@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Python是一种什么类型的编程语言？",
+      "options": [
+        "A. 编译型静态类型语言",
+        "B. 解释型动态类型语言",
+        "C. 编译型动态类型语言",
+        "D. 解释型静态类型语言"
+      ],
+      "correct_answer": "B",
+      "explanation": "Python是解释型语言，代码逐行执行；同时也是动态类型语言，变量类型在运行时确定。"
+    },
+    {
+      "id": "q2",
+      "question": "以下哪个是Python中正确的变量赋值方式？",
+      "options": [
+        "A. var name = \"Alice\"",
+        "B. string name = \"Alice\"",
+        "C. name = \"Alice\"",
+        "D. let name = \"Alice\""
+      ],
+      "correct_answer": "C",
+      "explanation": "Python不需要声明变量类型，直接使用变量名 = 值的方式赋值。"
+    },
+    {
+      "id": "q3",
+      "question": "在Python中，== 和 is 的区别是什么？",
+      "options": [
+        "A. == 比较对象身份，is 比较值",
+        "B. == 比较值，is 比较对象身份",
+        "C. 两者完全相同，可以互换使用",
+        "D. == 用于数字比较，is 用于字符串比较"
+      ],
+      "correct_answer": "B",
+      "explanation": "== 比较两个对象的值是否相等，is 比较两个对象是否是同一个对象（内存地址相同）。"
+    },
+    {
+      "id": "q4",
+      "question": "以下哪个数据类型在Python中是不可变的？",
+      "options": [
+        "A. 列表 (list)",
+        "B. 字典 (dict)",
+        "C. 集合 (set)",
+        "D. 元组 (tuple)"
+      ],
+      "correct_answer": "D",
+      "explanation": "元组 (tuple) 是不可变的数据类型，一旦创建就不能修改。列表、字典和集合都是可变的。"
+    },
+    {
+      "id": "q5",
+      "question": "Python函数定义使用哪个关键字？",
+      "options": [
+        "A. func",
+        "B. function",
+        "C. def",
+        "D. lambda"
+      ],
+      "correct_answer": "C",
+      "explanation": "Python使用 def 关键字定义函数。lambda 用于定义匿名函数，但不是常规函数定义的关键字。"
+    },
+    {
+      "id": "q6",
+      "question": "以下哪个是正确的Python注释方式？",
+      "options": [
+        "A. // 这是注释",
+        "B. /* 这是注释 */",
+        "C. # 这是注释",
+        "D. <!-- 这是注释 -->"
+      ],
+      "correct_answer": "C",
+      "explanation": "Python使用 # 符号进行单行注释。多行注释通常使用三引号字符串。"
+    },
+    {
+      "id": "q7",
+      "question": "Python中的缩进通常使用多少个空格？",
+      "options": [
+        "A. 2个空格",
+        "B. 4个空格",
+        "C. 8个空格",
+        "D. 1个制表符"
+      ],
+      "correct_answer": "B",
+      "explanation": "根据PEP 8规范，Python推荐使用4个空格进行缩进。"
+    },
+    {
+      "id": "q8",
+      "question": "以下哪个表达式的结果是 True？",
+      "options": [
+        "A. [] is []",
+        "B. \"hello\" is \"hello\"",
+        "C. [1, 2] == [1, 2]",
+        "D. 1000 is 1000"
+      ],
+      "correct_answer": "C",
+      "explanation": "[1, 2] == [1, 2] 比较的是值，结果为True。[] is [] 比较的是对象身份，结果为False（两个不同的空列表）。字符串和小整数可能因为缓存而 is 返回True，但这不可靠。大整数如1000通常不会被缓存。"
+    }
+  ]
+}

@@ -1,0 +1,537 @@
+---
+id: '07-01'
+title: 'Python入门：编程的第一把钥匙'
+module: '07-programming-languages'
+difficulty: 1
+duration: 30
+prerequisites: []
+---
+
+# Python入门：编程的第一把钥匙
+
+想象一下，如果你能用接近英语的方式告诉计算机做什么，而不是一堆复杂的符号和规则，那该多好？这就是Python的魅力！Python为什么这么流行？连AI都能写代码——因为它的语法简洁明了，就像在写伪代码一样自然。
+
+> 💡 **思考问题**: 为什么Python被称为"胶水语言"？它和其他编程语言有什么不同？
+
+---
+
+## 开场白
+
+欢迎来到编程世界的大门！我是你的CS教授，今天我们要一起探索Python这把神奇的钥匙。Python诞生于1991年，由荷兰程序员Guido van Rossum创造，他希望创造一种既强大又易于阅读的编程语言。
+
+你知道吗？Python的名字其实来源于英国喜剧团体Monty Python，而不是蟒蛇！这体现了Python社区的幽默感和轻松氛围。
+
+Python现在的地位可以说是编程界的"瑞士军刀"——从数据分析到人工智能，从Web开发到自动化脚本，几乎无所不能。而且最棒的是，它的学习曲线非常平缓，让你能够快速上手并看到成果。
+
+> 💡 **思考问题**: 你觉得什么样的编程语言才算"易学"？Python在这方面做对了什么？
+
+---
+
+## 核心概念
+
+### Python的特点
+
+Python有几个让人爱不释手的特点：
+- **简洁优雅**：代码可读性极高，减少了括号和分号的使用
+- **动态类型**：不需要声明变量类型，Python会自动推断
+- **解释型语言**：代码逐行执行，便于调试和测试
+- **丰富的标准库**："电池已包含"（Batteries included）哲学
+- **跨平台**：一次编写，到处运行
+
+### 变量与数据类型
+
+Python中有几种基本的数据类型：
+
+```python
+# 整数 (int)
+age = 25
+
+# 浮点数 (float)  
+price = 19.99
+
+# 字符串 (str)
+name = "小明"
+
+# 布尔值 (bool)
+is_student = True
+
+# 列表 (list) - 可变序列
+fruits = ["苹果", "香蕉", "橙子"]
+
+# 元组 (tuple) - 不可变序列  
+coordinates = (10, 20)
+
+# 字典 (dict) - 键值对
+person = {"name": "小明", "age": 25}
+```
+
+### 运算符
+
+Python支持各种运算符：
+
+```python
+# 算术运算符
+a = 10 + 5    # 加法
+b = 10 - 5    # 减法  
+c = 10 * 5    # 乘法
+d = 10 / 3    # 除法 (结果是浮点数)
+e = 10 // 3   # 整除
+f = 10 % 3    # 取余
+g = 2 ** 3    # 幂运算
+
+# 比较运算符
+x = 5 == 5    # True
+y = 5 != 3    # True
+z = 5 > 3     # True
+
+# 逻辑运算符  
+result = True and False  # False
+result = True or False   # True  
+result = not True        # False
+```
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: 变量和基本类型
+
+```python
+# variables_types.py
+# 定义不同类型的变量
+name = "Alice"          # 字符串
+age = 30                # 整数
+height = 1.75           # 浮点数
+is_programmer = True    # 布尔值
+
+# 查看变量类型
+print(f"姓名: {name}, 类型: {type(name)}")
+print(f"年龄: {age}, 类型: {type(age)}")
+print(f"身高: {height}, 类型: {type(height)}")
+print(f"是程序员: {is_programmer}, 类型: {type(is_programmer)}")
+
+# 动态类型演示
+dynamic_var = 42        # 现在是整数
+print(f"动态变量初始值: {dynamic_var}, 类型: {type(dynamic_var)}")
+
+dynamic_var = "Hello"   # 现在变成字符串！
+print(f"动态变量新值: {dynamic_var}, 类型: {type(dynamic_var)}")
+```
+
+**运行结果**：
+```
+姓名: Alice, 类型: <class 'str'>
+年龄: 30, 类型: <class 'int'>
+身高: 1.75, 类型: <class 'float'>
+是程序员: True, 类型: <class 'bool'>
+动态变量初始值: 42, 类型: <class 'int'>
+动态变量新值: Hello, 类型: <class 'str'>
+```
+
+这个例子展示了Python的动态类型特性——同一个变量可以在运行时改变类型，这让代码更加灵活，但也需要开发者更加小心。
+
+### 示例2: 控制流
+
+```python
+# control_flow.py
+# if-elif-else 条件语句
+score = 85
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+else:
+    grade = "D"
+
+print(f"分数 {score} 对应等级: {grade}")
+
+# for 循环
+fruits = ["苹果", "香蕉", "橙子", "葡萄"]
+print("水果列表:")
+for i, fruit in enumerate(fruits):
+    print(f"{i+1}. {fruit}")
+
+# while 循环
+count = 3
+print("倒计时:")
+while count > 0:
+    print(count)
+    count -= 1
+print("发射！")
+```
+
+**运行结果**：
+```
+分数 85 对应等级: B
+水果列表:
+1. 苹果
+2. 香蕉
+3. 橙子
+4. 葡萄
+倒计时:
+3
+2
+1
+发射！
+```
+
+控制流是程序的灵魂！条件语句让程序能够做决策，循环让程序能够重复执行任务。Python的缩进语法让代码结构一目了然。
+
+### 示例3: 函数定义
+
+```python
+# functions.py
+def greet(name, greeting="你好"):
+    """向某人打招呼的函数
+    
+    参数:
+        name (str): 要打招呼的人的名字
+        greeting (str): 问候语，默认为"你好"
+    
+    返回:
+        str: 完整的问候消息
+    """
+    return f"{greeting}, {name}!"
+
+def calculate_area(length, width):
+    """计算矩形面积"""
+    return length * width
+
+def is_even(number):
+    """判断数字是否为偶数"""
+    return number % 2 == 0
+
+# 使用函数
+message = greet("小明")
+print(message)
+
+area = calculate_area(5, 3)
+print(f"面积: {area}")
+
+print(f"4是偶数吗? {is_even(4)}")
+print(f"7是偶数吗? {is_even(7)}")
+
+# Lambda函数（匿名函数）
+square = lambda x: x ** 2
+print(f"5的平方: {square(5)}")
+```
+
+**运行结果**：
+```
+你好, 小明!
+面积: 15
+4是偶数吗? True
+7是偶数吗? False
+5的平方: 25
+```
+
+函数是代码的积木！它们让你能够将复杂的问题分解成小的、可重用的部分。Python的函数定义简洁明了，还支持默认参数、文档字符串等高级特性。
+
+---
+
+## 深入理解
+
+### Python是解释型语言
+
+Python代码不是直接编译成机器码，而是先被编译成字节码（.pyc文件），然后由Python虚拟机（PVM）解释执行。这意味着：
+
+- **开发效率高**：修改代码后立即可以看到效果，无需编译
+- **跨平台性好**：只要有Python解释器，就能运行Python代码
+- **调试友好**：错误信息详细，堆栈跟踪清晰
+
+### 动态类型系统
+
+Python的动态类型意味着变量的类型是在运行时确定的，而不是编译时。这带来了灵活性，但也需要注意：
+
+- **类型检查在运行时**：错误可能在程序运行一段时间后才暴露
+- **性能开销**：类型检查和转换需要额外的运行时间
+- **工具支持**：现代IDE和类型检查器（如mypy）可以帮助提前发现类型错误
+
+### 一切皆对象
+
+在Python中，**一切都是对象**！数字、字符串、函数、模块，甚至类型本身都是对象。这意味着：
+
+```python
+# 数字也是对象
+num = 42
+print(num.__class__)  # <class 'int'>
+
+# 函数也是对象
+def my_function():
+    pass
+
+print(my_function.__class__)  # <class 'function'>
+my_function.description = "这是一个函数对象"
+print(my_function.description)  # 可以给函数添加属性！
+```
+
+这种设计理念让Python非常灵活和强大，你可以像操作普通对象一样操作函数、类等。
+
+---
+
+## 实际应用
+
+### 应用场景1: 数据分析
+
+Python是数据科学的首选语言，得益于pandas、numpy、matplotlib等强大的库：
+
+```python
+# 数据分析示例（概念性）
+import pandas as pd
+
+# 读取CSV文件
+df = pd.read_csv('sales_data.csv')
+
+# 数据清洗和分析
+cleaned_data = df.dropna()
+monthly_sales = cleaned_data.groupby('month')['sales'].sum()
+
+# 可视化
+monthly_sales.plot(kind='bar')
+```
+
+### 应用场景2: Web开发
+
+使用Flask或Django框架，几行代码就能搭建一个Web应用：
+
+```python
+# Flask Web应用示例
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+### 应用场景3: 自动化脚本
+
+Python让日常任务自动化变得简单：
+
+```python
+# 文件批量重命名脚本
+import os
+
+def rename_files(directory, prefix):
+    for i, filename in enumerate(os.listdir(directory)):
+        old_path = os.path.join(directory, filename)
+        new_name = f"{prefix}_{i:03d}{os.path.splitext(filename)[1]}"
+        new_path = os.path.join(directory, new_name)
+        os.rename(old_path, new_path)
+```
+
+### 应用场景4: 人工智能
+
+从机器学习到深度学习，Python生态系统提供了完整的解决方案：
+
+```python
+# 简单的机器学习示例
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+# 加载数据
+iris = load_iris()
+X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target)
+
+# 训练模型
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# 预测
+accuracy = model.score(X_test, y_test)
+print(f"准确率: {accuracy:.2f}")
+```
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 可变/不可变类型混淆
+
+新手常常混淆可变和不可变类型的行为：
+
+```python
+# 错误示例
+def add_item_bad(item, target_list=[]):  # 危险！默认参数是可变对象
+    target_list.append(item)
+    return target_list
+
+# 第一次调用
+list1 = add_item_bad("apple")
+print(list1)  # ['apple']
+
+# 第二次调用 - 意外的结果！
+list2 = add_item_bad("banana")  
+print(list2)  # ['apple', 'banana'] - 不是我们期望的！
+```
+
+✅ **正确做法**: 
+```python
+def add_item_good(item, target_list=None):
+    if target_list is None:
+        target_list = []
+    target_list.append(item)
+    return target_list
+
+# 现在每次调用都会得到独立的列表
+list1 = add_item_good("apple")   # ['apple']
+list2 = add_item_good("banana")  # ['banana']
+```
+
+### 误区2: == vs is
+
+很多新手不知道`==`和`is`的区别：
+
+```python
+# == 比较值是否相等
+# is 比较是否是同一个对象
+
+a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+
+print(a == b)  # True - 值相等
+print(a is b)  # False - 不是同一个对象
+print(a is c)  # True - 是同一个对象
+
+# 特殊情况：小整数缓存
+x = 256
+y = 256
+print(x is y)  # True - Python缓存了小整数
+
+x = 257
+y = 257
+print(x is y)  # 可能是False！不要依赖这个行为
+```
+
+✅ **正确做法**: 除非你明确需要比较对象身份，否则总是使用`==`进行比较。
+
+### 误区3: 缩进错误
+
+Python使用缩进来表示代码块，这是新手最容易犯的错误：
+
+```python
+# 错误示例 - 混合使用空格和制表符
+if True:
+	print("这行用了制表符")
+    print("这行用了4个空格")  # IndentationError!
+
+# 正确做法 - 统一使用4个空格（PEP 8推荐）
+if True:
+    print("这行用了4个空格")
+    print("这行也用了4个空格")
+```
+
+✅ **正确做法**: 在编辑器中设置"显示空白字符"，并统一使用4个空格进行缩进。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 温度转换器 ⭐
+
+编写一个函数，将摄氏度转换为华氏度，公式是：F = C × 9/5 + 32
+
+**要求**：
+- 函数名为 `celsius_to_fahrenheit`
+- 接受一个参数 `celsius`（摄氏度）
+- 返回对应的华氏度
+- 处理输入验证（确保输入是数字）
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用 `isinstance()` 函数检查输入类型，或者使用 `try-except` 处理类型转换错误。
+
+</details>
+
+### 练习2: 简单计算器 ⭐⭐
+
+创建一个简单的计算器函数，支持加、减、乘、除四种运算。
+
+**要求**：
+- 函数名为 `simple_calculator`
+- 接受三个参数：`num1`, `num2`, `operation`
+- `operation` 可以是 `"+"`, `"-"`, `"*"`, `"/"`
+- 返回计算结果
+- 处理除零错误
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用 `if-elif-else` 语句处理不同的运算符，用 `try-except` 处理除零异常。
+
+</details>
+
+### 练习3: 列表处理器 ⭐⭐⭐
+
+编写一个函数，接受一个数字列表，返回一个字典，包含以下统计信息：总和、平均值、最大值、最小值、中位数。
+
+**要求**：
+- 函数名为 `analyze_numbers`
+- 接受一个参数 `numbers`（数字列表）
+- 返回包含统计信息的字典
+- 处理空列表的情况
+- 正确计算中位数（考虑奇数和偶数长度）
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用内置函数 `sum()`, `max()`, `min()`，自己实现中位数计算。记得导入 `statistics` 模块或者手动排序列表。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- Python语法简洁优雅，易于学习和使用
+- 支持多种基本数据类型：int, float, str, bool, list, tuple, dict
+- 控制流包括 if-elif-else 条件语句和 for/while 循环
+- 函数是代码重用的基本单元，支持默认参数和文档字符串
+- Python是解释型、动态类型的面向对象语言
+- "一切皆对象"的设计理念让Python非常灵活
+- 广泛应用于数据分析、Web开发、自动化、AI等领域
+- 需要注意可变/不可变类型、== vs is、缩进等常见陷阱
+
+### 思考题
+
+1. 为什么Python的动态类型既是优势也是劣势？在什么场景下你会选择静态类型语言？
+
+2. Python的"一切皆对象"理念如何影响你的编程思维方式？你能想到其他体现这一理念的例子吗？
+
+3. 如果你要向完全没接触过编程的朋友介绍Python，你会重点强调哪些特点？为什么？
+
+---
+
+## 下节预告
+
+下一节课我们将深入探索Python的数据结构，包括列表、元组、字典和集合的高级用法，以及它们在实际项目中的应用场景。准备好让你的Python技能更上一层楼了吗？
+
+---
+
+## 参考资源
+
+- [Python官方文档](https://docs.python.org/zh-cn/3/)
+- [PEP 8 -- Python代码风格指南](https://peps.python.org/pep-0008/)
+- [Python之禅 (The Zen of Python)](https://peps.python.org/pep-0020/)
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
