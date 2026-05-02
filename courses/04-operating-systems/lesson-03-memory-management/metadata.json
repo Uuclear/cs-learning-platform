@@ -1,0 +1,10 @@
+{
+  "id": "04-03",
+  "title": "内存管理：虚拟内存的魔法",
+  "module": "04-operating-systems",
+  "difficulty": 3,
+  "duration": 35,
+  "prerequisites": ["01-03", "04-01"],
+  "completed": false,
+  "version": "1.0.0"
+}
