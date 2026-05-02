@@ -1,0 +1,18 @@
+{
+  "id": "05-04",
+  "title": "数据库范式：数据组织的艺术",
+  "module": "05-databases",
+  "slug": "lesson-04-normalization",
+  "status": "completed",
+  "module_name": "数据库",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": ["05-01"],
+  "tags": ["normalization", "1nf", "2nf", "3nf", "database-design"],
+  "learning_objectives": ["理解1NF/2NF/3NF/BCNF范式的定义和应用", "掌握数据库表设计的规范化方法", "能够在范式化和反范式化之间做出权衡"],
+  "files": ["index.mdx", "metadata.json", "code/examples/example-01-normal-forms-demo.py", "code/examples/example-02-functional-dependency.py", "code/examples/example-03-denormalization-demo.py", "code/solutions/solution-01.py", "code/solutions/solution-02.py", "code/solutions/solution-03.py", "exercises/quiz.json", "exercises/challenges/challenge-01.md", "exercises/challenges/challenge-02.md"],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

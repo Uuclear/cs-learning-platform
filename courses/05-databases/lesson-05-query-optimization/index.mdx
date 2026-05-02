@@ -1,0 +1,241 @@
+---
+title: "05-05 查询优化：为什么查询这么慢"
+difficulty: "⭐⭐⭐⭐"
+---
+
+import Exercise from "@site/src/components/Exercise";
+import Challenge from "@site/src/components/Challenge";
+
+# 05-05 查询优化：为什么查询这么慢
+
+## 1. 开场白
+
+想象一下这样的场景：你的应用上线后运行良好，用户增长迅速。突然有一天，客服接到大量投诉——"页面加载太慢了！"、"搜索功能要等好几秒！"。你检查服务器资源，CPU 和内存都很正常，网络也没有问题。最后发现罪魁祸首竟然是一个看似简单的 SQL 查询！
+
+这正是我们在实际工作中经常遇到的问题。查询优化是数据库性能调优的核心技能，也是高级数据库工程师的必备能力。今天，我们就来揭开查询优化的神秘面纱，学会如何诊断和解决慢查询问题。
+
+## 2. 核心概念
+
+### 查询执行计划 (Query Execution Plan)
+
+当数据库接收到一个 SQL 查询时，它不会直接执行，而是先生成一个**执行计划**。这个计划描述了数据库将如何获取和处理数据，包括：
+
+- 使用哪些索引
+- 表的连接顺序
+- 连接算法的选择
+- 是否需要排序或分组
+
+### 表扫描 vs 索引扫描
+
+**全表扫描 (Table Scan)**：数据库逐行检查表中的每一行数据。时间复杂度为 O(n)，当表很大时会非常慢。
+
+**索引扫描 (Index Scan)**：利用索引快速定位到目标数据。时间复杂度通常为 O(log n) 或更好。
+
+```sql
+-- 全表扫描 - 慢！
+SELECT * FROM users WHERE email = 'user@example.com';
+
+-- 如果 email 列有索引，则使用索引扫描 - 快！
+CREATE INDEX idx_users_email ON users(email);
+```
+
+### 成本估算 (Cost Estimation)
+
+查询优化器会为每个可能的执行计划计算一个**成本值**，然后选择成本最低的计划。成本估算基于：
+- 表的行数（基数）
+- 索引的选择性
+- I/O 成本
+- CPU 成本
+
+## 3. 代码演示
+
+让我们通过三个实际例子来看看查询优化的魔力：
+
+<details>
+<summary>📊 示例 1: EXPLAIN 分析不同查询</summary>
+
+使用 `EXPLAIN QUERY PLAN` 可以看到 SQLite 如何执行查询：
+
+```python
+# 查看执行计划
+cursor.execute("EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 123")
+```
+
+我们会看到类似这样的输出：
+- `SEARCH TABLE orders USING INDEX idx_orders_customer (customer_id=?)` - 使用索引
+- `SCAN TABLE orders` - 全表扫描
+
+</details>
+
+<details>
+<summary>⚡ 示例 2: 连接性能对比</summary>
+
+比较嵌套循环连接和索引连接的性能差异：
+
+```python
+# 嵌套循环连接 - O(n*m)
+SELECT * FROM orders o, customers c WHERE o.customer_id = c.id;
+
+# 如果有适当的索引，会使用更高效的连接算法
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+```
+
+</details>
+
+<details>
+<summary>🔄 示例 3: 查询重写优化</summary>
+
+将低效的子查询重写为 JOIN：
+
+```python
+# 低效的子查询
+SELECT * FROM products WHERE id IN (SELECT product_id FROM orders WHERE status = 'shipped');
+
+# 高效的 JOIN
+SELECT DISTINCT p.* FROM products p 
+JOIN orders o ON p.id = o.product_id 
+WHERE o.status = 'shipped';
+```
+
+</details>
+
+## 4. 深入理解
+
+### 查询优化器内部机制
+
+现代数据库的查询优化器是一个复杂的组件，它的工作流程通常包括：
+
+1. **语法分析**：解析 SQL 语句
+2. **语义分析**：验证表和列是否存在
+3. **逻辑优化**：应用代数优化规则（如谓词下推、投影消除）
+4. **物理优化**：选择具体的执行算法和访问路径
+5. **计划生成**：输出最终的执行计划
+
+### 连接算法详解
+
+**嵌套循环连接 (Nested Loop Join)**：
+- 适用于小表连接大表
+- 外层表每行都要扫描内层表
+
+**哈希连接 (Hash Join)**：
+- 构建哈希表，然后探测
+- 适用于中等大小的表
+
+**归并连接 (Merge Join)**：
+- 要求两个表都按连接键排序
+- 效率最高，但需要预排序
+
+### 统计信息和直方图
+
+数据库维护着表和索引的**统计信息**，包括：
+- 表的行数
+- 列的唯一值数量
+- 数据分布的直方图
+
+这些统计信息帮助优化器做出更好的决策。定期更新统计信息对查询性能至关重要：
+
+```sql
+-- 在 PostgreSQL 中更新统计信息
+ANALYZE table_name;
+
+-- 在 MySQL 中
+ANALYZE TABLE table_name;
+```
+
+## 5. 实际应用
+
+### 优化慢查询的步骤
+
+1. **识别慢查询**：使用慢查询日志或性能监控工具
+2. **分析执行计划**：使用 `EXPLAIN` 查看当前执行计划
+3. **检查索引**：确认是否有合适的索引，或者是否需要复合索引
+4. **重写查询**：考虑是否可以简化或重写查询逻辑
+5. **测试验证**：对比优化前后的性能
+
+### 常见优化场景
+
+**场景 1：缺少索引**
+```sql
+-- 慢查询
+SELECT * FROM logs WHERE created_at > '2023-01-01' AND level = 'ERROR';
+
+-- 创建复合索引
+CREATE INDEX idx_logs_created_level ON logs(created_at, level);
+```
+
+**场景 2：函数导致索引失效**
+```sql
+-- 索引失效 - 慢！
+SELECT * FROM users WHERE UPPER(name) = 'JOHN';
+
+-- 改为 - 快！
+SELECT * FROM users WHERE name = 'john';  -- 存储时就用小写
+```
+
+**场景 3：不必要的 SELECT \***
+```sql
+-- 只选择需要的列
+SELECT id, name, email FROM users WHERE status = 'active';
+-- 而不是
+SELECT * FROM users WHERE status = 'active';
+```
+
+## 6. 常见误区
+
+### ❌ 误区 1：索引越多越好
+
+实际上，过多的索引会：
+- 增加写操作的开销（INSERT/UPDATE/DELETE 都要更新索引）
+- 占用更多存储空间
+- 让优化器选择困难，可能导致选择错误的索引
+
+### ❌ 误区 2：复合索引的列顺序不重要
+
+复合索引 `(A, B, C)` 只能有效支持：
+- `WHERE A = ?`
+- `WHERE A = ? AND B = ?`
+- `WHERE A = ? AND B = ? AND C = ?`
+
+但不能有效支持 `WHERE B = ?` 或 `WHERE C = ?`。
+
+### ❌ 误区 3：EXPLAIN 显示使用了索引就一定快
+
+有时候优化器会选择使用索引，但实际上全表扫描可能更快（比如要返回大部分行时）。要结合实际执行时间和逻辑读取次数来判断。
+
+### ❌ 误区 4：查询优化是一次性工作
+
+随着数据量增长和查询模式变化，原来的优化策略可能不再适用。需要定期重新评估和优化。
+
+## 7. 动手实践
+
+现在让我们通过几个练习来巩固所学知识：
+
+<Exercise title="练习 1: EXPLAIN 分析">
+使用提供的示例代码，分析不同查询的执行计划，理解什么时候使用索引，什么时候进行全表扫描。
+</Exercise>
+
+<Exercise title="练习 2: 性能对比">
+运行连接性能对比脚本，观察不同数据量下各种连接算法的表现差异。
+</Exercise>
+
+<Exercise title="练习 3: 查询重写">
+尝试将给定的低效查询重写为高效版本，并验证性能提升。
+</Exercise>
+
+## 8. 小结与思考
+
+查询优化是一门艺术，也是一门科学。它需要我们：
+- 理解数据库内部工作原理
+- 掌握执行计划的阅读方法
+- 学会权衡不同的优化策略
+- 持续监控和调优
+
+记住，最好的优化往往是**避免执行不必要的查询**。在应用层面做好缓存、分页和数据预加载，往往比在数据库层面优化更有效。
+
+### 思考题
+
+1. 为什么有时候优化器会选择全表扫描而不是使用索引？
+2. 如何设计复合索引来支持多种查询模式？
+3. 在什么情况下应该考虑分区表而不是仅仅添加索引？
+
+通过今天的课程，希望你能建立起查询优化的系统性思维，在面对慢查询问题时能够从容应对！🚀
