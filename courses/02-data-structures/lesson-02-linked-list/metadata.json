@@ -10,24 +10,25 @@
   "difficulty_label": "简单",
   "duration_minutes": 20,
   "prerequisites": ["02-01"],
-  "tags": ["linked-list", "singly-linked-list", "doubly-linked-list", "data-structure"],
+  "tags": ["linked-list", "singly-linked-list", "doubly-linked-list", "data-structure", "pointer"],
   "author": "sub-agent",
   "created_at": "2026-05-03",
   "updated_at": "2026-05-03",
   "status": "completed",
-  "description": "用生活化的比喻讲解链表的定义、结构、基本操作，对比链表与数组的优劣，并实现单向和双向链表。",
+  "description": "学习链表数据结构，理解节点连接的概念，掌握单链表、双链表的实现和基本操作，以及链表与数组的对比和实际应用场景",
   "learning_objectives": [
-    "理解链表的定义和核心特征（节点结构、数据+指针、非连续存储）",
-    "掌握单向链表和双向链表的结构差异",
-    "掌握链表的基本操作：遍历O(n)、插入O(1)、删除O(1)、查找O(n)",
-    "能够根据场景选择合适的存储结构（数组vs链表）"
+    "理解链表的基本概念和节点结构",
+    "掌握单链表和双链表的实现方式",
+    "熟练进行链表的插入、删除、查找操作",
+    "理解链表与数组在内存布局和时间复杂度上的差异",
+    "能够应用链表解决实际问题"
   ],
   "files": {
     "main_content": "index.mdx",
     "code_examples": 3,
     "exercises": {
       "quiz_questions": 8,
-      "programming_challenges": 3
+      "programming_challenges": 2
     }
   }
 }
