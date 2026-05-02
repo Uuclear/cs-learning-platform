@@ -181,7 +181,7 @@ program = [
 ]
 
 print("=" * 60)
-print("流水线CPU模拟 - 让CPU"一心多用"")
+print("流水线CPU模拟 - 让CPU一心多用")
 print("=" * 60)
 print("\n程序代码:")
 for i, instr in enumerate(program):
