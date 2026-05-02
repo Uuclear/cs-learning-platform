@@ -1,0 +1,12 @@
+{
+  "id": "06-05",
+  "title": "网络安全：如何保护你的数据",
+  "module": "06-computer-networks",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": ["06-01"],
+  "tags": ["网络安全", "加密", "SSL/TLS", "哈希函数", "数字签名"],
+  "author": "CS Professor",
+  "created_at": "2026-05-03",
+  "version": "1.0.0"
+}

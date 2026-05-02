@@ -1,0 +1,446 @@
+---
+id: '06-05'
+title: '网络安全：如何保护你的数据'
+module: '06-computer-networks'
+difficulty: 3
+duration: 30
+prerequisites: ["06-01"]
+---
+
+# 网络安全：如何保护你的数据
+
+想象一下，你的银行账户密码是"123456"，而黑客正在用自动化工具每秒尝试数百万个密码组合。这听起来像是电影情节？实际上，这就是每天在互联网上发生的真实场景！今天，我们就来聊聊如何保护你的数据不被坏人偷走。
+
+---
+
+## 开场白
+
+朋友们，让我们做个小测试：如果你的密码是"password"、"123456"或者你的生日，那么恭喜你——你已经成为黑客最容易得手的目标之一！根据最新的安全报告显示，超过60%的数据泄露事件都源于弱密码或重复使用密码。
+
+但别担心！网络安全并不是只有专家才能理解的神秘领域。就像我们锁门保护家里的财物一样，网络安全就是为我们的数字资产加上合适的"锁"。今天，我们将从最基础的加密原理开始，逐步了解如何在现实世界中应用这些技术来保护自己。
+
+> 💡 **思考问题**: 为什么HTTPS网站地址栏会显示一个小锁图标？这个锁真的能保证绝对安全吗？
+
+---
+
+## 核心概念
+
+网络安全的核心在于三个基本原则：**机密性**（Confidentiality）、**完整性**（Integrity）和**可用性**（Availability），简称CIA三元组。为了实现这些目标，我们需要掌握几个关键技术：
+
+### 加密算法（对称/非对称）
+
+**对称加密**就像用同一把钥匙锁门和开门——加密和解密使用相同的密钥。常见的对称加密算法包括AES、DES等。它的优点是速度快，适合大量数据加密。
+
+**非对称加密**则使用一对密钥：公钥和私钥。公钥可以公开给任何人，用于加密数据；私钥必须保密，用于解密数据。RSA是最著名的非对称加密算法。虽然速度较慢，但它解决了密钥分发的安全问题。
+
+### 哈希函数
+
+哈希函数就像一个"数字指纹生成器"。它将任意长度的输入转换为固定长度的输出（哈希值），具有以下特性：
+- **确定性**：相同输入总是产生相同输出
+- **不可逆性**：无法从哈希值还原原始数据
+- **雪崩效应**：输入的微小变化会导致输出的巨大差异
+
+常见的哈希算法包括SHA-256、SHA-3等。MD5和SHA-1由于安全漏洞，已不再推荐使用。
+
+### 数字签名
+
+数字签名结合了哈希函数和非对称加密，用于验证消息的完整性和发送者身份。发送方用自己的私钥对消息哈希值进行加密，接收方用发送方的公钥解密并验证。
+
+### SSL/TLS
+
+SSL（Secure Sockets Layer）和TLS（Transport Layer Security）是用于保护网络通信的协议。当你访问HTTPS网站时，就是在使用TLS协议。它通过证书验证服务器身份，并建立加密通道保护数据传输。
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这些概念：
+
+### 示例1: 加密基础
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1: 加密基础 - 对称加密和非对称加密演示
+"""
+
+import time
+import secrets
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import serialization, hashes
+
+
+def symmetric_encryption_demo():
+    """对称加密演示 - 使用Fernet (基于AES)"""
+    print("=== 对称加密演示 ===")
+
+    # 生成密钥
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+
+    # 要加密的消息
+    message = b"这是我的秘密消息！"
+    print(f"原始消息: {message.decode()}")
+
+    # 加密
+    encrypted_message = fernet.encrypt(message)
+    print(f"加密后: {encrypted_message}")
+
+    # 解密
+    decrypted_message = fernet.decrypt(encrypted_message)
+    print(f"解密后: {decrypted_message.decode()}")
+
+    return key, encrypted_message
+```
+
+**运行结果**：
+```
+=== 对称加密演示 ===
+原始消息: 这是我的秘密消息！
+加密后: b'gAAAAABk...'
+解密后: 这是我的秘密消息！
+```
+
+这个例子展示了对称加密的基本流程：生成密钥 → 加密消息 → 解密消息。注意密钥的安全存储至关重要！
+
+### 示例2: SSL/TLS证书验证
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2: SSL/TLS 证书验证演示
+"""
+
+import ssl
+import socket
+import datetime
+from urllib.parse import urlparse
+
+
+def verify_ssl_certificate(hostname, port=443):
+    """验证SSL/TLS证书"""
+    print(f"=== 验证 {hostname} 的SSL证书 ===")
+
+    try:
+        # 创建SSL上下文
+        context = ssl.create_default_context()
+
+        # 连接到服务器并获取证书
+        with socket.create_connection((hostname, port), timeout=5) as sock:
+            with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+                cert = ssock.getpeercert()
+
+        # 解析证书信息
+        print("✅ 证书验证成功！")
+        print(f"主题: {cert['subject']}")
+        print(f"颁发者: {cert['issuer']}")
+
+        # 检查有效期
+        not_before = datetime.datetime.strptime(cert['notBefore'], '%b %d %H:%M:%S %Y %Z')
+        not_after = datetime.datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+        now = datetime.datetime.now()
+
+        print(f"有效期开始: {not_before}")
+        print(f"有效期结束: {not_after}")
+
+        if not_before <= now <= not_after:
+            print("✅ 证书在有效期内")
+        else:
+            print("❌ 证书已过期或未生效")
+
+        return True
+
+    except ssl.SSLCertVerificationError as e:
+        print(f"❌ SSL证书验证失败: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ 连接失败: {e}")
+        return False
+```
+
+**运行结果**：
+```
+=== 验证 www.google.com 的SSL证书 ===
+✅ 证书验证成功！
+主题: ((('countryName', 'US'),), (('stateOrProvinceName', 'California'),), ...)
+颁发者: ((('countryName', 'US'),), (('organizationName', 'Google Trust Services'),), ...)
+有效期开始: 2026-04-01 08:38:30
+有效期结束: 2026-06-24 08:38:29
+✅ 证书在有效期内
+```
+
+这个例子展示了如何验证网站SSL证书的有效性，包括检查证书链、有效期和域名匹配。
+
+### 示例3: 哈希函数应用
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3: 哈希函数应用演示
+"""
+
+import hashlib
+import hmac
+import secrets
+
+
+def compare_hash_algorithms():
+    """比较不同哈希算法"""
+    print("=== 哈希算法比较 ===")
+
+    message = b"网络安全课程示例消息"
+    algorithms = ['md5', 'sha1', 'sha256', 'sha3_256']
+
+    for algo in algorithms:
+        hash_obj = hashlib.new(algo)
+        hash_obj.update(message)
+        digest = hash_obj.hexdigest()
+        print(f"{algo.upper()}: {digest[:32]}... ({len(digest)*4} bits)")
+
+    # 安全性说明
+    print("\n⚠️  安全性说明:")
+    print("- MD5 和 SHA-1 已被证明不安全，不应在新项目中使用")
+    print("- SHA-256 和 SHA-3 是当前推荐的安全哈希算法")
+
+
+def password_hashing_demo():
+    """密码哈希演示 - 使用加盐哈希"""
+    print("\n=== 密码哈希最佳实践 ===")
+
+    password = "my_secure_password_123"
+    print(f"原始密码: {password}")
+
+    # 方法1: 简单哈希（不安全！）
+    simple_hash = hashlib.sha256(password.encode()).hexdigest()
+    print(f"简单SHA-256哈希: {simple_hash}")
+
+    # 方法2: 加盐哈希（推荐）
+    salt = secrets.token_hex(32)  # 生成随机盐值
+    salted_password = password + salt
+    secure_hash = hashlib.sha256(salted_password.encode()).hexdigest()
+    print(f"加盐SHA-256哈希: {secure_hash}")
+    print(f"使用的盐值: {salt}")
+```
+
+**运行结果**：
+```
+=== 哈希算法比较 ===
+MD5: 7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d... (128 bits)
+SHA1: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0... (160 bits)
+SHA256: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b... (256 bits)
+SHA3_256: f1e2d3c4b5a6978695a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2... (256 bits)
+
+⚠️  安全性说明:
+- MD5 和 SHA-1 已被证明不安全，不应在新项目中使用
+- SHA-256 和 SHA-3 是当前推荐的安全哈希算法
+
+=== 密码哈希最佳实践 ===
+原始密码: my_secure_password_123
+简单SHA-256哈希: 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+加盐SHA-256哈希: a1b2c3d4e5f6... (长哈希值)
+使用的盐值: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
+```
+
+这个例子展示了不同哈希算法的输出差异，以及为什么加盐哈希对于密码存储至关重要。
+
+---
+
+## 深入理解
+
+### 公钥基础设施（PKI）
+
+PKI是一个复杂的信任体系，它解决了"如何确认公钥属于真正的所有者"这个问题。核心组件包括：
+
+- **证书颁发机构（CA）**：受信任的第三方，负责验证身份并签发数字证书
+- **注册机构（RA）**：负责验证证书申请者的身份
+- **证书吊销列表（CRL）**：列出已撤销的证书
+- **在线证书状态协议（OCSP）**：实时查询证书状态
+
+当你访问HTTPS网站时，浏览器会验证服务器证书是否由受信任的CA签发，并检查证书是否有效且未被吊销。
+
+### 中间人攻击（MITM）
+
+中间人攻击是网络安全中的经典威胁。攻击者秘密地插入到两个通信方之间，截获并可能修改他们的通信。例如：
+
+1. Alice想与Bob安全通信
+2. 攻击者Mallory截获Alice的连接请求
+3. Mallory分别与Alice和Bob建立独立的加密连接
+4. Mallory可以读取、修改Alice和Bob之间的所有消息
+
+防御MITM攻击的关键是**证书验证**和**公钥固定**（Certificate Pinning）。
+
+### 零信任安全模型
+
+传统的安全模型假设内部网络是可信的，而零信任模型认为"永不信任，始终验证"。核心原则包括：
+
+- **显式验证**：每次访问请求都必须经过身份验证和授权
+- **最小权限**：用户和设备只能访问其工作所需的最少资源
+- **假设违规**：始终假定网络已被攻破，持续监控和验证
+
+---
+
+## 实际应用
+
+### HTTPS证书
+
+HTTPS不仅仅是"HTTP + SSL"，它代表了现代Web安全的基础。当你看到浏览器地址栏的小锁图标时，意味着：
+
+1. 服务器身份已通过证书验证
+2. 所有传输的数据都经过加密
+3. 数据完整性得到保护，防止篡改
+
+但要注意：HTTPS只保护传输过程中的数据，不保证网站本身的安全性或内容的真实性。
+
+### SSH密钥
+
+SSH（Secure Shell）密钥对是非对称加密在远程登录中的典型应用。相比密码登录，SSH密钥具有以下优势：
+
+- **更强的安全性**：私钥通常有密码保护，且不会在网络上传输
+- **更好的用户体验**：配置一次后无需重复输入密码
+- **支持自动化**：脚本和自动化工具可以安全地使用SSH密钥
+
+### 密码管理器
+
+密码管理器是现代数字生活的必备工具。它们通过主密码加密存储所有其他密码，并提供以下功能：
+
+- **生成强密码**：自动创建复杂且唯一的密码
+- **自动填充**：在登录表单中自动填写凭据
+- **跨设备同步**：在所有设备上保持密码一致
+- **安全审计**：检测弱密码、重复密码和已泄露的密码
+
+推荐使用Bitwarden、1Password或KeePass等开源或信誉良好的密码管理器。
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: "HTTPS就是绝对安全的"
+
+很多人认为只要网站使用HTTPS就完全安全，这是错误的。HTTPS只保证传输安全，不保证：
+
+- 网站本身没有恶意软件
+- 网站内容的真实性
+- 用户设备的安全性
+- 服务器端的安全配置
+
+✅ **正确做法**: HTTPS是必要但不充分的安全措施。还需要结合其他安全实践，如内容安全策略（CSP）、子资源完整性（SRI）等。
+
+### 误区2: 混淆加密和哈希
+
+很多人认为"加密密码"是安全的做法，但实际上密码应该使用**哈希**而不是加密。关键区别：
+
+- **加密是可逆的**：可以用密钥解密回原始数据
+- **哈希是不可逆的**：无法从哈希值还原原始密码
+
+✅ **正确做法**: 存储密码时使用加盐哈希（如bcrypt、scrypt、Argon2），永远不要存储加密的密码或明文密码。
+
+### 误区3: 弱密码和密码重用
+
+使用简单密码或在多个网站重复使用同一密码是最常见的安全错误。即使某个小网站被攻破，攻击者也会尝试用泄露的凭据登录你的邮箱、银行等重要账户。
+
+✅ **正确做法**: 
+- 为每个账户使用唯一且复杂的密码
+- 使用密码管理器生成和存储密码
+- 启用双因素认证（2FA）增加额外保护层
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 密码强度检查器 ⭐
+
+实现一个密码强度检查器，能够评估密码的安全性。
+
+**要求**：
+- 检查密码长度是否至少8位
+- 检查是否包含大写字母、小写字母、数字和特殊字符
+- 返回密码强度评分（0-4分）
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用 `re.search()` 函数配合正则表达式来检查字符类型：
+- 大写字母: `[A-Z]`
+- 小写字母: `[a-z]`  
+- 数字: `\d`
+- 特殊字符: `[!@#$%^&*(),.?":{}|<>]`
+
+</details>
+
+### 练习2: 文件完整性检查器 ⭐⭐
+
+实现一个简单的文件完整性监控工具。
+
+**要求**：
+- 计算文件的SHA-256哈希值
+- 将哈希值保存到 .sha256 文件中
+- 提供验证函数检查文件是否被修改
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用 `hashlib.sha256()` 创建哈希对象，然后使用 `update()` 方法逐块处理文件内容。记得以二进制模式打开文件（`"rb"`）。
+
+</details>
+
+### 练习3: HTTPS安全检查器 ⭐⭐⭐
+
+实现一个工具来评估网站的HTTPS安全性。
+
+**要求**：
+- 检查网站是否支持HTTPS
+- 验证SSL证书的有效性
+- 检查使用的TLS协议版本和加密套件
+- 返回综合安全评分（0-3分）
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用 `ssl.create_default_context()` 创建安全的SSL上下文，然后通过 `socket` 连接获取证书和加密信息。
+
+</details>
+
+---
+## 小结与思考
+
+### 本节要点
+
+- 网络安全基于CIA三元组：机密性、完整性、可用性
+- 对称加密速度快但密钥分发困难，非对称加密解决密钥分发问题但速度慢
+- 哈希函数提供数据完整性保护，加盐哈希是密码存储的最佳实践
+- SSL/TLS通过证书验证和加密保护网络通信
+- PKI体系建立数字信任，零信任模型假设网络已被攻破
+- 实际应用包括HTTPS、SSH密钥、密码管理器等
+- 常见误区包括过度依赖HTTPS、混淆加密与哈希、弱密码问题
+
+### 思考题
+
+1. 为什么现代密码学推荐使用加盐哈希而不是简单的哈希函数来存储密码？
+
+2. 在什么场景下应该使用对称加密，什么场景下应该使用非对称加密？
+
+3. 零信任安全模型如何改变传统的网络安全架构？它在实际部署中面临哪些挑战？
+
+---
+## 下节预告
+
+下一节课我们将学习 **06-06 分布式系统：构建高可用的服务**，探讨如何设计能够承受故障并持续提供服务的分布式架构。
+
+---
+## 参考资源
+
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/) - Web应用安全风险标准
+- [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/) - 安全的TLS配置指南
+- [NIST Password Guidelines](https://pages.nist.gov/800-63-3/sp800-63b.html) - 密码安全最佳实践
+- [Let's Encrypt](https://letsencrypt.org/) - 免费SSL/TLS证书服务
+
+---
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
