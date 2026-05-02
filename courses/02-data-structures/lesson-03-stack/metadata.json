@@ -1,0 +1,33 @@
+{
+  "id": "02-03",
+  "title": "栈：后进先出的盘子堆",
+  "slug": "lesson-03-stack",
+  "module": "02-data-structures",
+  "module_name": "数据结构",
+  "module_order": 2,
+  "lesson_order": 3,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 20,
+  "prerequisites": ["02-01"],
+  "tags": ["stack", "lifo", "data-structure", "array", "linked-list"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习栈数据结构，理解LIFO原则，掌握数组和链表两种实现方式，以及括号匹配、表达式求值等经典应用",
+  "learning_objectives": [
+    "理解栈的LIFO（后进先出）原则",
+    "掌握push、pop、peek、isEmpty四种基本操作",
+    "能用数组和链表分别实现栈",
+    "会用栈解决括号匹配和表达式求值问题"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}
