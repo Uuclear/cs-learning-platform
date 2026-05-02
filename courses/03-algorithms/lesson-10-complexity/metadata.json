@@ -1,0 +1,34 @@
+{
+  "id": "03-10",
+  "title": "算法复杂度：为什么我的代码这么慢",
+  "slug": "lesson-10-complexity",
+  "module": "03-algorithms",
+  "module_name": "算法",
+  "module_order": 3,
+  "lesson_order": 10,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 25,
+  "prerequisites": ["03-01"],
+  "tags": ["time-complexity", "space-complexity", "big-o", "algorithm-analysis", "performance"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习算法复杂度分析的核心概念：时间复杂度、空间复杂度和大O表示法，通过实际代码对比不同复杂度算法的性能差异。",
+  "learning_objectives": [
+    "理解时间复杂度和空间复杂度的概念",
+    "掌握大O表示法的使用方法",
+    "能够分析常见算法的复杂度",
+    "识别代码中的性能瓶颈",
+    "在实际开发中应用复杂度分析"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 2
+    }
+  }
+}
