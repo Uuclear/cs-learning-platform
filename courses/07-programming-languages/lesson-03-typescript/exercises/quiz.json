@@ -1,0 +1,108 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "question": "TypeScript 的主要优势是什么？",
+      "options": [
+        "A. 运行速度比 JavaScript 快",
+        "B. 在编译时提供类型检查，减少运行时错误",
+        "C. 不需要编译，直接在浏览器中运行",
+        "D. 自动修复所有 JavaScript 错误"
+      ],
+      "correct_answer": "B",
+      "explanation": "TypeScript 的核心优势是在开发阶段（编译时）进行类型检查，帮助开发者发现潜在的类型错误，从而减少运行时错误。"
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "question": "以下哪个是 TypeScript 中定义字符串变量的正确语法？",
+      "options": [
+        "A. let name = string '张三';",
+        "B. let name: string = '张三';",
+        "C. let string name = '张三';",
+        "D. let name string = '张三';"
+      ],
+      "correct_answer": "B",
+      "explanation": "TypeScript 使用冒号后跟类型的方式声明变量类型：let 变量名: 类型 = 值;"
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "question": "接口（Interface）在 TypeScript 中的主要作用是什么？",
+      "options": [
+        "A. 定义类的私有方法",
+        "B. 为对象定义结构和契约",
+        "C. 创建新的数据类型",
+        "D. 替代所有的类定义"
+      ],
+      "correct_answer": "B",
+      "explanation": "接口用于定义对象的结构，规定对象必须包含哪些属性以及它们的类型，起到契约的作用。"
+    },
+    {
+      "id": "q4",
+      "type": "multiple-choice",
+      "question": "泛型（Generics）的主要目的是什么？",
+      "options": [
+        "A. 让代码运行得更快",
+        "B. 创建可以处理多种类型的可重用组件",
+        "C. 自动转换数据类型",
+        "D. 减少代码行数"
+      ],
+      "correct_answer": "B",
+      "explanation": "泛型允许我们编写可以适用于多种类型的函数、接口或类，提高代码的可重用性和类型安全性。"
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "question": "以下哪个符号用于标记 TypeScript 中的可选属性？",
+      "options": [
+        "A. !",
+        "B. ?",
+        "C. *",
+        "D. &"
+      ],
+      "correct_answer": "B",
+      "explanation": "在接口或类型定义中，使用问号 (?) 标记属性为可选，表示该属性可以不存在。"
+    },
+    {
+      "id": "q6",
+      "type": "multiple-choice",
+      "question": "TypeScript 编译后的代码是什么？",
+      "options": [
+        "A. Java 字节码",
+        "B. C++ 代码",
+        "C. JavaScript 代码",
+        "D. WebAssembly"
+      ],
+      "correct_answer": "C",
+      "explanation": "TypeScript 最终会被编译成纯 JavaScript 代码，可以在任何支持 JavaScript 的环境中运行。"
+    },
+    {
+      "id": "q7",
+      "type": "multiple-choice",
+      "question": "联合类型（Union Types）使用什么符号表示？",
+      "options": [
+        "A. &",
+        "B. |",
+        "C. ||",
+        "D. +"
+      ],
+      "correct_answer": "B",
+      "explanation": "联合类型使用竖线符号 (|) 表示，例如 string | number 表示变量可以是字符串或数字类型。"
+    },
+    {
+      "id": "q8",
+      "type": "multiple-choice",
+      "question": "以下哪个是避免使用 any 类型的主要原因？",
+      "options": [
+        "A. any 类型会让代码变慢",
+        "B. any 类型会绕过类型检查，失去 TypeScript 的主要优势",
+        "C. any 类型不能存储数字",
+        "D. any 类型只能在函数中使用"
+      ],
+      "correct_answer": "B",
+      "explanation": "使用 any 类型会完全绕过 TypeScript 的类型检查，这样就失去了使用 TypeScript 的主要价值——类型安全。"
+    }
+  ]
+}

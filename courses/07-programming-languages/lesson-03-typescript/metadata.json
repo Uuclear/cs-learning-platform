@@ -1,0 +1,35 @@
+{
+  "id": "07-03",
+  "title": "TypeScript：给JavaScript加上类型铠甲",
+  "slug": "lesson-03-typescript",
+  "module": "07-programming-languages",
+  "module_name": "编程语言",
+  "module_order": 7,
+  "lesson_order": 3,
+  "difficulty": 2,
+  "difficulty_label": "初级",
+  "duration_minutes": 25,
+  "prerequisites": ["07-01"],
+  "tags": ["typescript", "javascript", "types", "interfaces", "generics", "programming", "web-development"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "从JavaScript的痛点出发，深入浅出地介绍TypeScript的基本类型、接口、泛型等核心概念。通过丰富的代码示例和实际应用场景，帮助开发者理解如何利用TypeScript的类型系统提高代码质量和开发效率，并避免常见的使用误区。",
+  "learning_objectives": [
+    "理解TypeScript与JavaScript的关系和优势",
+    "掌握TypeScript的基本类型系统（string, number, boolean, array, tuple, enum等）",
+    "熟练使用接口定义对象结构和契约",
+    "能够使用泛型创建类型安全的可重用组件",
+    "理解编译时类型检查与运行时行为的区别",
+    "避免TypeScript使用中的常见误区"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 2
+    }
+  }
+}
