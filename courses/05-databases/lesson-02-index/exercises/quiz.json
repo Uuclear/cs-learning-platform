@@ -1,0 +1,108 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "question": "数据库索引的主要作用是什么？",
+      "options": [
+        "A. 增加数据存储容量",
+        "B. 加速数据检索操作",
+        "C. 提高数据安全性",
+        "D. 减少数据库文件大小"
+      ],
+      "correct_answer": "B",
+      "explanation": "索引的主要目的是加速数据检索，通过创建额外的数据结构来快速定位数据，而不是扫描整个表。"
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "question": "B+树索引相比普通二叉搜索树更适合做数据库索引的原因是什么？",
+      "options": [
+        "A. B+树的查询时间复杂度更低",
+        "B. B+树的高度更低，减少磁盘I/O次数",
+        "C. B+树占用的内存更少",
+        "D. B+树更容易实现"
+      ],
+      "correct_answer": "B",
+      "explanation": "B+树是多路平衡树，高度通常只有2-4层，能有效减少磁盘I/O次数，这对于数据库性能至关重要。"
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "question": "以下哪种情况下索引可能无法被有效使用？",
+      "options": [
+        "A. WHERE name = 'John'",
+        "B. WHERE UPPER(name) = 'JOHN'",
+        "C. WHERE id IN (1, 2, 3)",
+        "D. WHERE created_at > '2026-01-01'"
+      ],
+      "correct_answer": "B",
+      "explanation": "在索引列上使用函数（如UPPER）会导致索引失效，因为数据库无法直接使用索引值进行比较。"
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "question": "关于聚簇索引和非聚簇索引，以下说法正确的是？",
+      "options": [
+        "A. 一张表可以有多个聚簇索引",
+        "B. 聚簇索引存储的是指向数据行的指针",
+        "C. 非聚簇索引决定数据的物理存储顺序",
+        "D. InnoDB中主键自动成为聚簇索引"
+      ],
+      "correct_answer": "D",
+      "explanation": "InnoDB引擎中，主键自动成为聚簇索引，数据按主键顺序物理存储。一张表只能有一个聚簇索引。"
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "question": "覆盖索引（Covering Index）的优势是什么？",
+      "options": [
+        "A. 减少索引占用的存储空间",
+        "B. 避免回表操作，直接从索引获取所有需要的数据",
+        "C. 提高索引的创建速度",
+        "D. 支持更多的查询条件组合"
+      ],
+      "correct_answer": "B",
+      "explanation": "覆盖索引包含查询所需的所有列，数据库可以直接从索引中返回结果，无需访问原始数据行（回表）。"
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "question": "对于复合索引 (A, B, C)，以下哪个查询条件可以有效利用该索引？",
+      "options": [
+        "A. WHERE B = 1 AND C = 2",
+        "B. WHERE A = 1 AND C = 3",
+        "C. WHERE B = 2",
+        "D. WHERE C = 3"
+      ],
+      "correct_answer": "B",
+      "explanation": "复合索引遵循最左前缀原则。WHERE A = 1 AND C = 3 可以使用索引的A部分，但无法使用C部分。其他选项完全无法使用索引。"
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "question": "哈希索引最适合用于哪种查询场景？",
+      "options": [
+        "A. 范围查询（BETWEEN, >, <）",
+        "B. 模糊查询（LIKE '%keyword%'）",
+        "C. 等值查询（=）",
+        "D. 排序查询（ORDER BY）"
+      ],
+      "correct_answer": "C",
+      "explanation": "哈希索引通过哈希函数直接定位到特定位置，等值查询时间复杂度为O(1)，但不支持范围查询和排序。"
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "question": "以下关于索引代价的说法，哪项是正确的？",
+      "options": [
+        "A. 索引只影响查询性能，不影响写入性能",
+        "B. 索引会增加存储空间开销和写入开销",
+        "C. 索引越多越好，不会带来任何负面影响",
+        "D. 索引只在大数据量时才有用，小数据量无意义"
+      ],
+      "correct_answer": "B",
+      "explanation": "索引需要额外的存储空间，并且每次INSERT/UPDATE/DELETE操作都需要维护索引，因此会增加写入开销。"
+    }
+  ]
+}

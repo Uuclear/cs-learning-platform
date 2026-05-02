@@ -1,0 +1,11 @@
+{
+  "id": "05-02",
+  "title": "索引：让查询飞起来的秘密",
+  "module": "05-databases",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": ["05-01"],
+  "status": "in-progress",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03"
+}
