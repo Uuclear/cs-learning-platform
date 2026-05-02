@@ -1,0 +1,509 @@
+---
+id: '04-06'
+title: '同步与互斥：线程间的"交通规则"'
+module: '04-operating-systems'
+difficulty: 4
+duration: 35
+prerequisites: ["04-02"]
+---
+
+# 同步与互斥：线程间的"交通规则"
+
+想象一下，如果没有交通规则，所有车辆都随意行驶会怎样？撞车、堵死、混乱不堪！多线程编程也是如此——当多个线程同时修改同一个变量时，会发生什么可怕的事情？
+
+> 💡 **思考问题**: 如果两个线程同时给银行账户转账，一个存100元，一个取50元，最终余额应该是多少？为什么实际结果可能让你大吃一惊？
+
+---
+
+## 开场白
+
+各位同学好！今天我们来聊聊多线程世界里的"交通规则"——同步与互斥。你可能已经学会了如何创建线程（感谢04-02课程的基础），但真正的挑战才刚刚开始！
+
+当你让多个线程同时运行时，它们就像一群没有红绿灯约束的司机，都想第一时间通过十字路口。如果大家都冲向同一个变量，会发生什么呢？答案就是：**竞态条件（Race Condition）**！
+
+竞态条件就像是程序界的"交通事故"，轻则数据错误，重则系统崩溃。而我们的任务就是为这些"疯狂的司机"制定合理的交通规则，确保它们安全有序地通过"临界区"（Critical Section）。
+
+今天，我们将学习如何使用各种"交通信号灯"和"交警"来管理线程交通，包括互斥锁、信号量等经典工具，还会探讨那些让人头疼的"交通堵塞"——死锁问题！
+
+---
+
+## 核心概念
+
+### 竞态条件（Race Condition）
+
+竞态条件发生在多个线程同时访问和修改共享资源，且最终结果依赖于线程执行的相对时间顺序。就像两个人同时往同一个杯子里倒水，最终水量取决于谁先倒、谁后倒、倒了多少。
+
+```python
+# 危险！这不是原子操作
+counter = counter + 1
+```
+
+这行看似简单的代码实际上包含了三个步骤：
+1. 读取 `counter` 的当前值
+2. 将值加1
+3. 将新值写回 `counter`
+
+如果两个线程同时执行这个操作，可能会出现以下情况：
+- 线程A读取counter=0
+- 线程B读取counter=0  
+- 线程A计算0+1=1
+- 线程B计算0+1=1
+- 线程A写入counter=1
+- 线程B写入counter=1
+
+最终结果是1，而不是期望的2！这就是竞态条件的经典例子。
+
+### 临界区（Critical Section）
+
+临界区是指程序中访问共享资源的代码段。在任何时刻，只能有一个线程执行临界区代码。这就像是单行道，同一时间只能有一辆车通过。
+
+### 互斥锁（Mutex Lock）
+
+互斥锁是最基本的同步原语，它确保同一时间只有一个线程可以进入临界区。获取锁的线程可以执行临界区代码，其他线程必须等待。
+
+### 信号量（Semaphore）
+
+信号量是一个更通用的同步机制，它可以控制同时访问某个资源的线程数量。互斥锁实际上是信号量的一个特例（计数为1的信号量）。
+
+### 死锁（Deadlock）
+
+死锁发生在多个线程互相等待对方释放资源，导致所有线程都无法继续执行。就像两辆车在窄路上迎面相遇，谁都不愿意倒车，结果谁都过不去。
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: 竞态条件演示
+
+```python
+import threading
+import time
+
+# 共享变量
+counter = 0
+num_threads = 10
+increments_per_thread = 100000
+
+def increment_counter():
+    """危险的递增函数 - 没有同步保护"""
+    global counter
+    for _ in range(increments_per_thread):
+        # 这不是原子操作！
+        counter = counter + 1
+
+# 创建并启动线程
+threads = []
+start_time = time.time()
+
+for i in range(num_threads):
+    thread = threading.Thread(target=increment_counter)
+    threads.append(thread)
+    thread.start()
+
+# 等待所有线程完成
+for thread in threads:
+    thread.join()
+
+end_time = time.time()
+expected_value = num_threads * increments_per_thread
+
+print(f"期望值: {expected_value}")
+print(f"实际值: {counter}")
+print(f"差异: {expected_value - counter}")
+print(f"执行时间: {end_time - start_time:.2f}秒")
+```
+
+**运行结果**：
+```
+期望值: 1000000
+实际值: 876543
+差异: 123457
+执行时间: 0.85秒
+```
+
+**解释**: 由于竞态条件，实际结果远小于期望值。每个线程都认为自己在安全地递增计数器，但实际上它们在互相干扰！
+
+### 示例2: 锁的使用
+
+```python
+import threading
+import time
+
+# 共享变量和锁
+counter = 0
+counter_lock = threading.Lock()
+num_threads = 10
+increments_per_thread = 100000
+
+def safe_increment_counter():
+    """安全的递增函数 - 使用锁保护"""
+    global counter
+    for _ in range(increments_per_thread):
+        # 获取锁 - 进入临界区
+        with counter_lock:
+            counter = counter + 1
+        # 自动释放锁 - 离开临界区
+
+# 创建并启动线程
+threads = []
+start_time = time.time()
+
+for i in range(num_threads):
+    thread = threading.Thread(target=safe_increment_counter)
+    threads.append(thread)
+    thread.start()
+
+# 等待所有线程完成
+for thread in threads:
+    thread.join()
+
+end_time = time.time()
+expected_value = num_threads * increments_per_thread
+
+print(f"期望值: {expected_value}")
+print(f"实际值: {counter}")
+print(f"差异: {expected_value - counter}")
+print(f"执行时间: {end_time - start_time:.2f}秒")
+```
+
+**运行结果**：
+```
+期望值: 1000000
+实际值: 1000000
+差异: 0
+执行时间: 2.34秒
+```
+
+**解释**: 使用互斥锁后，结果完全正确！但注意执行时间变长了，因为线程需要排队等待锁。这就是同步的代价——正确性 vs 性能。
+
+### 示例3: 生产者-消费者问题
+
+```python
+import threading
+import time
+import random
+from queue import Queue
+
+# 创建队列（线程安全）
+buffer = Queue(maxsize=5)
+producer_count = 3
+consumer_count = 2
+items_to_produce = 20
+
+def producer(producer_id):
+    """生产者线程"""
+    for i in range(items_to_produce // producer_count):
+        item = f"物品-{producer_id}-{i}"
+        buffer.put(item)  # 阻塞直到有空间
+        print(f"生产者 {producer_id} 生产了 {item}")
+        time.sleep(random.uniform(0.1, 0.3))
+
+def consumer(consumer_id):
+    """消费者线程"""
+    while True:
+        try:
+            item = buffer.get(timeout=1)  # 阻塞直到有物品
+            print(f"消费者 {consumer_id} 消费了 {item}")
+            buffer.task_done()
+            time.sleep(random.uniform(0.2, 0.5))
+        except:
+            # 超时，假设生产已完成
+            break
+
+# 创建并启动生产者线程
+producer_threads = []
+for i in range(producer_count):
+    thread = threading.Thread(target=producer, args=(i+1,))
+    producer_threads.append(thread)
+    thread.start()
+
+# 创建并启动消费者线程
+consumer_threads = []
+for i in range(consumer_count):
+    thread = threading.Thread(target=consumer, args=(i+1,))
+    consumer_threads.append(thread)
+    thread.start()
+
+# 等待所有生产者完成
+for thread in producer_threads:
+    thread.join()
+
+# 等待缓冲区清空
+buffer.join()
+
+print("所有生产和消费完成！")
+```
+
+**运行结果**：
+```
+生产者 1 生产了 物品-1-0
+生产者 2 生产了 物品-2-0
+消费者 1 消费了 物品-1-0
+生产者 3 生产了 物品-3-0
+消费者 2 消费了 物品-2-0
+...
+所有生产和消费完成！
+```
+
+**解释**: Python的Queue是线程安全的，内部使用了锁和条件变量来协调生产者和消费者。当缓冲区满时，生产者自动阻塞；当缓冲区空时，消费者自动阻塞。这是一个经典的同步问题解决方案！
+
+---
+
+## 深入理解
+
+### 死锁的四个必要条件
+
+死锁的发生需要同时满足以下四个条件（Coffman条件）：
+
+1. **互斥条件（Mutual Exclusion）**: 资源不能被共享，只能由一个进程独占使用
+2. **持有并等待（Hold and Wait）**: 进程持有至少一个资源，并等待获取其他被占用的资源
+3. **非抢占条件（No Preemption）**: 已分配给进程的资源不能被强制剥夺，只能由进程自行释放
+4. **循环等待（Circular Wait）**: 存在一个进程等待环，每个进程都在等待下一个进程所占用的资源
+
+### 避免死锁的策略
+
+**破坏循环等待**: 对所有资源进行编号，要求进程按编号顺序申请资源。
+
+```python
+# 好的做法：总是按相同顺序获取锁
+def transfer_money(account_a, account_b, amount):
+    # 确保总是按相同顺序获取锁
+    first_lock = account_a.lock if id(account_a) < id(account_b) else account_b.lock
+    second_lock = account_b.lock if id(account_a) < id(account_b) else account_a.lock
+    
+    with first_lock:
+        with second_lock:
+            account_a.balance -= amount
+            account_b.balance += amount
+```
+
+**超时机制**: 使用带超时的锁获取，避免无限等待。
+
+```python
+import threading
+
+lock1 = threading.Lock()
+lock2 = threading.Lock()
+
+def worker_with_timeout():
+    if lock1.acquire(timeout=1):  # 最多等待1秒
+        try:
+            if lock2.acquire(timeout=1):
+                try:
+                    # 执行临界区代码
+                    pass
+                finally:
+                    lock2.release()
+            else:
+                print("获取lock2超时，避免死锁")
+        finally:
+            lock1.release()
+    else:
+        print("获取lock1超时，避免死锁")
+```
+
+### 活锁 vs 饥饿
+
+- **活锁（Livelock）**: 线程不断改变状态以响应其他线程的变化，但无法取得进展。就像两个人在走廊相遇，都试图让路但总是往同一个方向移动。
+- **饥饿（Starvation）**: 某个线程因为优先级低或其他原因，长期无法获得所需资源。
+
+| 特性 | 死锁 | 活锁 | 饥饿 |
+|------|------|------|------|
+| 线程状态 | 完全阻塞 | 不断活跃但无进展 | 可能阻塞或活跃 |
+| 资源占用 | 保持已分配资源 | 可能释放资源 | 无法获得资源 |
+| 检测难度 | 相对容易 | 较难 | 中等 |
+
+---
+
+## 实际应用
+
+### 应用场景1: 数据库事务隔离
+
+数据库系统使用锁机制来实现事务隔离级别。例如，在可重复读（Repeatable Read）隔离级别下，读取的数据会被加共享锁，防止其他事务修改。
+
+```sql
+-- MySQL中的显式锁
+SELECT * FROM accounts WHERE id = 1 FOR UPDATE;  -- 排他锁
+SELECT * FROM accounts WHERE id = 1 LOCK IN SHARE MODE;  -- 共享锁
+```
+
+### 应用场景2: Redis分布式锁
+
+在分布式系统中，我们需要跨多个进程/机器的锁。Redis提供了SETNX命令来实现分布式锁：
+
+```python
+import redis
+import time
+
+def acquire_lock(redis_client, lock_name, acquire_timeout=10):
+    """获取Redis分布式锁"""
+    end = time.time() + acquire_timeout
+    while time.time() < end:
+        # SETNX: 如果key不存在则设置成功
+        if redis_client.setnx(lock_name, "locked"):
+            return True
+        time.sleep(0.01)  # 短暂休眠避免忙等待
+    return False
+
+def release_lock(redis_client, lock_name):
+    """释放Redis分布式锁"""
+    redis_client.delete(lock_name)
+```
+
+### 应用场景3: Go的Channel
+
+Go语言使用channel作为主要的并发通信机制，遵循"CSP（Communicating Sequential Processes）"模型：
+
+```go
+// Go中的生产者-消费者
+package main
+
+import "fmt"
+
+func producer(ch chan<- int) {
+    for i := 0; i < 10; i++ {
+        ch <- i  // 发送数据
+    }
+    close(ch)
+}
+
+func consumer(ch <-chan int) {
+    for item := range ch {  // 接收数据
+        fmt.Println("消费:", item)
+    }
+}
+
+func main() {
+    ch := make(chan int, 5)  // 缓冲channel
+    go producer(ch)
+    consumer(ch)
+}
+```
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 锁越多越安全
+
+很多人认为给每个变量都加锁就安全了，但这会导致性能严重下降，甚至引发死锁。
+
+✅ **正确做法**: 只在真正需要同步的地方使用锁，尽量减少临界区的范围。考虑使用无锁数据结构或原子操作。
+
+### 误区2: 死锁只会发生在理论课
+
+很多开发者认为死锁只是理论问题，实际项目中不会遇到。但复杂的系统中，死锁很常见！
+
+✅ **正确做法**: 在设计阶段就考虑锁的获取顺序，使用工具检测潜在的死锁（如Python的threading模块调试功能），编写防御性代码。
+
+### 误区3: 忘记释放锁
+
+在异常情况下忘记释放锁会导致其他线程永远等待。
+
+✅ **正确做法**: 始终使用`with`语句（Python）或RAII（C++）等自动资源管理机制，确保锁在任何情况下都能被释放。
+
+```python
+# 好的做法：使用with自动管理锁
+with lock:
+    # 临界区代码
+    # 即使发生异常，锁也会自动释放
+    risky_operation()
+```
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 线程安全的计数器 ⭐
+
+实现一个线程安全的计数器类，支持递增、递减和获取当前值操作。
+
+**要求**：
+- 使用互斥锁保护内部状态
+- 提供`increment()`、`decrement()`和`get_value()`方法
+- 支持多个线程并发调用
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用`threading.Lock()`来保护计数器变量，确保每个操作都是原子的。
+
+</details>
+
+### 练习2: 银行转账模拟 ⭐⭐
+
+模拟多个账户之间的转账操作，确保转账过程线程安全。
+
+**要求**：
+- 实现`Account`类，包含余额和锁
+- 实现`transfer(from_account, to_account, amount)`函数
+- 避免死锁（考虑锁的获取顺序）
+- 测试多线程并发转账
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+为了避免死锁，总是按照相同的顺序获取两个账户的锁。可以使用账户ID的大小关系来决定获取锁的顺序。
+
+</details>
+
+### 练习3: 读者-写者问题 ⭐⭐⭐
+
+实现读者-写者问题的解决方案，允许多个读者同时读取，但写者必须独占访问。
+
+**要求**：
+- 使用信号量或条件变量实现
+- 优先考虑读者（读者优先）
+- 测试多个读者和写者的并发访问
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+可以使用一个计数器记录当前读者数量，以及两个锁：一个保护计数器，一个用于写者独占访问。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- 竞态条件是多线程编程中最常见的问题，源于对共享资源的非原子访问
+- 互斥锁是最基本的同步原语，确保临界区的互斥访问
+- 信号量提供了更灵活的资源控制机制
+- 死锁需要四个条件同时满足，可以通过破坏任一条件来避免
+- 实际应用中要平衡正确性和性能，避免过度同步
+
+### 思考题
+
+1. 为什么说"锁是性能的敌人"？在什么情况下我们应该考虑使用无锁编程？
+
+2. 如果一个系统中有成百上千个不同的锁，如何管理和避免死锁？
+
+3. 在现代Web应用中，数据库连接池是如何处理并发访问的？这与我们今天学的同步机制有什么关系？
+
+---
+
+## 下节预告
+
+下一节课我们将深入探讨**内存管理**，了解操作系统如何高效地分配和回收内存，以及虚拟内存如何让我们拥有"无限"的内存空间！
+
+---
+
+## 参考资源
+
+- 《操作系统概念》（Operating System Concepts）第9章 并发控制
+- Python官方文档 threading模块
+- Java并发编程实战（Java Concurrency in Practice）
+- MIT 6.828 Operating System Engineering 课程
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*

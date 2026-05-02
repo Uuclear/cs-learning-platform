@@ -1,0 +1,19 @@
+{
+  "id": "04-06",
+  "title": "同步与互斥：线程间的\"交通规则\"",
+  "module": "04-operating-systems",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": ["04-02"],
+  "tags": ["operating-systems", "concurrency", "threading", "synchronization", "mutex"],
+  "learningObjectives": [
+    "理解竞态条件的概念和危害",
+    "掌握互斥锁的使用方法",
+    "了解信号量的工作原理",
+    "识别和避免死锁",
+    "应用同步机制解决实际问题"
+  ],
+  "version": "1.0.0",
+  "createdAt": "2026-05-03",
+  "updatedAt": "2026-05-03"
+}
