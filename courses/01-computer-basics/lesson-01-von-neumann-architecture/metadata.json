@@ -1,0 +1,32 @@
+{
+  "id": "01-01",
+  "title": "冯诺依曼架构：计算机的"五脏六腑"",
+  "slug": "lesson-01-von-neumann-architecture",
+  "module": "01-computer-basics",
+  "module_name": "计算机基础",
+  "module_order": 1,
+  "lesson_order": 1,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 15,
+  "prerequisites": [],
+  "tags": ["computer-architecture", "von-neumann", "cpu", "memory", "alu", "controller"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "了解计算机的基本组成和工作原理，掌握冯诺依曼架构的五大组成部分",
+  "learning_objectives": [
+    "理解冯诺依曼架构的五大组成部分",
+    "了解计算机如何执行指令",
+    "掌握计算机工作的基本流程"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}

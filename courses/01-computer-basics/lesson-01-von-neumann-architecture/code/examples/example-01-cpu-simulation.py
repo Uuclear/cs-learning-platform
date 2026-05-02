@@ -10,13 +10,13 @@ class SimpleCPU:
         self.accumulator = 0 # 累加器：存储运算结果
         self.running = True  # CPU运行状态
 
-        # 指令集定义
+        # 指令集定义（操作码在高4位）
         self.instructions = {
-            'LOAD': 0x01,   # 从内存加载数据到累加器
-            'ADD': 0x02,    # 加法
-            'SUB': 0x03,    # 减法
-            'STORE': 0x04,  # 存储累加器到内存
-            'HALT': 0xFF,   # 停止运行
+            'LOAD': 0x01,   # 从内存加载数据到累加器 (0001 xxxx)
+            'ADD': 0x02,    # 加法 (0010 xxxx)
+            'SUB': 0x03,    # 减法 (0011 xxxx)
+            'STORE': 0x04,  # 存储累加器到内存 (0100 xxxx)
+            'HALT': 0x0F,   # 停止运行 (1111 xxxx)
         }
 
     def fetch(self, memory):
@@ -100,14 +100,16 @@ class SimpleCPU:
 memory = [0] * 16  # 16个存储单元
 
 # 编写程序（数据和指令都存储在同一块内存中）
-memory[0] = 0x15   # LOAD 5: 从地址5加载数据
-memory[1] = 0x23   # ADD 3: 加上地址3的数据
-memory[2] = 0x34   # SUB 4: 减去地址4的数据
-memory[3] = 0x0A   # 数据: 10 (注意：程序和数据混合存储！)
-memory[4] = 0x02   # 数据: 2
+# 指令格式：高4位是操作码，低4位是操作数
+memory[0] = 0x15   # LOAD 5: 从地址5加载数据 (0001 0101)
+memory[1] = 0x27   # ADD 7: 加上地址7的数据 (0010 0111)
+memory[2] = 0x38   # SUB 8: 减去地址8的数据 (0011 1000)
+memory[3] = 0x46   # STORE 6: 结果存入地址6 (0100 0110)
+memory[4] = 0xF0   # HALT: 停止 (1111 0000)
 memory[5] = 0x05   # 数据: 5
-memory[6] = 0x46   # STORE 6: 结果存入地址6
-memory[7] = 0xFF0  # HALT: 停止
+memory[6] = 0x00   # 结果存储位置
+memory[7] = 0x0A   # 数据: 10
+memory[8] = 0x02   # 数据: 2
 
 # 初始化CPU并运行
 cpu = SimpleCPU()
@@ -115,3 +117,4 @@ cpu.run(memory)
 
 print(f"\n内存[6]中的结果: {memory[6]}")
 print(f"预期结果: 5 + 10 - 2 = 13")
+print(f"验证: {'通过！' if memory[6] == 13 else '失败！'}")

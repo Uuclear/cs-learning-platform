@@ -10,13 +10,13 @@ def simulate_cpu():
     memory = [0] * 16
     memory[0] = 0x15   # LOAD 5: 从地址5加载数据
     memory[1] = 0x22   # ADD 2: 加上地址2的数据
-    memory[2] = 0x03   # 数据: 3
-    memory[3] = 0x00   # 数据: 0
+    memory[2] = 0x46   # STORE 6: 存储到地址6
+    memory[3] = 0xFF   # HALT: 停止
     memory[4] = 0x00   # 数据: 0
     memory[5] = 0x0A   # 数据: 10
     memory[6] = 0x00   # （结果将存储在这里）
-    memory[7] = 0x46   # STORE 6: 存储到地址6
-    memory[8] = 0xFF   # HALT: 停止
+    memory[7] = 0x03   # 数据: 3
+    memory[8] = 0x00   # 数据: 0
 
     # CPU状态
     pc = 0              # 程序计数器

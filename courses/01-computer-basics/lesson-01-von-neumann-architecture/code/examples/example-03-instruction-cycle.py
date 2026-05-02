@@ -50,7 +50,7 @@ class VisualCPU:
             0x03: ("SUB", self.op_sub),
             0x04: ("MUL", self.op_mul),
             0x05: ("STORE", self.op_store),
-            0x0F: ("HALT", self.op_halt),
+            0x0F: ("HALT", self.op_halt),  # 0xF = 15
         }
 
         if opcode in operations:
@@ -129,17 +129,18 @@ memory = [0] * 32
 
 # 编写程序：计算 (2 + 3) * 4
 # 地址0-9: 程序代码区
-memory[0] = 0x12   # LOAD 2: 加载地址2的值
-memory[1] = 0x23   # ADD 3: 加上地址3的值
-memory[2] = 0x04   # 数据: 2
-memory[3] = 0x03   # 数据: 3
-memory[4] = 0x15   # STORE 5: 存储中间结果到地址5
-memory[5] = 0x00   # （将被写入）
-memory[6] = 0x14   # LOAD 4: 加载地址4的值（乘数）
-memory[7] = 0x35   # MUL 5: 乘以地址5的值（中间结果）
-memory[8] = 0x04   # 数据: 4
-memory[9] = 0x16   # STORE 6: 存储最终结果
-memory[10] = 0xFF  # HALT: 停止
+# 数据放在程序之后
+memory[0] = 0x1A   # LOAD 10: 加载地址10的值 (0001 1010)
+memory[1] = 0x2B   # ADD 11: 加上地址11的值 (0010 1011)
+memory[2] = 0x45   # STORE 5: 存储中间结果到地址5 (0100 0101)
+memory[3] = 0x1C   # LOAD 12: 加载地址12的值（乘数）(0001 1100)
+memory[4] = 0x45   # MUL 5: 乘以地址5的值（中间结果）(0100 0101)
+memory[5] = 0x46   # STORE 6: 存储最终结果 (0100 0110)
+memory[6] = 0xF0   # HALT: 停止 (1111 0000)
+# 数据区
+memory[10] = 0x02   # 数据: 2
+memory[11] = 0x03   # 数据: 3
+memory[12] = 0x04   # 数据: 4
 
 # 运行（无延迟，直接输出）
 cpu.run(memory, delay=0)
