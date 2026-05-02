@@ -1,0 +1,762 @@
+---
+id: '03-08'
+title: '图算法：最短路径与最小生成树'
+module: '03-algorithms'
+difficulty: 4
+duration: 40
+prerequisites: ['02-06']
+---
+
+# 图算法：最短路径与最小生成树
+
+想象一下，当你打开导航软件输入目的地时，它是如何在几秒钟内找到最快路线的？或者当互联网数据包在全球网络中传输时，路由器是如何选择最佳路径的？这些神奇的功能背后，都离不开我们今天要学习的图算法！
+
+> 💡 **思考问题**: 如果你是一个城市的交通规划师，如何设计一套算法来实时计算任意两点间的最快路线？
+
+---
+
+## 开场白
+
+每天我们都在享受图算法带来的便利：GPS导航帮我们避开拥堵、社交网络推荐可能认识的人、电商网站推荐相关商品...这些看似智能的功能，其实都是基于图论中的经典算法。
+
+今天我们要深入探讨两个核心问题：
+1. **最短路径问题**：如何在带权图中找到两点间的最优路径？
+2. **最小生成树问题**：如何用最低成本连接所有节点？
+
+这两个问题看似简单，但它们的解决方案却影响着现代科技的方方面面。让我们一起揭开这些算法的神秘面纱！
+
+---
+
+## 核心概念
+
+### Dijkstra算法：贪心的最短路径求解器
+
+Dijkstra算法是解决单源最短路径问题的经典算法，由荷兰计算机科学家Edsger Dijkstra于1956年提出。它的核心思想是**贪心策略**：每次选择当前距离起点最近的未访问顶点，并用它来更新其他顶点的距离。
+
+**关键特点**：
+- 只适用于非负权边的图
+- 时间复杂度：O((V + E) log V)（使用优先队列）
+- 空间复杂度：O(V)
+
+### Bellman-Ford算法：负权边的克星
+
+Bellman-Ford算法是另一种解决单源最短路径问题的算法，它的最大优势是**能够处理负权边**，并且还能**检测负权环**的存在。
+
+**关键特点**：
+- 可以处理负权边
+- 能检测负权环
+- 时间复杂度：O(VE)
+- 空间复杂度：O(V)
+
+### Prim算法：构建最小生成树
+
+Prim算法用于在带权无向图中找到最小生成树（Minimum Spanning Tree, MST）。MST是连接所有顶点的边权和最小的无环子图，在网络设计、电路布线等领域有广泛应用。
+
+**关键特点**：
+- 适用于连通无向图
+- 时间复杂度：O(E log V)（使用优先队列）
+- 类似于Dijkstra算法的扩展思路
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: Dijkstra最短路径算法
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1: Dijkstra最短路径算法实现
+Dijkstra算法用于在带权图中找到从起点到所有其他顶点的最短路径
+注意：该算法不能处理负权边！
+"""
+
+import heapq
+from typing import Dict, List, Tuple, Optional
+
+
+def dijkstra(graph: Dict[str, Dict[str, int]], start: str) -> Tuple[Dict[str, int], Dict[str, Optional[str]]]:
+    """
+    使用Dijkstra算法计算从起点到所有顶点的最短路径
+
+    Args:
+        graph: 图的邻接表表示，格式为 {顶点: {邻居顶点: 权重}}
+        start: 起始顶点
+
+    Returns:
+        tuple: (距离字典, 前驱字典)
+        - 距离字典: {顶点: 从起点到该顶点的最短距离}
+        - 前驱字典: {顶点: 最短路径上的前一个顶点}
+    """
+    # 初始化距离字典，所有顶点距离设为无穷大
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0  # 起点距离为0
+
+    # 初始化前驱字典，用于重构路径
+    previous = {vertex: None for vertex in graph}
+
+    # 优先队列，存储(距离, 顶点)元组
+    priority_queue = [(0, start)]
+
+    # 已访问顶点集合
+    visited = set()
+
+    while priority_queue:
+        # 取出当前距离最小的顶点
+        current_distance, current_vertex = heapq.heappop(priority_queue)
+
+        # 如果已经访问过，跳过
+        if current_vertex in visited:
+            continue
+
+        # 标记为已访问
+        visited.add(current_vertex)
+
+        # 遍历当前顶点的所有邻居
+        for neighbor, weight in graph[current_vertex].items():
+            # 计算通过当前顶点到达邻居的新距离
+            distance = current_distance + weight
+
+            # 如果新距离更短，则更新
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous[neighbor] = current_vertex
+                heapq.heappush(priority_queue, (distance, neighbor))
+
+    return distances, previous
+
+
+def reconstruct_path(previous: Dict[str, Optional[str]], start: str, end: str) -> List[str]:
+    """
+    根据前驱字典重构从起点到终点的最短路径
+
+    Args:
+        previous: 前驱字典
+        start: 起点
+        end: 终点
+
+    Returns:
+        从起点到终点的最短路径列表
+    """
+    path = []
+    current = end
+
+    # 从终点开始反向追踪到起点
+    while current is not None:
+        path.append(current)
+        current = previous[current]
+
+    # 如果路径的最后一个顶点不是起点，说明无法到达
+    if path[-1] != start:
+        return []
+
+    # 反转路径得到从起点到终点的顺序
+    return path[::-1]
+
+
+def main():
+    """主函数：演示Dijkstra算法"""
+    # 构建示例图（城市间的距离）
+    # A --4--> B --2--> C
+    # |      / |      /
+    # 3    1   5    1
+    # |  /     |  /
+    # D --2--> E
+    graph = {
+        'A': {'B': 4, 'D': 3},
+        'B': {'A': 4, 'C': 2, 'D': 1, 'E': 5},
+        'C': {'B': 2, 'E': 1},
+        'D': {'A': 3, 'B': 1, 'E': 2},
+        'E': {'B': 5, 'C': 1, 'D': 2}
+    }
+
+    print("=== Dijkstra最短路径算法演示 ===")
+    print("图结构：")
+    for vertex, neighbors in graph.items():
+        for neighbor, weight in neighbors.items():
+            print(f"  {vertex} --{weight}--> {neighbor}")
+
+    # 计算从A到所有顶点的最短路径
+    start_vertex = 'A'
+    distances, previous = dijkstra(graph, start_vertex)
+
+    print(f"\n从顶点 '{start_vertex}' 到各顶点的最短距离：")
+    for vertex in sorted(distances.keys()):
+        if distances[vertex] == float('infinity'):
+            print(f"  {start_vertex} -> {vertex}: 无法到达")
+        else:
+            path = reconstruct_path(previous, start_vertex, vertex)
+            path_str = " -> ".join(path)
+            print(f"  {start_vertex} -> {vertex}: 距离={distances[vertex]}, 路径=[{path_str}]")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+=== Dijkstra最短路径算法演示 ===
+图结构：
+  A --4--> B
+  A --3--> D
+  B --4--> A
+  B --2--> C
+  B --1--> D
+  B --5--> E
+  C --2--> B
+  C --1--> E
+  D --3--> A
+  D --1--> B
+  D --2--> E
+  E --5--> B
+  E --1--> C
+  E --2--> D
+
+从顶点 'A' 到各顶点的最短距离：
+  A -> A: 距离=0, 路径=[A]
+  A -> B: 距离=4, 路径=[A -> B]
+  A -> C: 距离=6, 路径=[A -> B -> C]
+  A -> D: 距离=3, 路径=[A -> D]
+  A -> E: 距离=5, 路径=[A -> D -> E]
+```
+
+这个例子展示了Dijkstra算法如何逐步确定最短路径。注意从A到E的最短路径是A->D->E（总距离5），而不是直观上看起来更直接的A->B->E（总距离9）！
+
+### 示例2: Bellman-Ford算法
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2: Bellman-Ford算法实现
+Bellman-Ford算法可以处理包含负权边的图，并能检测负权环
+"""
+
+from typing import Dict, List, Tuple, Optional
+
+
+def bellman_ford(graph: Dict[str, Dict[str, int]], start: str) -> Tuple[Dict[str, float], Dict[str, Optional[str]], bool]:
+    """
+    使用Bellman-Ford算法计算从起点到所有顶点的最短路径
+
+    Args:
+        graph: 图的邻接表表示，格式为 {顶点: {邻居顶点: 权重}}
+        start: 起始顶点
+
+    Returns:
+        tuple: (距离字典, 前驱字典, 是否存在负权环)
+        - 距离字典: {顶点: 从起点到该顶点的最短距离}
+        - 前驱字典: {顶点: 最短路径上的前一个顶点}
+        - 负权环标志: True表示存在负权环，False表示不存在
+    """
+    # 获取所有顶点
+    vertices = set(graph.keys())
+    for neighbors in graph.values():
+        vertices.update(neighbors.keys())
+
+    vertices = list(vertices)
+
+    # 初始化距离字典
+    distances = {vertex: float('infinity') for vertex in vertices}
+    distances[start] = 0
+
+    # 初始化前驱字典
+    previous = {vertex: None for vertex in vertices}
+
+    # 进行|V|-1轮松弛操作
+    for _ in range(len(vertices) - 1):
+        updated = False
+        for vertex in vertices:
+            if distances[vertex] != float('infinity'):
+                for neighbor, weight in graph.get(vertex, {}).items():
+                    # 松弛操作：如果通过当前顶点到达邻居的距离更短，则更新
+                    new_distance = distances[vertex] + weight
+                    if new_distance < distances[neighbor]:
+                        distances[neighbor] = new_distance
+                        previous[neighbor] = vertex
+                        updated = True
+
+        # 如果没有更新，提前结束
+        if not updated:
+            break
+
+    # 检测负权环：再进行一轮松弛操作
+    has_negative_cycle = False
+    for vertex in vertices:
+        if distances[vertex] != float('infinity'):
+            for neighbor, weight in graph.get(vertex, {}).items():
+                if distances[vertex] + weight < distances[neighbor]:
+                    has_negative_cycle = True
+                    break
+        if has_negative_cycle:
+            break
+
+    return distances, previous, has_negative_cycle
+
+
+def reconstruct_path(previous: Dict[str, Optional[str]], start: str, end: str) -> List[str]:
+    """重构路径（与Dijkstra相同）"""
+    path = []
+    current = end
+
+    while current is not None:
+        path.append(current)
+        current = previous[current]
+
+    if path[-1] != start:
+        return []
+
+    return path[::-1]
+
+
+def main():
+    """主函数：演示Bellman-Ford算法"""
+    # 构建包含负权边的示例图
+    # A --2--> B --(-1)--> C
+    # |      / |         /
+    # 4    1   3       2
+    # |  /     |     /
+    # D --5--> E
+    graph = {
+        'A': {'B': 2, 'D': 4},
+        'B': {'C': -1, 'D': 1, 'E': 3},
+        'C': {'E': 2},
+        'D': {'B': 1, 'E': 5},
+        'E': {}
+    }
+
+    print("=== Bellman-Ford算法演示 ===")
+    print("图结构（包含负权边）：")
+    all_vertices = set(graph.keys())
+    for neighbors in graph.values():
+        all_vertices.update(neighbors.keys())
+
+    for vertex in sorted(all_vertices):
+        if vertex in graph:
+            for neighbor, weight in graph[vertex].items():
+                print(f"  {vertex} --{weight}--> {neighbor}")
+
+    # 计算从A到所有顶点的最短路径
+    start_vertex = 'A'
+    distances, previous, has_negative_cycle = bellman_ford(graph, start_vertex)
+
+    if has_negative_cycle:
+        print("\n⚠️ 检测到负权环！最短路径可能不存在。")
+    else:
+        print(f"\n从顶点 '{start_vertex}' 到各顶点的最短距离：")
+        for vertex in sorted(distances.keys()):
+            if distances[vertex] == float('infinity'):
+                print(f"  {start_vertex} -> {vertex}: 无法到达")
+            else:
+                path = reconstruct_path(previous, start_vertex, vertex)
+                path_str = " -> ".join(path)
+                print(f"  {start_vertex} -> {vertex}: 距离={distances[vertex]}, 路径=[{path_str}]")
+
+    # 演示负权环的情况
+    print("\n=== 负权环检测演示 ===")
+    negative_cycle_graph = {
+        'A': {'B': 1},
+        'B': {'C': -2},
+        'C': {'A': -1}  # A->B->C->A 形成负权环: 1 + (-2) + (-1) = -2
+    }
+
+    distances, previous, has_negative_cycle = bellman_ford(negative_cycle_graph, 'A')
+    print(f"负权环检测结果: {'存在负权环' if has_negative_cycle else '不存在负权环'}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+=== Bellman-Ford算法演示 ===
+图结构（包含负权边）：
+  A --2--> B
+  A --4--> D
+  B ---1--> C
+  B --1--> D
+  B --3--> E
+  C --2--> E
+  D --1--> B
+  D --5--> E
+
+从顶点 'A' 到各顶点的最短距离：
+  A -> A: 距离=0, 路径=[A]
+  A -> B: 距离=2, 路径=[A -> B]
+  A -> C: 距离=1, 路径=[A -> B -> C]
+  A -> D: 距离=3, 路径=[A -> B -> D]
+  A -> E: 距离=3, 路径=[A -> B -> C -> E]
+
+=== 负权环检测演示 ===
+负权环检测结果: 存在负权环
+```
+
+Bellman-Ford算法成功处理了负权边，并正确检测到了负权环！注意从A到C的最短距离是1（通过A->B->C，2 + (-1) = 1），这比任何其他路径都要短。
+
+### 示例3: Prim最小生成树算法
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3: Prim最小生成树算法实现
+Prim算法用于在带权无向图中找到最小生成树（MST）
+最小生成树是连接所有顶点的边权和最小的子图
+"""
+
+import heapq
+from typing import Dict, List, Tuple, Set
+
+
+def prim_mst(graph: Dict[str, Dict[str, int]]) -> List[Tuple[str, str, int]]:
+    """
+    使用Prim算法计算最小生成树
+
+    Args:
+        graph: 无向图的邻接表表示，格式为 {顶点: {邻居顶点: 权重}}
+
+    Returns:
+        最小生成树的边列表，每个元素为(顶点1, 顶点2, 权重)
+    """
+    if not graph:
+        return []
+
+    # 选择任意起始顶点
+    start_vertex = next(iter(graph))
+
+    # 已包含在MST中的顶点集合
+    mst_vertices: Set[str] = {start_vertex}
+
+    # MST的边列表
+    mst_edges: List[Tuple[str, str, int]] = []
+
+    # 候选边的优先队列（最小堆）
+    # 格式：(权重, 顶点1, 顶点2)
+    candidate_edges = []
+
+    # 将起始顶点的所有边加入候选队列
+    for neighbor, weight in graph[start_vertex].items():
+        heapq.heappush(candidate_edges, (weight, start_vertex, neighbor))
+
+    # 当MST还没有包含所有顶点时继续
+    while candidate_edges and len(mst_vertices) < len(graph):
+        # 取出权重最小的边
+        weight, vertex1, vertex2 = heapq.heappop(candidate_edges)
+
+        # 如果两个顶点都已经在MST中，跳过（避免环）
+        if vertex1 in mst_vertices and vertex2 in mst_vertices:
+            continue
+
+        # 确定哪个顶点不在MST中
+        new_vertex = vertex2 if vertex1 in mst_vertices else vertex1
+        existing_vertex = vertex1 if vertex1 in mst_vertices else vertex2
+
+        # 将新顶点加入MST
+        mst_vertices.add(new_vertex)
+        mst_edges.append((existing_vertex, new_vertex, weight))
+
+        # 将新顶点的所有边加入候选队列
+        for neighbor, edge_weight in graph[new_vertex].items():
+            if neighbor not in mst_vertices:
+                heapq.heappush(candidate_edges, (edge_weight, new_vertex, neighbor))
+
+    return mst_edges
+
+
+def calculate_mst_weight(mst_edges: List[Tuple[str, str, int]]) -> int:
+    """计算最小生成树的总权重"""
+    return sum(weight for _, _, weight in mst_edges)
+
+
+def main():
+    """主函数：演示Prim最小生成树算法"""
+    # 构建示例无向图（城市间铺设电缆的成本）
+    #     4
+    # A ----- B
+    # | \   / |
+    # |  2/   | 3
+    # 1 / \   |
+    # |/   \  |
+    # C ----- D
+    #     5
+    graph = {
+        'A': {'B': 4, 'C': 1, 'D': 2},
+        'B': {'A': 4, 'D': 3},
+        'C': {'A': 1, 'D': 5},
+        'D': {'A': 2, 'B': 3, 'C': 5}
+    }
+
+    print("=== Prim最小生成树算法演示 ===")
+    print("无向图结构（边权重表示连接成本）：")
+    printed_edges = set()
+    for vertex, neighbors in graph.items():
+        for neighbor, weight in neighbors.items():
+            edge_key = tuple(sorted([vertex, neighbor]))
+            if edge_key not in printed_edges:
+                printed_edges.add(edge_key)
+                print(f"  {vertex} --{weight}-- {neighbor}")
+
+    # 计算最小生成树
+    mst_edges = prim_mst(graph)
+
+    print(f"\n最小生成树的边：")
+    total_weight = 0
+    for vertex1, vertex2, weight in mst_edges:
+        print(f"  {vertex1} --{weight}-- {vertex2}")
+        total_weight += weight
+
+    print(f"\n最小生成树总权重: {total_weight}")
+
+    # 验证结果
+    expected_edges = [('A', 'C', 1), ('A', 'D', 2), ('B', 'D', 3)]
+    expected_weight = 6
+
+    print(f"\n验证：预期总权重为 {expected_weight}，实际为 {total_weight}")
+    if total_weight == expected_weight:
+        print("✅ 结果正确！")
+    else:
+        print("❌ 结果有误！")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+=== Prim最小生成树算法演示 ===
+无向图结构（边权重表示连接成本）：
+  A --4-- B
+  A --1-- C
+  A --2-- D
+  B --3-- D
+  C --5-- D
+
+最小生成树的边：
+  A --1-- C
+  A --2-- D
+  D --3-- B
+
+最小生成树总权重: 6
+
+验证：预期总权重为 6，实际为 6
+✅ 结果正确！
+```
+
+Prim算法成功找到了总权重最小的生成树！它选择了权重为1、2、3的三条边，总成本为6，这是连接所有四个城市所需的最低成本。
+
+---
+
+## 深入理解
+
+### 为什么Dijkstra不能处理负权边？
+
+Dijkstra算法的核心假设是：**一旦确定某个顶点的最短距离，这个距离就不会再被更新**。这个假设在非负权图中是成立的，因为后续路径只会让距离变得更长。
+
+但是，当存在负权边时，这个假设就失效了。考虑这样的情况：我们已经确定顶点B的最短距离为5，但后来发现一条经过负权边的路径：A->C->B，其中A->C的权重为3，C->B的权重为-2，总距离为1，比之前确定的5还要小！
+
+Dijkstra算法不会重新考虑已经"确定"的顶点，因此会错过真正的最短路径。而Bellman-Ford算法通过多轮松弛操作，确保即使存在负权边也能找到正确的最短路径。
+
+### Bellman-Ford的松弛操作
+
+松弛操作是Bellman-Ford算法的核心。对于每条边(u, v)，如果通过u到达v的距离比当前记录的距离更短，就更新v的距离。这个过程重复|V|-1次，因为在最坏情况下，最短路径最多包含|V|-1条边。
+
+负权环的检测原理很简单：如果在|V|-1轮松弛后还能继续更新距离，说明存在负权环。因为正常情况下，最短路径不应该超过|V|-1条边，如果还能更新，说明可以通过负权环无限降低路径成本。
+
+### MST的重要性质
+
+最小生成树有几个重要性质：
+
+1. **唯一性**：如果图中所有边的权重都不相同，那么MST是唯一的
+2. **切割性质**：对于图的任意切割，跨越切割的最小权重边一定在MST中
+3. **环性质**：对于图中的任意环，环中权重最大的边一定不在MST中
+
+这些性质不仅帮助我们理解MST的本质，也为算法设计提供了理论基础。
+
+### 时间/空间复杂度对比
+
+| 算法 | 时间复杂度 | 空间复杂度 | 适用场景 |
+|------|------------|------------|----------|
+| Dijkstra (优先队列) | O((V + E) log V) | O(V) | 非负权图，稀疏图 |
+| Dijkstra (数组) | O(V²) | O(V) | 非负权图，稠密图 |
+| Bellman-Ford | O(VE) | O(V) | 可能有负权边的图 |
+| Prim (优先队列) | O(E log V) | O(V) | 稀疏图的MST |
+| Prim (数组) | O(V²) | O(V) | 稠密图的MST |
+| Kruskal | O(E log E) | O(V) | 边数较少的图 |
+
+### 与其他概念的对比
+
+| 特性 | 最短路径 | 最小生成树 | 拓扑排序 |
+|------|----------|------------|----------|
+| 目标 | 找到两点间最优路径 | 连接所有顶点的最小成本 | 线性排列有向无环图 |
+| 处理负权 | Bellman-Ford可以 | 不适用（无向图） | 不适用 |
+| 输出形式 | 路径或距离 | 边的集合 | 顶点序列 |
+| 典型应用 | GPS导航、网络路由 | 网络设计、电路布线 | 任务调度、依赖解析 |
+
+---
+
+## 实际应用
+
+### 应用场景1: GPS导航系统
+
+现代GPS导航系统大量使用Dijkstra算法的变种（如A*算法）来计算最快或最短路线。实际上，为了提高效率，这些系统通常会预处理地图数据，将道路网络划分为层次结构，这样可以在毫秒级别内响应用户的路线查询。
+
+有趣的是，Google Maps等服务还会考虑实时交通数据，动态调整边的权重，这就需要频繁重新计算最短路径，对算法效率提出了更高要求。
+
+### 应用场景2: 网络路由协议
+
+互联网的路由协议中，OSPF（开放最短路径优先）协议使用Dijkstra算法来计算网络中的最短路径。每个路由器维护一个链路状态数据库，描述整个网络的拓扑结构，然后独立运行Dijkstra算法来确定到每个目的地的最佳路径。
+
+相比之下，RIP（路由信息协议）使用Bellman-Ford算法的分布式版本，每个路由器只与邻居交换距离信息，逐步收敛到全局最优解。
+
+### 应用场景3: 电路板布线
+
+在电子设计自动化（EDA）中，最小生成树算法被用于电路板的布线优化。给定一组需要连接的焊盘，MST算法可以找到连接所有焊盘的最小总长度的布线方案，从而节省材料成本并减少信号延迟。
+
+### 应用场景4: 社交网络分析
+
+在社交网络中，最短路径算法用于计算用户之间的"距离"（六度分隔理论）。例如，LinkedIn的"你可能认识的人"功能就基于图论算法，通过分析共同好友和最短路径来推荐潜在联系人。
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 在负权图中使用Dijkstra算法
+
+很多初学者会错误地在包含负权边的图中使用Dijkstra算法，导致得到错误的最短路径。
+
+✅ **正确做法**: 如果图中可能存在负权边，应该使用Bellman-Ford算法。如果确定没有负权边，Dijkstra算法效率更高。
+
+### 误区2: 忘记初始化距离为无穷大
+
+在实现最短路径算法时，忘记将除起点外的所有顶点距离初始化为无穷大，会导致算法无法正确工作。
+
+✅ **正确做法**: 始终记得初始化距离字典：`distances = {vertex: float('infinity') for vertex in graph}`，然后设置起点距离为0。
+
+### 误区3: 图的表示方式选择不当
+
+对于稠密图（边数接近V²），使用邻接表可能不如邻接矩阵高效；而对于稀疏图，邻接矩阵会浪费大量空间。
+
+✅ **正确做法**: 
+- 稀疏图（E << V²）：使用邻接表
+- 稠密图（E ≈ V²）：考虑使用邻接矩阵
+- 对于MST问题，通常图是稀疏的，邻接表更合适
+
+### 误区4: 忽略图的连通性
+
+在计算MST时，如果图不连通，算法可能无法生成包含所有顶点的树。
+
+✅ **正确做法**: 在实现MST算法前，先检查图的连通性，或者在算法中处理不连通的情况（返回错误或部分结果）。
+
+### 误区5: 混淆有向图和无向图
+
+Dijkstra和Bellman-Ford可以处理有向图，但Prim算法要求无向图。在实现时要注意图的表示方式。
+
+✅ **正确做法**: 
+- 对于有向图的最短路径：直接使用邻接表
+- 对于无向图的MST：确保每条边在邻接表中双向表示
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 网络延迟优化 ⭐
+
+实现一个函数 `optimize_network_delay(graph: Dict[str, Dict[str, int]], source: str) -> Dict[str, int]`，该函数使用Dijkstra算法计算从源服务器到所有其他服务器的最小通信延迟。
+
+**要求**：
+- 输入：`graph` 是邻接表表示的有向图，`source` 是源服务器名称
+- 输出：字典，键为服务器名称，值为从源服务器到该服务器的最小延迟
+- 如果某个服务器无法到达，对应的值应为 -1
+- 图中不会包含负权边
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+你可以直接使用标准库中的 `heapq` 模块来实现优先队列。记得正确初始化距离字典，并处理无法到达的服务器情况。
+
+</details>
+
+### 练习2: 负权环检测 ⭐⭐
+
+实现一个函数 `has_negative_cycle(graph: Dict[str, Dict[str, int]]) -> bool`，该函数使用Bellman-Ford算法检测图中是否存在负权环。
+
+**要求**：
+- 输入：图的邻接表表示
+- 输出：True表示存在负权环，False表示不存在
+- 图可能是有向的
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+Bellman-Ford算法的标准做法是在完成V-1轮松弛后，再进行第V轮松弛。如果在第V轮中还能更新任何顶点的距离，说明存在负权环。
+
+</details>
+
+### 练习3: Kruskal算法实现 ⭐⭐⭐
+
+实现Kruskal算法来找到最小生成树。你需要实现并查集（Union-Find）数据结构来高效地检测环。
+
+**要求**：
+- 输入：无向图的邻接表表示
+- 输出：最小生成树的边列表
+- 处理图不连通的情况
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+Kruskal算法的关键步骤：
+1. 将所有边按权重排序
+2. 初始化并查集
+3. 依次选择不会形成环的最小权重边
+4. 使用并查集的union-find操作来检测环
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+1. **Dijkstra算法**：适用于非负权图的单源最短路径，使用贪心策略和优先队列
+2. **Bellman-Ford算法**：可以处理负权边并检测负权环，通过多轮松弛操作保证正确性
+3. **Prim算法**：用于构建最小生成树，类似Dijkstra的扩展思路
+4. **算法选择**：根据图的特性（是否有负权边、稀疏/稠密）选择合适的算法
+5. **实际应用**：这些算法在GPS导航、网络路由、电路设计等领域有广泛应用
+
+### 思考题
+
+1. 为什么Dijkstra算法在负权图中会失效？能否通过修改Dijkstra算法来处理负权边？
+
+2. Bellman-Ford算法的时间复杂度是O(VE)，在什么情况下这会成为性能瓶颈？有什么优化方法？
+
+3. 最小生成树和最短路径树有什么区别？在什么情况下它们会相同？
+
+---
+
+## 下节预告
+
+下一节课我们将探索**网络流算法**，学习如何在网络中最大化流量传输，这在资源分配、匹配问题等领域有重要应用。我们将重点介绍Ford-Fulkerson算法和最大流最小割定理！
+
+---
+
+## 参考资源
+
+- 《算法导论》第24章（单源最短路径）和第23章（最小生成树）
+- Dijkstra的原始论文："A note on two problems in connexion with graphs" (1959)
+- CLRS教材中的Bellman-Ford算法详细分析
+- Prim算法的原始论文："Shortest connection networks and some generalizations" (1957)
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*

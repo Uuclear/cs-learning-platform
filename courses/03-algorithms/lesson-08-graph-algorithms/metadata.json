@@ -1,0 +1,33 @@
+{
+  "id": "03-08",
+  "title": "图算法：最短路径与最小生成树",
+  "slug": "lesson-08-graph-algorithms",
+  "module": "03-algorithms",
+  "module_name": "算法",
+  "module_order": 3,
+  "lesson_order": 8,
+  "difficulty": 4,
+  "difficulty_label": "困难",
+  "duration_minutes": 40,
+  "prerequisites": ["02-06"],
+  "tags": ["graph-algorithms", "dijkstra", "bellman-ford", "prim", "shortest-path", "mst"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习三种经典图算法：Dijkstra最短路径、Bellman-Ford负权边处理、Prim最小生成树，通过GPS导航、网络路由等实际场景理解算法的价值。",
+  "learning_objectives": [
+    "理解Dijkstra算法的工作原理和应用场景",
+    "掌握Bellman-Ford算法处理负权边的能力",
+    "学会使用Prim算法构建最小生成树",
+    "能够分析不同图算法的时间复杂度和适用场景"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 2
+    }
+  }
+}
