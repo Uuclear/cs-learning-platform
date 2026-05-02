@@ -1,0 +1,108 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "question": "以下关于进程的描述，哪一个是正确的？",
+      "options": [
+        "进程是存储在硬盘上的可执行文件",
+        "进程是程序的一次执行过程",
+        "进程和程序是完全相同的概念",
+        "一个程序只能对应一个进程"
+      ],
+      "correct_answer": 1,
+      "explanation": "进程是程序的一次执行过程，是动态的实体。程序是静态的指令集合。"
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "question": "进程控制块（PCB）中不包含以下哪项信息？",
+      "options": [
+        "进程ID（PID）",
+        "程序计数器",
+        "进程的源代码",
+        "内存管理信息"
+      ],
+      "correct_answer": 2,
+      "explanation": "PCB包含进程的运行时信息，但不包含源代码。源代码在编译后已经转换为机器码。"
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "question": "在Unix/Linux系统中，所有进程的祖先进程通常是哪个PID？",
+      "options": [
+        "PID 0",
+        "PID 1",
+        "PID 100",
+        "PID -1"
+      ],
+      "correct_answer": 1,
+      "explanation": "PID 1是init进程（在现代系统中可能是systemd或launchd），它是所有用户进程的祖先。"
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "question": "当进程等待I/O操作完成时，它处于什么状态？",
+      "options": [
+        "就绪状态",
+        "运行状态",
+        "阻塞状态",
+        "终止状态"
+      ],
+      "correct_answer": 2,
+      "explanation": "当进程等待I/O操作（如磁盘读写、网络请求）完成时，它处于阻塞状态（Blocked/Waiting）。"
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "question": "僵尸进程（Zombie Process）的特点是什么？",
+      "options": [
+        "占用大量CPU资源",
+        "占用大量内存资源",
+        "只占用进程表中的一个小条目",
+        "无法被任何方式终止"
+      ],
+      "correct_answer": 2,
+      "explanation": "僵尸进程已经终止，但父进程还未回收其退出状态，只占用进程表中的条目，不占用内存。"
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "question": "孤儿进程（Orphan Process）会被如何处理？",
+      "options": [
+        "立即被操作系统终止",
+        "被init进程（PID 1）收养",
+        "保持孤儿状态直到系统重启",
+        "自动转换为守护进程"
+      ],
+      "correct_answer": 1,
+      "explanation": "在Unix/Linux系统中，孤儿进程会被init进程（PID 1）收养，继续正常运行。"
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "question": "以下哪个命令可以查看Linux系统中的进程树？",
+      "options": [
+        "ps aux",
+        "top",
+        "pstree",
+        "df -h"
+      ],
+      "correct_answer": 2,
+      "explanation": "pstree命令以树状结构显示进程及其父子关系。"
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "question": "进程从运行状态转换到就绪状态的原因可能是？",
+      "options": [
+        "请求I/O操作",
+        "时间片用完",
+        "等待信号量",
+        "进程执行完毕"
+      ],
+      "correct_answer": 1,
+      "explanation": "当进程的时间片用完或被更高优先级的进程抢占时，会从运行状态转为就绪状态。"
+    }
+  ]
+}

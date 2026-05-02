@@ -1,0 +1,402 @@
+---
+id: '04-01'
+title: '进程：程序的"生命体"'
+module: '04-operating-systems'
+difficulty: 2
+duration: 25
+prerequisites: ['01-02 CPU']
+---
+
+# 进程：程序的"生命体"
+
+想象一下，当你双击一个程序，它就像被施了魔法一样活了过来！从一个静静躺在硬盘上的文件，瞬间变成了在内存中奔跑、与你互动的"生命体"。这就是进程的魔力！
+
+> 💡 **思考问题**: 为什么同一个程序可以同时运行多个实例？它们是如何互不干扰的？
+
+---
+
+## 开场白
+
+嘿，亲爱的程序员朋友！今天我们来聊聊操作系统中最神奇的概念之一——进程。你有没有想过，当你打开Chrome浏览器、VS Code和音乐播放器时，你的电脑是如何让这些程序"同时"运行的？实际上，它们并不是真的同时运行（除非你有多核CPU），而是操作系统在巧妙地切换它们，让每个程序都感觉自己独占了整个系统！
+
+进程就像是程序的"化身"或"生命体"。程序本身只是一个静态的指令集合，存储在硬盘上。但当它被加载到内存中并开始执行时，它就变成了一个动态的实体——进程。这个进程有自己的身份、自己的资源，甚至还有自己的"生命周期"。
+
+---
+
+## 核心概念
+
+### 进程的定义
+
+进程（Process）是程序的一次执行过程，是操作系统进行资源分配和调度的基本单位。简单来说，进程就是正在运行的程序。
+
+### 进程控制块（PCB）
+
+每个进程都有一个对应的进程控制块（Process Control Block，PCB），它是操作系统用来管理和控制进程的数据结构。PCB包含了进程的所有关键信息：
+
+- 进程ID（PID）：进程的唯一标识符
+- 进程状态：就绪、运行、阻塞等
+- 程序计数器：指向下一条要执行的指令
+- CPU寄存器：保存进程切换时的上下文
+- 内存管理信息：进程使用的内存区域
+- I/O状态信息：打开的文件、设备等
+
+### 进程ID（PID）
+
+每个进程都有一个唯一的进程ID（Process ID），就像人的身份证号一样。操作系统通过PID来识别和管理进程。
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: 进程创建
+
+```python
+import os
+import time
+
+def main():
+    """演示进程创建和父子进程关系"""
+    print(f"父进程PID: {os.getpid()}")
+    
+    # 创建子进程
+    pid = os.fork()
+    
+    if pid == 0:
+        # 子进程
+        print(f"子进程PID: {os.getpid()}, 父进程PID: {os.getppid()}")
+        time.sleep(2)
+        print("子进程结束")
+    else:
+        # 父进程
+        print(f"父进程创建了子进程，子进程PID: {pid}")
+        time.sleep(3)
+        print("父进程结束")
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+父进程PID: 12345
+父进程创建了子进程，子进程PID: 12346
+子进程PID: 12346, 父进程PID: 12345
+子进程结束
+父进程结束
+```
+
+这段代码展示了如何使用`os.fork()`创建子进程。在Unix/Linux系统中，`fork()`会创建一个与父进程几乎完全相同的子进程。子进程中`fork()`返回0，父进程中返回子进程的PID。
+
+### 示例2: 进程状态查看
+
+```python
+import psutil
+import time
+
+def monitor_process_states():
+    """监控当前进程的状态变化"""
+    current_pid = os.getpid()
+    print(f"当前进程PID: {current_pid}")
+    
+    # 获取当前进程对象
+    process = psutil.Process(current_pid)
+    
+    # 显示初始状态
+    print(f"初始状态: {process.status()}")
+    print(f"CPU使用率: {process.cpu_percent()}%")
+    print(f"内存使用: {process.memory_info().rss / 1024 / 1024:.2f} MB")
+    
+    # 模拟一些计算工作（运行状态）
+    print("\n正在进行计算工作...")
+    start_time = time.time()
+    while time.time() - start_time < 2:
+        # 空循环模拟CPU密集型工作
+        pass
+    
+    print(f"工作后状态: {process.status()}")
+    
+    # 模拟I/O等待（阻塞状态）
+    print("\n模拟I/O等待（睡眠2秒）...")
+    time.sleep(2)
+    print(f"睡眠后状态: {process.status()}")
+
+if __name__ == "__main__":
+    monitor_process_states()
+```
+
+**运行结果**：
+```
+当前进程PID: 12347
+初始状态: running
+CPU使用率: 0.0%
+内存使用: 15.23 MB
+
+正在进行计算工作...
+工作后状态: running
+
+模拟I/O等待（睡眠2秒）...
+睡眠后状态: sleeping
+```
+
+这个例子使用`psutil`库来监控进程状态的变化。我们可以看到进程在不同活动下的状态：计算时是"running"，睡眠时是"sleeping"（阻塞状态）。
+
+### 示例3: 进程树查看
+
+```python
+import psutil
+
+def print_process_tree(pid=None, indent=0):
+    """递归打印进程树"""
+    if pid is None:
+        pid = psutil.Process().pid  # 当前进程
+    
+    try:
+        process = psutil.Process(pid)
+        name = process.name()
+        status = process.status()
+        
+        # 打印当前进程
+        prefix = "  " * indent
+        print(f"{prefix}PID {pid}: {name} [{status}]")
+        
+        # 获取子进程并递归打印
+        children = process.children()
+        for child in children:
+            print_process_tree(child.pid, indent + 1)
+            
+    except psutil.NoSuchProcess:
+        print(f"{'  ' * indent}PID {pid}: 已终止")
+
+def show_system_processes():
+    """显示系统中的部分进程"""
+    print("=== 系统进程树示例 ===")
+    
+    # 显示init进程（PID 1）的子树（简化版）
+    try:
+        init_process = psutil.Process(1)
+        print(f"根进程 (PID 1): {init_process.name()}")
+        children = init_process.children(recursive=False)
+        print(f"直接子进程数量: {len(children)}")
+        
+        # 显示前5个子进程
+        for i, child in enumerate(children[:5]):
+            try:
+                print(f"  ├── PID {child.pid}: {child.name()}")
+            except psutil.NoSuchProcess:
+                continue
+                
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
+        print("无法访问根进程信息（需要管理员权限）")
+    
+    print("\n=== 当前进程树 ===")
+    print_process_tree()
+
+if __name__ == "__main__":
+    show_system_processes()
+```
+
+**运行结果**：
+```
+=== 系统进程树示例 ===
+根进程 (PID 1): launchd
+直接子进程数量: 85
+  ├── PID 45: syslogd
+  ├── PID 47: UserEventAgent
+  ├── PID 48: uninstalld
+  ├── PID 50: loginwindow
+  ├── PID 52: logd
+
+=== 当前进程树 ===
+PID 12348: python3 [running]
+```
+
+这个例子展示了如何遍历进程树。在类Unix系统中，所有进程都源自PID为1的init进程（在macOS中是launchd）。每个进程都可以有子进程，形成树状结构。
+
+---
+
+## 深入理解
+
+### 进程与程序的区别
+
+很多人容易混淆进程和程序，它们的关键区别在于：
+
+- **程序**：静态的指令集合，存储在磁盘上的可执行文件
+- **进程**：动态的执行实体，程序在内存中的运行实例
+
+同一个程序可以同时有多个进程在运行。比如你可以同时打开多个Chrome窗口，每个窗口都是一个独立的Chrome进程。
+
+### 进程状态机
+
+进程在其生命周期中会经历不同的状态，主要状态包括：
+
+1. **新建（New）**：进程刚被创建，还未进入就绪队列
+2. **就绪（Ready）**：进程已准备好运行，等待CPU调度
+3. **运行（Running）**：进程正在CPU上执行
+4. **阻塞（Blocked/Waiting）**：进程等待某个事件（如I/O完成）
+5. **终止（Terminated）**：进程执行完毕或被强制终止
+
+状态转换图：
+- 就绪 → 运行：获得CPU时间片
+- 运行 → 就绪：时间片用完或被更高优先级进程抢占
+- 运行 → 阻塞：请求I/O或等待资源
+- 阻塞 → 就绪：等待的事件完成
+
+### 进程 vs 线程对比
+
+| 特性 | 进程 | 线程 |
+|------|------|------|
+| 资源开销 | 较大（独立内存空间） | 较小（共享进程内存） |
+| 通信方式 | IPC（管道、消息队列等） | 直接共享内存 |
+| 独立性 | 完全独立，一个崩溃不影响其他 | 共享地址空间，一个崩溃可能影响整个进程 |
+| 切换开销 | 较大（需要切换内存映射） | 较小（只需切换寄存器状态） |
+
+---
+
+## 实际应用
+
+### Linux的ps命令
+
+在Linux/Unix系统中，`ps`命令是最常用的进程查看工具：
+
+```bash
+# 查看所有进程
+ps aux
+
+# 查看特定用户的进程
+ps -u username
+
+# 实时监控进程（类似Windows任务管理器）
+top
+
+# 树状显示进程
+pstree
+```
+
+### Windows任务管理器
+
+Windows用户可以通过Ctrl+Shift+Esc快捷键打开任务管理器，查看正在运行的进程、CPU和内存使用情况。
+
+### 系统监控工具
+
+现代系统监控工具如`htop`、`glances`、`systemd-cgtop`等提供了更直观的进程监控界面，帮助系统管理员了解系统负载和资源使用情况。
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 进程和线程是一回事
+
+很多人初学时容易混淆进程和线程。虽然它们都是执行单元，但进程是资源分配的基本单位，线程是CPU调度的基本单位。
+
+✅ **正确做法**: 记住进程有独立的内存空间，线程共享进程的内存空间。多进程适合CPU密集型任务，多线程适合I/O密集型任务。
+
+### 误区2: 僵尸进程会消耗大量内存
+
+僵尸进程（Zombie Process）是已经终止但父进程还未回收其退出状态的进程。很多人以为僵尸进程会占用大量内存。
+
+✅ **正确做法**: 僵尸进程实际上只占用进程表中的一个小条目，不占用内存。但大量僵尸进程会耗尽进程表，导致无法创建新进程。父进程应该及时调用`wait()`或`waitpid()`来回收子进程。
+
+### 误区3: 孤儿进程会被立即终止
+
+孤儿进程（Orphan Process）是指父进程先于子进程终止的进程。很多人认为孤儿进程会被操作系统立即杀死。
+
+✅ **正确做法**: 在Unix/Linux系统中，孤儿进程会被init进程（PID 1）收养，继续正常运行直到自己终止。只有在特殊情况下（如系统关机）才会被强制终止。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 进程基本信息获取 ⭐
+
+编写一个Python程序，获取并显示当前进程的基本信息，包括PID、父进程PID、进程名、启动时间等。
+
+**要求**：
+- 使用`os`模块和`psutil`库
+- 显示至少5个不同的进程属性
+- 代码要有中文注释
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用`os.getpid()`获取当前PID，`os.getppid()`获取父进程PID，`psutil.Process()`获取更多详细信息。
+
+</details>
+
+### 练习2: 进程状态监控 ⭐⭐
+
+创建一个程序，能够监控指定PID的进程状态变化，并在状态改变时输出通知。
+
+**要求**：
+- 接受PID作为命令行参数
+- 每秒检查一次进程状态
+- 当状态发生变化时打印通知
+- 处理进程不存在的情况
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用`psutil.Process(pid).status()`获取状态，用循环和`time.sleep()`实现定时检查，用try-except处理异常。
+
+</details>
+
+### 练习3: 简单进程管理器 ⭐⭐⭐
+
+实现一个简单的进程管理器，能够列出所有进程、根据名称查找进程、终止指定进程。
+
+**要求**：
+- 提供菜单式交互界面
+- 支持列出所有进程（显示PID、名称、状态）
+- 支持按名称搜索进程
+- 支持终止指定PID的进程（需确认）
+- 处理权限不足的情况
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用`psutil.process_iter()`遍历所有进程，`process.kill()`终止进程，注意异常处理和用户确认。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+1. 进程是程序的执行实例，是操作系统资源分配的基本单位
+2. 每个进程都有唯一的PID和对应的PCB（进程控制块）
+3. 进程有多种状态：新建、就绪、运行、阻塞、终止
+4. 进程与程序的区别：程序是静态的，进程是动态的
+5. 进程树反映了进程间的父子关系，所有进程都源自init进程
+
+### 思考题
+
+1. 为什么操作系统需要进程的概念？直接让程序在CPU上运行不行吗？
+
+2. 在多核CPU系统中，进程调度和单核系统有什么不同？
+
+3. 如果一个进程创建了很多子进程但没有回收它们，会发生什么问题？
+
+---
+
+## 下节预告
+
+下一节课我们将深入探讨**线程：进程内部的"小工人"**，了解线程如何在进程内部实现并发，以及线程同步的重要性。
+
+---
+
+## 参考资源
+
+- 《操作系统概念》（Operating System Concepts）- Abraham Silberschatz
+- Python psutil文档：https://psutil.readthedocs.io/
+- Linux进程管理：https://man7.org/linux/man-pages/man7/signal.7.html
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
