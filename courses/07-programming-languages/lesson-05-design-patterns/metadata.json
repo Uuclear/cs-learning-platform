@@ -1,0 +1,11 @@
+{
+  "id": "07-05",
+  "title": "设计模式：前辈们的智慧结晶",
+  "module": "07-programming-languages",
+  "difficulty": 3,
+  "duration": 35,
+  "prerequisites": ["07-01"],
+  "tags": ["design-patterns", "python", "software-architecture"],
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03"
+}

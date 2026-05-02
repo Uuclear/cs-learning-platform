@@ -1,0 +1,520 @@
+---
+id: '07-05'
+title: '设计模式：前辈们的智慧结晶'
+module: '07-programming-languages'
+difficulty: 3
+duration: 35
+prerequisites: ["07-01"]
+---
+
+# 设计模式：前辈们的智慧结晶
+
+每个程序员都写过类似的代码，为什么总要重复？
+
+> 💡 **思考问题**: 你是否曾经发现自己在不同的项目中反复编写相似的代码结构？这些重复背后隐藏着什么规律？
+
+---
+
+## 开场白
+
+嘿，程序员朋友！你有没有这样的经历：写完一段代码后，突然意识到"哎呀，我上周在另一个项目里也写过几乎一样的东西！"或者看到别人的代码时心想"这不就是我上周写的那个模式吗？"
+
+其实，你并不孤单！早在1994年，四位聪明的程序员（Erich Gamma、Richard Helm、Ralph Johnson 和 John Vlissides，他们被称为"Gang of Four"或GoF）就注意到了这个现象。他们收集整理了23种在面向对象编程中反复出现的优秀解决方案，并把这些方案命名为"设计模式"。
+
+**设计模式就像是编程界的成语典故**——它们是前辈们在长期实践中总结出来的最佳实践，是解决特定问题的经典套路。掌握设计模式，不仅能让你的代码更加优雅，还能让你和其他开发者用同一种"语言"交流！
+
+---
+
+## 核心概念
+
+### 什么是设计模式？
+
+设计模式是在特定上下文中解决常见软件设计问题的可重用解决方案。它不是具体的代码，而是一种模板或蓝图，描述了如何组织类和对象来解决特定问题。
+
+设计模式有三个关键特征：
+1. **可重用性**：可以在不同项目中重复使用
+2. **经过验证**：已经被证明是有效的解决方案
+3. **通用性**：适用于一类问题，而不是特定场景
+
+### GoF 23种模式分类
+
+GoF将23种设计模式分为三大类：
+
+#### 创建型模式（Creational Patterns）
+关注对象的创建过程，帮助我们更灵活地创建对象。
+- 单例模式（Singleton）
+- 工厂方法模式（Factory Method）
+- 抽象工厂模式（Abstract Factory）
+- 建造者模式（Builder）
+- 原型模式（Prototype）
+
+#### 结构型模式（Structural Patterns）
+关注类和对象的组合，帮助我们构建更大的结构。
+- 适配器模式（Adapter）
+- 装饰器模式（Decorator）
+- 代理模式（Proxy）
+- 外观模式（Facade）
+- 桥接模式（Bridge）
+- 组合模式（Composite）
+- 享元模式（Flyweight）
+
+#### 行为型模式（Behavioral Patterns）
+关注对象之间的职责分配和通信。
+- 观察者模式（Observer）
+- 策略模式（Strategy）
+- 命令模式（Command）
+- 状态模式（State）
+- 模板方法模式（Template Method）
+- 迭代器模式（Iterator）
+- 责任链模式（Chain of Responsibility）
+- 中介者模式（Mediator）
+- 备忘录模式（Memento）
+- 访问者模式（Visitor）
+- 解释器模式（Interpreter）
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: 单例模式
+
+```python
+"""
+单例模式示例 - 确保一个类只有一个实例
+
+单例模式是一种创建型设计模式，它保证一个类只有一个实例，
+并提供一个全局访问点来访问该实例。
+
+在Python中，我们可以通过重写__new__方法来实现单例模式。
+"""
+
+
+class Singleton:
+    """单例类的实现"""
+    _instance = None  # 类变量，存储唯一的实例
+
+    def __new__(cls):
+        # 如果实例不存在，则创建新实例
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            # 初始化实例属性
+            cls._instance.value = None
+        return cls._instance
+
+
+# 使用示例
+if __name__ == "__main__":
+    # 创建两个"实例"
+    singleton1 = Singleton()
+    singleton2 = Singleton()
+
+    # 设置第一个实例的值
+    singleton1.value = "我是单例实例的值"
+
+    # 检查两个实例是否相同
+    print(f"singleton1 的值: {singleton1.value}")
+    print(f"singleton2 的值: {singleton2.value}")
+    print(f"singleton1 is singleton2: {singleton1 is singleton2}")
+    print(f"singleton1 == singleton2: {singleton1 == singleton2}")
+```
+
+**运行结果**：
+```
+singleton1 的值: 我是单例实例的值
+singleton2 的值: 我是单例实例的值
+singleton1 is singleton2: True
+singleton1 == singleton2: True
+```
+
+单例模式确保了无论我们调用多少次构造函数，都只会得到同一个实例。这在需要全局唯一资源（如数据库连接池、配置管理器）时非常有用。
+
+### 示例2: 观察者模式
+
+```python
+"""
+观察者模式示例 - 定义对象间的一对多依赖关系
+
+观察者模式是一种行为型设计模式，它定义了对象之间的一对多依赖关系，
+当一个对象的状态发生改变时，所有依赖于它的对象都会得到通知并自动更新。
+
+在这个例子中，我们实现了一个简单的新闻订阅系统。
+"""
+
+
+class Subject:
+    """被观察者（主题）基类"""
+
+    def __init__(self):
+        self._observers = []  # 存储所有观察者
+
+    def attach(self, observer):
+        """添加观察者"""
+        if observer not in self._observers:
+            self._observers.append(observer)
+
+    def detach(self, observer):
+        """移除观察者"""
+        try:
+            self._observers.remove(observer)
+        except ValueError:
+            pass
+
+    def notify(self, message):
+        """通知所有观察者"""
+        for observer in self._observers:
+            observer.update(message)
+
+
+class NewsPublisher(Subject):
+    """新闻发布者（具体的被观察者）"""
+
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
+        self._latest_news = ""
+
+    def publish_news(self, news):
+        """发布新闻"""
+        self._latest_news = news
+        print(f"\n【{self.name}】发布了新消息: {news}")
+        # 通知所有订阅者
+        self.notify(news)
+
+
+class Observer:
+    """观察者基类"""
+
+    def __init__(self, name):
+        self.name = name
+
+    def update(self, message):
+        """接收更新（需要子类实现）"""
+        pass
+
+
+class NewsSubscriber(Observer):
+    """新闻订阅者（具体的观察者）"""
+
+    def update(self, message):
+        """接收到新闻更新"""
+        print(f"  → {self.name} 收到了消息: {message}")
+
+
+# 使用示例
+if __name__ == "__main__":
+    # 创建新闻发布者
+    tech_news = NewsPublisher("科技前沿")
+    sports_news = NewsPublisher("体育快讯")
+
+    # 创建订阅者
+    alice = NewsSubscriber("Alice")
+    bob = NewsSubscriber("Bob")
+    charlie = NewsSubscriber("Charlie")
+
+    # 订阅新闻
+    tech_news.attach(alice)
+    tech_news.attach(bob)
+    sports_news.attach(bob)
+    sports_news.attach(charlie)
+
+    # 发布新闻
+    tech_news.publish_news("Python 3.12正式发布！")
+    sports_news.publish_news("中国队赢得世界冠军！")
+
+    # 取消订阅
+    tech_news.detach(alice)
+    tech_news.publish_news("新的AI框架震撼发布！")
+```
+
+**运行结果**：
+```
+【科技前沿】发布了新消息: Python 3.12正式发布！
+  → Alice 收到了消息: Python 3.12正式发布！
+  → Bob 收到了消息: Python 3.12正式发布！
+
+【体育快讯】发布了新消息: 中国队赢得世界冠军！
+  → Bob 收到了消息: 中国队赢得世界冠军！
+  → Charlie 收到了消息: 中国队赢得世界冠军！
+
+【科技前沿】发布了新消息: 新的AI框架震撼发布！
+  → Bob 收到了消息: 新的AI框架震撼发布！
+```
+
+观察者模式实现了松耦合的设计——新闻发布者不需要知道具体的订阅者是谁，只需要维护一个观察者列表即可。这种模式在事件处理系统、GUI框架中非常常见。
+
+### 示例3: 策略模式
+
+```python
+"""
+策略模式示例 - 定义一系列算法，将它们封装起来并使它们可以互换
+
+策略模式是一种行为型设计模式，它定义了一系列算法，并将每个算法封装起来，
+使它们可以相互替换。策略模式让算法的变化独立于使用算法的客户。
+
+在这个例子中，我们实现了一个支付系统，支持多种支付方式。
+"""
+
+
+from abc import ABC, abstractmethod
+
+
+class PaymentStrategy(ABC):
+    """支付策略抽象基类"""
+
+    @abstractmethod
+    def pay(self, amount: float) -> bool:
+        """执行支付（需要子类实现）"""
+        pass
+
+
+class CreditCardPayment(PaymentStrategy):
+    """信用卡支付策略"""
+
+    def __init__(self, card_number: str, name: str):
+        self.card_number = card_number
+        self.name = name
+
+    def pay(self, amount: float) -> bool:
+        print(f"使用信用卡支付 ¥{amount:.2f}")
+        print(f"卡号: **** **** **** {self.card_number[-4:]}")
+        print(f"持卡人: {self.name}")
+        # 模拟支付成功
+        return True
+
+
+class AlipayPayment(PaymentStrategy):
+    """支付宝支付策略"""
+
+    def __init__(self, account: str):
+        self.account = account
+
+    def pay(self, amount: float) -> bool:
+        print(f"使用支付宝支付 ¥{amount:.2f}")
+        print(f"支付宝账号: {self.account}")
+        # 模拟支付成功
+        return True
+
+
+class WeChatPayment(PaymentStrategy):
+    """微信支付策略"""
+
+    def __init__(self, openid: str):
+        self.openid = openid
+
+    def pay(self, amount: float) -> bool:
+        print(f"使用微信支付 ¥{amount:.2f}")
+        print(f"微信ID: {self.openid[:8]}...")
+        # 模拟支付成功
+        return True
+
+
+class ShoppingCart:
+    """购物车类 - 使用策略模式"""
+
+    def __init__(self):
+        self.items = []
+        self.payment_strategy = None
+
+    def add_item(self, item: str, price: float):
+        """添加商品到购物车"""
+        self.items.append((item, price))
+
+    def set_payment_strategy(self, strategy: PaymentStrategy):
+        """设置支付策略"""
+        self.payment_strategy = strategy
+
+    def get_total(self) -> float:
+        """计算总金额"""
+        return sum(price for _, price in self.items)
+
+    def checkout(self) -> bool:
+        """结账"""
+        if not self.payment_strategy:
+            print("请先选择支付方式！")
+            return False
+
+        total = self.get_total()
+        print(f"\n购物车总计: ¥{total:.2f}")
+        print("开始支付...")
+
+        # 使用当前策略执行支付
+        return self.payment_strategy.pay(total)
+
+
+# 使用示例
+if __name__ == "__main__":
+    # 创建购物车
+    cart = ShoppingCart()
+    cart.add_item("Python编程入门", 69.9)
+    cart.add_item("设计模式实战", 89.5)
+    cart.add_item("算法导论", 128.0)
+
+    # 使用信用卡支付
+    credit_card = CreditCardPayment("1234567890123456", "张三")
+    cart.set_payment_strategy(credit_card)
+    cart.checkout()
+
+    print("\n" + "="*50 + "\n")
+
+    # 使用支付宝支付
+    alipay = AlipayPayment("zhangsan@example.com")
+    cart.set_payment_strategy(alipay)
+    cart.checkout()
+```
+
+**运行结果**：
+```
+购物车总计: ¥287.40
+开始支付...
+使用信用卡支付 ¥287.40
+卡号: **** **** **** 3456
+持卡人: 张三
+
+==================================================
+
+购物车总计: ¥287.40
+开始支付...
+使用支付宝支付 ¥287.40
+支付宝账号: zhangsan@example.com
+```
+
+策略模式让我们可以轻松地在运行时切换不同的算法或行为，而无需修改客户端代码。这对于需要支持多种算法或配置的系统非常有用。
+
+---
+
+## 深入理解
+
+### 模式不是银弹
+
+记住，设计模式不是万能药！**过度使用设计模式反而会让代码变得复杂和难以理解**。很多初学者犯的一个常见错误就是"为了用模式而用模式"，结果导致过度设计。
+
+### 什么时候不该用模式？
+
+1. **简单问题不需要复杂解决方案**：如果你的问题很简单，直接写代码可能比引入设计模式更好
+2. **团队不熟悉该模式**：如果团队成员都不熟悉某个模式，可能会增加维护成本
+3. **语言特性已经提供了更好的解决方案**：比如Python的装饰器语法本身就很好用，不一定非要实现经典的装饰器模式
+
+### Pythonic的实现方式
+
+Python是一门非常灵活的语言，很多设计模式在Python中有更简洁的实现方式：
+
+- **单例模式**：可以使用模块级别的变量，因为Python模块本身就是单例
+- **策略模式**：可以直接传递函数，因为Python函数是一等公民
+- **观察者模式**：可以使用信号/槽机制或回调函数
+
+关键是要理解模式背后的**思想**，而不是死记硬背具体的实现方式。
+
+---
+
+## 实际应用
+
+### 应用场景1: Web框架中的设计模式
+
+现代Web框架大量使用了设计模式：
+
+- **Django**：使用了MVC模式（实际上是MTV）、工厂模式（表单字段）、装饰器模式（视图装饰器）
+- **Flask**：使用了观察者模式（信号）、策略模式（蓝图）、单例模式（应用实例）
+
+### 应用场景2: 企业级应用
+
+在大型企业应用中，设计模式帮助解决复杂的架构问题：
+
+- **微服务架构**：适配器模式用于服务间通信，策略模式用于路由决策
+- **数据访问层**：工厂模式用于创建数据库连接，装饰器模式用于添加缓存或日志
+- **用户界面**：观察者模式用于状态管理，命令模式用于撤销/重做功能
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 过度设计
+
+很多开发者一听到设计模式就兴奋不已，恨不得在每个地方都用上。结果代码变得异常复杂，连自己都看不懂了。
+
+✅ **正确做法**: 先写出简单直接的代码，当发现重复模式或需要灵活性时，再考虑引入设计模式。
+
+### 误区2: 生搬硬套模式
+
+严格按照书本上的UML图来实现模式，完全不考虑实际需求和语言特性。
+
+✅ **正确做法**: 理解模式的核心思想，根据具体场景和语言特性进行调整。比如在Python中，很多模式可以用更简洁的方式实现。
+
+### 误区3: 忽视语言特性
+
+在Python这样的动态语言中，很多设计模式的需求已经被语言本身解决了。
+
+✅ **正确做法**: 充分利用Python的特性（如装饰器、上下文管理器、鸭子类型），不要强行套用Java/C++风格的模式实现。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 工厂模式实现 ⭐
+
+实现一个动物工厂，能够根据字符串参数创建不同类型的动物实例。
+
+**要求**：
+- 创建 `Animal` 抽象基类和至少三种具体动物类
+- 实现 `AnimalFactory` 工厂类
+- 编写测试代码验证功能
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用Python的`abc`模块定义抽象基类，工厂方法可以是静态方法。
+
+</details>
+
+### 练习2: 装饰器模式实现 ⭐⭐
+
+实现一个饮料点单系统，支持动态添加调料。
+
+**要求**：
+- 创建基础饮料类和调料装饰器类
+- 支持任意组合饮料和调料
+- 正确计算总价和描述
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+装饰器的构造函数需要接收被装饰的对象，成本和描述都要基于被装饰对象进行计算。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- 设计模式是解决常见软件设计问题的可重用解决方案
+- GoF的23种模式分为创建型、结构型和行为型三大类
+- 理解模式的思想比死记硬背实现更重要
+- 在Python中，很多模式可以用更简洁的方式实现
+- 避免过度设计，根据实际需求选择合适的模式
+
+### 思考题
+
+1. 你在之前的项目中是否无意中使用过某些设计模式？能识别出来吗？
+
+2. 对于Python这样的动态语言，哪些设计模式变得不那么必要了？为什么？
+
+3. 如何判断一个问题是真正需要设计模式来解决，还是可以直接用简单代码处理？
+
+---
+
+## 参考资源
+
+- 《设计模式：可复用面向对象软件的基础》（GoF经典著作）
+- Python官方文档中的设计模式相关章节
+- Real Python网站的设计模式教程
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
