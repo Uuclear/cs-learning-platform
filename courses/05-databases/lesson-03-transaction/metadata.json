@@ -1,0 +1,18 @@
+{
+  "id": "05-03",
+  "title": "事务：要么全做，要么全不做",
+  "module": "05-databases",
+  "slug": "lesson-03-transaction",
+  "status": "completed",
+  "module_name": "数据库",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": ["05-01"],
+  "tags": ["transaction", "acid", "commit", "rollback", "concurrency"],
+  "learning_objectives": ["理解事务的ACID特性", "掌握并发事务的隔离级别", "能够处理事务冲突和死锁问题"],
+  "files": ["index.mdx", "metadata.json", "code/examples/example-01-bank-transfer.py", "code/examples/example-02-isolation-levels.py", "code/examples/example-03-deadlock-demo.py", "code/solutions/solution-01.py", "code/solutions/solution-02.py", "code/solutions/solution-03.py", "exercises/quiz.json", "exercises/challenges/challenge-01.md", "exercises/challenges/challenge-02.md"],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

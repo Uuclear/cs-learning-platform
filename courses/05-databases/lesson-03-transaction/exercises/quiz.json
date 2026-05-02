@@ -1,0 +1,90 @@
+[
+  {
+    "question": "ACID特性中的'A'代表什么？",
+    "options": [
+      "Atomicity（原子性）",
+      "Availability（可用性）",
+      "Authentication（认证）",
+      "Authorization（授权）"
+    ],
+    "answer": 0,
+    "explanation": "A代表Atomicity（原子性），指事务中的所有操作要么全部成功，要么全部失败回滚。"
+  },
+  {
+    "question": "以下哪个SQL语句用于开始一个数据库事务？",
+    "options": [
+      "START TRANSACTION;",
+      "BEGIN;",
+      "OPEN TRANSACTION;",
+      "INITIATE TRANSACTION;"
+    ],
+    "answer": 1,
+    "explanation": "BEGIN; 是开始事务的标准SQL语句，虽然有些数据库也支持 START TRANSACTION;，但 BEGIN; 更通用。"
+  },
+  {
+    "question": "在Read Committed隔离级别下，可能出现哪种并发异常？",
+    "options": [
+      "脏读（Dirty Read）",
+      "不可重复读（Non-repeatable Read）",
+      "幻读（Phantom Read）",
+      "B和C都可能"
+    ],
+    "answer": 3,
+    "explanation": "Read Committed隔离级别避免了脏读，但仍可能出现不可重复读和幻读。"
+  },
+  {
+    "question": "什么是脏读（Dirty Read）？",
+    "options": [
+      "读取了其他事务未提交的数据",
+      "读取了已删除的数据",
+      "读取了损坏的数据",
+      "读取了过期的数据"
+    ],
+    "answer": 0,
+    "explanation": "脏读是指一个事务读取了另一个事务尚未提交的数据，如果那个事务后来回滚，读取到的数据就是'脏'的。"
+  },
+  {
+    "question": "死锁发生的主要原因是什么？",
+    "options": [
+      "两个或多个事务循环等待对方持有的资源",
+      "数据库服务器内存不足",
+      "网络连接中断",
+      "磁盘空间不足"
+    ],
+    "answer": 0,
+    "explanation": "死锁发生在两个或多个事务相互等待对方释放资源时，形成循环等待，导致所有相关事务都无法继续执行。"
+  },
+  {
+    "question": "以下哪种策略可以有效预防死锁？",
+    "options": [
+      "总是按相同的顺序获取资源",
+      "增加事务的隔离级别",
+      "减少数据库连接数",
+      "使用更大的数据库缓存"
+    ],
+    "answer": 0,
+    "explanation": "按固定顺序获取资源可以打破循环等待条件，是预防死锁的有效策略。"
+  },
+  {
+    "question": "Serializable（串行化）隔离级别的主要缺点是什么？",
+    "options": [
+      "性能较差，并发度低",
+      "可能导致数据丢失",
+      "不支持复杂查询",
+      "需要额外的硬件支持"
+    ],
+    "answer": 0,
+    "explanation": "Serializable隔离级别提供了最高的数据一致性保证，但会显著降低并发性能，因为事务需要串行执行。"
+  },
+  {
+    "question": "当事务执行过程中发生错误时，应该使用哪个语句来撤销所有已执行的操作？",
+    "options": [
+      "UNDO;",
+      "CANCEL;",
+      "ROLLBACK;",
+      "REVERT;"
+    ],
+    "answer": 2,
+    "explanation": "ROLLBACK; 语句用于回滚事务，撤销事务中所有已执行的操作，将数据库恢复到事务开始前的状态。"
+  }
+]

@@ -1,0 +1,269 @@
+---
+title: SQL基础：和数据对话的语言
+module: 05-databases
+difficulty: ⭐⭐
+duration: 25分钟
+---
+
+# 05-01 SQL基础：和数据对话的语言
+
+## 开场白
+
+同学们好！今天我们来学习一门特殊的语言——SQL（Structured Query Language，结构化查询语言）。
+
+你有没有想过，当你打开淘宝搜索"笔记本电脑"时，数据库是如何在几毫秒内从几十亿件商品中找出你想要的那些？答案就是 SQL。
+
+SQL 不是编程语言（虽然它有语法），它是一种**声明式语言**——你告诉数据库"我要什么"，而不是"怎么做"。这就像你去餐厅点菜，你只说"我要一份宫保鸡丁"，而不需要告诉厨师怎么炒菜。
+
+今天我们就来学习如何"点菜"——用 SQL 和数据对话！
+
+## 核心概念
+
+### 什么是关系型数据库？
+
+关系型数据库的核心概念很简单：**用表格来存储数据**，就像 Excel 表格一样。但比 Excel 强大得多：
+
+- **表（Table）**：存储数据的基本单位，比如"用户表"、"订单表"
+- **行（Row）**：一条具体的记录，比如"张三"这个用户
+- **列（Column）**：数据的字段，比如"姓名"、"邮箱"、"年龄"
+- **主键（Primary Key）**：唯一标识一行数据的列，就像身份证号
+- **外键（Foreign Key）**：连接两个表的桥梁，比如订单中的"用户ID"指向用户表
+
+### SQL 的四大操作（CRUD）
+
+SQL 的核心就是四个操作，对应英文缩写 **CRUD**：
+
+| 操作 | SQL语句 | 类比 |
+|------|---------|------|
+| Create（创建） | `INSERT` | 往表格里添加新行 |
+| Read（读取） | `SELECT` | 查看表格里的数据 |
+| Update（更新） | `UPDATE` | 修改表格里的数据 |
+| Delete（删除） | `DELETE` | 从表格中删除行 |
+
+这四个操作覆盖了几乎所有数据库操作的需求。
+
+### JOIN：连接多个表
+
+数据库设计的黄金法则：**每个表只做一件事**。
+
+所以用户信息放"用户表"，订单信息放"订单表"。当你需要"查询张三的所有订单"时，就需要把两个表"连接"起来——这就是 `JOIN` 的作用。
+
+```sql
+-- 查询张三的所有订单
+SELECT orders.order_name, orders.amount
+FROM orders
+INNER JOIN users ON orders.user_id = users.id
+WHERE users.name = '张三'
+```
+
+## 代码演示
+
+### 示例1：CRUD 基础操作
+
+```python
+# code/examples/example-01-crud-operations.py
+```
+
+运行结果：
+```
+✅ 创建用户表成功！
+✅ 插入3条用户数据成功！
+
+📋 查询所有用户:
+  ID: 1, 姓名: 张三, 邮箱: zhangsan@example.com, 年龄: 25
+  ID: 2, 姓名: 李四, 邮箱: lisi@example.com, 年龄: 30
+  ID: 3, 姓名: 王五, 邮箱: wangwu@example.com, 年龄: 28
+
+✅ 更新了 1 条记录 (张三年龄从25改为26)
+
+📋 更新后查询张三的信息:
+  ID: 1, 姓名: 张三, 邮箱: zhangsan@example.com, 年龄: 26
+
+✅ 删除了 1 条记录 (年龄小于27的用户)
+
+📋 最终用户列表:
+  ID: 2, 姓名: 李四, 邮箱: lisi@example.com, 年龄: 30
+  ID: 3, 姓名: 王五, 邮箱: wangwu@example.com, 年龄: 28
+
+🔒 数据库连接已关闭
+```
+
+**关键点**：注意我们使用了 `?` 占位符而不是字符串拼接，这是防止 SQL 注入的最佳实践。
+
+### 示例2：JOIN 连接查询
+
+```python
+# code/examples/example-02-joins.py
+```
+
+这个示例演示了三种 JOIN 的区别：
+- **INNER JOIN**：只返回两个表都匹配的记录
+- **LEFT JOIN**：返回左表所有记录，右表不匹配时填 NULL
+- **CROSS JOIN**：返回两个表的笛卡尔积（所有组合）
+
+### 示例3：聚合函数
+
+```python
+# code/examples/example-03-aggregation.py
+```
+
+聚合函数让你能够对一组数据进行统计：
+- `COUNT()`：计数
+- `SUM()`：求和
+- `AVG()`：求平均值
+- `MAX()` / `MIN()`：最大/最小值
+- `GROUP BY`：分组统计
+
+## 深入理解
+
+### SQL 查询的执行顺序
+
+你可能觉得 SQL 是从上到下执行的，但其实数据库引擎有自己的执行顺序：
+
+1. **FROM**：确定数据来源的表
+2. **WHERE**：过滤行
+3. **GROUP BY**：分组
+4. **HAVING**：过滤分组
+5. **SELECT**：选择列
+6. **ORDER BY**：排序
+7. **LIMIT**：限制结果数量
+
+这解释了为什么你不能在 `WHERE` 中使用 `SELECT` 中定义的别名——因为 `WHERE` 比 `SELECT` 先执行！
+
+### SQL 注入：必须知道的安全风险
+
+SQL 注入是最常见的网络安全攻击之一。想象一下：
+
+```python
+# ❌ 危险写法（绝对不要这样做！）
+query = f"SELECT * FROM users WHERE name = '{user_input}'"
+# 如果用户输入：' OR '1'='1
+# 实际执行的SQL：SELECT * FROM users WHERE name = '' OR '1'='1
+# 这会返回所有用户！
+```
+
+```python
+# ✅ 安全写法
+cursor.execute("SELECT * FROM users WHERE name = ?", (user_input,))
+# 参数会被当作纯数据处理，不会被当作SQL代码执行
+```
+
+## 实际应用
+
+### 实战场景：电商查询
+
+假设你有一个电商系统，包含以下表：
+
+```sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    created_at TEXT
+);
+
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    price REAL NOT NULL,
+    category TEXT
+);
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER,
+    order_date TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+```
+
+常见查询示例：
+
+```sql
+-- 1. 查询每个用户的订单总数
+SELECT u.name, COUNT(o.id) as order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+GROUP BY u.id;
+
+-- 2. 查询每个品类的平均价格
+SELECT category, AVG(price) as avg_price
+FROM products
+GROUP BY category
+ORDER BY avg_price DESC;
+
+-- 3. 查询购买过"手机"的所有用户
+SELECT DISTINCT u.name
+FROM users u
+JOIN orders o ON u.id = o.user_id
+JOIN products p ON o.product_id = p.id
+WHERE p.name = '手机';
+```
+
+## 常见误区
+
+### 误区1：`WHERE` 中可以写聚合函数
+
+```sql
+-- ❌ 错误：WHERE 不能过滤聚合结果
+SELECT category, AVG(price) FROM products WHERE AVG(price) > 100;
+
+-- ✅ 正确：使用 HAVING 过滤聚合结果
+SELECT category, AVG(price) FROM products GROUP BY category HAVING AVG(price) > 100;
+```
+
+### 误区2：`COUNT(*)` 和 `COUNT(column)` 一样
+
+不一样！`COUNT(*)` 统计所有行（包括 NULL），而 `COUNT(column)` 只统计该列非 NULL 的行数。
+
+### 误区3：用字符串拼接构建 SQL
+
+这是最危险的错误，会导致 **SQL 注入漏洞**。永远使用参数化查询（`?` 占位符）。
+
+### 误区4：忘记加 WHERE 条件
+
+```sql
+-- 这会删除所有数据！（不只是张三的）
+DELETE FROM users WHERE name = '张三' AND 1=1; -- 如果写成这样，1=1 总是为真
+```
+
+养成先写 `SELECT` 验证，再改成 `UPDATE` / `DELETE` 的好习惯。
+
+## 动手实践
+
+### 练习1：学生成绩管理
+
+创建一个学生成绩数据库，包含学生表和成绩表，完成以下查询：
+1. 查询所有学生的平均成绩
+2. 找出成绩高于班级平均的学生
+3. 查询每门课的最高分和最低分
+
+### 练习2：博客系统查询
+
+设计一个博客系统的数据库，包含用户、文章、评论三张表，编写以下查询：
+1. 统计每个用户的文章数量
+2. 找出评论最多的文章
+3. 查询某个用户发表的所有文章及其评论数
+
+## 小结与思考
+
+### 本节要点
+
+1. SQL 是一种**声明式语言**——告诉数据库"要什么"而不是"怎么做"
+2. CRUD 是数据库操作的基石：INSERT、SELECT、UPDATE、DELETE
+3. JOIN 让我们将多个表连接起来，获取完整的信息
+4. 聚合函数（COUNT/SUM/AVG）配合 GROUP BY 进行数据统计
+5. **永远使用参数化查询**，避免 SQL 注入
+
+### 思考题
+
+1. 如果数据库有 10 亿行数据，`SELECT * FROM users` 会发生什么？
+2. `DELETE` 和 `DROP TABLE` 有什么区别？
+3. 为什么数据库要用主键来唯一标识每一行？
+
+### 下节预告
+
+在下一课《索引：让查询飞起来的秘密》中，我们会学习数据库是如何在毫秒内从海量数据中找到你想要的记录的。想象一下图书馆的索引系统——你不会一本一本地找书，而是通过目录快速定位。数据库的索引就是这样的"目录"！
