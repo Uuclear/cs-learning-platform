@@ -1,0 +1,569 @@
+---
+id: '06-03'
+title: 'DNS：域名背后的"电话簿"'
+module: '06-computer-networks'
+difficulty: 2
+duration: 20
+prerequisites: ['06-01']
+---
+
+# DNS：域名背后的"电话簿"
+
+想象一下，如果你要给朋友打电话，但你必须记住他们家的完整地址（街道号、城市、邮编），而不是简单地记住他们的名字，那会有多麻烦？互联网世界也面临同样的问题！
+
+> 💡 **思考问题**: 为什么我们输入 google.com 就能访问网站，而不是一串冰冷的数字 IP 地址？
+
+---
+
+## 开场白
+
+嘿，同学们！今天我们要聊聊互联网上最不起眼但最重要的系统之一——DNS（Domain Name System，域名系统）。你可以把它想象成互联网的"电话簿"。
+
+每当你在浏览器中输入一个网址，比如 baidu.com 或 github.com，你的电脑其实并不知道这些网站到底在哪里。它只知道 IP 地址，就像 142.250.185.206 这样的数字。但是谁愿意记住这些毫无意义的数字呢？
+
+这就是 DNS 的用武之地！它负责把人类友好的域名转换成机器能理解的 IP 地址。没有 DNS，互联网对我们普通人来说简直就是天书！
+
+> 💡 **思考问题**: 如果 DNS 系统突然瘫痪了，我们的互联网生活会发生什么变化？
+
+---
+
+## 核心概念
+
+DNS 是互联网的基础设施，它的主要作用就是**域名解析**——将域名转换为对应的 IP 地址。这个看似简单的功能背后，却有着精巧的设计。
+
+### 域名的层次结构
+
+域名不是随便写的，它有着严格的层次结构，就像我们的地址一样：
+
+- **根域名（Root Domain）**: 最顶层，用空字符串或点（.）表示
+- **顶级域名（TLD, Top-Level Domain）**: 如 .com、.org、.cn、.net 等
+- **二级域名**: 如 google.com 中的 google
+- **子域名**: 如 mail.google.com 中的 mail
+
+整个域名从右到左，层次越来越具体，就像 "中国.北京.海淀区.中关村大街.1号" 一样。
+
+### DNS 记录类型
+
+DNS 不仅仅是把域名转成 IP，它还支持多种记录类型：
+
+- **A 记录**: 将域名映射到 IPv4 地址（最常见）
+- **AAAA 记录**: 将域名映射到 IPv6 地址
+- **CNAME 记录**: 别名记录，将一个域名指向另一个域名
+- **MX 记录**: 邮件交换记录，指定邮件服务器
+- **TXT 记录**: 文本记录，用于验证域名所有权等
+- **NS 记录**: 名称服务器记录，指定哪个 DNS 服务器负责该域名
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: DNS 查询模拟
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+DNS 查询模拟器 - 演示基本的域名解析过程
+"""
+
+class SimpleDNSResolver:
+    """简单的 DNS 解析器模拟"""
+    
+    def __init__(self):
+        # 模拟的 DNS 记录数据库
+        self.dns_records = {
+            "google.com": "142.250.185.206",
+            "baidu.com": "220.181.38.148",
+            "github.com": "140.82.114.4",
+            "taobao.com": "110.75.128.22",
+            "www.example.com": "93.184.216.34"
+        }
+    
+    def resolve(self, domain: str) -> str:
+        """
+        解析域名到 IP 地址
+        
+        Args:
+            domain (str): 要解析的域名
+            
+        Returns:
+            str: 对应的 IP 地址，如果找不到则返回错误信息
+        """
+        if domain in self.dns_records:
+            return self.dns_records[domain]
+        else:
+            return f"错误: 无法找到域名 {domain} 的记录"
+
+# 使用示例
+if __name__ == "__main__":
+    resolver = SimpleDNSResolver()
+    
+    domains = ["google.com", "baidu.com", "unknown-site.com"]
+    
+    print("=== DNS 查询模拟 ===")
+    for domain in domains:
+        ip = resolver.resolve(domain)
+        print(f"{domain} -> {ip}")
+```
+
+**运行结果**：
+```
+=== DNS 查询模拟 ===
+google.com -> 142.250.185.206
+baidu.com -> 220.181.38.148
+unknown-site.com -> 错误: 无法找到域名 unknown-site.com 的记录
+```
+
+这个简单的模拟器展示了 DNS 的核心功能：维护一个域名到 IP 的映射表，并提供查询接口。真实的 DNS 系统要复杂得多，但它本质上就是这么回事！
+
+### 示例2: DNS 解析过程模拟
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+DNS 解析过程模拟 - 演示递归查询和迭代查询的区别
+"""
+
+class DNSServer:
+    """DNS 服务器模拟"""
+    
+    def __init__(self, name: str, records: dict):
+        self.name = name
+        self.records = records  # 本地记录
+        self.authoritative_for = set(records.keys())  # 权威域名
+    
+    def has_record(self, domain: str) -> bool:
+        """检查是否有该域名的记录"""
+        return domain in self.authoritative_for
+    
+    def get_record(self, domain: str) -> str:
+        """获取域名记录"""
+        return self.records.get(domain, None)
+
+class RecursiveDNSResolver:
+    """递归 DNS 解析器"""
+    
+    def __init__(self):
+        # 设置 DNS 服务器层次结构
+        self.root_server = DNSServer("根服务器", {
+            "com": "tld-com-server",
+            "org": "tld-org-server",
+            "cn": "tld-cn-server"
+        })
+        
+        self.tld_com_server = DNSServer("COM顶级域服务器", {
+            "google.com": "ns1.google.com",
+            "baidu.com": "ns.baidu.com",
+            "github.com": "dns1.github.com"
+        })
+        
+        self.authoritative_servers = {
+            "ns1.google.com": DNSServer("Google权威服务器", {"google.com": "142.250.185.206"}),
+            "ns.baidu.com": DNSServer("百度权威服务器", {"baidu.com": "220.181.38.148"}),
+            "dns1.github.com": DNSServer("GitHub权威服务器", {"github.com": "140.82.114.4"})
+        }
+    
+    def recursive_resolve(self, domain: str) -> str:
+        """
+        递归解析域名 - 客户端视角
+        客户端只需要问一次，DNS 服务器会负责完成所有查询
+        """
+        print(f"开始递归解析 {domain}")
+        
+        # 第一步：问根服务器
+        tld_server_name = self.root_server.get_record(domain.split('.')[-1] + '.')
+        print(f"根服务器告诉我去问 {tld_server_name}")
+        
+        # 第二步：问 TLD 服务器
+        auth_server_name = self.tld_com_server.get_record(domain)
+        print(f"TLD服务器告诉我去问 {auth_server_name}")
+        
+        # 第三步：问权威服务器
+        if auth_server_name in self.authoritative_servers:
+            ip = self.authoritative_servers[auth_server_name].get_record(domain)
+            print(f"权威服务器返回 IP: {ip}")
+            return ip
+        else:
+            return "解析失败"
+
+# 使用示例
+if __name__ == "__main__":
+    resolver = RecursiveDNSResolver()
+    result = resolver.recursive_resolve("google.com")
+    print(f"\n最终结果: {result}")
+```
+
+**运行结果**：
+```
+开始递归解析 google.com
+根服务器告诉我去问 tld-com-server
+TLD服务器告诉我去问 ns1.google.com
+权威服务器返回 IP: 142.250.185.206
+
+最终结果: 142.250.185.206
+```
+
+这个例子展示了 DNS 解析的完整过程：从根服务器开始，逐级向下查询，直到找到最终的 IP 地址。递归查询意味着客户端只需要发起一次请求，后续的所有查询都由 DNS 服务器代劳。
+
+### 示例3: DNS 缓存实现
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+DNS 缓存实现 - 演示如何通过缓存提高 DNS 查询效率
+"""
+
+import time
+from typing import Optional, Dict, Tuple
+
+class DNSCache:
+    """DNS 缓存实现"""
+    
+    def __init__(self, ttl: int = 300):
+        """
+        初始化 DNS 缓存
+        
+        Args:
+            ttl (int): 缓存过期时间（秒），默认 5 分钟
+        """
+        self.cache: Dict[str, Tuple[str, float]] = {}  # 域名 -> (IP, 过期时间)
+        self.ttl = ttl
+    
+    def get(self, domain: str) -> Optional[str]:
+        """
+        从缓存获取域名解析结果
+        
+        Args:
+            domain (str): 要查询的域名
+            
+        Returns:
+            str or None: 如果缓存有效则返回 IP，否则返回 None
+        """
+        if domain in self.cache:
+            ip, expiry_time = self.cache[domain]
+            if time.time() < expiry_time:
+                print(f"缓存命中: {domain} -> {ip}")
+                return ip
+            else:
+                # 缓存过期，删除它
+                del self.cache[domain]
+                print(f"缓存过期: {domain}")
+        return None
+    
+    def set(self, domain: str, ip: str) -> None:
+        """
+        设置缓存记录
+        
+        Args:
+            domain (str): 域名
+            ip (str): IP 地址
+        """
+        expiry_time = time.time() + self.ttl
+        self.cache[domain] = (ip, expiry_time)
+        print(f"缓存设置: {domain} -> {ip} (过期时间: {self.ttl}秒)")
+
+# 模拟真实的 DNS 查询函数
+def real_dns_lookup(domain: str) -> str:
+    """模拟真实的 DNS 查询（耗时操作）"""
+    print(f"执行真实 DNS 查询: {domain}")
+    # 模拟网络延迟
+    time.sleep(0.1)
+    
+    # 简单的域名到 IP 映射
+    dns_map = {
+        "google.com": "142.250.185.206",
+        "baidu.com": "220.181.38.148",
+        "github.com": "140.82.114.4"
+    }
+    return dns_map.get(domain, "未知域名")
+
+def smart_dns_resolve(domain: str, cache: DNSCache) -> str:
+    """智能 DNS 解析（带缓存）"""
+    # 先查缓存
+    cached_ip = cache.get(domain)
+    if cached_ip:
+        return cached_ip
+    
+    # 缓存未命中，执行真实查询
+    ip = real_dns_lookup(domain)
+    cache.set(domain, ip)
+    return ip
+
+# 使用示例
+if __name__ == "__main__":
+    cache = DNSCache(ttl=10)  # 10秒缓存
+    
+    print("=== 第一次查询（缓存未命中）===")
+    ip1 = smart_dns_resolve("google.com", cache)
+    print(f"结果: {ip1}\n")
+    
+    print("=== 第二次查询（缓存命中）===")
+    ip2 = smart_dns_resolve("google.com", cache)
+    print(f"结果: {ip2}\n")
+    
+    print("=== 等待缓存过期 ===")
+    time.sleep(11)  # 等待超过 TTL
+    
+    print("=== 第三次查询（缓存已过期）===")
+    ip3 = smart_dns_resolve("google.com", cache)
+    print(f"结果: {ip3}")
+```
+
+**运行结果**：
+```
+=== 第一次查询（缓存未命中）===
+执行真实 DNS 查询: google.com
+缓存设置: google.com -> 142.250.185.206 (过期时间: 10秒)
+结果: 142.250.185.206
+
+=== 第二次查询（缓存命中）===
+缓存命中: google.com -> 142.250.185.206
+结果: 142.250.185.206
+
+=== 等待缓存过期 ===
+=== 第三次查询（缓存已过期）===
+缓存过期: google.com
+执行真实 DNS 查询: google.com
+缓存设置: google.com -> 142.250.185.206 (过期时间: 10秒)
+结果: 142.250.185.206
+```
+
+DNS 缓存是提高性能的关键！通过缓存最近的查询结果，可以大大减少对上游 DNS 服务器的请求，降低延迟并减轻服务器负担。每个缓存记录都有一个 TTL（Time To Live）值，确保不会使用过期的数据。
+
+---
+
+## 深入理解
+
+DNS 看似简单，但其设计充满了智慧。让我们深入了解一下它的内部机制。
+
+### DNS 查询类型：递归 vs 迭代
+
+**递归查询（Recursive Query）**：
+- 客户端向 DNS 服务器发起查询
+- DNS 服务器负责完成所有必要的查询步骤
+- 最终只给客户端一个答案（成功或失败）
+- 大多数用户的本地 DNS 服务器（如路由器、ISP 提供的 DNS）使用递归查询
+
+**迭代查询（Iterative Query）**：
+- DNS 服务器收到查询后，如果自己不知道答案
+- 不会代替客户端继续查询，而是告诉客户端"你应该去问谁"
+- 客户端需要自己继续向推荐的服务器发起查询
+- DNS 服务器之间通常使用迭代查询
+
+这种混合设计既保证了用户体验（简单的一次查询），又避免了单个服务器承担过多负载。
+
+### DNS 缓存机制
+
+DNS 缓存存在于多个层级：
+1. **浏览器缓存**: 浏览器会缓存 DNS 记录几分钟
+2. **操作系统缓存**: 系统级别的 DNS 缓存（如 Windows 的 DNS Client 服务）
+3. **本地 DNS 服务器缓存**: 路由器或 ISP 的 DNS 服务器缓存
+4. **应用程序缓存**: 一些应用会自己维护 DNS 缓存
+
+缓存的好处显而易见：减少查询延迟、降低网络流量、减轻权威服务器压力。但缓存也有缺点：当 DNS 记录更新时，可能需要等待 TTL 过期才能看到新结果。
+
+### DNS 安全问题：DNS 劫持
+
+DNS 劫持是指攻击者篡改 DNS 查询结果，将用户引导到恶意网站。常见方式包括：
+- **本地劫持**: 感染用户电脑，修改 hosts 文件或 DNS 设置
+- **路由器劫持**: 攻击家用路由器，修改 DNS 服务器设置
+- **ISP 劫持**: 某些 ISP 会劫持不存在的域名，显示广告页面
+- **中间人攻击**: 在网络传输过程中篡改 DNS 响应
+
+防范措施包括使用 HTTPS（即使被劫持到错误网站，证书验证也会失败）、使用可信的公共 DNS（如 8.8.8.8、1.1.1.1）、启用 DNSSEC 等。
+
+---
+
+## 实际应用
+
+DNS 不仅是理论概念，它在实际开发和运维中有广泛的应用。
+
+### 实用命令：nslookup 和 dig
+
+**nslookup**（Windows/Linux 都支持）：
+```bash
+# 基本查询
+nslookup google.com
+
+# 指定 DNS 服务器
+nslookup google.com 8.8.8.8
+
+# 查询特定记录类型
+nslookup -type=mx gmail.com
+```
+
+**dig**（Linux/macOS，功能更强大）：
+```bash
+# 基本查询
+dig google.com
+
+# 查询 A 记录
+dig google.com A
+
+# 查询 MX 记录
+dig gmail.com MX
+
+# 跟踪完整解析过程
+dig +trace google.com
+```
+
+这些命令是网络故障排查的利器，可以帮助你了解 DNS 解析是否正常工作。
+
+### 公共 DNS 服务
+
+除了 ISP 默认提供的 DNS，还有很多优秀的公共 DNS 服务：
+
+- **Google Public DNS**: 8.8.8.8 和 8.8.4.4
+  - 全球覆盖，速度快，支持 DNS-over-TLS/HTTPS
+  
+- **Cloudflare DNS**: 1.1.1.1 和 1.0.0.1
+  - 注重隐私，不记录用户查询日志，速度极快
+  
+- **阿里 DNS**: 223.5.5.5 和 223.6.6.6
+  - 国内访问速度快，适合中国用户
+  
+- **腾讯 DNSPod**: 119.29.29.29
+  - 国内知名 DNS 服务，稳定性好
+
+使用公共 DNS 可以获得更好的性能、安全性和隐私保护。
+
+### CDN 与 DNS 的关系
+
+CDN（内容分发网络）和 DNS 密切配合：
+- 当用户请求某个网站时，CDN 的 DNS 服务器会根据用户的地理位置
+- 返回距离用户最近的 CDN 节点的 IP 地址
+- 这样用户就能从最近的服务器获取内容，大大提升访问速度
+
+例如，同一个 baidu.com 域名，在北京、上海、广州解析出的 IP 地址可能是不同的，因为它们指向了不同地区的 CDN 节点。
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: DNS 修改会立即生效
+
+很多人以为修改 DNS 记录后，全世界马上就能看到新结果。实际上，由于 DNS 缓存的存在，修改可能需要几小时甚至几天才能完全生效。
+
+✅ **正确做法**: 在修改重要 DNS 记录前，先将 TTL 值调小（比如 300 秒），等待一段时间让旧的长 TTL 记录过期，然后再进行实际修改。这样可以大大缩短切换时间。
+
+### 误区2: 混淆 A 记录和 CNAME 记录
+
+A 记录直接指向 IP 地址，而 CNAME 记录指向另一个域名。很多人随意使用 CNAME，但 CNAME 有一些限制：
+- 不能用于根域名（apex domain），比如 example.com 不能是 CNAME
+- CNAME 会产生额外的 DNS 查询，增加延迟
+
+✅ **正确做法**: 根域名使用 A 记录，子域名根据需要选择。如果目标是固定的 IP，优先使用 A 记录；如果目标可能变化，使用 CNAME 更灵活。
+
+### 误区3: 认为 DNS 只是用来解析网站
+
+DNS 的用途远不止解析网站！它还用于：
+- 邮件服务器发现（MX 记录）
+- 服务发现（SRV 记录）
+- 域名所有权验证（TXT 记录）
+- 负载均衡和故障转移
+- 内网服务发现
+
+✅ **正确做法**: 充分利用 DNS 的各种记录类型，它们是构建可靠分布式系统的重要工具。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 简单 DNS 缓存实现 ⭐
+
+实现一个简单的 DNS 缓存类，支持基本的 get/set 操作和 TTL 过期机制。
+
+**要求**：
+- 使用 Python 字典存储缓存数据
+- 支持设置 TTL（过期时间）
+- get 方法需要检查缓存是否过期
+- 过期的缓存应该自动删除
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+考虑使用元组来存储 (value, expiration_time)，在 get 时比较当前时间和过期时间。可以参考示例3中的实现思路。
+
+</details>
+
+### 练习2: DNS 记录类型解析器 ⭐⭐
+
+扩展 DNS 解析器，支持多种记录类型的查询（A、CNAME、MX）。
+
+**要求**：
+- 创建不同的记录类型类
+- 解析器能够根据请求的记录类型返回相应结果
+- 支持查询不存在的记录类型时返回适当的错误信息
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+可以使用字典来存储不同类型的记录，键为 (domain, record_type) 的元组。例如：{("google.com", "A"): "142.250.185.206", ("gmail.com", "MX"): "gmail-smtp-in.l.google.com"}
+
+</details>
+
+### 练习3: 模拟 DNS 层次查询 ⭐⭐⭐
+
+实现一个完整的 DNS 层次查询模拟器，包含根服务器、TLD 服务器和权威服务器。
+
+**要求**：
+- 模拟真实的 DNS 层次结构
+- 支持递归和迭代两种查询模式
+- 能够处理域名不存在的情况
+- 输出详细的查询过程日志
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+参考示例2的结构，但需要更完整的错误处理和边界情况处理。考虑如何表示不同层级的服务器，以及如何在它们之间传递查询请求。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- DNS 是互联网的"电话簿"，负责域名到 IP 地址的转换
+- 域名具有层次结构：根域名 → 顶级域名 → 二级域名 → 子域名
+- DNS 支持多种记录类型：A、AAAA、CNAME、MX、TXT、NS 等
+- DNS 查询分为递归查询和迭代查询，各有适用场景
+- DNS 缓存机制提高了性能，但也带来了更新延迟的问题
+- DNS 安全很重要，需要注意防范 DNS 劫持等攻击
+- 实际应用中要善用 nslookup/dig 等工具进行故障排查
+
+### 思考题
+
+1. 为什么 DNS 系统要设计成分布式的层次结构，而不是集中在一个中央服务器？
+
+2. DNS 缓存的 TTL 值应该如何设置？太短和太长各有什么问题？
+
+3. 在现代 Web 应用中，DNS 如何与 HTTPS、CDN、负载均衡等技术协同工作？
+
+---
+
+## 下节预告
+
+下一节课我们将深入探讨 **HTTP/HTTPS 协议**，了解 Web 应用的数据传输机制，以及如何保证通信的安全性。我们会学习 HTTP 报文结构、状态码、头部字段，以及 HTTPS 的加密原理。
+
+---
+
+## 参考资源
+
+- [RFC 1034 - Domain Names - Concepts and Facilities](https://datatracker.ietf.org/doc/html/rfc1034)
+- [MDN Web Docs - DNS](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/What_is_DNS)
+- [Cloudflare Learning Center - DNS](https://www.cloudflare.com/learning/dns/what-is-dns/)
+- [Google Public DNS Documentation](https://developers.google.com/speed/public-dns)
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*

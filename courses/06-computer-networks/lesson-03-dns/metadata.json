@@ -1,0 +1,13 @@
+{
+  "id": "06-03",
+  "title": "DNS：域名背后的\"电话簿\"",
+  "module": "06-computer-networks",
+  "difficulty": 2,
+  "duration": 20,
+  "prerequisites": ["06-01"],
+  "tags": ["dns", "networking", "domain-name-system", "computer-networks"],
+  "language": "zh-CN",
+  "version": "1.0.0",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03"
+}
