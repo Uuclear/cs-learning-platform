@@ -1,0 +1,33 @@
+{
+  "id": "03-05",
+  "title": "贪心算法：每一步都选最好的",
+  "slug": "lesson-05-greedy",
+  "module": "03-algorithms",
+  "module_name": "算法",
+  "module_order": 3,
+  "lesson_order": 5,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["03-03"],
+  "tags": ["greedy", "algorithm", "activity-selection", "huffman", "knapsack"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习贪心算法的核心思想，理解贪心选择性质和最优子结构，掌握经典贪心问题及其应用场景",
+  "learning_objectives": [
+    "理解贪心算法的核心思想和适用条件",
+    "掌握贪心选择性质和最优子结构的概念",
+    "能够区分何时贪心是正确的，何时会失败",
+    "学会编写贪心策略解决实际问题"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}
