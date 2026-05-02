@@ -1,0 +1,118 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "CPU的三大核心组件不包括以下哪个？",
+      "options": [
+        "ALU（运算器）",
+        "控制器",
+        "寄存器组",
+        "硬盘控制器"
+      ],
+      "correct": 3,
+      "explanation": "CPU的三大核心组件是ALU（运算器）、控制器和寄存器组。硬盘控制器属于I/O设备，不在CPU内部。",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "指令周期的四个阶段按正确顺序排列是？",
+      "options": [
+        "执行 → 取指令 → 解码 → 写回",
+        "取指令 → 解码 → 执行 → 写回",
+        "解码 → 取指令 → 执行 → 写回",
+        "取指令 → 执行 → 解码 → 写回"
+      ],
+      "correct": 1,
+      "explanation": "指令周期的正确顺序是：取指令(Fetch) → 解码(Decode) → 执行(Execute) → 写回(Write Back)。",
+      "difficulty": 2
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "以下关于寄存器的描述，哪个是正确的？",
+      "options": [
+        "寄存器容量很大，可以存储大量数据",
+        "寄存器速度很慢，但价格便宜",
+        "寄存器容量小但速度极快，位于CPU内部",
+        "寄存器就是内存的另一种叫法"
+      ],
+      "correct": 2,
+      "explanation": "寄存器是CPU内部的高速存储空间，容量很小（通常只有几十到几百字节），但速度极快，比内存快几百倍。",
+      "difficulty": 2
+    },
+    {
+      "id": 4,
+      "type": "single_choice",
+      "question": "流水线技术的主要作用是什么？",
+      "options": [
+        "降低CPU的功耗",
+        "让CPU可以同时处理多条指令的不同阶段，提高效率",
+        "增加CPU的缓存容量",
+        "让CPU的主频更高"
+      ],
+      "correct": 1,
+      "explanation": "流水线技术通过让多条指令的不同阶段并行执行，大幅提高了CPU的指令吞吐量（单位时间内完成的指令数）。",
+      "difficulty": 2
+    },
+    {
+      "id": 5,
+      "type": "true_false",
+      "question": "CPU的主频越高，性能就一定越好。",
+      "correct": false,
+      "explanation": "错误。CPU性能不仅取决于主频，还受IPC（每时钟周期指令数）、核心数、缓存大小、架构效率等因素影响。不同架构的CPU不能直接比较主频。",
+      "difficulty": 2
+    },
+    {
+      "id": 6,
+      "type": "single_choice",
+      "question": "PC寄存器（Program Counter）的主要作用是什么？",
+      "options": [
+        "存储当前正在执行的指令",
+        "存储下一条要执行的指令的地址",
+        "存储计算结果",
+        "存储程序运行时间"
+      ],
+      "correct": 1,
+      "explanation": "PC（程序计数器）存储的是下一条要执行的指令在内存中的地址。CPU根据PC的值去内存中取指令。",
+      "difficulty": 2
+    },
+    {
+      "id": 7,
+      "type": "single_choice",
+      "question": "ARM架构和x86架构的主要区别是什么？",
+      "options": [
+        "ARM是复杂指令集(CISC)，x86是精简指令集(RISC)",
+        "ARM是精简指令集(RISC)，x86是复杂指令集(CISC)",
+        "ARM只能用于手机，x86只能用于电脑",
+        "ARM和x86没有本质区别，只是厂商不同"
+      ],
+      "correct": 1,
+      "explanation": "ARM采用精简指令集(RISC)架构，指令简单、功耗低，适合移动设备；x86采用复杂指令集(CISC)架构，指令功能丰富，适合高性能计算。",
+      "difficulty": 3
+    },
+    {
+      "id": 8,
+      "type": "single_choice",
+      "question": "一个5级流水线执行10条指令，理论上最少需要多少个时钟周期？",
+      "options": [
+        "10个周期",
+        "14个周期",
+        "50个周期",
+        "15个周期"
+      ],
+      "correct": 1,
+      "explanation": "流水线执行n条指令需要 n + 流水线级数 - 1 个周期。所以是 10 + 5 - 1 = 14 个周期。前5个周期填满流水线，后9个周期每条指令完成一个。",
+      "difficulty": 3
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 1,
+      "medium": 5,
+      "hard": 2
+    }
+  }
+}

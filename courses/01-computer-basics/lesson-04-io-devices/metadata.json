@@ -1,0 +1,34 @@
+{
+  "id": "01-04",
+  "title": "I/O设备：计算机如何与外界对话",
+  "slug": "lesson-04-io-devices",
+  "module": "01-computer-basics",
+  "module_name": "计算机基础",
+  "module_order": 1,
+  "lesson_order": 4,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 20,
+  "prerequisites": ["01-01"],
+  "tags": ["io", "input", "output", "interrupt", "usb", "keyboard", "mouse", "display"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "了解计算机的输入输出设备，包括键盘、鼠标、显示器、打印机等，学习I/O接口和中断机制的基本概念",
+  "learning_objectives": [
+    "理解输入设备和输出设备的区别和作用",
+    "了解常见的I/O设备及其工作原理",
+    "认识常见的I/O接口（USB、HDMI、蓝牙等）",
+    "理解中断机制的概念和作用",
+    "掌握基本的文件I/O操作"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}

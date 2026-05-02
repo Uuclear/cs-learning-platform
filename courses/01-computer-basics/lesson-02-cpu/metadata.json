@@ -1,0 +1,34 @@
+{
+  "id": "01-02",
+  "title": "CPU：计算机的大脑如何思考",
+  "slug": "lesson-02-cpu",
+  "module": "01-computer-basics",
+  "module_name": "计算机基础",
+  "module_order": 1,
+  "lesson_order": 2,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 20,
+  "prerequisites": ["01-01"],
+  "tags": ["cpu", "alu", "register", "pipeline", "computer-architecture"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "深入浅出讲解CPU的工作原理，包括ALU运算器、控制器、寄存器组三大组件，指令周期、流水线技术等核心概念，以及CPU性能指标和实际应用。",
+  "learning_objectives": [
+    "理解CPU的三大核心组件及其功能",
+    "掌握CPU指令周期的四个阶段",
+    "理解流水线技术如何提高CPU效率",
+    "了解CPU性能指标（主频、核心数、缓存）的含义",
+    "认识不同架构CPU的特点（x86 vs ARM）"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}
