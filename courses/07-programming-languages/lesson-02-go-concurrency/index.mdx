@@ -1,0 +1,418 @@
+---
+id: '07-02'
+title: 'Go并发：轻量级线程的艺术'
+module: '07-programming-languages'
+difficulty: 3
+duration: 35
+prerequisites: ['04-02']
+---
+
+# Go并发：轻量级线程的艺术
+
+为什么Go只用几行代码就能实现百万并发？秘密就藏在goroutine这个轻量级线程里！
+
+---
+
+## 开场白
+
+想象一下，你是一家餐厅的老板。传统的多线程就像雇佣了成千上万的服务员，每个服务员都要有自己的工牌、制服、休息室——开销巨大！而Go的goroutine就像是魔术师变出来的分身，轻如鸿毛，却能同时服务百万顾客。
+
+Go语言从诞生之初就把并发作为核心特性，而不是事后补丁。它用极简的语法（就一个`go`关键字！）和强大的运行时调度器，让我们轻松驾驭高并发场景。今天，我们就来揭开Go并发的神秘面纱，看看它是如何做到"轻量级线程的艺术"的。
+
+> 💡 **思考问题**: 如果传统线程这么重，为什么操作系统还要用它？Go的goroutine又是如何解决这个问题的？
+
+---
+
+## 核心概念
+
+Go并发编程的核心围绕四个关键组件：goroutine、channel、select和sync包。它们共同构成了Go并发的基石。
+
+### goroutine
+
+goroutine是Go语言中的轻量级线程，由Go运行时管理。创建一个goroutine只需要在函数调用前加上`go`关键字。goroutine的栈空间初始只有2KB，并且会根据需要动态增长或缩小，这使得我们可以轻松创建成千上万个goroutine而不会耗尽内存。
+
+### channel
+
+channel是goroutine之间通信的管道，遵循"不要通过共享内存来通信，而要通过通信来共享内存"的原则。channel可以是有缓冲的也可以是无缓冲的，它们提供了类型安全的数据传递机制，并且天然支持同步。
+
+### select
+
+select语句让goroutine能够同时等待多个channel操作。它类似于switch语句，但每个case都是一个channel操作。select会随机选择一个可以执行的操作，如果没有可执行的操作且有default case，则执行default case。
+
+### sync包
+
+sync包提供了低级别的同步原语，如Mutex（互斥锁）、WaitGroup（等待组）、Once（一次性执行）等。虽然Go鼓励使用channel进行通信，但在某些场景下，sync包提供的工具仍然是必要的。
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: goroutine基础使用
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func sayHello(name string) {
+    // 模拟一些工作
+    time.Sleep(100 * time.Millisecond)
+    fmt.Printf("你好, %s!\n", name)
+}
+
+func main() {
+    // 启动多个goroutine
+    go sayHello("小明")
+    go sayHello("小红")
+    go sayHello("小刚")
+    
+    // 等待goroutine完成（实际项目中应该用更优雅的方式）
+    time.Sleep(200 * time.Millisecond)
+    fmt.Println("主程序结束")
+}
+```
+
+**运行结果**：
+```
+你好, 小明!
+你好, 小红!
+你好, 小刚!
+主程序结束
+```
+
+这个例子展示了goroutine的基本用法。注意我们用了`time.Sleep`来等待goroutine完成，这在实际项目中并不推荐，更好的方式是使用WaitGroup或channel进行同步。
+
+### 示例2: channel通信
+
+```go
+package main
+
+import "fmt"
+
+func worker(id int, jobs <-chan int, results chan<- int) {
+    // 从jobs channel接收任务，处理后发送到results channel
+    for job := range jobs {
+        fmt.Printf("工人 %d 正在处理任务 %d\n", id, job)
+        results <- job * 2 // 简单的处理：乘以2
+    }
+}
+
+func main() {
+    const numJobs = 5
+    jobs := make(chan int, numJobs)   // 有缓冲的jobs channel
+    results := make(chan int, numJobs) // 有缓冲的results channel
+
+    // 启动3个worker goroutine
+    for w := 1; w <= 3; w++ {
+        go worker(w, jobs, results)
+    }
+
+    // 发送任务
+    for j := 1; j <= numJobs; j++ {
+        jobs <- j
+    }
+    close(jobs) // 关闭jobs channel，告诉workers没有更多任务了
+
+    // 收集结果
+    for a := 1; a <= numJobs; a++ {
+        result := <-results
+        fmt.Printf("收到结果: %d\n", result)
+    }
+}
+```
+
+**运行结果**：
+```
+工人 1 正在处理任务 1
+工人 2 正在处理任务 2
+工人 3 正在处理任务 3
+收到结果: 2
+收到结果: 4
+工人 1 正在处理任务 4
+收到结果: 6
+工人 2 正在处理任务 5
+收到结果: 8
+收到结果: 10
+```
+
+这个例子展示了如何使用channel在多个goroutine之间协调工作。jobs channel用于分发任务，results channel用于收集结果。
+
+### 示例3: select多路复用
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    ch1 := make(chan string)
+    ch2 := make(chan string)
+
+    // 启动两个goroutine，分别向不同的channel发送消息
+    go func() {
+        time.Sleep(150 * time.Millisecond)
+        ch1 <- "来自channel 1的消息"
+    }()
+
+    go func() {
+        time.Sleep(100 * time.Millisecond)
+        ch2 <- "来自channel 2的消息"
+    }()
+
+    // 使用select等待多个channel
+    for i := 0; i < 2; i++ {
+        select {
+        case msg1 := <-ch1:
+            fmt.Println("收到:", msg1)
+        case msg2 := <-ch2:
+            fmt.Println("收到:", msg2)
+        case <-time.After(200 * time.Millisecond):
+            fmt.Println("超时了！")
+        }
+    }
+}
+```
+
+**运行结果**：
+```
+收到: 来自channel 2的消息
+收到: 来自channel 1的消息
+```
+
+select语句让我们能够优雅地处理多个channel操作，还内置了超时机制（通过time.After）。
+
+---
+
+## 深入理解
+
+### 工作原理
+
+Go的并发模型基于GMP调度模型：
+- **G (Goroutine)**: 轻量级协程，用户态线程
+- **M (Machine)**: 操作系统线程，真正执行计算的实体
+- **P (Processor)**: 处理器，包含goroutine队列和调度信息
+
+Go运行时会将多个G映射到少量的M上，通过P进行调度。当一个G发生阻塞（比如I/O操作）时，M不会被阻塞，而是可以执行其他G，从而实现高效的并发。
+
+### 时间/空间复杂度
+
+- **goroutine创建**: O(1)时间复杂度，初始栈空间约2KB
+- **channel操作**: 无缓冲channel的发送/接收是O(1)，有缓冲channel在缓冲区满/空时可能阻塞
+- **select操作**: O(n)时间复杂度，其中n是case的数量
+
+### 与其他概念的对比
+
+| 特性 | Go goroutine | Java Thread | Python Thread |
+|------|--------------|-------------|---------------|
+| 内存开销 | ~2KB初始 | ~1MB | ~8KB+ |
+| 创建速度 | 极快 | 较慢 | 中等 |
+| 调度方式 | 用户态协作式 | 内核态抢占式 | GIL限制 |
+| 通信机制 | channel优先 | 共享内存+锁 | 共享内存+锁 |
+
+---
+
+## 实际应用
+
+### 应用场景1: Web服务器
+
+Go的并发特性使其成为构建高性能Web服务器的理想选择。每个HTTP请求可以作为一个goroutine处理，轻松应对数千甚至数万的并发连接。
+
+```go
+// 简化的Web服务器示例
+func handler(w http.ResponseWriter, r *http.Request) {
+    // 每个请求在一个独立的goroutine中处理
+    fmt.Fprintf(w, "Hello, World!")
+}
+
+func main() {
+    http.HandleFunc("/", handler)
+    http.ListenAndServe(":8080", nil) // 自动为每个请求创建goroutine
+}
+```
+
+### 应用场景2: 并发爬虫
+
+网络爬虫是Go并发的经典应用场景。我们可以启动多个goroutine同时抓取不同页面，使用channel协调结果收集和错误处理。
+
+```go
+// 伪代码示例
+urls := []string{"http://site1.com", "http://site2.com", ...}
+results := make(chan string, len(urls))
+
+for _, url := range urls {
+    go func(u string) {
+        content := fetchURL(u) // 并发抓取
+        results <- content
+    }(url)
+}
+```
+
+### 应用场景3: 管道模式
+
+Go的channel非常适合实现生产者-消费者模式和管道处理。我们可以将复杂的处理流程分解为多个阶段，每个阶段由独立的goroutine处理，通过channel连接。
+
+```go
+// 数据处理管道
+func processPipeline(data []int) []int {
+    stage1 := square(data)      // 第一阶段：平方
+    stage2 := filterEven(stage1) // 第二阶段：过滤偶数
+    return stage2
+}
+```
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 忘记关闭channel
+
+忘记关闭channel会导致接收方永远阻塞，造成goroutine泄漏。
+
+✅ **正确做法**: 在发送方完成发送后显式关闭channel，或者使用defer确保channel被关闭。
+
+```go
+// 正确做法
+func producer(ch chan<- int) {
+    defer close(ch) // 确保channel被关闭
+    for i := 0; i < 10; i++ {
+        ch <- i
+    }
+}
+```
+
+### 误区2: goroutine泄漏
+
+启动了goroutine但没有适当的同步机制来等待它们完成，导致程序提前退出或资源无法释放。
+
+✅ **正确做法**: 使用sync.WaitGroup或channel来协调goroutine的生命周期。
+
+```go
+// 使用WaitGroup
+var wg sync.WaitGroup
+for i := 0; i < 5; i++ {
+    wg.Add(1)
+    go func(id int) {
+        defer wg.Done()
+        // 工作逻辑
+    }(i)
+}
+wg.Wait() // 等待所有goroutine完成
+```
+
+### 误区3: 数据竞争
+
+多个goroutine同时读写共享变量而没有适当的同步机制，导致不可预测的结果。
+
+✅ **正确做法**: 要么使用channel进行通信，要么使用sync.Mutex保护共享资源。
+
+```go
+// 使用Mutex保护共享资源
+var mu sync.Mutex
+var counter int
+
+func increment() {
+    mu.Lock()
+    counter++
+    mu.Unlock()
+}
+```
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 并发计数器 ⭐
+
+实现一个并发安全的计数器，支持增加、减少和获取当前值操作。
+
+**要求**：
+- 使用sync.Mutex保护内部状态
+- 提供Increment()、Decrement()和Value()方法
+- 编写测试验证并发安全性
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+考虑使用结构体封装计数器状态和Mutex，确保所有修改操作都持有锁。
+
+</details>
+
+### 练习2: 工作池模式 ⭐⭐
+
+实现一个工作池，能够并发处理任务并收集结果。
+
+**要求**：
+- 接收任务列表和工作goroutine数量
+- 使用channel分发任务和收集结果
+- 处理错误情况（如任务panic）
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+参考示例2的worker模式，但需要处理错误传播和优雅关闭。
+
+</details>
+
+### 练习3: 超时控制的HTTP客户端 ⭐⭐⭐
+
+实现一个支持超时控制的并发HTTP客户端。
+
+**要求**：
+- 能够并发请求多个URL
+- 支持整体超时和单个请求超时
+- 返回成功结果和失败原因
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+结合context包和select语句实现超时控制，使用errgroup简化错误处理。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- goroutine是Go的轻量级线程，创建成本极低
+- channel是goroutine间通信的主要机制，遵循CSP模型
+- select语句提供多路channel操作的能力
+- sync包提供底层同步原语，在必要时使用
+- Go的GMP调度模型实现了高效的并发执行
+
+### 思考题
+
+1. 为什么Go选择channel而不是传统的共享内存+锁的方式来处理并发？
+2. goroutine的栈空间是如何动态调整的？这种设计有什么优势和劣势？
+3. 在什么场景下应该使用sync.Mutex而不是channel？
+
+---
+
+## 下节预告
+
+下一节课我们将深入探讨Rust的所有权系统，看看这门系统编程语言是如何在编译期就保证内存安全的。准备好迎接"借用检查器"的挑战了吗？
+
+---
+
+## 参考资源
+
+- [Go官方并发教程](https://golang.org/doc/effective_go#concurrency)
+- [Go by Example: Goroutines](https://gobyexample.com/goroutines)
+- [The Go Memory Model](https://golang.org/ref/mem)
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*

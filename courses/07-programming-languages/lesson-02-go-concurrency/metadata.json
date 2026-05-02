@@ -1,0 +1,13 @@
+{
+  "id": "07-02",
+  "title": "Go并发：轻量级线程的艺术",
+  "module": "07-programming-languages",
+  "difficulty": 3,
+  "duration": 35,
+  "prerequisites": ["04-02"],
+  "tags": ["go", "concurrency", "goroutine", "channel", "select", "programming-languages"],
+  "language": "zh-CN",
+  "version": "1.0.0",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03"
+}

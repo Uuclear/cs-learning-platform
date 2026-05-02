@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Go语言中创建goroutine的关键字是什么？",
+      "options": [
+        "thread",
+        "go",
+        "spawn",
+        "async"
+      ],
+      "correctAnswer": 1,
+      "explanation": "在Go语言中，只需要在函数调用前加上`go`关键字就可以创建一个goroutine。"
+    },
+    {
+      "id": "q2",
+      "question": "关于Go的channel，以下哪个说法是正确的？",
+      "options": [
+        "channel只能传递基本数据类型",
+        "无缓冲channel的发送和接收操作都是阻塞的",
+        "channel不能在多个goroutine之间共享",
+        "channel的容量在创建后可以动态调整"
+      ],
+      "correctAnswer": 1,
+      "explanation": "无缓冲channel的发送操作会阻塞直到有接收者准备接收，接收操作也会阻塞直到有发送者准备发送。"
+    },
+    {
+      "id": "q3",
+      "question": "Go的GMP调度模型中的P代表什么？",
+      "options": [
+        "Process",
+        "Processor",
+        "Program",
+        "Pool"
+      ],
+      "correctAnswer": 1,
+      "explanation": "P代表Processor（处理器），它包含goroutine队列和调度信息，是G和M之间的桥梁。"
+    },
+    {
+      "id": "q4",
+      "question": "以下哪种情况会导致goroutine泄漏？",
+      "options": [
+        "使用sync.WaitGroup等待所有goroutine完成",
+        "在函数结束时关闭channel",
+        "启动了goroutine但没有适当的同步机制来等待它们完成",
+        "使用select语句处理多个channel"
+      ],
+      "correctAnswer": 2,
+      "explanation": "如果启动了goroutine但没有适当的同步机制（如WaitGroup或channel）来等待它们完成，主程序可能会提前退出，导致goroutine被强制终止或资源无法释放。"
+    },
+    {
+      "id": "q5",
+      "question": "select语句在Go并发编程中的主要作用是什么？",
+      "options": [
+        "提供循环控制结构",
+        "实现多路channel操作的选择",
+        "替代if-else条件判断",
+        "管理goroutine的生命周期"
+      ],
+      "correctAnswer": 1,
+      "explanation": "select语句让goroutine能够同时等待多个channel操作，类似于switch语句但专门用于channel操作。"
+    },
+    {
+      "id": "q6",
+      "question": "Go语言推荐的并发编程原则是什么？",
+      "options": [
+        "通过共享内存来通信",
+        "不要通过共享内存来通信，而要通过通信来共享内存",
+        "尽量使用全局变量",
+        "避免使用channel，优先使用锁"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Go语言的核心哲学之一是'不要通过共享内存来通信，而要通过通信来共享内存'，这鼓励使用channel而不是传统的共享内存+锁的方式。"
+    },
+    {
+      "id": "q7",
+      "question": "goroutine的初始栈空间大约是多少？",
+      "options": [
+        "1MB",
+        "64KB",
+        "8KB",
+        "2KB"
+      ],
+      "correctAnswer": 3,
+      "explanation": "goroutine的初始栈空间约为2KB，并且会根据需要动态增长或缩小，这使得可以轻松创建大量goroutine。"
+    },
+    {
+      "id": "q8",
+      "question": "以下哪个sync包的组件用于确保某个函数只执行一次？",
+      "options": [
+        "sync.Mutex",
+        "sync.WaitGroup",
+        "sync.Once",
+        "sync.Pool"
+      ],
+      "correctAnswer": 2,
+      "explanation": "sync.Once用于确保某个函数在整个程序生命周期中只执行一次，常用于单例模式的初始化。"
+    }
+  ]
+}
