@@ -1,0 +1,33 @@
+{
+  "id": "03-04",
+  "title": "动态规划：聪明的"抄近路"",
+  "slug": "lesson-04-dynamic-programming",
+  "module": "03-algorithms",
+  "module_name": "算法",
+  "module_order": 3,
+  "lesson_order": 4,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 40,
+  "prerequisites": ["03-03"],
+  "tags": ["dynamic-programming", "memoization", "fibonacci", "knapsack", "lcs", "algorithm"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习动态规划的核心思想：重叠子问题、最优子结构和状态转移方程，通过斐波那契、背包问题和最长公共子序列等经典案例掌握DP解题方法。",
+  "learning_objectives": [
+    "理解动态规划的核心思想：重叠子问题和最优子结构",
+    "掌握自顶向下（记忆化搜索）和自底向上（迭代法）两种写法",
+    "能够定义状态、写出状态转移方程、确定边界条件",
+    "运用动态规划解决经典问题：斐波那契、背包、最长公共子序列"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 2
+    }
+  }
+}
