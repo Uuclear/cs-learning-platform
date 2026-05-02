@@ -1,0 +1,737 @@
+---
+id: '03-09'
+title: '字符串算法：文本处理的绝技'
+module: '03-algorithms'
+difficulty: 3
+duration: 30
+prerequisites: ['03-01']
+---
+
+# 字符串算法：文本处理的绝技
+
+想象一下，当你在Google搜索"字符串算法"时，搜索引擎是如何在几十亿网页中瞬间找到包含这些关键词的页面？或者当你在Word文档中按Ctrl+F查找某个词时，软件是如何快速定位到所有匹配位置的？这些看似神奇的功能背后，都离不开高效的字符串算法！
+
+> 💡 **思考问题**: 如果让你从一本1000页的小说中找出所有"爱情"这个词出现的位置，你会怎么找？逐字逐句扫描？有没有更快的方法？
+
+---
+
+## 开场白
+
+嘿，程序员朋友们！今天我们来聊聊字符串算法——这个听起来有点枯燥，但实际上超级实用的话题。你可能会想："不就是字符串匹配吗？用Python的`find()`方法不就行了？"
+
+哈哈，如果你真的这么想，那说明你还没遇到真正的挑战！想象一下，如果你需要在一个10GB的日志文件中查找某个错误模式，或者在一个包含数百万DNA序列的数据库中寻找特定的基因片段，这时候朴素的逐字符比较方法可能要运行好几个小时！
+
+字符串算法就是为了解决这些实际问题而生的。它们就像是文本处理界的"绝技"，能让你在海量文本中如鱼得水，快速准确地找到目标。
+
+今天我们要学习三种经典且实用的字符串算法：KMP算法、Trie树和Rabin-Karp算法。每一种都有其独特的适用场景和优势，掌握它们会让你在处理文本相关问题时游刃有余！
+
+---
+
+## 核心概念
+
+### KMP算法（Knuth-Morris-Pratt算法）
+
+KMP算法是一种高效的单模式字符串匹配算法，它的核心思想是**利用已匹配的信息避免回溯**。当我们发现某个位置不匹配时，不是简单地将模式串向右移动一位，而是根据已经匹配的部分，计算出可以跳过的最大距离。
+
+KMP算法通过预处理模式串构建一个"部分匹配表"（也叫next数组），这个表告诉我们当匹配失败时应该跳转到哪个位置继续匹配。
+
+### Trie树（前缀树）
+
+Trie树是一种专门用于存储字符串集合的树形数据结构。每个节点代表一个字符，从根节点到任意节点的路径构成一个字符串前缀。Trie树的最大优势是支持**高效的前缀搜索**，这使得它在自动补全、拼写检查、IP路由等场景中大放异彩。
+
+Trie树的特点是空间换时间——虽然它可能占用较多内存，但查询效率极高，通常只需要O(m)时间（m为字符串长度）。
+
+### Rabin-Karp算法
+
+Rabin-Karp算法使用**滚动哈希**技术来进行字符串匹配。它先计算模式串的哈希值，然后在文本中滑动窗口计算每个子串的哈希值。只有当哈希值匹配时，才进行实际的字符串比较。
+
+这种方法的优势在于可以很容易地扩展到多模式匹配，并且在平均情况下具有很好的性能。不过需要注意哈希冲突的问题。
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: KMP字符串匹配算法
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+KMP (Knuth-Morris-Pratt) 字符串匹配算法示例
+
+KMP算法通过预处理模式串，构建部分匹配表（也称为next数组），
+避免在匹配失败时回溯文本串，从而实现线性时间复杂度的字符串匹配。
+"""
+
+def build_next_array(pattern: str) -> list[int]:
+    """
+    构建KMP算法的next数组（部分匹配表）
+
+    Args:
+        pattern: 模式串
+
+    Returns:
+        next数组，next[i]表示pattern[0:i]的最长相同前后缀长度
+    """
+    n = len(pattern)
+    next_array = [0] * n
+    j = 0  # j表示当前已匹配的前缀长度
+
+    # 从第二个字符开始构建next数组
+    for i in range(1, n):
+        # 如果当前字符不匹配，回溯到next[j-1]的位置
+        while j > 0 and pattern[i] != pattern[j]:
+            j = next_array[j - 1]
+
+        # 如果当前字符匹配，增加匹配长度
+        if pattern[i] == pattern[j]:
+            j += 1
+
+        next_array[i] = j
+
+    return next_array
+
+
+def kmp_search(text: str, pattern: str) -> list[int]:
+    """
+    使用KMP算法在文本中搜索模式串的所有出现位置
+
+    Args:
+        text: 文本串
+        pattern: 模式串
+
+    Returns:
+        所有匹配位置的列表（0-based索引）
+    """
+    if not pattern:
+        return []
+
+    next_array = build_next_array(pattern)
+    matches = []
+    j = 0  # 模式串的匹配位置
+
+    for i in range(len(text)):
+        # 如果当前字符不匹配，根据next数组回溯
+        while j > 0 and text[i] != pattern[j]:
+            j = next_array[j - 1]
+
+        # 如果当前字符匹配，移动到下一个字符
+        if text[i] == pattern[j]:
+            j += 1
+
+        # 如果完全匹配，记录位置并准备下一次匹配
+        if j == len(pattern):
+            matches.append(i - j + 1)
+            j = next_array[j - 1]  # 利用next数组继续匹配
+
+    return matches
+
+
+def main():
+    """KMP算法演示"""
+    text = "ABABDABACDABABCABCABCABCABC"
+    pattern = "ABABCABC"
+
+    print("=== KMP字符串匹配算法演示 ===")
+    print(f"文本串: {text}")
+    print(f"模式串: {pattern}")
+
+    # 构建next数组
+    next_array = build_next_array(pattern)
+    print(f"next数组: {next_array}")
+
+    # 执行搜索
+    matches = kmp_search(text, pattern)
+    print(f"匹配位置: {matches}")
+
+    # 验证结果
+    if matches:
+        print("\n匹配结果验证:")
+        for pos in matches:
+            matched_text = text[pos:pos + len(pattern)]
+            print(f"  位置 {pos}: '{matched_text}' ✓")
+    else:
+        print("未找到匹配!")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+=== KMP字符串匹配算法演示 ===
+文本串: ABABDABACDABABCABCABCABCABC
+模式串: ABABCABC
+next数组: [0, 0, 1, 2, 0, 1, 2, 0]
+匹配位置: [10]
+
+匹配结果验证:
+  位置 10: 'ABABCABC' ✓
+```
+
+这个例子展示了KMP算法如何通过next数组避免不必要的回溯。注意next数组的值[0, 0, 1, 2, 0, 1, 2, 0]告诉我们，当在某个位置匹配失败时，应该跳转到哪里继续匹配。
+
+### 示例2: Trie树（前缀树）实现
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Trie树（前缀树）实现示例
+
+Trie树是一种用于存储字符串集合的树形数据结构，
+每个节点代表一个字符，从根到叶子的路径构成完整的字符串。
+Trie树在自动补全、拼写检查、IP路由等场景中有广泛应用。
+"""
+
+from typing import Dict, Optional, List
+
+
+class TrieNode:
+    """Trie树的节点类"""
+
+    def __init__(self):
+        # 子节点字典，键为字符，值为对应的子节点
+        self.children: Dict[str, 'TrieNode'] = {}
+        # 标记当前节点是否为某个单词的结尾
+        self.is_end_of_word: bool = False
+        # 可选：存储以当前前缀开头的单词数量（用于统计）
+        self.word_count: int = 0
+
+
+class Trie:
+    """Trie树实现"""
+
+    def __init__(self):
+        # 根节点不包含任何字符
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        """
+        向Trie树中插入一个单词
+
+        Args:
+            word: 要插入的单词
+        """
+        current = self.root
+
+        for char in word:
+            # 如果当前字符不存在，则创建新节点
+            if char not in current.children:
+                current.children[char] = TrieNode()
+
+            current = current.children[char]
+            current.word_count += 1  # 增加以当前前缀开头的单词计数
+
+        # 标记单词结尾
+        current.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        """
+        在Trie树中搜索完整单词
+
+        Args:
+            word: 要搜索的单词
+
+        Returns:
+            如果存在该单词返回True，否则返回False
+        """
+        current = self.root
+
+        for char in word:
+            if char not in current.children:
+                return False
+            current = current.children[char]
+
+        # 必须是完整单词的结尾
+        return current.is_end_of_word
+
+    def starts_with(self, prefix: str) -> bool:
+        """
+        检查Trie树中是否存在以指定前缀开头的单词
+
+        Args:
+            prefix: 前缀字符串
+
+        Returns:
+            如果存在以该前缀开头的单词返回True，否则返回False
+        """
+        current = self.root
+
+        for char in prefix:
+            if char not in current.children:
+                return False
+            current = current.children[char]
+
+        return True
+
+    def get_words_with_prefix(self, prefix: str) -> List[str]:
+        """
+        获取所有以指定前缀开头的单词
+
+        Args:
+            prefix: 前缀字符串
+
+        Returns:
+            所有匹配的单词列表
+        """
+        current = self.root
+
+        # 先找到前缀对应的节点
+        for char in prefix:
+            if char not in current.children:
+                return []
+            current = current.children[char]
+
+        # 从当前节点开始DFS遍历所有可能的单词
+        words = []
+        self._dfs(current, prefix, words)
+        return words
+
+    def _dfs(self, node: TrieNode, current_word: str, words: List[str]) -> None:
+        """
+        深度优先搜索辅助函数
+
+        Args:
+            node: 当前节点
+            current_word: 当前构建的单词
+            words: 结果列表
+        """
+        if node.is_end_of_word:
+            words.append(current_word)
+
+        for char, child_node in node.children.items():
+            self._dfs(child_node, current_word + char, words)
+
+    def delete(self, word: str) -> bool:
+        """
+        从Trie树中删除一个单词
+
+        Args:
+            word: 要删除的单词
+
+        Returns:
+            如果成功删除返回True，如果单词不存在返回False
+        """
+        def _delete_helper(node: TrieNode, word: str, index: int) -> bool:
+            """
+            删除辅助函数，返回当前节点是否应该被删除
+            """
+            if index == len(word):
+                # 到达单词末尾
+                if not node.is_end_of_word:
+                    return False  # 单词不存在
+
+                node.is_end_of_word = False
+                node.word_count -= 1
+                # 如果没有子节点且不是其他单词的结尾，则可以删除
+                return len(node.children) == 0
+
+            char = word[index]
+            if char not in node.children:
+                return False  # 单词不存在
+
+            child_node = node.children[char]
+            should_delete_child = _delete_helper(child_node, word, index + 1)
+
+            if should_delete_child:
+                del node.children[char]
+                node.word_count -= 1
+
+            # 当前节点可以被删除的条件：
+            # 1. 不是任何单词的结尾
+            # 2. 没有子节点
+            return not node.is_end_of_word and len(node.children) == 0
+
+        return _delete_helper(self.root, word, 0)
+
+
+def main():
+    """Trie树演示"""
+    trie = Trie()
+
+    # 插入单词
+    words_to_insert = ["apple", "app", "application", "apply", "aptitude", "banana", "band"]
+    print("=== Trie树（前缀树）演示 ===")
+    print(f"插入单词: {words_to_insert}")
+
+    for word in words_to_insert:
+        trie.insert(word)
+
+    # 搜索完整单词
+    print("\n--- 完整单词搜索 ---")
+    test_words = ["app", "apple", "appl", "banana", "ban"]
+    for word in test_words:
+        exists = trie.search(word)
+        print(f"'{word}' 存在: {exists}")
+
+    # 前缀搜索
+    print("\n--- 前缀搜索 ---")
+    prefixes = ["app", "ban", "ap", "xyz"]
+    for prefix in prefixes:
+        has_prefix = trie.starts_with(prefix)
+        print(f"存在以 '{prefix}' 开头的单词: {has_prefix}")
+
+    # 获取所有以指定前缀开头的单词
+    print("\n--- 获取前缀匹配的单词 ---")
+    prefix_words = trie.get_words_with_prefix("app")
+    print(f"以 'app' 开头的单词: {prefix_words}")
+
+    # 删除单词
+    print("\n--- 删除操作 ---")
+    deleted = trie.delete("app")
+    print(f"删除 'app': {'成功' if deleted else '失败（不存在）'}")
+
+    # 验证删除结果
+    print(f"删除后 'app' 存在: {trie.search('app')}")
+    print(f"删除后 'apple' 存在: {trie.search('apple')}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+=== Trie树（前缀树）演示 ===
+插入单词: ['apple', 'app', 'application', 'apply', 'aptitude', 'banana', 'band']
+
+--- 完整单词搜索 ---
+'app' 存在: True
+'apple' 存在: True
+'appl' 存在: False
+'banana' 存在: True
+'ban' 存在: False
+
+--- 前缀搜索 ---
+存在以 'app' 开头的单词: True
+存在以 'ban' 开头的单词: True
+存在以 'ap' 开头的单词: True
+存在以 'xyz' 开头的单词: False
+
+--- 获取前缀匹配的单词 ---
+以 'app' 开头的单词: ['app', 'apple', 'application', 'apply']
+
+--- 删除操作 ---
+删除 'app': 失败（不存在）
+删除后 'app' 存在: False
+删除后 'apple' 存在: True
+```
+
+这个Trie树实现展示了如何高效地存储和查询字符串集合。注意前缀搜索的时间复杂度只与前缀长度有关，而不是与字典中的单词总数有关！
+
+### 示例3: Rabin-Karp哈希匹配算法
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Rabin-Karp 字符串匹配算法示例
+
+Rabin-Karp算法使用滚动哈希技术来高效地在文本中搜索模式串。
+通过预先计算模式串的哈希值，然后在文本中滑动窗口计算哈希值，
+只有当哈希值匹配时才进行实际的字符串比较，从而减少不必要的比较。
+"""
+
+def rabin_karp_search(text: str, pattern: str, prime: int = 101) -> list[int]:
+    """
+    使用Rabin-Karp算法在文本中搜索模式串
+
+    Args:
+        text: 文本串
+        pattern: 模式串
+        prime: 用于哈希计算的大质数（默认101）
+
+    Returns:
+        所有匹配位置的列表（0-based索引）
+    """
+    if not pattern or not text or len(pattern) > len(text):
+        return []
+
+    n = len(text)
+    m = len(pattern)
+    matches = []
+
+    # 计算d^(m-1) % prime，用于滚动哈希
+    h = pow(256, m - 1, prime)
+
+    # 计算模式串和文本前m个字符的哈希值
+    pattern_hash = 0
+    text_hash = 0
+
+    for i in range(m):
+        pattern_hash = (pattern_hash * 256 + ord(pattern[i])) % prime
+        text_hash = (text_hash * 256 + ord(text[i])) % prime
+
+    # 在文本中滑动窗口
+    for i in range(n - m + 1):
+        # 如果哈希值匹配，进行实际字符串比较（防止哈希冲突）
+        if pattern_hash == text_hash:
+            # 验证实际字符串是否匹配
+            if text[i:i + m] == pattern:
+                matches.append(i)
+
+        # 计算下一个窗口的哈希值（如果不是最后一个窗口）
+        if i < n - m:
+            # 移除最左边字符的影响
+            text_hash = (text_hash - ord(text[i]) * h) % prime
+            # 添加新字符
+            text_hash = (text_hash * 256 + ord(text[i + m])) % prime
+            # 处理负数情况
+            if text_hash < 0:
+                text_hash += prime
+
+    return matches
+
+
+def compute_hash(s: str, prime: int = 101) -> int:
+    """
+    计算字符串的简单哈希值
+
+    Args:
+        s: 输入字符串
+        prime: 质数模数
+
+    Returns:
+        哈希值
+    """
+    hash_value = 0
+    for char in s:
+        hash_value = (hash_value * 256 + ord(char)) % prime
+    return hash_value
+
+
+def main():
+    """Rabin-Karp算法演示"""
+    text = "ABABDABACDABABCABCABCABCABC"
+    pattern = "ABABCABC"
+
+    print("=== Rabin-Karp字符串匹配算法演示 ===")
+    print(f"文本串: {text}")
+    print(f"模式串: {pattern}")
+
+    # 计算哈希值
+    pattern_hash = compute_hash(pattern)
+    print(f"模式串哈希值: {pattern_hash}")
+
+    # 执行搜索
+    matches = rabin_karp_search(text, pattern)
+    print(f"匹配位置: {matches}")
+
+    # 验证结果
+    if matches:
+        print("\n匹配结果验证:")
+        for pos in matches:
+            matched_text = text[pos:pos + len(pattern)]
+            print(f"  位置 {pos}: '{matched_text}' ✓")
+    else:
+        print("未找到匹配!")
+
+    # 性能对比演示
+    print("\n--- 算法特点 ---")
+    print("✅ 时间复杂度: 平均 O(n+m)，最坏 O(nm)")
+    print("✅ 空间复杂度: O(1)")
+    print("✅ 优点: 可以同时搜索多个模式，适合多模式匹配")
+    print("⚠️  注意: 存在哈希冲突的可能性，需要二次验证")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+=== Rabin-Karp字符串匹配算法演示 ===
+文本串: ABABDABACDABABCABCABCABCABC
+模式串: ABABCABC
+模式串哈希值: 66
+匹配位置: [10]
+
+匹配结果验证:
+  位置 10: 'ABABCABC' ✓
+
+--- 算法特点 ---
+✅ 时间复杂度: 平均 O(n+m)，最坏 O(nm)
+✅ 空间复杂度: O(1)
+✅ 优点: 可以同时搜索多个模式，适合多模式匹配
+⚠️  注意: 存在哈希冲突的可能性，需要二次验证
+```
+
+Rabin-Karp算法展示了如何使用哈希技术来加速字符串匹配。虽然存在哈希冲突的可能性，但在实际应用中，通过选择合适的哈希函数和质数，冲突的概率可以降到很低。
+
+---
+
+## 深入理解
+
+### 工作原理
+
+**KMP算法**的核心在于预处理阶段构建的next数组。这个数组记录了模式串中每个位置的"最长相同前后缀"长度。当匹配失败时，我们不需要从头开始匹配，而是可以直接跳转到next数组指示的位置，这样就避免了大量的重复比较。
+
+**Trie树**的工作原理类似于字典的索引系统。每个字符对应树的一个层级，通过逐层向下遍历，我们可以快速判断某个字符串是否存在，或者找到所有以特定前缀开头的字符串。
+
+**Rabin-Karp算法**利用了哈希函数的性质：相同的字符串必然有相同的哈希值（但反过来不一定成立）。通过滚动哈希技术，我们可以在O(1)时间内计算出文本中每个子串的哈希值，从而大大减少实际字符串比较的次数。
+
+### 时间/空间复杂度
+
+| 算法 | 预处理时间 | 搜索时间 | 空间复杂度 |
+|------|------------|----------|------------|
+| 朴素匹配 | O(1) | O(n×m) | O(1) |
+| KMP | O(m) | O(n) | O(m) |
+| Trie树 | O(N×L) | O(m) | O(N×L) |
+| Rabin-Karp | O(1) | 平均O(n+m)，最坏O(n×m) | O(1) |
+
+其中：
+- n: 文本长度
+- m: 模式长度  
+- N: 字典中单词数量
+- L: 平均单词长度
+
+### 与其他概念的对比
+
+| 特性 | KMP算法 | Trie树 | Rabin-Karp算法 |
+|------|---------|--------|----------------|
+| 适用场景 | 单模式匹配 | 多字符串存储/前缀搜索 | 单/多模式匹配 |
+| 预处理需求 | 需要 | 需要 | 不需要 |
+| 空间开销 | 中等 | 较高 | 低 |
+| 实现难度 | 中等 | 中等 | 简单 |
+| 哈希冲突 | 无 | 无 | 有 |
+
+---
+
+## 实际应用
+
+### 应用场景1: 文本编辑器的查找替换功能
+
+现代文本编辑器（如VS Code、Sublime Text）的查找功能通常使用优化的字符串匹配算法。对于简单的查找，可能会使用类似KMP的算法；对于正则表达式匹配，则会使用更复杂的自动机算法。
+
+### 应用场景2: 搜索引擎关键词匹配
+
+搜索引擎在索引网页时，会使用各种字符串算法来提取和匹配关键词。倒排索引的构建过程中，Trie树常被用来高效地存储和查询关键词前缀。
+
+### 应用场景3: 生物信息学中的DNA序列匹配
+
+在生物信息学中，研究人员经常需要在庞大的DNA序列数据库中查找特定的基因片段。由于DNA序列通常非常长（人类基因组约30亿个碱基对），高效的字符串匹配算法至关重要。KMP和Rabin-Karp算法在这方面都有广泛应用。
+
+### 应用场景4: 网络安全中的入侵检测
+
+入侵检测系统需要实时监控网络流量，查找已知的恶意代码模式。这类系统通常使用Aho-Corasick算法（Trie树 + KMP思想的结合）来同时匹配成千上万个恶意模式。
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 认为KMP的next数组很难理解
+
+很多初学者觉得KMP算法的next数组很神秘，难以理解。其实next数组的本质很简单：它告诉我们当匹配失败时，模式串可以向右滑动多少位，而不丢失任何可能的匹配。
+
+✅ **正确做法**: 通过具体的例子手动计算next数组，理解其含义。记住：next[i]表示模式串前i个字符中最长相同前后缀的长度。
+
+### 误区2: 在所有场景都使用Trie树
+
+Trie树虽然强大，但并不是万能的。它的空间开销很大，特别是当字符串集合很大且字符串之间没有太多公共前缀时。
+
+✅ **正确做法**: 在选择数据结构时要考虑具体场景。如果主要是精确匹配且字符串集合不大，哈希表可能是更好的选择；如果需要前缀搜索或自动补全，Trie树才是首选。
+
+### 误区3: 忽略Rabin-Karp算法的哈希冲突
+
+有些开发者在实现Rabin-Karp算法时，只比较哈希值就认为匹配成功，忽略了哈希冲突的可能性。
+
+✅ **正确做法**: 始终在哈希值匹配后进行实际的字符串比较，确保结果的正确性。可以选择更大的质数或更好的哈希函数来降低冲突概率，但不能完全依赖哈希值。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 寻找回文子串 ⭐
+
+实现一个函数，找出给定字符串中所有的回文子串。
+
+**要求**：
+- 函数签名：`find_all_palindromes(s: str) -> list[str]`
+- 返回所有不同的回文子串（包括单字符）
+- 时间复杂度尽量优化
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用中心扩展法：对每个可能的回文中心（包括奇数和偶数长度），向两边扩展直到不匹配为止。
+
+</details>
+
+### 练习2: 自动补全系统 ⭐⭐
+
+基于Trie树实现一个简单的自动补全系统。
+
+**要求**：
+- 支持添加单词到词典
+- 给定前缀，返回最多5个匹配的建议
+- 建议按字典序排列
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+在之前实现的Trie树基础上，添加一个获取前缀匹配单词的方法，并限制返回数量。
+
+</details>
+
+### 练习3: 多模式字符串匹配 ⭐⭐⭐
+
+实现一个能够同时搜索多个模式串的算法。
+
+**要求**：
+- 函数签名：`multi_pattern_search(text: str, patterns: list[str]) -> list[tuple[int, str]]`
+- 返回所有匹配的位置和对应的模式
+- 结果按位置排序
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+可以先实现简化版本：对每个模式分别使用KMP算法。进阶版本可以研究Aho-Corasick算法。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+1. **KMP算法**通过预处理模式串构建next数组，实现了线性时间复杂度的单模式匹配
+2. **Trie树**是一种高效的字符串存储结构，特别适合前缀搜索和自动补全
+3. **Rabin-Karp算法**使用滚动哈希技术，在平均情况下具有很好的性能
+4. 每种算法都有其适用场景，选择合适的算法比盲目追求"最优"更重要
+5. 实际应用中往往需要考虑空间复杂度、实现复杂度和实际性能的平衡
+
+### 思考题
+
+1. **为什么KMP算法的next数组构建过程本身也是一个KMP匹配过程？**
+
+2. **在什么情况下，朴素的字符串匹配算法可能比KMP算法更快？**
+
+3. **如何修改Rabin-Karp算法来支持通配符（如*匹配任意字符）的模式匹配？**
+
+---
+
+## 下节预告
+
+下一节课我们将学习**图算法：网络世界的导航地图**，探索如何在复杂的网络结构中找到最短路径、检测环路、以及解决各种图论问题。从社交网络的好友推荐到GPS导航，图算法无处不在！
+
+---
+
+## 参考资源
+
+- 《算法导论》第32章：字符串匹配
+- Knuth, Morris, Pratt的经典论文"The Fast Pattern Matching Algorithm"
+- Aho, Corasick的"Aho-Corasick字符串匹配算法"
+- LeetCode字符串相关题目练习
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
