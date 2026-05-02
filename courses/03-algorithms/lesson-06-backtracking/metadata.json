@@ -1,0 +1,12 @@
+{
+  "id": "03-06",
+  "title": "回溯算法：走不通就回头",
+  "module": "03-algorithms",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": ["03-03"],
+  "tags": ["algorithms", "backtracking", "recursion", "search"],
+  "version": "1.0.0",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03"
+}
