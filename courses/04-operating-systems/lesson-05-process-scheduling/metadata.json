@@ -1,0 +1,11 @@
+{
+  "id": "04-05",
+  "title": "进程调度：谁该用CPU？",
+  "module": "04-operating-systems",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": ["04-01"],
+  "tags": ["operating-systems", "process-scheduling", "cpu-scheduling"],
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03"
+}

@@ -1,0 +1,671 @@
+---
+id: '04-05'
+title: '进程调度：谁该用CPU？'
+module: '04-operating-systems'
+difficulty: 3
+duration: 30
+prerequisites: ["04-01"]
+---
+
+# 进程调度：谁该用CPU？
+
+想象一下，如果全班同学共用一台电脑，大家都想运行自己的程序，谁来用CPU呢？这就是进程调度要解决的核心问题！
+
+在多道程序系统中，多个进程竞争有限的CPU资源，操作系统需要一个公平、高效的调度策略来决定哪个进程获得CPU使用权。好的调度算法能让系统响应更快、吞吐量更高、用户体验更好。
+
+> 💡 **思考问题**: 如果让你设计一个调度算法，你会优先考虑什么因素？是让所有进程都能快速响应，还是最大化CPU利用率？
+
+---
+
+## 开场白
+
+嘿，同学们！今天我们来聊聊操作系统中最有趣的话题之一——**进程调度**。
+
+想象这样一个场景：你正在用电脑同时做三件事——听音乐、写代码、下载文件。你的CPU其实只有一个（或者几个核心），但为什么这些程序看起来都在同时运行呢？这背后就是进程调度器的魔法！
+
+调度器就像是一个精明的交通警察，它决定什么时候让哪个进程通过"CPU十字路口"。不同的调度策略会产生完全不同的系统表现。有些策略注重公平性，确保每个进程都能得到CPU时间；有些策略追求效率，尽量减少总的执行时间；还有些策略专注于响应性，让用户感觉系统反应迅速。
+
+今天，我们就一起来揭开进程调度的神秘面纱，看看操作系统是如何聪明地分配CPU时间的！
+
+---
+
+## 核心概念
+
+### 调度目标
+
+进程调度的主要目标包括：
+- **公平性**：每个进程都应该获得合理的CPU时间
+- **效率**：最大化CPU利用率，减少空闲时间  
+- **响应时间**：交互式进程应该快速响应用户输入
+- **周转时间**：批处理进程应该尽快完成
+- **吞吐量**：单位时间内完成的进程数量
+
+### FCFS (First Come First Serve) 先来先服务
+
+FCFS是最简单的调度算法，按照进程到达的顺序依次执行。
+
+**优点**：实现简单，概念直观，公平性好
+**缺点**：可能导致长进程阻塞短进程（Convoy Effect护航效应）
+
+### SJF (Shortest Job First) 最短作业优先
+
+SJF选择执行时间最短的进程先执行。
+
+**优点**：能够最小化平均等待时间
+**缺点**：实际中难以预测进程执行时间，可能导致长进程饥饿
+
+### Round Robin (RR) 轮转调度
+
+轮转调度给每个进程分配固定时间片（quantum），时间片用完后切换到下一个就绪进程。
+
+**优点**：响应性好，适合交互式系统
+**缺点**：时间片选择很重要，太小导致频繁上下文切换，太大则退化为FCFS
+
+### Priority Scheduling 优先级调度
+
+根据进程的优先级来决定执行顺序，优先级高的进程先执行。
+
+**优点**：可以根据进程重要性分配CPU时间
+**缺点**：可能导致低优先级进程饥饿（Starvation）
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: FCFS调度算法
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+进程调度算法示例1：FCFS (First Come First Serve) 先来先服务
+
+FCFS是最简单的调度算法，按照进程到达的顺序依次执行。
+优点：实现简单，公平性好
+缺点：可能导致长进程阻塞短进程（Convoy Effect）
+"""
+
+from typing import List, Tuple
+
+
+class Process:
+    """进程类，包含进程ID、到达时间和执行时间"""
+    def __init__(self, pid: int, arrival_time: int, burst_time: int):
+        self.pid = pid                    # 进程ID
+        self.arrival_time = arrival_time  # 到达时间
+        self.burst_time = burst_time      # 执行时间（CPU burst time）
+        self.completion_time = 0         # 完成时间
+        self.turnaround_time = 0         # 周转时间
+        self.waiting_time = 0            # 等待时间
+
+
+def fcfs_scheduling(processes: List[Process]) -> Tuple[List[Process], float, float]:
+    """
+    FCFS调度算法实现
+
+    Args:
+        processes: 进程列表
+
+    Returns:
+        tuple: (调度后的进程列表, 平均周转时间, 平均等待时间)
+    """
+    # 按照到达时间排序（先来先服务）
+    processes.sort(key=lambda p: p.arrival_time)
+
+    current_time = 0
+    total_turnaround_time = 0
+    total_waiting_time = 0
+
+    print("FCFS调度过程:")
+    print(f"{'PID':<5} {'到达时间':<8} {'执行时间':<8} {'完成时间':<8} {'周转时间':<8} {'等待时间':<8}")
+    print("-" * 60)
+
+    for process in processes:
+        # 如果当前时间小于进程到达时间，CPU空闲到进程到达
+        if current_time < process.arrival_time:
+            current_time = process.arrival_time
+
+        # 计算完成时间
+        process.completion_time = current_time + process.burst_time
+        # 计算周转时间 = 完成时间 - 到达时间
+        process.turnaround_time = process.completion_time - process.arrival_time
+        # 计算等待时间 = 周转时间 - 执行时间
+        process.waiting_time = process.turnaround_time - process.burst_time
+
+        # 更新当前时间
+        current_time = process.completion_time
+
+        # 累加统计信息
+        total_turnaround_time += process.turnaround_time
+        total_waiting_time += process.waiting_time
+
+        print(f"{process.pid:<5} {process.arrival_time:<8} {process.burst_time:<8} "
+              f"{process.completion_time:<8} {process.turnaround_time:<8} {process.waiting_time:<8}")
+
+    avg_turnaround_time = total_turnaround_time / len(processes)
+    avg_waiting_time = total_waiting_time / len(processes)
+
+    return processes, avg_turnaround_time, avg_waiting_time
+
+
+def main():
+    """主函数：演示FCFS调度算法"""
+    # 创建示例进程
+    processes = [
+        Process(1, 0, 8),   # PID=1, 到达时间=0, 执行时间=8
+        Process(2, 1, 4),   # PID=2, 到达时间=1, 执行时间=4
+        Process(3, 2, 9),   # PID=3, 到达时间=2, 执行时间=9
+        Process(4, 3, 5),   # PID=4, 到达时间=3, 执行时间=5
+    ]
+
+    # 执行FCFS调度
+    scheduled_processes, avg_tat, avg_wt = fcfs_scheduling(processes)
+
+    print("\n性能统计:")
+    print(f"平均周转时间: {avg_tat:.2f}")
+    print(f"平均等待时间: {avg_wt:.2f}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+FCFS调度过程:
+PID   到达时间     执行时间     完成时间     周转时间     等待时间    
+------------------------------------------------------------
+1     0        8        8        8        0       
+2     1        4        12       11       7       
+3     2        9        21       19       10      
+4     3        5        26       23       18      
+
+性能统计:
+平均周转时间: 15.25
+平均等待时间: 8.75
+```
+
+这个例子展示了FCFS的基本原理：严格按照到达顺序执行。注意进程2虽然执行时间很短（4个单位），但由于进程1先到达且执行时间长（8个单位），进程2不得不等待7个单位时间。
+
+### 示例2: Round Robin轮转调度
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+进程调度算法示例2：Round Robin (RR) 轮转调度
+
+轮转调度是分时系统中最常用的调度算法，每个进程分配固定时间片（quantum），
+时间片用完后切换到下一个就绪进程。
+
+优点：响应性好，适合交互式系统
+缺点：时间片选择很重要，太小会导致频繁上下文切换，太大则退化为FCFS
+"""
+
+from typing import List, Tuple, Deque
+from collections import deque
+
+
+class Process:
+    """进程类，包含进程ID、到达时间、执行时间和剩余执行时间"""
+    def __init__(self, pid: int, arrival_time: int, burst_time: int):
+        self.pid = pid                    # 进程ID
+        self.arrival_time = arrival_time  # 到达时间
+        self.burst_time = burst_time      # 总执行时间
+        self.remaining_time = burst_time  # 剩余执行时间
+        self.completion_time = 0         # 完成时间
+        self.turnaround_time = 0         # 周转时间
+        self.waiting_time = 0            # 等待时间
+        self.started = False             # 是否已经开始执行
+
+
+def round_robin_scheduling(processes: List[Process], quantum: int) -> Tuple[List[Process], float, float]:
+    """
+    轮转调度算法实现
+
+    Args:
+        processes: 进程列表
+        quantum: 时间片大小
+
+    Returns:
+        tuple: (调度后的进程列表, 平均周转时间, 平均等待时间)
+    """
+    from copy import deepcopy
+    processes = deepcopy(processes)  # 避免修改原始数据
+
+    # 按到达时间排序
+    processes.sort(key=lambda p: p.arrival_time)
+
+    ready_queue: Deque[Process] = deque()
+    current_time = 0
+    completed = 0
+    n = len(processes)
+    process_index = 0
+
+    # 统计信息
+    total_turnaround_time = 0
+    total_waiting_time = 0
+
+    print(f"Round Robin调度过程 (时间片={quantum}):")
+    print(f"{'时间':<6} {'事件':<20} {'就绪队列':<20}")
+    print("-" * 50)
+
+    while completed < n:
+        # 将所有已到达的进程加入就绪队列
+        while process_index < n and processes[process_index].arrival_time <= current_time:
+            ready_queue.append(processes[process_index])
+            process_index += 1
+
+        if not ready_queue:
+            # CPU空闲，跳到下一个进程到达时间
+            if process_index < n:
+                current_time = processes[process_index].arrival_time
+            continue
+
+        # 取出队首进程
+        current_process = ready_queue.popleft()
+
+        if not current_process.started:
+            current_process.started = True
+
+        # 执行时间片或剩余时间（取较小值）
+        execution_time = min(quantum, current_process.remaining_time)
+        print(f"{current_time:<6} 执行P{current_process.pid}({execution_time}单位) "
+              f"{[f'P{p.pid}' for p in ready_queue]}")
+
+        current_time += execution_time
+        current_process.remaining_time -= execution_time
+
+        # 将所有在此期间到达的进程加入就绪队列
+        while process_index < n and processes[process_index].arrival_time <= current_time:
+            ready_queue.append(processes[process_index])
+            process_index += 1
+
+        # 如果进程完成
+        if current_process.remaining_time == 0:
+            current_process.completion_time = current_time
+            current_process.turnaround_time = current_process.completion_time - current_process.arrival_time
+            current_process.waiting_time = current_process.turnaround_time - current_process.burst_time
+
+            total_turnaround_time += current_process.turnaround_time
+            total_waiting_time += current_process.waiting_time
+            completed += 1
+            print(f"{current_time:<6} P{current_process.pid}完成 "
+                  f"{[f'P{p.pid}' for p in ready_queue]}")
+        else:
+            # 进程未完成，重新加入就绪队列末尾
+            ready_queue.append(current_process)
+
+    avg_turnaround_time = total_turnaround_time / n
+    avg_waiting_time = total_waiting_time / n
+
+    return processes, avg_turnaround_time, avg_waiting_time
+
+
+def main():
+    """主函数：演示轮转调度算法"""
+    # 创建示例进程
+    processes = [
+        Process(1, 0, 8),   # PID=1, 到达时间=0, 执行时间=8
+        Process(2, 1, 4),   # PID=2, 到达时间=1, 执行时间=4
+        Process(3, 2, 9),   # PID=3, 到达时间=2, 执行时间=9
+        Process(4, 3, 5),   # PID=4, 到达时间=3, 执行时间=5
+    ]
+
+    # 设置时间片为3
+    quantum = 3
+
+    # 执行轮转调度
+    scheduled_processes, avg_tat, avg_wt = round_robin_scheduling(processes, quantum)
+
+    print(f"\n性能统计 (时间片={quantum}):")
+    print(f"平均周转时间: {avg_tat:.2f}")
+    print(f"平均等待时间: {avg_wt:.2f}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+Round Robin调度过程 (时间片=3):
+时间     事件                   就绪队列                
+--------------------------------------------------
+0      执行P1(3单位) []
+3      执行P2(3单位) ['P3', 'P4', 'P1']
+6      执行P3(3单位) ['P4', 'P1', 'P2']
+9      执行P4(3单位) ['P1', 'P2', 'P3']
+12     执行P1(3单位) ['P2', 'P3', 'P4']
+15     执行P2(1单位) ['P3', 'P4', 'P1']
+16     P2完成 ['P3', 'P4', 'P1']
+16     执行P3(3单位) ['P4', 'P1']
+19     执行P4(2单位) ['P1', 'P3']
+21     P4完成 ['P1', 'P3']
+21     执行P1(2单位) ['P3']
+23     P1完成 ['P3']
+23     执行P3(3单位) []
+26     P3完成 []
+
+性能统计 (时间片=3):
+平均周转时间: 20.00
+平均等待时间: 13.50
+```
+
+轮转调度通过时间片机制实现了更好的公平性。每个进程都能定期获得CPU时间，即使有长进程存在，短进程也不会被长时间阻塞。
+
+### 示例3: 优先级调度
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+进程调度算法示例3：Priority Scheduling 优先级调度
+
+优先级调度根据进程的优先级来决定执行顺序，优先级高的进程先执行。
+可以是抢占式（Preemptive）或非抢占式（Non-preemptive）。
+
+优点：可以根据进程重要性分配CPU时间
+缺点：可能导致低优先级进程饥饿（Starvation）
+"""
+
+from typing import List, Tuple
+import heapq
+
+
+class Process:
+    """进程类，包含进程ID、到达时间、执行时间和优先级"""
+    def __init__(self, pid: int, arrival_time: int, burst_time: int, priority: int):
+        self.pid = pid                    # 进程ID
+        self.arrival_time = arrival_time  # 到达时间
+        self.burst_time = burst_time      # 执行时间
+        self.priority = priority          # 优先级（数值越小优先级越高）
+        self.remaining_time = burst_time  # 剩余执行时间（用于抢占式）
+        self.completion_time = 0         # 完成时间
+        self.turnaround_time = 0         # 周转时间
+        self.waiting_time = 0            # 等待时间
+
+
+def priority_scheduling_non_preemptive(processes: List[Process]) -> Tuple[List[Process], float, float]:
+    """
+    非抢占式优先级调度算法实现
+
+    Args:
+        processes: 进程列表
+
+    Returns:
+        tuple: (调度后的进程列表, 平均周转时间, 平均等待时间)
+    """
+    from copy import deepcopy
+    processes = deepcopy(processes)
+
+    current_time = 0
+    completed = 0
+    n = len(processes)
+    ready_queue = []  # 使用堆实现优先级队列
+
+    total_turnaround_time = 0
+    total_waiting_time = 0
+
+    print("非抢占式优先级调度过程:")
+    print(f"{'PID':<5} {'到达时间':<8} {'执行时间':<8} {'优先级':<8} {'完成时间':<8} {'周转时间':<8} {'等待时间':<8}")
+    print("-" * 70)
+
+    while completed < n:
+        # 将所有新到达的进程加入就绪队列（避免重复添加已完成的进程）
+        for process in processes:
+            if (process.arrival_time <= current_time and
+                process.completion_time == 0 and
+                (process.priority, process.pid, process) not in [(p[0], p[1], p[2]) for p in ready_queue]):
+                # 使用负的优先级值，因为heapq是最小堆，但我们希望高优先级（数值小）先执行
+                heapq.heappush(ready_queue, (process.priority, process.pid, process))
+
+        if not ready_queue:
+            # CPU空闲，跳到下一个进程到达时间
+            next_arrival = min(p.arrival_time for p in processes if p.completion_time == 0)
+            current_time = next_arrival
+            continue
+
+        # 取出最高优先级的进程
+        _, _, current_process = heapq.heappop(ready_queue)
+
+        # 执行完整个进程
+        if current_time < current_process.arrival_time:
+            current_time = current_process.arrival_time
+
+        current_process.completion_time = current_time + current_process.burst_time
+        current_process.turnaround_time = current_process.completion_time - current_process.arrival_time
+        current_process.waiting_time = current_process.turnaround_time - current_process.burst_time
+
+        current_time = current_process.completion_time
+
+        total_turnaround_time += current_process.turnaround_time
+        total_waiting_time += current_process.waiting_time
+        completed += 1
+
+        print(f"{current_process.pid:<5} {current_process.arrival_time:<8} {current_process.burst_time:<8} "
+              f"{current_process.priority:<8} {current_process.completion_time:<8} "
+              f"{current_process.turnaround_time:<8} {current_process.waiting_time:<8}")
+
+    avg_turnaround_time = total_turnaround_time / n
+    avg_waiting_time = total_waiting_time / n
+
+    return processes, avg_turnaround_time, avg_waiting_time
+
+
+def main():
+    """主函数：演示优先级调度算法"""
+    # 创建示例进程（优先级：1最高，10最低）
+    processes = [
+        Process(1, 0, 8, 3),   # PID=1, 到达时间=0, 执行时间=8, 优先级=3
+        Process(2, 1, 4, 1),   # PID=2, 到达时间=1, 执行时间=4, 优先级=1（最高）
+        Process(3, 2, 9, 4),   # PID=3, 到达时间=2, 执行时间=9, 优先级=4
+        Process(4, 3, 5, 2),   # PID=4, 到达时间=3, 执行时间=5, 优先级=2
+    ]
+
+    # 执行非抢占式优先级调度
+    scheduled_processes, avg_tat, avg_wt = priority_scheduling_non_preemptive(processes)
+
+    print(f"\n性能统计:")
+    print(f"平均周转时间: {avg_tat:.2f}")
+    print(f"平均等待时间: {avg_wt:.2f}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+**运行结果**：
+```
+非抢占式优先级调度过程:
+PID   到达时间     执行时间     优先级      完成时间     周转时间     等待时间    
+----------------------------------------------------------------------
+1     0        8        3        8        8        0       
+2     1        4        1        12       11       7       
+4     3        5        2        17       14       9       
+3     2        9        4        26       24       15      
+
+性能统计:
+平均周转时间: 14.25
+平均等待时间: 7.75
+```
+
+优先级调度根据进程的重要性来分配CPU时间。在这个例子中，优先级为1的进程2虽然不是最先到达的，但因为它优先级最高，所以在进程1执行完后立即得到执行。
+
+---
+
+## 深入理解
+
+### 调度器层次
+
+现代操作系统通常采用三级调度器结构：
+
+1. **长期调度器（Long-term scheduler/Job scheduler）**：决定哪些进程从外存调入内存，控制系统的并发度
+2. **中期调度器（Medium-term scheduler/Swapper）**：负责进程的换入换出，实现虚拟内存管理
+3. **短期调度器（Short-term scheduler/CPU scheduler）**：决定就绪队列中的哪个进程获得CPU，执行频率最高
+
+### 抢占 vs 非抢占
+
+- **非抢占式调度**：一旦进程获得CPU，就会一直运行直到主动放弃（如I/O请求、完成执行）
+- **抢占式调度**：操作系统可以在任何时候中断正在运行的进程，将CPU分配给其他进程
+
+抢占式调度能提供更好的响应性，但增加了系统开销和实现复杂度。
+
+### 饥饿问题（Starvation）
+
+某些调度算法（如优先级调度）可能导致低优先级进程长时间得不到CPU时间，这种现象称为**饥饿**。
+
+**解决方案**：
+- **老化（Aging）**：随着时间推移，逐渐提高等待进程的优先级
+- **多级反馈队列**：结合多种调度策略，防止任何进程被永久忽略
+
+---
+
+## 实际应用
+
+### Linux的CFS调度器
+
+Linux从2.6.23版本开始使用**完全公平调度器（Completely Fair Scheduler, CFS）**，其核心思想是：
+
+- 使用**虚拟运行时间（vruntime）**来衡量进程的执行时间
+- 总是选择vruntime最小的进程执行
+- 通过红黑树高效维护就绪队列
+- 支持动态优先级调整和实时调度类
+
+CFS的目标是在所有可运行进程中公平地分配CPU时间，同时保持良好的响应性和吞吐量。
+
+### Windows优先级调度
+
+Windows使用基于优先级的抢占式调度，具有以下特点：
+
+- **32个优先级级别**（0-31），其中0-15为动态优先级，16-31为实时优先级
+- **优先级提升**：I/O密集型进程会获得临时优先级提升以改善响应性
+- **线程优先级**：调度的基本单位是线程而非进程
+- **多处理器支持**：支持处理器亲和性和负载均衡
+
+### 实时系统调度
+
+实时系统对调度有严格的时间要求：
+
+- **硬实时系统**：必须在截止时间内完成，否则会导致灾难性后果（如航空控制系统）
+- **软实时系统**：尽量在截止时间内完成，偶尔错过不会造成严重后果（如多媒体播放）
+
+常用算法包括**最早截止时间优先（EDF）**和**速率单调调度（RMS）**。
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: "轮转调度总是最快的"
+
+很多同学认为轮转调度因为公平所以最快，但实际上：
+
+✅ **正确做法**: 调度算法的选择取决于工作负载特性。对于CPU密集型任务，SJF可能更优；对于交互式任务，轮转调度更适合。
+
+### 误区2: "忽略上下文切换开销"
+
+在理论分析中经常忽略上下文切换的时间开销，但在实际系统中：
+
+✅ **正确做法**: 上下文切换是有成本的！频繁的调度会消耗大量CPU时间。时间片设置要权衡响应性和开销。
+
+### 误区3: "优先级越高越好"
+
+给重要进程设置高优先级看似合理，但可能导致系统不稳定：
+
+✅ **正确做法**: 合理设置优先级范围，避免过多高优先级进程导致低优先级进程饥饿。使用老化机制防止饥饿问题。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 实现SJF调度算法 ⭐⭐
+
+实现一个非抢占式的最短作业优先（SJF）调度算法。
+
+**要求**：
+- 创建Process类和sjf_scheduling函数
+- 正确处理CPU空闲情况
+- 输出调度过程和性能统计
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+在每个时间点，找出所有已到达且未完成的进程中执行时间最短的那个。注意处理多个进程同时到达的情况。
+
+</details>
+
+### 练习2: 实现抢占式优先级调度 ⭐⭐⭐
+
+扩展优先级调度算法，支持抢占式调度。
+
+**要求**：
+- 当有更高优先级进程到达时，能够中断当前进程
+- 正确处理进程的剩余执行时间
+- 显示详细的调度事件
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+需要维护当前正在执行的进程，并在每个时间步长检查是否有更高优先级的进程到达。使用就绪队列存储等待的进程。
+
+</details>
+
+### 练习3: 多级反馈队列调度 ⭐⭐⭐
+
+实现一个多级反馈队列（MLFQ）调度算法。
+
+**要求**：
+- 支持可配置的队列数量和时间片大小
+- 正确处理进程在不同队列间的迁移
+- 防止饥饿问题（可选）
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用多个队列表示不同优先级级别。新进程进入最高优先级队列，时间片用完后降级到下一级队列。最低优先级队列可以使用FCFS。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- 进程调度是操作系统的核心功能，决定CPU资源如何分配给多个竞争进程
+- 不同的调度算法有不同的适用场景：FCFS简单但可能不公平，SJF最优但难实现，轮转调度适合交互式系统
+- 现代操作系统使用复杂的混合调度策略，如Linux的CFS和Windows的优先级调度
+- 调度算法需要在公平性、效率、响应时间和吞吐量之间做出权衡
+- 实际实现中需要考虑上下文切换开销、饥饿问题和多处理器支持
+
+### 思考题
+
+1. 如果你要为一个Web服务器设计调度算法，你会选择哪种策略？为什么？
+
+2. 在移动设备上，电池寿命是一个重要考虑因素。调度算法如何影响电池消耗？
+
+3. 考虑一个混合工作负载（既有交互式任务又有批处理任务），如何设计一个调度算法来同时满足两种任务的需求？
+
+---
+
+## 下节预告
+
+下一节课我们将学习**死锁**——当多个进程互相等待对方释放资源时发生的僵局情况。我们会探讨死锁的四个必要条件、预防策略和检测方法。
+
+---
+
+## 参考资源
+
+- Abraham Silberschatz, Peter Baer Galvin, Greg Gagne. "Operating System Concepts"
+- Linux Kernel Documentation: Scheduler Design
+- Windows Internals by Mark Russinovich
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
