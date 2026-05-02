@@ -1,0 +1,33 @@
+{
+  "id": "02-07",
+  "title": "哈希表：神奇的"字典"",
+  "slug": "lesson-07-hash-table",
+  "module": "02-data-structures",
+  "module_name": "数据结构",
+  "module_order": 2,
+  "lesson_order": 7,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["02-01"],
+  "tags": ["hash-table", "hash-function", "collision", "chaining", "data-structure"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习哈希表的原理、哈希函数、碰撞处理方法，以及哈希表在实际场景中的广泛应用。",
+  "learning_objectives": [
+    "理解哈希表的核心思想和键值映射机制",
+    "掌握哈希函数的设计原则和碰撞处理方法",
+    "能够手写哈希表并实现链地址法",
+    "了解哈希表在数据库、缓存、密码存储等场景的应用"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}

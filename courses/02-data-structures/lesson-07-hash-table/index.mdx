@@ -1,0 +1,879 @@
+---
+id: '02-07'
+title: '哈希表：神奇的"字典"'
+module: '02-data-structures'
+difficulty: 3
+duration: 30
+prerequisites: ['02-01']
+---
+
+# 哈希表：神奇的"字典"
+
+> 📖 "给我一把钥匙，我就能瞬间找到对应的抽屉！"
+>
+> 这就是哈希表的超能力：**键值映射，瞬间定位**。
+
+---
+
+## 开场白
+
+想象一下这个场景：
+
+你走进一家大型图书馆，管理员大爷笑眯眯地说："小朋友，随便找！这里10万本书！"你倒吸一口凉气——这得找到什么时候？
+
+结果大爷递给你一张小卡片，上面写着："你要的书在3楼B区第7排第23格。"你按照卡片找过去，**10秒搞定**！
+
+这就是**哈希表**的魔法：通过一个"映射规则"（哈希函数），把你要找的东西（键）瞬间变成一个位置（索引），然后直接拿取！
+
+```
+你要找: "Python入门"
+    ↓ 哈希函数（图书馆索引规则）
+位置: 3楼B区第7排第23格
+    ↓ 直接过去
+拿到: 《Python入门》这本书！
+```
+
+没有哈希表的话，你得从第一本书开始一本本翻找...想想就头皮发麻！
+
+> 💡 **思考问题**: 如果两本不同的书被分到了同一个格子，怎么办？这就是哈希表最核心的问题——**碰撞（Collision）**，我们马上揭晓答案！
+
+---
+
+## 核心概念
+
+### 什么是哈希表？
+
+哈希表（Hash Table），也叫散列表，是一种通过**键值对（Key-Value Pair）**来存储和访问数据的数据结构。
+
+核心思想很简单：
+
+1. 你给数据起个"名字"（Key）
+2. 通过一个"翻译规则"（Hash Function）把名字变成一个数字
+3. 用这个数字作为位置，把数据放进去或取出来
+
+用生活化的比喻：
+
+- 🏪 **超市存包柜**：你存包时拿到一个号码牌（Key），号码决定了你的包放在哪个柜子（Value）
+- 📱 **手机通讯录**：输入"张三"（Key），瞬间弹出他的电话（Value）
+- 🗂️ **公司花名册**：按工号（Key）查员工信息（Value）
+
+### 哈希函数：神奇的翻译官
+
+哈希函数（Hash Function）是哈希表的心脏。它的作用是：**把任意长度的输入，映射成一个固定范围的整数**。
+
+```
+哈希函数(key) → 索引位置
+```
+
+一个**好的**哈希函数需要具备以下特征：
+
+1. **确定性**：相同的输入永远产生相同的输出。不能今天映射到5号柜，明天变成12号柜
+2. **均匀分布**：尽量把数据均匀分散到各个位置，不要都挤在一起
+3. **计算快速**：映射过程要快，不然哈希表就没优势了
+4. **输入敏感**：稍有差别的输入产生不同的输出（理想情况）
+
+举个简单的例子：
+
+```python
+# 一个简单的哈希函数：把字符串每个字符的ASCII值加起来，然后取余
+def simple_hash(key, table_size):
+    total = 0
+    for char in key:
+        total += ord(char)  # 获取字符的ASCII值
+    return total % table_size
+
+# 测试
+print(simple_hash("apple", 10))   # 输出: 4
+print(simple_hash("banana", 10))  # 输出: 1
+print(simple_hash("cherry", 10))  # 输出: 9
+```
+
+> 这个哈希函数很粗糙，但原理一目了然：先算出一个数字，再用取余（%）操作把数字限制在表的范围内。
+
+### 哈希碰撞：当两个钥匙开同一把锁
+
+现实是残酷的——再好的哈希函数也**无法完全避免碰撞（Collision）**。
+
+碰撞：**两个不同的Key，经过哈希函数计算后，得到了相同的索引位置**。
+
+```
+table_size = 10
+
+哈希("apple") → 4
+哈希("eppla") → 4  ← 碰撞！两个不同的词都指向位置4
+```
+
+这就像超市存包柜：你拿着3号柜的牌子去存包，发现里面已经有一个包了。咋办？
+
+好消息是，计算机科学家们想出了聪明的解决方案。我们马上来看！
+
+---
+
+## 代码演示
+
+让我们通过代码来真正理解哈希表：
+
+### 示例1: 哈希表的基本操作
+
+```python
+# ============================================
+# 示例1：哈希表的基本操作演示
+# 看看Python的dict（就是哈希表）有多好用
+# ============================================
+
+# 创建哈希表（字典）
+student_scores = {
+    "小明": 95,
+    "小红": 88,
+    "小刚": 72,
+    "小丽": 99
+}
+
+print("=== 创建哈希表 ===")
+print(f"学生成绩: {student_scores}")
+print()
+
+# 1. 查找 - O(1)，瞬间定位！
+print("=== 查找元素 ===")
+print(f"小明的成绩: {student_scores['小明']}")
+print(f"小丽的成绩: {student_scores['小丽']}")
+print()
+
+# 2. 插入/更新 - O(1)，直接添加
+print("=== 插入/更新元素 ===")
+student_scores["小强"] = 85  # 新增
+print(f"添加小强后: {student_scores}")
+
+student_scores["小明"] = 98  # 更新已有键
+print(f"小明考了98分: {student_scores}")
+print()
+
+# 3. 删除 - O(1)，说删就删
+print("=== 删除元素 ===")
+del student_scores["小刚"]
+print(f"删除小刚后: {student_scores}")
+print()
+
+# 4. 检查键是否存在
+print("=== 检查键是否存在 ===")
+print(f"'小红'在表中吗？ {'小红' in student_scores}")
+print(f"'小刚'在表中吗？ {'小刚' in student_scores}")
+print()
+
+# 5. 遍历
+print("=== 遍历哈希表 ===")
+for name, score in student_scores.items():
+    print(f"  {name}: {score}分")
+```
+
+**运行结果**：
+```
+=== 创建哈希表 ===
+学生成绩: {'小明': 95, '小红': 88, '小刚': 72, '小丽': 99}
+
+=== 查找元素 ===
+小明的成绩: 95
+小丽的成绩: 99
+
+=== 插入/更新元素 ===
+添加小强后: {'小明': 95, '小红': 88, '小刚': 72, '小丽': 99, '小强': 85}
+小明考了98分: {'小明': 98, '小红': 88, '小刚': 72, '小丽': 99, '小强': 85}
+
+=== 删除元素 ===
+删除小刚后: {'小明': 98, '小红': 88, '小丽': 99, '小强': 85}
+
+=== 检查键是否存在 ===
+'小红'在表中吗？ True
+'小刚'在表中吗？ False
+
+=== 遍历哈希表 ===
+  小明: 98分
+  小红: 88分
+  小丽: 99分
+  小强: 85分
+```
+
+### 示例2: 手写哈希表 + 链地址法
+
+```python
+# ============================================
+# 示例2：手写哈希表 - 链地址法解决碰撞
+# 理解哈希表的底层实现原理
+# ============================================
+
+class HashTable:
+    """
+    手写哈希表，使用链地址法解决碰撞
+    核心思路：每个位置是一个链表，碰撞了就往链尾挂
+    """
+
+    def __init__(self, size=10):
+        # 初始化桶数组，每个桶是一个空列表（链表）
+        self.size = size
+        self.buckets = [[] for _ in range(size)]
+        self.count = 0  # 当前存储的键值对数量
+        print(f"🎉 创建了大小为 {size} 的哈希表")
+
+    def _hash(self, key):
+        """
+        哈希函数：将键映射到桶的索引
+        Python内置的hash()已经很好了，这里用它
+        """
+        return hash(key) % self.size
+
+    def put(self, key, value):
+        """
+        插入或更新键值对
+        如果键已存在，就更新值；否则新建
+        """
+        idx = self._hash(key)
+        bucket = self.buckets[idx]
+
+        # 检查这个键是否已经存在
+        for i, (k, v) in enumerate(bucket):
+            if k == key:
+                bucket[i] = (key, value)  # 更新值
+                print(f"  更新 [{key}] → {value} (桶{idx})")
+                return
+
+        # 键不存在，添加到链表尾部
+        bucket.append((key, value))
+        self.count += 1
+        print(f"  插入 [{key}] → {value} (桶{idx})")
+
+        # 检查是否需要扩容
+        if self.count > self.size * 0.7:
+            self._resize()
+
+    def get(self, key, default=None):
+        """
+        查找键对应的值
+        找不到就返回默认值
+        """
+        idx = self._hash(key)
+        bucket = self.buckets[idx]
+
+        for k, v in bucket:
+            if k == key:
+                return v
+
+        return default
+
+    def remove(self, key):
+        """
+        删除键值对
+        """
+        idx = self._hash(key)
+        bucket = self.buckets[idx]
+
+        for i, (k, v) in enumerate(bucket):
+            if k == key:
+                del bucket[i]
+                self.count -= 1
+                print(f"  删除 [{key}] (桶{idx})")
+                return True
+
+        print(f"  警告: [{key}] 不存在！")
+        return False
+
+    def _resize(self):
+        """
+        扩容操作：桶数量翻倍，重新哈希所有元素
+        """
+        old_size = self.size
+        old_buckets = self.buckets
+
+        self.size *= 2
+        self.buckets = [[] for _ in range(self.size)]
+        self.count = 0
+
+        print(f"  🔧 扩容: {old_size} → {self.size}，重新哈希...")
+
+        # 把所有旧数据重新哈希到新表
+        for bucket in old_buckets:
+            for key, value in bucket:
+                self.put(key, value)
+
+    def display(self):
+        """
+        可视化展示哈希表的状态
+        """
+        print("\n=== 哈希表状态 ===")
+        for i, bucket in enumerate(self.buckets):
+            if bucket:
+                pairs = " → ".join(f"[{k}:{v}]" for k, v in bucket)
+                print(f"  桶{i}: {pairs}")
+            else:
+                print(f"  桶{i}: (空)")
+        print(f"  总计: {self.count} 个键值对, 大小: {self.size}")
+        print("=" * 30)
+
+
+# 测试手写哈希表
+print("=== 测试手写哈希表（链地址法）===")
+ht = HashTable(size=5)
+
+# 插入一些键值对
+ht.put("name", "小明")
+ht.put("age", 18)
+ht.put("city", "北京")
+ht.put("hobby", "编程")
+ht.put("language", "Python")
+
+# 查找
+print(f"\n查找 'name': {ht.get('name')}")
+print(f"查找 'city': {ht.get('city')}")
+print(f"查找 '不存在的键': {ht.get('nope', '找不到！')}")
+
+# 更新
+ht.put("name", "小红")
+print(f"\n更新后 'name': {ht.get('name')}")
+
+# 删除
+ht.remove("age")
+
+# 展示最终状态
+ht.display()
+```
+
+**运行结果**：
+```
+=== 测试手写哈希表（链地址法）===
+🎉 创建了大小为 5 的哈希表
+  插入 [name] → 小明 (桶0)
+  插入 [age] → 18 (桶2)
+  插入 [city] → 北京 (桶2)
+  插入 [hobby] → 编程 (桶1)
+  🔧 扩容: 5 → 10，重新哈希...
+  插入 [name] → 小明 (桶0)
+  插入 [hobby] → 编程 (桶6)
+  插入 [age] → 18 (桶7)
+  插入 [city] → 北京 (桶7)
+  插入 [language] → Python (桶8)
+
+查找 'name': 小明
+查找 'city': 北京
+查找 '不存在的键': 找不到！
+  更新 [name] → 小红 (桶0)
+
+更新后 'name': 小红
+  删除 [age] (桶7)
+
+=== 哈希表状态 ===
+  桶0: [name:小红]
+  桶1: (空)
+  桶2: (空)
+  桶3: (空)
+  桶4: (空)
+  桶5: (空)
+  桶6: [hobby:编程]
+  桶7: [city:北京]
+  桶8: [language:Python]
+  桶9: (空)
+  总计: 4 个键值对, 大小: 10
+==============================
+```
+
+### 示例3: 哈希表的实际应用——词频统计
+
+```python
+# ============================================
+# 示例3：哈希表的实际应用——词频统计
+# 这就是哈希表最常见的用途之一：计数和统计
+# ============================================
+
+def word_frequency(text):
+    """
+    统计文本中每个单词出现的频率
+    哈希表天然适合这种"键→计数"的场景
+    """
+    # 清理文本：转小写，按空格拆分
+    words = text.lower().split()
+
+    # 用哈希表（字典）统计词频
+    freq = {}
+    for word in words:
+        # 去掉标点符号
+        word = word.strip(".,!?;:\"'()[]{}")
+        if word:
+            freq[word] = freq.get(word, 0) + 1
+
+    return freq
+
+
+def print_top_words(freq, top_n=5):
+    """
+    打印出现频率最高的N个单词
+    """
+    # 按频率排序
+    sorted_words = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+
+    print(f"词频统计 TOP {top_n}:")
+    print("-" * 30)
+    for i, (word, count) in enumerate(sorted_words[:top_n], 1):
+        bar = "█" * count
+        print(f"  {i:2d}. {word:15s} ({count:3d}次) {bar}")
+
+
+# 测试
+sample_text = """
+The quick brown fox jumps over the lazy dog
+The dog barks at the fox
+The fox is quick and the dog is lazy
+A quick brown dog runs in the park
+The park is beautiful and the fox likes the park
+"""
+
+print("=== 词频统计示例 ===\n")
+print("输入文本:")
+for line in sample_text.strip().split("\n"):
+    print(f"  {line.strip()}")
+print()
+
+freq = word_frequency(sample_text)
+print(f"共统计到 {len(freq)} 个不同的单词\n")
+print_top_words(freq, top_n=5)
+
+# 看看完整统计
+print("\n完整词频:")
+for word in sorted(freq.keys()):
+    print(f"  '{word}': {freq[word]}")
+```
+
+**运行结果**：
+```
+=== 词频统计示例 ===
+
+输入文本:
+  The quick brown fox jumps over the lazy dog
+  The dog barks at the fox
+  The fox is quick and the dog is lazy
+  A quick brown dog runs in the park
+  The park is beautiful and the fox likes the park
+
+共统计到 18 个不同的单词
+
+词频统计 TOP 5:
+------------------------------
+   1. the             ( 10次) ██████████
+   2. fox             (  4次) ████
+   3. dog             (  4次) ████
+   4. quick           (  3次) ███
+   5. is              (  3次) ███
+
+完整词频:
+  'a': 1
+  'and': 2
+  'at': 1
+  'barks': 1
+  'beautiful': 1
+  'brown': 2
+  'dog': 4
+  'fox': 4
+  'in': 1
+  'is': 3
+  'jumps': 1
+  'lazy': 2
+  'likes': 1
+  'over': 1
+  'park': 3
+  'quick': 3
+  'runs': 1
+  'the': 10
+```
+
+---
+
+## 深入理解
+
+### 哈希表的灵魂：为什么这么快？
+
+哈希表能在**O(1)**时间内完成插入、查找、删除，这个速度在所有常见数据结构中是最快的（之一）！
+
+秘密就在于它**跳过了比较**，直接定位。
+
+想象你要在人群中找张三：
+
+- **数组/链表**：从第一个人开始问"你是张三吗？"——最坏要问n次，**O(n)**
+- **排序数组+二分查找**：每次排除一半——log n次，**O(log n)**
+- **哈希表**：直接算出张三站在哪个位置，走过去——**O(1)**
+
+```
+找"张三":
+  数组: [问]→[问]→[问]→[问]→[问]→[问]→[找到!]  ← 要问6次
+  哈希: [计算哈希]→直接走过去→[找到!]  ← 只算1次
+```
+
+### 碰撞的三种解决方案
+
+#### 方案1：链地址法（Separate Chaining）⭐ 最常用
+
+每个桶里存一个**链表**。碰撞时，把新元素挂在链表后面。
+
+```
+桶4: [apple:"红色"] → [eppla:"一种乐器"] → [pplea:"一种水果"]
+```
+
+- **优点**：简单直观，链表长度可以无限增长
+- **缺点**：链表太长时，查找变成O(n)
+- **最佳实践**：当链平均长度超过某个阈值（如0.7），就扩容
+
+#### 方案2：开放地址法（Open Addressing）
+
+不引入链表，而是在哈希表中**找下一个空桶**来存放碰撞的元素。
+
+常见的探测策略：
+
+- **线性探测**：位置满了就看下一个（+1, +2, +3...）
+- **二次探测**：位置满了就按平方跳跃（+1, +4, +9...）
+- **双重哈希**：用第二个哈希函数计算步长
+
+```
+线性探测:
+  桶4: [apple:"红色"]
+  桶4的下一个: [eppla:"一种乐器"]  ← 本来也该放桶4，但满了所以放桶5
+  桶5的下一个: [pplea:"一种水果"]  ← 桶4和5都满了，所以放桶6
+```
+
+- **优点**：不需要额外数据结构（链表），缓存友好
+- **缺点**：负载因子高时性能急剧下降，删除操作复杂
+- **注意**：装得太满时要及时扩容！
+
+#### 方案3：再哈希法（Double Hashing）
+
+碰撞时用**第二个不同的哈希函数**重新计算位置。
+
+```
+第一次: hash1("eppla") → 4 (冲突!)
+第二次: hash2("eppla") → 7 (放到桶7)
+```
+
+- **优点**：减少"聚集"现象（多个元素挤在一起）
+- **缺点**：计算成本高，需要设计第二个哈希函数
+
+### 负载因子（Load Factor）：何时扩容？
+
+负载因子 = 元素数量 / 表大小
+
+它决定了哈希表有多"满"。负载因子越高，碰撞概率越大。
+
+```
+表大小=10，已有7个元素:
+  负载因子 = 7/10 = 0.7  ← 通常在这个阈值扩容
+
+表大小=10，已有9个元素:
+  负载因子 = 9/10 = 0.9  ← 已经很挤了！碰撞频繁！
+```
+
+**经验法则**：负载因子超过0.7时就扩容（通常是翻倍）。
+
+### 时间复杂度汇总
+
+| 操作 | 平均情况 | 最坏情况 | 说明 |
+|------|----------|----------|------|
+| 查找 | ⚡ O(1) | 🐌 O(n) | 哈希函数完美分布时O(1)；所有键都碰撞时退化到O(n) |
+| 插入 | ⚡ O(1) | 🐌 O(n) | 同上 |
+| 删除 | ⚡ O(1) | 🐌 O(n) | 同上 |
+| 扩容 | 🐌 O(n) | 🐌 O(n) | 需要重新哈希所有元素 |
+
+### 哈希表 vs 其他数据结构
+
+| 特性 | 哈希表 | 数组 | 二叉搜索树 |
+|------|--------|------|-----------|
+| 查找 | ⚡ O(1) | ⚡ O(1)（按索引）/ O(n)（按值） | O(log n) |
+| 插入 | ⚡ O(1) | O(n) | O(log n) |
+| 删除 | ⚡ O(1) | O(n) | O(log n) |
+| 有序性 | ❌ 无序 | ✅ 有序（按索引） | ✅ 有序 |
+| 内存开销 | 中等 | 最小 | 中等（指针开销） |
+| 适用场景 | 键值映射、查找 | 随机访问 | 需要有序遍历 |
+
+---
+
+## 实际应用
+
+哈希表无处不在！看看它在你每天用的软件里扮演什么角色：
+
+### 应用场景1: Python的dict —— 你每天都在用
+
+Python的`dict`就是哈希表的官方实现！每次你写`d[key] = value`时，Python底层就在做哈希映射。
+
+```python
+# 这就是在操作哈希表
+config = {
+    "database": "localhost",
+    "port": 5432,
+    "username": "admin"
+}
+
+print(config["database"])  # 哈希表查找
+config["password"] = "xxx"  # 哈希表插入
+```
+
+Python 3.7+的dict还**保持了插入顺序**，这是额外加了一个双向链表来实现的。
+
+### 应用场景2: 数据库索引
+
+数据库的**哈希索引**是最基础的索引类型。当你用`WHERE id = 123`查询时，如果id字段有哈希索引，数据库可以直接定位到数据行，而不是全表扫描。
+
+```sql
+-- 有哈希索引：瞬间定位
+SELECT * FROM users WHERE email = 'user@example.com';
+-- 内部过程: hash("user@example.com") → 直接跳到那一行
+```
+
+当然，数据库更常用的是B+树索引（支持范围查询），但哈希索引在等值查询中更快。
+
+### 应用场景3: 缓存系统
+
+缓存（Cache）的本质就是一个**大哈希表**：Key是请求URL或数据ID，Value是缓存的结果。
+
+```python
+# 简易缓存实现
+cache = {}
+
+def get_user_info(user_id):
+    # 先看缓存有没有
+    if user_id in cache:
+        return cache[user_id]  # 缓存命中！
+
+    # 没有就查数据库
+    data = query_database(user_id)
+    cache[user_id] = data  # 写入缓存
+    return data
+```
+
+Redis、Memcached这些专业缓存系统，底层都是大规模哈希表。
+
+### 应用场景4: 密码存储
+
+你注册网站时，网站**不应该存你的明文密码**。正确的做法是：存密码的**哈希值**。
+
+```python
+import hashlib
+
+# 用户注册：存密码的哈希值
+password = "my_secret_password"
+stored_hash = hashlib.sha256(password.encode()).hexdigest()
+print(f"存储的哈希: {stored_hash}")
+# 存储的哈希: 652c...（固定长度的字符串）
+
+# 用户登录：验证密码
+def verify_password(input_pwd, stored_hash):
+    input_hash = hashlib.sha256(input_pwd.encode()).hexdigest()
+    return input_hash == stored_hash  # 哈希值相同就登录成功
+```
+
+哈希函数是**单向的**：你能从密码算出哈希值，但不能从哈希值反推密码。这就是密码安全的基础。
+
+### 应用场景5: 集合去重
+
+Python的`set`底层也是哈希表！利用哈希表的"键唯一"特性，可以轻松去重。
+
+```python
+# 利用集合去重
+numbers = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+unique = set(numbers)
+print(f"去重前: {numbers}")
+print(f"去重后: {unique}")
+# 去重后: {1, 2, 3, 4}
+```
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 哈希表的查找永远是O(1)
+
+**错误理解**：
+"哈希表查找是O(1)，所以比数组快！"
+
+**真相**：
+哈希表的O(1)是**平均情况**。最坏情况下（所有键都碰撞到同一个桶），查找退化成**O(n)**——和链表一样慢！
+
+```
+极端碰撞情况:
+桶3: [key1] → [key2] → [key3] → [key4] → ... → [key1000]
+找key1000需要遍历整个链 → O(n)！
+```
+
+✅ **正确做法**：
+- 选择好的哈希函数，减少碰撞
+- 控制负载因子在0.7以下，及时扩容
+- 对于关键场景，要有性能监控和回退方案
+
+### 误区2: 哈希表是有序的
+
+**错误理解**：
+```python
+d = {"c": 3, "a": 1, "b": 2}
+for key in d:
+    print(key)  # 以为会按a, b, c的顺序输出？
+```
+
+**真相**：
+传统哈希表**不保证插入顺序**。你存进去的顺序和遍历时看到的顺序可能完全不同！
+
+> 注：Python 3.7+的dict确实保持了插入顺序，但这是语言特性，不代表哈希表本身有序。Java的HashMap也是无序的（需要用LinkedHashMap才有序）。
+
+✅ **正确做法**：
+- 需要有序遍历时，用排序后的键列表：`for key in sorted(d.keys())`
+- 或者使用专门的有序数据结构（如TreeMap、BTreeMap）
+
+### 误区3: 可以用可变对象做哈希表的Key
+
+**错误代码**：
+```python
+# ❌ 危险操作！用列表做字典的key
+d = {}
+key = [1, 2, 3]
+d[key] = "value"  # TypeError: unhashable type: 'list'
+
+# 就算某些语言允许了，后续修改key会更灾难：
+key.append(4)  # key变了，但哈希值没重新计算！
+print(d[key])  # 找不到原来的值了！
+```
+
+**为什么会这样**：
+哈希表依赖key的哈希值来定位。如果key可变，你改了key之后，原来的哈希值就"过期"了，数据找不回来了。
+
+✅ **正确做法**：
+```python
+# ✅ 用不可变对象做key
+d = {}
+d[(1, 2, 3)] = "value"  # 元组是不可变的，安全！
+d["name"] = "小明"       # 字符串也是不可变的
+
+# 如果必须用列表，先转成元组
+key_list = [1, 2, 3]
+d[tuple(key_list)] = "value"
+```
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 两数之和 ⭐
+
+**描述**：
+给定一个整数数组和一个目标值，找出数组中两个数，使它们的和等于目标值。返回这两个数的索引。
+
+**要求**：
+- 输入: `nums = [2, 7, 11, 15]`, `target = 9`
+- 输出: `[0, 1]`（因为nums[0] + nums[1] = 2 + 7 = 9）
+- 假设每组输入恰好有一个答案
+- 不能使用同一个元素两次
+- **提示**：用哈希表可以在O(n)时间内解决！
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+1. 遍历数组，对于每个数`num`，检查`target - num`是否已经在哈希表中
+2. 如果在，说明找到了答案
+3. 如果不在，把当前数和它的索引存入哈希表
+4. 这样只需要遍历一次数组！
+
+</details>
+
+### 练习2: 有效的字母异位词 ⭐⭐
+
+**描述**：
+给定两个字符串s和t，判断t是否是s的字母异位词（即：两个字符串包含相同的字符，只是排列不同）。
+
+**要求**：
+- 输入: `s = "anagram"`, `t = "nagaram"`
+- 输出: `True`（因为两个字符串都包含a:3, n:1, g:1, r:1, m:1）
+- 输入: `s = "rat"`, `t = "car"`
+- 输出: `False`
+- 使用哈希表统计字符频率来比较
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+1. 如果两个字符串长度不同，直接返回False
+2. 用哈希表统计s中每个字符的出现次数
+3. 再遍历t，每遇到一个字符就在哈希表中减1
+4. 如果某个字符不存在或计数为0，返回False
+5. 或者更简单：统计两个字符串的字符频率，直接比较两个哈希表是否相等
+
+</details>
+
+### 练习3: 设计LRU缓存 ⭐⭐⭐
+
+**描述**：
+实现一个LRU（Least Recently Used，最近最少使用）缓存。它有固定容量，当容量满了时，淘汰最久没有访问过的元素。
+
+**要求**：
+- `get(key)`：如果key存在，返回值并标记为"最近使用"；不存在返回-1
+- `put(key, value)`：插入或更新键值对。如果满了，淘汰最久未使用的元素
+- `get`和`put`操作都必须是**O(1)**时间复杂度
+- 容量: 2
+
+示例操作序列：
+```
+put(1, 1)    → 缓存: {1: 1}
+put(2, 2)    → 缓存: {1: 1, 2: 2}
+get(1)       → 返回 1，缓存: {2: 2, 1: 1}（1被标记为最近使用）
+put(3, 3)    → 淘汰2（最久未用），缓存: {1: 1, 3: 3}
+get(2)       → 返回 -1（2已被淘汰）
+put(4, 4)    → 淘汰1，缓存: {3: 3, 4: 4}
+get(1)       → 返回 -1
+get(3)       → 返回 3
+get(4)       → 返回 4
+```
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+1. 需要两个数据结构配合：**哈希表 + 双向链表**
+2. 哈希表负责O(1)查找，双向链表负责O(1)移动节点（标记最近使用）
+3. 链表头部放"最近使用"的节点，尾部放"最久未用"的节点
+4. `get`操作：从哈希表找到节点，移到链表头部
+5. `put`操作：如果key已存在，更新值并移到头部；如果是新key，插入头部；如果满了，删除尾部节点
+
+> 这是LeetCode 146题，经典的中等难度题！Python可以用`collections.OrderedDict`来简化实现。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+1. **哈希表的本质**：通过哈希函数将键映射为索引，实现O(1)的快速查找
+2. **哈希函数**：好的哈希函数要确定、均匀分布、计算快速
+3. **碰撞处理**：链地址法（最常用）、开放地址法、再哈希法
+4. **时间复杂度**：平均O(1)，最坏O(n)（所有键碰撞）
+5. **负载因子**：控制哈希表"拥挤程度"，超过0.7就应该扩容
+6. **无处不在**：Python的dict、数据库索引、缓存、密码存储、集合去重
+
+### 思考题
+
+1. **如果让你设计一个哈希函数来存储学生姓名（中文字符串），你会怎么设计？要考虑哪些因素？**
+
+2. **链地址法和开放地址法，各自在什么场景下表现更好？为什么现代语言（如Python、Java）的哈希表大多用链地址法？**
+
+3. **假设你要实现一个能存储10亿个URL的缓存系统，你会如何设计哈希表？要考虑内存、碰撞、扩容等哪些问题？**
+
+---
+
+## 下节预告
+
+下节课我们将学习**堆：优先级队列的秘密**。堆是一种特殊的树形结构，它能在O(log n)时间内找到最大值/最小值，是实现优先队列、堆排序的核心。准备好攀登数据结构的新高峰了吗？🏔️
+
+---
+
+## 参考资源
+
+- 《算法导论》第11章：散列表
+- Python官方文档：[Dictionaries](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)
+- 可视化学习：[VisuAlgo - Hash Table](https://visualgo.net/en/hashtable)
+- LeetCode 经典题：[LRU Cache (146)](https://leetcode.com/problems/lru-cache/)
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*

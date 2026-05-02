@@ -1,0 +1,110 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "以下哪个排序算法是稳定的？",
+      "options": [
+        "快速排序",
+        "选择排序",
+        "归并排序",
+        "堆排序"
+      ],
+      "correct": 2,
+      "explanation": "归并排序是稳定排序，相等元素的相对位置在排序后保持不变。快速排序、选择排序、堆排序都是不稳定的。"
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "冒泡排序的最好时间复杂度是？",
+      "options": [
+        "O(n²)",
+        "O(n log n)",
+        "O(n)",
+        "O(1)"
+      ],
+      "correct": 2,
+      "explanation": "当数组已经有序时，冒泡排序（带优化标志的版本）只需遍历一次就能确认，时间复杂度为O(n)。"
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "快速排序的最坏时间复杂度发生在什么情况？",
+      "options": [
+        "数组随机排列",
+        "数组已经完全有序",
+        "数组元素全部相同",
+        "数组长度为1"
+      ],
+      "correct": 1,
+      "explanation": "当选择固定端点作为基准时，如果数组已经有序（或逆序），每次分区都会产生一个空子数组和一个n-1的子数组，退化为O(n²)。"
+    },
+    {
+      "id": 4,
+      "type": "single_choice",
+      "question": "归并排序的空间复杂度是？",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correct": 2,
+      "explanation": "归并排序在合并过程中需要创建额外的数组来存储结果，因此空间复杂度为O(n)。这是它的一个缺点。"
+    },
+    {
+      "id": 5,
+      "type": "single_choice",
+      "question": "插入排序最适合以下哪种数据？",
+      "options": [
+        "完全随机的数据",
+        "逆序排列的数据",
+        "几乎有序的数据",
+        "所有元素都相同的数据"
+      ],
+      "correct": 2,
+      "explanation": "插入排序在几乎有序的数据上表现极佳，因为内层while循环几乎不会执行，时间复杂度接近O(n)。"
+    },
+    {
+      "id": 6,
+      "type": "true_false",
+      "question": "Python的sorted()函数底层使用的是快速排序算法。",
+      "correct": false,
+      "explanation": "Python的sorted()和list.sort()底层使用的是Timsort算法，它是归并排序和插入排序的混合体，由Tim Peters在2002年设计。"
+    },
+    {
+      "id": 7,
+      "type": "single_choice",
+      "question": "以下哪种排序算法使用了「分治法」的思想？",
+      "options": [
+        "冒泡排序",
+        "插入排序",
+        "选择排序",
+        "快速排序"
+      ],
+      "correct": 3,
+      "explanation": "快速排序使用分治法：选基准、分区、递归排序。归并排序也是分治法。而冒泡、插入、选择都是简单的迭代方法。"
+    },
+    {
+      "id": 8,
+      "type": "single_choice",
+      "question": "对n=10000的数据排序，O(n²)算法大约需要多少次操作？",
+      "options": [
+        "约1万次",
+        "约10万次",
+        "约1亿次",
+        "约100亿次"
+      ],
+      "correct": 2,
+      "explanation": "O(n²) = 10000² = 100,000,000，即约1亿次操作。而O(n log n) ≈ 140,000次，差了约700倍。"
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 3,
+      "medium": 4,
+      "hard": 1
+    }
+  }
+}

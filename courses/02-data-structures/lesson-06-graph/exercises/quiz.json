@@ -1,0 +1,118 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "图（Graph）由哪两个基本元素组成？",
+      "options": [
+        "节点（Vertex）和边（Edge）",
+        "键（Key）和值（Value）",
+        "行（Row）和列（Column）",
+        "父节点（Parent）和子节点（Child）"
+      ],
+      "correct": 0,
+      "explanation": "图由顶点（节点）和连接顶点的边组成。键和值是哈希表的元素，行和列是矩阵的元素，父节点和子节点是树的元素。",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "微信的好友关系最适合用哪种图来表示？",
+      "options": [
+        "有向图",
+        "无向图",
+        "加权有向图",
+        "树"
+      ],
+      "correct": 1,
+      "explanation": "微信好友是双向关系——你加了对方为好友，对方也会看到你。所以用无向图最合适。微博关注是单向的，用有向图。",
+      "difficulty": 1
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "对于有10000个节点但只有20000条边的稀疏图，哪种表示方法更节省空间？",
+      "options": [
+        "邻接矩阵",
+        "邻接表",
+        "两者一样",
+        "取决于边的分布"
+      ],
+      "correct": 1,
+      "explanation": "邻接矩阵需要O(n²)=O(10000²)=O(1亿)的空间，而邻接表只需要O(n+m)=O(20000+10000)=O(30000)的空间。对于稀疏图，邻接表远优于邻接矩阵。",
+      "difficulty": 2
+    },
+    {
+      "id": 4,
+      "type": "single_choice",
+      "question": "BFS（广度优先搜索）使用哪种数据结构来辅助实现？",
+      "options": [
+        "栈（Stack）",
+        "队列（Queue）",
+        "优先队列（Priority Queue）",
+        "哈希表（Hash Table）"
+      ],
+      "correct": 1,
+      "explanation": "BFS使用队列（FIFO，先进先出）来保证按层遍历——先加入队列的节点先被处理，保证"水波纹"式的扩散。DFS用栈，Dijkstra用优先队列。",
+      "difficulty": 1
+    },
+    {
+      "id": 5,
+      "type": "single_choice",
+      "question": "以下哪种场景应该使用Dijkstra算法而不是BFS？",
+      "options": [
+        "判断两个用户是否为微信好友",
+        "计算你到某个人的好友距离（隔了几层）",
+        "在地图中找到总距离最短的驾车路线",
+        "遍历一个文件系统的所有文件"
+      ],
+      "correct": 2,
+      "explanation": "地图导航中每条道路有不同的距离（权重），需要找总权重最小的路径，这是Dijkstra的典型应用。BFS只适用于无权图或所有权重相同的图。其他三个场景都是无权图，用BFS即可。",
+      "difficulty": 2
+    },
+    {
+      "id": 6,
+      "type": "true_false",
+      "question": "在图上执行BFS或DFS遍历时，必须使用visited集合来防止无限循环。",
+      "correct": true,
+      "explanation": "图中可能存在环，如果不记录已访问的节点，遍历时可能会在环中无限循环。这是图遍历和树遍历的关键区别之一。",
+      "difficulty": 1
+    },
+    {
+      "id": 7,
+      "type": "single_choice",
+      "question": "Dijkstra算法不能处理带负权边的图，原因是什么？",
+      "options": [
+        "负权边会导致队列溢出",
+        "负权边会使已确定最短路径的节点可能被再次更新",
+        "负权边会破坏邻接表的结构",
+        "Python不支持负数权重"
+      ],
+      "correct": 1,
+      "explanation": "Dijkstra的贪心策略基于一个假设：一旦某个节点被选中（当前距离最近的未处理节点），它的最短路径就确定了。但负权边可能让已经处理过的节点通过负权边变得更近，破坏这个假设。处理负权边需要用Bellman-Ford算法。",
+      "difficulty": 3
+    },
+    {
+      "id": 8,
+      "type": "single_choice",
+      "question": "一个图的邻接表表示为：{A: [B, C], B: [A], C: [A]}，这个图是什么类型的？",
+      "options": [
+        "有环图",
+        "树（也是无环连通图）",
+        "完全图",
+        "非连通图"
+      ],
+      "correct": 1,
+      "explanation": "这个图中A连接B和C，B和C之间没有连接。它有3个节点、2条边，连通且无环——符合树的定义（n个节点，n-1条边，连通无环）。完全图需要每对节点都有边（3个节点的完全图需要3条边）。",
+      "difficulty": 3
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 4,
+      "medium": 2,
+      "hard": 2
+    }
+  }
+}

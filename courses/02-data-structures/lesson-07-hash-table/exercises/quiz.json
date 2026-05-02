@@ -1,0 +1,82 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "哈希表查找操作的平均时间复杂度是多少？",
+      "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+      "correct": 2,
+      "explanation": "哈希表通过哈希函数直接计算索引位置，平均情况下查找时间复杂度为O(1)。最坏情况（所有键碰撞）才是O(n)。",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "以下哪项不是好的哈希函数应具备的特征？",
+      "options": ["确定性（相同输入产生相同输出）", "输入敏感（微小变化产生不同输出）", "输出长度随输入变化", "计算速度快"],
+      "correct": 2,
+      "explanation": "好的哈希函数应该将任意长度的输入映射为固定范围的整数，输出范围是固定的，不随输入长度变化。",
+      "difficulty": 2
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "链地址法（Separate Chaining）是如何解决哈希碰撞的？",
+      "options": ["将元素放入下一个空桶", "每个桶维护一个链表，碰撞时挂在链表尾部", "使用第二个哈希函数重新计算位置", "删除旧的元素替换为新的"],
+      "correct": 1,
+      "explanation": "链地址法的核心思想是：每个桶对应一个链表，当多个键映射到同一个桶时，将它们依次挂在链表后面。",
+      "difficulty": 1
+    },
+    {
+      "id": 4,
+      "type": "true_false",
+      "question": "哈希表的查找速度永远比数组快。",
+      "correct": false,
+      "explanation": "这是常见的误区！数组按索引访问也是O(1)，和哈希表一样快。哈希表的优势在于按键查找（不需要知道具体索引），而数组按值查找需要O(n)。另外，哈希表在最坏情况下（严重碰撞）查找会退化到O(n)，比数组还慢。",
+      "difficulty": 2
+    },
+    {
+      "id": 5,
+      "type": "single_choice",
+      "question": "当一个哈希表的负载因子（Load Factor）为0.8时，意味着什么？",
+      "options": ["表中有80%的桶是空的", "表中有80%的元素已经存储", "哈希表需要立即缩容", "哈希函数有80%的准确率"],
+      "correct": 1,
+      "explanation": "负载因子 = 已存储元素数量 / 哈希表大小。负载因子0.8表示80%的空间已被占用，碰撞概率较高，通常建议超过0.7时扩容。",
+      "difficulty": 2
+    },
+    {
+      "id": 6,
+      "type": "single_choice",
+      "question": "线性探测（Linear Probing）属于哪种碰撞解决方法？",
+      "options": ["链地址法", "开放地址法", "再哈希法", "分离链接法"],
+      "correct": 1,
+      "explanation": "线性探测是开放地址法的一种探测策略。当目标桶被占用时，按顺序查看下一个桶（+1, +2, +3...）直到找到空位。",
+      "difficulty": 2
+    },
+    {
+      "id": 7,
+      "type": "true_false",
+      "question": "Python的字典（dict）底层使用哈希表实现。",
+      "correct": true,
+      "explanation": "Python的dict确实是哈希表的实现。从Python 3.7开始，dict还额外保证了插入顺序（通过内部维护一个双向链表），但底层查找机制仍然是基于哈希的。",
+      "difficulty": 1
+    },
+    {
+      "id": 8,
+      "type": "single_choice",
+      "question": "以下哪种数据类型最适合作为哈希表的Key？",
+      "options": ["列表（list）", "集合（set）", "字符串（str）", "字典（dict）"],
+      "correct": 2,
+      "explanation": "哈希表的Key必须是不可变（可哈希）的类型。字符串是不可变的，适合做Key。列表、集合、字典都是可变类型，Python会报错'unhashable type'。如果需要用列表做Key，应先转为元组tuple(list)。",
+      "difficulty": 2
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 3,
+      "medium": 5,
+      "hard": 0
+    }
+  }
+}

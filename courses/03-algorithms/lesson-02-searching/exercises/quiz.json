@@ -1,0 +1,82 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "线性查找的最好情况时间复杂度是多少？",
+      "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      "correct": 0,
+      "explanation": "最好情况下，目标元素恰好在列表第一个位置，只需比较一次，所以是O(1)。",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "二分查找的前提条件是什么？",
+      "options": ["数据必须是整数", "数据必须是有序的", "数据必须是正数", "数据不能有重复"],
+      "correct": 1,
+      "explanation": "二分查找依赖有序性来排除一半搜索范围。如果无序，无法根据中间元素的大小关系推断目标在左边还是右边。",
+      "difficulty": 1
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "在一个长度为1024的有序数组中进行二分查找，最多需要比较多少次？",
+      "options": ["10次", "32次", "100次", "1024次"],
+      "correct": 0,
+      "explanation": "log₂(1024) = 10。每次比较砍掉一半范围，所以最多需要10次比较。这就是O(log n)的威力——1024个元素只需10步。",
+      "difficulty": 2
+    },
+    {
+      "id": 4,
+      "type": "true_false",
+      "question": "在无序数组中，可以先排序再用二分查找，这样比直接线性查找更高效（假设只需要查找一次）。",
+      "correct": false,
+      "explanation": "排序的时间复杂度是O(n log n)，而线性查找是O(n)。如果只查找一次，排序+二分查找反而更慢。只有在需要多次查找时，预排序才有意义。",
+      "difficulty": 2
+    },
+    {
+      "id": 5,
+      "type": "single_choice",
+      "question": "哈希查找的平均时间复杂度是多少？",
+      "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+      "correct": 2,
+      "explanation": "理想情况下，哈希函数将元素均匀映射到不同位置，查找只需一步到位，所以是O(1)。但最坏情况下（哈希冲突严重）可能退化到O(n)。",
+      "difficulty": 1
+    },
+    {
+      "id": 6,
+      "type": "single_choice",
+      "question": "对于频繁查找但数据量大的场景，以下哪种方案最优？",
+      "options": ["每次线性查找", "排序后用二分查找", "用哈希表", "排序后用线性查找"],
+      "correct": 2,
+      "explanation": "频繁查找时，哈希表O(1)的查找速度最快。虽然需要O(n)的空间和建表时间，但均摊到每次查找上，效率远超其他方案。",
+      "difficulty": 3
+    },
+    {
+      "id": 7,
+      "type": "single_choice",
+      "question": "二分查找的递归实现中，递归的基准情况（终止条件）是什么？",
+      "options": ["left == right", "left > right", "mid == target", "arr[mid] == 0"],
+      "correct": 1,
+      "explanation": "当left > right时，说明搜索范围已经为空，目标不存在，应该返回-1。这是递归的终止条件。left == right时还有最后一个元素需要检查。",
+      "difficulty": 2
+    },
+    {
+      "id": 8,
+      "type": "true_false",
+      "question": "Python中的`in`操作符（如`x in my_list`）底层使用的是线性查找。",
+      "correct": true,
+      "explanation": "对于Python的list，`in`操作是线性扫描，时间复杂度O(n)。但对于set和dict，底层是哈希表实现，`in`操作是O(1)。所以选择合适的数据结构很重要！",
+      "difficulty": 2
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 3,
+      "medium": 4,
+      "hard": 1
+    }
+  }
+}

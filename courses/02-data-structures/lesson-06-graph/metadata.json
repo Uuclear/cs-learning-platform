@@ -1,0 +1,33 @@
+{
+  "id": "02-06",
+  "title": "图：万物互联的社交网络",
+  "slug": "lesson-06-graph",
+  "module": "02-data-structures",
+  "module_name": "数据结构",
+  "module_order": 2,
+  "lesson_order": 6,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["02-05"],
+  "tags": ["graph", "bfs", "dfs", "dijkstra", "adjacency-list", "adjacency-matrix", "data-structure"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习图数据结构的基础概念、表示方法、遍历算法和最短路径算法",
+  "learning_objectives": [
+    "理解图的定义和分类（有向/无向、加权/无权）",
+    "掌握邻接矩阵和邻接表两种图的表示方法",
+    "实现BFS和DFS两种图遍历算法",
+    "理解Dijkstra最短路径算法的原理和应用"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}

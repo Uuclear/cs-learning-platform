@@ -1,0 +1,34 @@
+{
+  "id": "03-03",
+  "title": "递归：函数的自我修养",
+  "slug": "lesson-03-recursion",
+  "module": "03-algorithms",
+  "module_name": "算法",
+  "module_order": 3,
+  "lesson_order": 3,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["02-05"],
+  "tags": ["recursion", "base-case", "memoization", "call-stack", "tail-recursion", "algorithm"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "深入浅出讲解递归的核心概念、三要素、调用栈原理及记忆化优化，通过斐波那契、汉诺塔等经典案例掌握递归思维。",
+  "learning_objectives": [
+    "理解递归的定义和三要素（基准情况、递归情况、收敛）",
+    "掌握调用栈在递归中的工作机制",
+    "能用记忆化优化朴素递归的重复计算问题",
+    "识别递归适用的场景（树遍历、分治、回溯）",
+    "避免递归常见误区（忘写基准情况、忽略返回值）"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}
