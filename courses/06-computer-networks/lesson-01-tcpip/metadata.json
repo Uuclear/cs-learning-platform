@@ -1,0 +1,16 @@
+{
+  "id": "06-01",
+  "title": "TCP/IP协议栈：互联网的基石",
+  "module": "06-computer-networks",
+  "difficulty": 2,
+  "duration": 25,
+  "prerequisites": [],
+  "topics": ["TCP/IP协议栈", "网络分层", "IP地址", "端口", "TCP协议", "UDP协议", "Socket编程", "三次握手", "四次挥手"],
+  "learningObjectives": [
+    "理解TCP/IP四层模型的基本概念和各层职责",
+    "掌握IP地址和端口的作用及区别",
+    "能够使用Socket API进行基本的网络编程",
+    "理解TCP和UDP协议的特点及适用场景",
+    "了解网络诊断工具的工作原理"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "TCP/IP协议栈的四层模型中，哪一层负责端到端的可靠数据传输？",
+      "options": [
+        "链路层",
+        "网络层",
+        "传输层",
+        "应用层"
+      ],
+      "correctAnswer": 2,
+      "explanation": "传输层（Transport Layer）负责端到端的通信服务，其中TCP协议提供可靠的、面向连接的数据传输。"
+    },
+    {
+      "id": 2,
+      "question": "以下关于TCP和UDP的说法，哪一个是正确的？",
+      "options": [
+        "TCP是无连接的，UDP是面向连接的",
+        "TCP提供可靠传输，UDP提供不可靠传输",
+        "UDP比TCP更适合文件传输",
+        "TCP的开销比UDP小"
+      ],
+      "correctAnswer": 1,
+      "explanation": "TCP提供可靠的数据传输保证（不丢失、不重复、按序到达），而UDP是不可靠的，可能丢失、重复或乱序。"
+    },
+    {
+      "id": 3,
+      "question": "TCP建立连接需要几次握手？",
+      "options": [
+        "1次",
+        "2次",
+        "3次",
+        "4次"
+      ],
+      "correctAnswer": 2,
+      "explanation": "TCP使用三次握手建立连接：客户端发送SYN，服务器回复SYN-ACK，客户端再发送ACK确认。"
+    },
+    {
+      "id": 4,
+      "question": "IP地址和MAC地址的主要区别是什么？",
+      "options": [
+        "IP地址是物理地址，MAC地址是逻辑地址",
+        "IP地址用于同一网络内通信，MAC地址用于跨网络通信",
+        "IP地址是逻辑地址用于跨网络通信，MAC地址是物理地址用于同一网络内通信",
+        "IP地址和MAC地址没有区别，只是叫法不同"
+      ],
+      "correctAnswer": 2,
+      "explanation": "IP地址是逻辑地址，用于网络层的跨网络寻址；MAC地址是物理地址，用于链路层的同一网络内设备识别。"
+    },
+    {
+      "id": 5,
+      "question": "在TCP/IP协议栈中，HTTP协议属于哪一层？",
+      "options": [
+        "链路层",
+        "网络层",
+        "传输层",
+        "应用层"
+      ],
+      "correctAnswer": 3,
+      "explanation": "HTTP（超文本传输协议）属于应用层，它使用传输层的TCP协议来传输数据。"
+    },
+    {
+      "id": 6,
+      "question": "以下哪个端口号通常用于HTTPS服务？",
+      "options": [
+        "80",
+        "443",
+        "22",
+        "21"
+      ],
+      "correctAnswer": 1,
+      "explanation": "HTTPS（HTTP Secure）默认使用443端口，而普通HTTP使用80端口。"
+    },
+    {
+      "id": 7,
+      "question": "ping命令使用的是哪种协议？",
+      "options": [
+        "TCP",
+        "UDP",
+        "ICMP",
+        "HTTP"
+      ],
+      "correctAnswer": 2,
+      "explanation": "ping命令使用ICMP（Internet Control Message Protocol）协议来测试网络连通性和延迟。"
+    },
+    {
+      "id": 8,
+      "question": "IPv4地址的长度是多少位？",
+      "options": [
+        "32位",
+        "64位",
+        "128位",
+        "256位"
+      ],
+      "correctAnswer": 0,
+      "explanation": "IPv4地址是32位的，通常表示为四个十进制数（如192.168.1.1），每个数8位。"
+    }
+  ]
+}

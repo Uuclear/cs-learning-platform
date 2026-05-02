@@ -1,0 +1,479 @@
+---
+id: '06-02'
+title: 'HTTP协议：浏览器的"语言"'
+module: '06-computer-networks'
+difficulty: 2
+duration: 20
+prerequisites: ["06-01"]
+---
+
+# HTTP协议：浏览器的"语言"
+
+每次点击链接，你的浏览器都在说一种语言——这就是HTTP（超文本传输协议）！它就像互联网世界的通用语，让浏览器和服务器能够愉快地交流。
+
+> 💡 **思考问题**: 当你在浏览器地址栏输入网址并按下回车时，背后发生了什么？
+
+---
+
+## 开场白
+
+想象一下，你走进一家餐厅，服务员递给你菜单。你点了一份牛排，服务员把订单传给厨房，厨师做好后，服务员再把牛排端给你。这个过程就是HTTP的基本模型！
+
+在互联网世界里：
+- **你** = 浏览器（客户端）
+- **服务员** = HTTP协议
+- **菜单/订单** = HTTP请求
+- **厨房** = Web服务器
+- **牛排** = 网页内容（HTTP响应）
+
+HTTP是Web的基础，没有它，我们就无法浏览网页、使用API、甚至无法加载图片。它是应用层协议，运行在TCP之上（还记得我们上节课学的TCP/IP协议栈吗？）。
+
+---
+
+## 核心概念
+
+HTTP是一个**请求-响应**协议，客户端发送请求，服务器返回响应。整个过程简单而优雅！
+
+### HTTP请求/响应模型
+
+HTTP通信总是由客户端发起请求，服务器被动响应。一个完整的HTTP事务包含：
+
+1. **请求行**：方法 + URL + 协议版本
+2. **请求头**：元数据（如User-Agent、Content-Type等）
+3. **空行**：分隔头部和正文
+4. **请求体**（可选）：POST/PUT请求的数据
+
+响应结构类似：
+1. **状态行**：协议版本 + 状态码 + 状态描述
+2. **响应头**：服务器信息、内容类型等
+3. **空行**
+4. **响应体**：实际的网页内容或数据
+
+### 状态码分类
+
+HTTP状态码告诉我们请求的结果：
+
+- **1xx (信息性)**: 请求已接收，继续处理
+- **2xx (成功)**: 请求成功处理
+  - `200 OK`: 一切正常！
+  - `201 Created`: 资源创建成功
+- **3xx (重定向)**: 需要进一步操作
+  - `301 Moved Permanently`: 永久重定向
+  - `302 Found`: 临时重定向
+- **4xx (客户端错误)**: 请求有问题
+  - `400 Bad Request`: 请求格式错误
+  - `404 Not Found`: 找不到资源
+  - `403 Forbidden`: 没有权限
+- **5xx (服务器错误)**: 服务器出问题了
+  - `500 Internal Server Error`: 服务器内部错误
+  - `503 Service Unavailable`: 服务暂时不可用
+
+### 请求方法
+
+不同的HTTP方法表示不同的操作意图：
+
+- **GET**: 获取资源（安全、幂等）
+- **POST**: 创建资源或提交数据（不幂等）
+- **PUT**: 更新或创建指定资源（幂等）
+- **DELETE**: 删除资源（幂等）
+- **PATCH**: 部分更新资源（不幂等）
+- **HEAD**: 获取响应头，不获取响应体
+- **OPTIONS**: 查询服务器支持的方法
+
+---
+
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: 发送HTTP请求
+
+```python
+import requests
+
+# 发送GET请求获取网页内容
+response = requests.get('https://httpbin.org/get')
+
+# 打印状态码和响应内容
+print(f"状态码: {response.status_code}")
+print(f"响应头: {dict(response.headers)}")
+print(f"响应内容: {response.json()}")
+```
+
+**运行结果**：
+```
+状态码: 200
+响应头: {'Content-Type': 'application/json', 'Content-Length': '398', ...}
+响应内容: {
+    "args": {},
+    "headers": {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate",
+        "Host": "httpbin.org",
+        "User-Agent": "python-requests/2.28.1"
+    },
+    "origin": "xxx.xxx.xxx.xxx",
+    "url": "https://httpbin.org/get"
+}
+```
+
+这个例子展示了如何使用Python的`requests`库发送HTTP GET请求。我们获取了状态码、响应头和响应体，这些都是HTTP响应的核心组成部分。
+
+### 示例2: 创建简易HTTP服务器
+
+```python
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import json
+
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        """处理GET请求"""
+        # 设置响应状态码和头部
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        
+        # 准备响应数据
+        response_data = {
+            'message': '你好，这是我的第一个HTTP服务器！',
+            'path': self.path,
+            'method': 'GET'
+        }
+        
+        # 发送响应体
+        self.wfile.write(json.dumps(response_data, ensure_ascii=False).encode('utf-8'))
+    
+    def do_POST(self):
+        """处理POST请求"""
+        # 读取请求体
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
+        
+        # 设置响应
+        self.send_response(201)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        
+        # 返回接收到的数据
+        response_data = {
+            'received': post_data,
+            'message': '数据接收成功！'
+        }
+        self.wfile.write(json.dumps(response_data, ensure_ascii=False).encode('utf-8'))
+
+if __name__ == '__main__':
+    server_address = ('localhost', 8080)
+    httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
+    print("服务器启动在 http://localhost:8080")
+    print("按 Ctrl+C 停止服务器")
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\n服务器已停止")
+        httpd.server_close()
+```
+
+**运行结果**：
+```
+服务器启动在 http://localhost:8080
+按 Ctrl+C 停止服务器
+```
+
+这个例子创建了一个简单的HTTP服务器，可以处理GET和POST请求。你可以用浏览器访问`http://localhost:8080`或者用curl测试POST请求：
+```bash
+curl -X POST -d '{"name": "张三"}' http://localhost:8080/api/users
+```
+
+### 示例3: 调用REST API
+
+```python
+import requests
+
+# 1. 获取用户列表 (GET)
+def get_users():
+    response = requests.get('https://jsonplaceholder.typicode.com/users')
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"获取用户失败: {response.status_code}")
+        return []
+
+# 2. 创建新用户 (POST)
+def create_user(user_data):
+    response = requests.post(
+        'https://jsonplaceholder.typicode.com/users',
+        json=user_data,
+        headers={'Content-Type': 'application/json'}
+    )
+    if response.status_code == 201:
+        return response.json()
+    else:
+        print(f"创建用户失败: {response.status_code}")
+        return None
+
+# 3. 更新用户 (PUT)
+def update_user(user_id, user_data):
+    response = requests.put(
+        f'https://jsonplaceholder.typicode.com/users/{user_id}',
+        json=user_data
+    )
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"更新用户失败: {response.status_code}")
+        return None
+
+# 使用示例
+if __name__ == '__main__':
+    # 获取所有用户
+    users = get_users()
+    print(f"找到 {len(users)} 个用户")
+    
+    # 创建新用户
+    new_user = {
+        'name': '李四',
+        'username': 'lisi',
+        'email': 'lisi@example.com'
+    }
+    created_user = create_user(new_user)
+    if created_user:
+        print(f"创建用户成功: {created_user['name']}")
+    
+    # 更新用户（如果创建成功）
+    if created_user:
+        updated_data = {**created_user, 'name': '李四（已更新）'}
+        updated_user = update_user(created_user['id'], updated_data)
+        if updated_user:
+            print(f"更新用户成功: {updated_user['name']}")
+```
+
+**运行结果**：
+```
+找到 10 个用户
+创建用户成功: 李四
+更新用户成功: 李四（已更新）
+```
+
+这个例子展示了如何使用HTTP的不同方法来操作REST API。注意每个方法对应不同的操作语义：GET用于读取，POST用于创建，PUT用于更新。
+
+---
+
+## 深入理解
+
+HTTP看起来简单，但背后有很多精妙的设计！
+
+### HTTP是无状态的
+
+HTTP协议本身是**无状态**的，这意味着每个请求都是独立的，服务器不会记住之前的请求。这带来了两个重要影响：
+
+1. **简单性**: 服务器不需要维护客户端状态，易于扩展
+2. **挑战**: 如何实现登录、购物车等需要状态的功能？
+
+为了解决这个问题，我们引入了**Cookie**和**Session**：
+
+- **Cookie**: 存储在客户端的小型数据片段，每次请求都会自动发送给服务器
+- **Session**: 存储在服务器端的用户数据，通过Cookie中的Session ID来关联
+
+### Cookie/Session工作原理
+
+```
+客户端                     服务器
+  |                          |
+  | 1. 登录请求              |
+  |------------------------->|
+  |                          | 2. 验证凭据，创建Session
+  |                          |    Session ID = "abc123"
+  | 3. 设置Cookie           |
+  |<-------------------------|    Set-Cookie: session_id=abc123
+  |                          |
+  | 4. 后续请求              |
+  | Cookie: session_id=abc123|
+  |------------------------->| 5. 通过Session ID找到用户数据
+  |                          |
+```
+
+### HTTPS加密
+
+HTTP传输的数据是明文的，容易被窃听和篡改。HTTPS（HTTP Secure）通过SSL/TLS协议对数据进行加密：
+
+1. **身份验证**: 确保你连接的是真正的网站，不是钓鱼网站
+2. **数据加密**: 所有传输的数据都被加密，防止窃听
+3. **完整性保护**: 确保数据在传输过程中没有被篡改
+
+现代网站都应该使用HTTPS，浏览器也会对HTTP网站显示"不安全"警告。
+
+---
+
+## 实际应用
+
+HTTP协议无处不在，掌握它对开发者至关重要！
+
+### 浏览器开发者工具
+
+现代浏览器都内置了强大的开发者工具，可以查看所有的HTTP请求：
+
+1. 按 `F12` 或右键选择"检查"
+2. 切换到"Network"（网络）标签
+3. 刷新页面，查看所有请求的详细信息
+4. 可以看到请求头、响应头、响应体、时间线等
+
+这对于调试API调用、分析性能问题非常有用！
+
+### curl命令
+
+`curl`是命令行下的HTTP客户端，功能强大：
+
+```bash
+# 基本GET请求
+curl https://example.com
+
+# 带自定义头部的请求
+curl -H "Authorization: Bearer token123" https://api.example.com/users
+
+# POST请求发送JSON数据
+curl -X POST -H "Content-Type: application/json" -d '{"name":"张三"}' https://api.example.com/users
+
+# 查看详细的请求/响应过程
+curl -v https://example.com
+```
+
+### API调试
+
+开发API时，常用的调试工具有：
+
+- **Postman**: 图形化API测试工具
+- **Insomnia**: 另一个优秀的API客户端
+- **curl**: 命令行工具，适合自动化脚本
+- **浏览器开发者工具**: 直接查看网页中的API调用
+
+---
+
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: 混淆301和302重定向
+
+很多人认为301和302都可以用来重定向，但实际上它们有重要区别：
+
+- **301 Moved Permanently**: 永久重定向，搜索引擎会更新索引，浏览器会缓存
+- **302 Found**: 临时重定向，搜索引擎保持原URL，浏览器不会缓存
+
+✅ **正确做法**: 如果URL永久改变，使用301；如果是临时跳转（比如登录后跳转），使用302。
+
+### 误区2: GET和POST混用
+
+有些人用GET请求来提交敏感数据或修改数据，这是错误的：
+
+- **GET**: 应该只用于获取数据，参数在URL中，会被缓存、记录在历史记录中
+- **POST**: 用于提交数据，参数在请求体中，相对更安全
+
+✅ **正确做法**: 遵循RESTful原则，GET只用于读取，POST/PUT/DELETE用于写操作。敏感数据永远不要放在URL中。
+
+### 误区3: 忽略状态码的语义
+
+很多开发者只检查是否成功（2xx），忽略了具体的状态码含义：
+
+- `200 OK`: 请求成功，有响应体
+- `201 Created`: 资源创建成功，通常包含新资源的位置
+- `204 No Content`: 请求成功，但没有响应体
+- `400 Bad Request`: 客户端请求错误，应该修正后重试
+- `401 Unauthorized`: 需要认证
+- `403 Forbidden`: 已认证但没有权限
+
+✅ **正确做法**: 根据具体的业务逻辑处理不同的状态码，提供更好的用户体验和错误处理。
+
+---
+
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: HTTP状态码识别 ⭐
+
+编写一个函数，根据HTTP状态码返回对应的中文描述。
+
+**要求**：
+- 支持常见的状态码（200, 201, 301, 302, 400, 401, 403, 404, 500）
+- 对于不支持的状态码，返回"未知状态码"
+- 函数名为`get_status_description`
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+可以使用字典来映射状态码和描述，然后用get方法获取值。
+
+</details>
+
+### 练习2: 简易HTTP客户端 ⭐⭐
+
+创建一个简易的HTTP客户端类，支持GET和POST请求。
+
+**要求**：
+- 类名为`SimpleHttpClient`
+- 实现`get(url)`和`post(url, data)`方法
+- 返回包含状态码、响应头和响应体的对象
+- 处理基本的错误情况
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+可以基于`urllib.request`模块实现，不需要使用第三方库。注意处理异常情况。
+
+</details>
+
+### 练习3: REST API模拟器 ⭐⭐⭐
+
+创建一个REST API模拟器，支持对用户资源的CRUD操作。
+
+**要求**：
+- 使用内存存储（字典或列表）
+- 支持GET /users（获取所有用户）、GET /users/{id}（获取单个用户）
+- 支持POST /users（创建用户）、PUT /users/{id}（更新用户）、DELETE /users/{id}（删除用户）
+- 返回正确的HTTP状态码
+- 支持JSON格式的请求和响应
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+可以扩展之前示例2中的HTTP服务器，添加路由处理和数据存储逻辑。
+
+</details>
+
+---
+
+## 小结与思考
+
+### 本节要点
+
+- HTTP是请求-响应协议，运行在TCP之上
+- 核心组件包括请求/响应的结构、状态码、请求方法
+- HTTP是无状态的，通过Cookie/Session实现状态管理
+- HTTPS通过SSL/TLS提供加密和安全保证
+- 正确使用HTTP方法和状态码是构建良好API的关键
+
+### 思考题
+
+1. 为什么HTTP设计成无状态的？这种设计有什么优缺点？
+
+2. 在什么情况下应该使用PUT而不是POST？它们的根本区别是什么？
+
+3. 如果你要设计一个文件上传API，应该使用哪种HTTP方法？为什么？
+
+---
+
+## 下节预告
+
+下一节课我们将学习**DNS系统：互联网的电话簿**，了解域名是如何转换成IP地址的，以及DNS在整个网络架构中的重要作用。
+
+---
+
+## 参考资源
+
+- [MDN Web Docs - HTTP](https://developer.mozilla.org/zh-CN/docs/Web/HTTP)
+- [RFC 7231 - HTTP/1.1 Semantics and Content](https://tools.ietf.org/html/rfc7231)
+- [HTTP Status Code 官方文档](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
+
+---
+
+*本节课由CS教授精心打造，如有疑问欢迎交流！*

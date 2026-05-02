@@ -1,0 +1,17 @@
+{
+  "id": "06-02",
+  "title": "HTTP协议：浏览器的\"语言\"",
+  "module": "06-computer-networks",
+  "difficulty": 2,
+  "duration": 20,
+  "prerequisites": ["06-01"],
+  "topics": ["HTTP", "Web协议", "REST API", "状态码", "请求方法"],
+  "learningObjectives": [
+    "理解HTTP协议的基本工作原理",
+    "掌握HTTP请求/响应模型",
+    "熟悉常用HTTP状态码和请求方法",
+    "能够使用Python发送HTTP请求",
+    "理解HTTP无状态特性和会话管理"
+  ],
+  "keywords": ["HTTP", "HTTPS", "REST", "API", "Web开发", "网络协议"]
+}

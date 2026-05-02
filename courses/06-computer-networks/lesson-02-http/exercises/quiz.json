@@ -1,0 +1,108 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple_choice",
+      "question": "HTTP协议是运行在哪一层的协议？",
+      "options": [
+        "物理层",
+        "数据链路层",
+        "网络层",
+        "应用层"
+      ],
+      "correct_answer": 3,
+      "explanation": "HTTP是应用层协议，运行在TCP之上。"
+    },
+    {
+      "id": "q2",
+      "type": "multiple_choice",
+      "question": "以下哪个HTTP状态码表示'资源未找到'？",
+      "options": [
+        "200",
+        "403",
+        "404",
+        "500"
+      ],
+      "correct_answer": 2,
+      "explanation": "404 Not Found 表示请求的资源在服务器上找不到。"
+    },
+    {
+      "id": "q3",
+      "type": "multiple_choice",
+      "question": "GET和POST请求的主要区别是什么？",
+      "options": [
+        "GET用于获取数据，POST用于提交数据",
+        "GET比POST更快",
+        "POST只能发送JSON数据",
+        "GET不能有请求头"
+      ],
+      "correct_answer": 0,
+      "explanation": "GET应该只用于获取数据（安全、幂等），而POST用于提交数据或创建资源。"
+    },
+    {
+      "id": "q4",
+      "type": "multiple_choice",
+      "question": "HTTP协议的无状态特性意味着什么？",
+      "options": [
+        "服务器不会保存客户端的状态信息",
+        "HTTP连接不能保持长连接",
+        "HTTP不支持加密",
+        "HTTP只能传输文本数据"
+      ],
+      "correct_answer": 0,
+      "explanation": "HTTP的无状态性意味着每个请求都是独立的，服务器不会记住之前的请求。"
+    },
+    {
+      "id": "q5",
+      "type": "multiple_choice",
+      "question": "301和302状态码的区别是什么？",
+      "options": [
+        "301是临时重定向，302是永久重定向",
+        "301是永久重定向，302是临时重定向",
+        "301只能用于GET请求，302可以用于所有方法",
+        "302是错误状态码，301是成功状态码"
+      ],
+      "correct_answer": 1,
+      "explanation": "301 Moved Permanently 表示永久重定向，302 Found 表示临时重定向。"
+    },
+    {
+      "id": "q6",
+      "type": "multiple_choice",
+      "question": "HTTPS相比HTTP的主要优势是什么？",
+      "options": [
+        "速度更快",
+        "数据加密和身份验证",
+        "支持更多的HTTP方法",
+        "不需要TCP连接"
+      ],
+      "correct_answer": 1,
+      "explanation": "HTTPS通过SSL/TLS提供数据加密、身份验证和完整性保护。"
+    },
+    {
+      "id": "q7",
+      "type": "multiple_choice",
+      "question": "以下哪个HTTP方法是幂等的？",
+      "options": [
+        "POST",
+        "PATCH",
+        "PUT",
+        "以上都不是"
+      ],
+      "correct_answer": 2,
+      "explanation": "PUT是幂等的，多次执行相同的操作结果相同。POST和PATCH不是幂等的。"
+    },
+    {
+      "id": "q8",
+      "type": "multiple_choice",
+      "question": "Cookie主要用于解决HTTP的什么问题？",
+      "options": [
+        "提高传输速度",
+        "实现状态管理",
+        "压缩数据",
+        "处理跨域请求"
+      ],
+      "correct_answer": 1,
+      "explanation": "Cookie用于在客户端存储少量数据，每次请求自动发送给服务器，从而实现状态管理。"
+    }
+  ]
+}

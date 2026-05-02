@@ -1,0 +1,407 @@
+---
+id: '06-01'
+title: 'TCP/IP协议栈：互联网的基石'
+module: '06-computer-networks'
+difficulty: 2
+duration: 25
+prerequisites: []
+---
+
+# TCP/IP协议栈：互联网的基石
+
+当你在浏览器输入google.com并按下回车，发生了什么？
+
+---
+## 开场白
+
+想象一下，你坐在家里，手指轻点键盘输入"google.com"，瞬间就能看到全球最强大的搜索引擎界面。这看似简单的操作背后，却隐藏着一个精妙绝伦的通信系统——TCP/IP协议栈。
+
+这个协议栈就像是互联网的"邮政系统"，负责将你的请求准确无误地送达目的地，并将Google的回应完整地带回你的屏幕前。没有它，互联网就是一盘散沙；有了它，全世界的计算机才能像一家人一样顺畅交流。
+
+今天，我们就来揭开这个神奇系统的面纱，看看它是如何让信息在全球范围内自由流动的！
+
+> 💡 **思考问题**: 如果让你设计一个能让全世界计算机互相通信的系统，你会考虑哪些关键问题？
+
+---
+## 核心概念
+
+TCP/IP协议栈采用四层模型，每一层都有其特定的职责，就像工厂流水线上的不同工位，各司其职又紧密配合。
+
+### TCP/IP四层模型
+
+**链路层（Link Layer）**: 这是最底层，负责在同一个物理网络内的设备间传输数据。比如你家里的Wi-Fi网络、以太网，都是链路层的工作范围。它使用MAC地址来标识网络中的设备。
+
+**网络层（Network Layer）**: 这一层的核心是IP协议，负责将数据包从源主机路由到目标主机，即使它们位于不同的网络中。IP地址就是这一层的关键标识符。
+
+**传输层（Transport Layer）**: 这一层提供了端到端的通信服务。主要有两个协议：TCP（传输控制协议）提供可靠的、面向连接的服务；UDP（用户数据报协议）提供不可靠的、无连接的服务。
+
+**应用层（Application Layer）**: 这是最顶层，包含了我们日常使用的各种应用协议，如HTTP（网页）、FTP（文件传输）、SMTP（邮件）等。
+
+### IP地址与端口
+
+**IP地址**就像是房子的门牌号，用来在网络中唯一标识一台设备。IPv4地址是32位的（如192.168.1.1），而IPv6地址是128位的（如2001:0db8:85a3::8a2e:0370:7334）。
+
+**端口**则像是房子的房间号，用来区分同一台设备上运行的不同应用程序。比如Web服务器通常使用80端口，HTTPS使用443端口，SSH使用22端口。
+
+---
+## 代码演示
+
+让我们通过代码来理解这个概念：
+
+### 示例1: Socket编程基础
+
+```python
+import socket
+
+# 创建一个TCP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# 获取本地主机名和IP地址
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+
+print(f"本机主机名: {hostname}")
+print(f"本机IP地址: {local_ip}")
+
+# 查看常用服务的端口号
+http_port = socket.getservbyname('http')
+https_port = socket.getservbyname('https')
+ssh_port = socket.getservbyname('ssh')
+
+print(f"HTTP服务端口: {http_port}")
+print(f"HTTPS服务端口: {https_port}")
+print(f"SSH服务端口: {ssh_port}")
+
+# 关闭socket
+sock.close()
+```
+
+**运行结果**：
+```
+本机主机名: MacBook-Pro.local
+本机IP地址: 192.168.1.100
+HTTP服务端口: 80
+HTTPS服务端口: 443
+SSH服务端口: 22
+```
+
+这段代码展示了如何使用Python的socket库获取基本的网络信息。`socket.AF_INET`表示使用IPv4地址族，`socket.SOCK_STREAM`表示使用TCP协议。
+
+### 示例2: TCP客户端/服务器
+
+```python
+import socket
+import threading
+import time
+
+def start_tcp_server():
+    """启动一个简单的TCP服务器"""
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    
+    # 绑定到本地地址和端口
+    server_socket.bind(('localhost', 8888))
+    server_socket.listen(1)
+    print("服务器启动，监听端口 8888...")
+    
+    while True:
+        client_socket, addr = server_socket.accept()
+        print(f"客户端 {addr} 已连接")
+        
+        # 接收数据
+        data = client_socket.recv(1024).decode('utf-8')
+        print(f"收到数据: {data}")
+        
+        # 发送响应
+        response = f"服务器已收到: {data}"
+        client_socket.send(response.encode('utf-8'))
+        client_socket.close()
+        break
+    
+    server_socket.close()
+
+def tcp_client():
+    """TCP客户端示例"""
+    time.sleep(1)  # 等待服务器启动
+    
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect(('localhost', 8888))
+    
+    # 发送数据
+    message = "Hello, TCP Server!"
+    client_socket.send(message.encode('utf-8'))
+    
+    # 接收响应
+    response = client_socket.recv(1024).decode('utf-8')
+    print(f"服务器响应: {response}")
+    
+    client_socket.close()
+
+# 在后台线程启动服务器
+server_thread = threading.Thread(target=start_tcp_server)
+server_thread.daemon = True
+server_thread.start()
+
+# 运行客户端
+tcp_client()
+```
+
+**运行结果**：
+```
+服务器启动，监听端口 8888...
+客户端 ('127.0.0.1', 54321) 已连接
+收到数据: Hello, TCP Server!
+服务器响应: 服务器已收到: Hello, TCP Server!
+```
+
+这个例子展示了TCP的面向连接特性：服务器先监听端口，客户端连接后建立连接，然后可以双向通信。
+
+### 示例3: 数据包分析
+
+```python
+import socket
+import struct
+
+def analyze_ip_header(packet):
+    """简单分析IP数据包头部"""
+    # IP头部至少20字节
+    ip_header = packet[:20]
+    
+    # 解析IP头部
+    # B = unsigned char (1 byte), H = unsigned short (2 bytes)
+    iph = struct.unpack('!BBHHHBBH4s4s', ip_header)
+    
+    version_ihl = iph[0]
+    version = version_ihl >> 4  # 高4位是版本号
+    ihl = version_ihl & 0xF     # 低4位是头部长度
+    
+    ttl = iph[5]
+    protocol = iph[6]
+    src_addr = socket.inet_ntoa(iph[8])
+    dst_addr = socket.inet_ntoa(iph[9])
+    
+    print("=== IP数据包头部分析 ===")
+    print(f"IP版本: IPv{version}")
+    print(f"头部长度: {ihl * 4} 字节")
+    print(f"生存时间(TTL): {ttl}")
+    print(f"协议类型: {protocol}")
+    print(f"源IP地址: {src_addr}")
+    print(f"目标IP地址: {dst_addr}")
+
+# 模拟一个简单的IP数据包（实际使用需要root权限）
+# 这里我们创建一个模拟的数据包用于演示
+def create_mock_ip_packet():
+    """创建模拟的IP数据包"""
+    # IP头部字段: 版本+IHL, 服务类型, 总长度, 标识, 标志+片偏移
+    # TTL, 协议, 头部校验和, 源IP, 目标IP
+    version_ihl = (4 << 4) | 5  # IPv4, 头部长度5个32位字
+    tos = 0
+    total_length = 40
+    identification = 12345
+    flags_frag = 0
+    ttl = 64
+    protocol = 6  # TCP
+    checksum = 0  # 实际校验和计算很复杂，这里简化
+    src_ip = socket.inet_aton('192.168.1.100')
+    dst_ip = socket.inet_aton('8.8.8.8')
+    
+    ip_header = struct.pack('!BBHHHBBH4s4s', 
+                           version_ihl, tos, total_length, 
+                           identification, flags_frag, ttl, 
+                           protocol, checksum, src_ip, dst_ip)
+    
+    return ip_header
+
+# 分析模拟数据包
+mock_packet = create_mock_ip_packet()
+analyze_ip_header(mock_packet)
+```
+
+**运行结果**：
+```
+=== IP数据包头部分析 ===
+IP版本: IPv4
+头部长度: 20 字节
+生存时间(TTL): 64
+协议类型: 6
+源IP地址: 192.168.1.100
+目标IP地址: 8.8.8.8
+```
+
+这个例子展示了如何解析IP数据包的头部信息，虽然实际的网络编程很少需要手动解析这些底层细节，但了解它们有助于理解网络协议的工作原理。
+
+---
+## 深入理解
+
+TCP/IP协议栈的设计体现了分层思想的精髓：每一层只关心自己的职责，对上层提供服务，对下层使用服务。
+
+### TCP三次握手与四次挥手
+
+**三次握手（建立连接）**：
+1. 客户端发送SYN包（同步序列编号）到服务器
+2. 服务器回复SYN-ACK包（同步确认）
+3. 客户端发送ACK包（确认）
+
+这样就建立了可靠的TCP连接，确保双方都知道对方的存在并且准备好通信。
+
+**四次挥手（断开连接）**：
+1. 客户端发送FIN包（结束）
+2. 服务器回复ACK包
+3. 服务器发送FIN包
+4. 客户端回复ACK包
+
+由于TCP是全双工的，所以需要分别关闭两个方向的连接。
+
+### IP路由
+
+IP路由是网络层的核心功能。当数据包需要跨网络传输时，路由器会根据路由表决定下一跳。路由表包含目标网络、子网掩码、下一跳地址等信息。常用的路由协议有RIP、OSPF、BGP等。
+
+### TCP vs UDP对比
+
+| 特性 | TCP | UDP |
+|------|-----|-----|
+| 可靠性 | 可靠，保证数据不丢失、不重复、按序到达 | 不可靠，可能丢失、重复、乱序 |
+| 连接 | 面向连接，需要建立连接 | 无连接，直接发送数据 |
+| 速度 | 较慢，有连接建立和流量控制开销 | 较快，开销小 |
+| 应用场景 | Web、邮件、文件传输等需要可靠性的应用 | 视频流、语音通话、游戏等实时性要求高的应用 |
+
+---
+## 实际应用
+
+TCP/IP协议栈不仅是理论概念，更是我们日常网络活动的基础。
+
+### ping命令原理
+
+`ping`命令使用ICMP（Internet Control Message Protocol）协议来测试网络连通性。它发送ICMP Echo Request消息到目标主机，目标主机回复ICMP Echo Reply消息。通过测量往返时间，我们可以判断网络延迟和连通性。
+
+```bash
+# 在终端中执行
+ping google.com
+```
+
+### traceroute追踪
+
+`traceroute`命令利用IP数据包的TTL（Time To Live）字段来追踪数据包经过的路由路径。它发送一系列TTL递增的数据包，每个中间路由器在TTL减到0时会返回ICMP超时消息，从而揭示路径上的每个节点。
+
+```bash
+# 在终端中执行
+traceroute google.com
+```
+
+### Wireshark抓包
+
+Wireshark是一个强大的网络协议分析工具，可以捕获和分析网络中的所有数据包。通过Wireshark，你可以直观地看到TCP三次握手、HTTP请求响应、DNS查询等过程，是学习网络协议的绝佳工具。
+
+---
+## 常见误区
+
+⚠️ **注意这些坑！**
+
+### 误区1: "TCP一定比UDP可靠"
+
+虽然TCP提供了可靠性保证，但这并不意味着它在所有场景下都比UDP好。对于实时性要求高的应用（如视频通话、在线游戏），UDP的低延迟特性更重要。而且，应用层也可以在UDP基础上实现自己的可靠性机制。
+
+✅ **正确做法**: 根据应用场景选择合适的传输协议。需要可靠传输且能容忍一定延迟时选择TCP；需要低延迟且能容忍少量数据丢失时选择UDP。
+
+### 误区2: IP地址与MAC地址混淆
+
+很多人认为IP地址和MAC地址是同一回事，或者认为它们的作用相同。实际上，IP地址用于网络层寻址（跨网络），而MAC地址用于链路层寻址（同一网络内）。数据包在网络中传输时，IP地址保持不变，但MAC地址会在每个网络段发生变化。
+
+✅ **正确做法**: 理解IP地址和MAC地址的不同作用层次。IP地址是逻辑地址，用于端到端通信；MAC地址是物理地址，用于本地网络内的设备识别。
+
+### 误区3: 认为端口号是全局唯一的
+
+端口号只在单个主机上是唯一的，不同主机可以使用相同的端口号。比如，你的电脑和我的电脑都可以运行Web服务器在80端口，这不会产生冲突，因为我们的IP地址不同。
+
+✅ **正确做法**: 理解"IP地址+端口号"组合才是网络中服务的唯一标识符，单独的端口号没有全局意义。
+
+---
+## 动手实践
+
+现在轮到你动手了！
+
+### 练习1: 网络信息查询工具 ⭐
+
+编写一个Python程序，能够查询指定域名的IP地址，并显示本地主机的基本网络信息。
+
+**要求**：
+- 使用socket库实现
+- 能够查询任意域名的IP地址
+- 显示本地主机名和IP地址
+- 处理域名不存在的异常情况
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用`socket.gethostbyname()`函数查询域名IP，使用`socket.gethostname()`获取本地主机名。
+
+</details>
+
+### 练习2: 简单的端口扫描器 ⭐⭐
+
+实现一个简单的TCP端口扫描器，能够检测指定主机的常用端口是否开放。
+
+**要求**：
+- 扫描常见的10个端口（21, 22, 23, 25, 53, 80, 110, 143, 443, 993）
+- 对每个端口显示"开放"或"关闭"
+- 设置合理的超时时间避免长时间等待
+- 使用多线程提高扫描效率
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+使用`socket.connect_ex()`方法检测端口状态，返回0表示端口开放。可以使用`threading`模块实现并发扫描。
+
+</details>
+
+### 练习3: HTTP客户端实现 ⭐⭐⭐
+
+不使用requests库，仅使用socket库实现一个简单的HTTP客户端，能够发送GET请求并解析响应。
+
+**要求**：
+- 构造正确的HTTP请求报文
+- 解析HTTP响应的状态码和响应头
+- 提取响应体内容
+- 支持HTTP/1.1协议
+- 处理重定向和错误状态码
+
+<details>
+<summary>💡 提示（点击展开）</summary>
+
+HTTP请求格式为"GET /path HTTP/1.1\r\nHost: hostname\r\n\r\n"。响应以状态行开头，后面是响应头和空行，然后是响应体。
+
+</details>
+
+---
+## 小结与思考
+
+### 本节要点
+
+- TCP/IP协议栈采用四层模型：链路层、网络层、传输层、应用层
+- IP地址用于网络层寻址，端口用于区分同一主机上的不同服务
+- TCP提供可靠、面向连接的服务，UDP提供不可靠、无连接的服务
+- TCP通过三次握手建立连接，四次挥手断开连接
+- 实际应用中要根据需求选择合适的协议和工具
+
+### 思考题
+
+1. 为什么TCP/IP协议栈要采用分层设计？这种设计有什么优势和劣势？
+
+2. 在移动网络环境下（如从Wi-Fi切换到4G），TCP连接会发生什么变化？为什么？
+
+3. 如果你要设计一个新的传输层协议，会在TCP和UDP的基础上做哪些改进？
+
+---
+## 下节预告
+
+下节课我们将深入探讨网络安全的基础知识，包括加密算法、数字证书、SSL/TLS协议等内容，让你了解如何在网络上安全地传输敏感信息。
+
+---
+## 参考资源
+
+- 《TCP/IP详解 卷1：协议》 - W. Richard Stevens
+- RFC 791 (IP协议规范) 和 RFC 793 (TCP协议规范)
+- Wireshark官方文档和教程
+
+---
+*本节课由CS教授精心打造，如有疑问欢迎交流！*
