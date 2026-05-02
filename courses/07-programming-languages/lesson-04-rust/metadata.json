@@ -1,0 +1,19 @@
+{
+  "id": "07-04",
+  "title": "Rust：内存安全的系统编程",
+  "module": "07-programming-languages",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["01-03"],
+  "keywords": ["rust", "ownership", "borrowing", "lifetimes", "memory safety", "system programming"],
+  "learningObjectives": [
+    "理解Rust的所有权系统及其三个核心规则",
+    "掌握借用和引用的使用方法及规则",
+    "了解生命周期的概念和标注方式",
+    "能够编写符合Rust内存安全规则的代码",
+    "理解Rust与传统系统编程语言的区别和优势"
+  ],
+  "version": "1.0.0",
+  "createdAt": "2026-05-03",
+  "updatedAt": "2026-05-03"
+}
