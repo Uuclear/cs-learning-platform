@@ -1,0 +1,118 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "总线由哪三部分组成？",
+      "options": [
+        "电源线、地线、信号线",
+        "地址线、数据线、控制线",
+        "输入线、输出线、时钟线",
+        "数据线、控制线、时钟线"
+      ],
+      "correct": 1,
+      "explanation": "总线由地址线（告诉数据要去哪里）、数据线（传输实际数据）、控制线（发送读写等控制信号）三部分组成。这是总线的基本组成结构。",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "一条32位地址线的总线，最大可以访问的内存地址空间是多少？",
+      "options": [
+        "256 MB",
+        "1 GB",
+        "4 GB",
+        "8 GB"
+      ],
+      "correct": 2,
+      "explanation": "32位地址线可以表示 2^32 = 4,294,967,296 个不同的地址，每个地址对应1个字节，所以最大可寻址空间为 4 GB。",
+      "difficulty": 2
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "总线带宽的计算公式是什么？",
+      "options": [
+        "带宽 = 频率 + 位宽",
+        "带宽 = 频率 × 位宽 / 8",
+        "带宽 = 频率 / 位宽",
+        "带宽 = 位宽 × 8"
+      ],
+      "correct": 1,
+      "explanation": "总线带宽 = 频率（每秒传输次数）× 位宽（每次传输的位数）/ 8（位转字节）。频率决定"每秒发几次车"，位宽决定"每辆车装多少货"。",
+      "difficulty": 1
+    },
+    {
+      "id": 4,
+      "type": "single_choice",
+      "question": "DDR（Double Data Rate）技术如何提升带宽？",
+      "options": [
+        "增加总线的位宽",
+        "在每个时钟周期的上升沿和下降沿各传输一次数据",
+        "提高总线的时钟频率",
+        "减少数据传输的等待时间"
+      ],
+      "correct": 1,
+      "explanation": "DDR在时钟信号的上升沿和下降沿各传输一次数据，相当于同样频率下传输次数翻倍，带宽也就翻倍。这就是为什么DDR4-3200的实际频率是1600MHz但数据率是3200MT/s。",
+      "difficulty": 2
+    },
+    {
+      "id": 5,
+      "type": "single_choice",
+      "question": "在总线仲裁中，轮询算法（Round Robin）的主要优点是什么？",
+      "options": [
+        "高优先级设备能优先使用总线",
+        "实现最简单，硬件开销最小",
+        "公平性好，每个设备都有均等机会",
+        "可以动态调整优先级"
+      ],
+      "correct": 2,
+      "explanation": "轮询算法按顺序轮流给设备分配总线使用权，保证每个请求的设备都能获得机会，不会出现"饿死"现象。缺点是实时性不如优先级算法。",
+      "difficulty": 2
+    },
+    {
+      "id": 6,
+      "type": "true_false",
+      "question": "PCIe 4.0的显卡插在PCIe 3.0的插槽上完全无法使用。",
+      "correct": false,
+      "explanation": "PCIe是向下兼容的。PCIe 4.0显卡可以插在PCIe 3.0插槽上正常工作，但只能以PCIe 3.0的带宽运行（约16 GB/s而非32 GB/s），性能会有所损失。",
+      "difficulty": 1
+    },
+    {
+      "id": 7,
+      "type": "single_choice",
+      "question": "以下哪种总线类型的理论带宽最高？",
+      "options": [
+        "SATA 3.0",
+        "USB 3.0",
+        "PCIe 4.0 x16",
+        "DDR4-3200"
+      ],
+      "correct": 2,
+      "explanation": "PCIe 4.0 x16的理论带宽约32 GB/s，远超SATA 3.0（约600 MB/s）、USB 3.0（约500 MB/s）和DDR4-3200（约25 GB/s）。这也是为什么高性能SSD和显卡都用PCIe接口。",
+      "difficulty": 3
+    },
+    {
+      "id": 8,
+      "type": "single_choice",
+      "question": "现代计算机从共享总线架构演进到点对点架构的主要原因是什么？",
+      "options": [
+        "点对点架构更便宜",
+        "共享总线在高负载下会成为性能瓶颈（堵车）",
+        "点对点架构更省电",
+        "共享总线无法连接足够的设备"
+      ],
+      "correct": 1,
+      "explanation": "共享总线就像一条单车道公路，车多了必然堵车。随着CPU核心数增加、外设带宽提高，共享总线的带宽和延迟问题日益突出。点对点架构让不同设备对可以并行通信，大幅提高了整体性能。",
+      "difficulty": 3
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 3,
+      "medium": 3,
+      "hard": 2
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "01-05",
+  "title": "总线：计算机内部的\"高速公路\"",
+  "slug": "lesson-05-bus",
+  "module": "01-computer-basics",
+  "module_name": "计算机基础",
+  "module_order": 1,
+  "lesson_order": 5,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 25,
+  "prerequisites": ["01-02", "01-03", "01-04"],
+  "tags": ["bus", "computer-architecture", "pcie", "usb", "bandwidth", "arbitration"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "介绍计算机总线的基本概念、类型、工作原理、常见标准和性能指标，通过代码模拟帮助理解总线通信、带宽计算和仲裁算法。",
+  "learning_objectives": [
+    "理解总线的定义和作用——连接CPU、内存、I/O设备的公共通道",
+    "掌握总线的三要素：地址线、数据线、控制线的分工",
+    "学会计算总线带宽：频率 × 位宽",
+    "了解常见总线标准：PCIe、USB、SATA、DDR",
+    "理解总线仲裁的基本算法：轮询和优先级"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}

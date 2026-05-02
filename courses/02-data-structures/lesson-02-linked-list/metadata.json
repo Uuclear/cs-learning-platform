@@ -1,0 +1,33 @@
+{
+  "id": "02-02",
+  "title": "链表：手拉手的小朋友们",
+  "slug": "lesson-02-linked-list",
+  "module": "02-data-structures",
+  "module_name": "数据结构",
+  "module_order": 2,
+  "lesson_order": 2,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 20,
+  "prerequisites": ["02-01"],
+  "tags": ["linked-list", "singly-linked-list", "doubly-linked-list", "data-structure"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "用生活化的比喻讲解链表的定义、结构、基本操作，对比链表与数组的优劣，并实现单向和双向链表。",
+  "learning_objectives": [
+    "理解链表的定义和核心特征（节点结构、数据+指针、非连续存储）",
+    "掌握单向链表和双向链表的结构差异",
+    "掌握链表的基本操作：遍历O(n)、插入O(1)、删除O(1)、查找O(n)",
+    "能够根据场景选择合适的存储结构（数组vs链表）"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 3
+    }
+  }
+}
