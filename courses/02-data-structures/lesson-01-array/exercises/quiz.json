@@ -1,0 +1,118 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "single_choice",
+      "question": "数组的索引通常从哪个数字开始？",
+      "options": [
+        "0",
+        "1",
+        "-1",
+        "视编程语言而定"
+      ],
+      "correct": 0,
+      "explanation": "大多数编程语言（如C、C++、Java、Python）的数组索引都从0开始。这是因为索引表示的是相对于起始地址的偏移量，0表示没有偏移，即第一个元素。",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "type": "single_choice",
+      "question": "在数组中，访问第i个元素的时间复杂度是多少？",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correct": 0,
+      "explanation": "数组支持随机访问，通过公式'地址 = 基地址 + 索引 × 元素大小'可以直接计算出元素位置，因此时间复杂度是O(1)。",
+      "difficulty": 1
+    },
+    {
+      "id": 3,
+      "type": "single_choice",
+      "question": "在数组中间插入一个元素，时间复杂度是多少？",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correct": 2,
+      "explanation": "在数组中间插入元素时，插入位置后面的所有元素都需要向后移动一位。最坏情况下（插在开头）需要移动n个元素，因此时间复杂度是O(n)。",
+      "difficulty": 2
+    },
+    {
+      "id": 4,
+      "type": "single_choice",
+      "question": "动态数组（如Python的list）在扩容时，通常采用什么策略？",
+      "options": [
+        "每次增加固定大小（如+10）",
+        "容量翻倍（×2）",
+        "容量变为原来的1.5倍",
+        "容量变为原来的3倍"
+      ],
+      "correct": 1,
+      "explanation": "动态数组通常采用翻倍扩容策略。这样虽然单次扩容是O(n)，但通过摊还分析，平均每次添加操作的时间复杂度接近O(1)。",
+      "difficulty": 2
+    },
+    {
+      "id": 5,
+      "type": "single_choice",
+      "question": "以下哪个场景最适合使用数组？",
+      "options": [
+        "需要频繁在开头插入和删除元素",
+        "需要频繁随机访问元素，但很少插入删除",
+        "元素大小不固定，经常变化",
+        "需要在中间频繁插入和删除元素"
+      ],
+      "correct": 1,
+      "explanation": "数组的优势是O(1)的随机访问，劣势是O(n)的插入删除。因此适合频繁访问、很少修改的场景。频繁插入删除应该使用链表。",
+      "difficulty": 2
+    },
+    {
+      "id": 6,
+      "type": "true_false",
+      "question": "静态数组和动态数组的主要区别是：静态数组的大小在创建后不能改变，而动态数组可以自动扩容。",
+      "correct": true,
+      "explanation": "正确！静态数组（如C语言的基本数组）大小固定；动态数组（如Python list、Java ArrayList）在容量不足时会自动申请更大的内存并迁移数据。",
+      "difficulty": 1
+    },
+    {
+      "id": 7,
+      "type": "single_choice",
+      "question": "数组元素在内存中是如何存储的？",
+      "options": [
+        "随机分散在内存各处",
+        "通过指针连接",
+        "连续存储在相邻的内存位置",
+        "存储在硬盘上"
+      ],
+      "correct": 2,
+      "explanation": "数组的元素在内存中是连续存储的，这也是数组能够实现O(1)随机访问的根本原因。连续存储还带来了CPU缓存友好的优势。",
+      "difficulty": 1
+    },
+    {
+      "id": 8,
+      "type": "single_choice",
+      "question": "动态数组的append操作，摊还时间复杂度是多少？",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correct": 0,
+      "explanation": "虽然单次扩容是O(n)，但通过摊还分析，考虑到扩容后可以进行多次O(1)的添加操作，平均每次append的时间复杂度是O(1)。",
+      "difficulty": 3
+    }
+  ],
+  "metadata": {
+    "total_questions": 8,
+    "difficulty_distribution": {
+      "easy": 3,
+      "medium": 4,
+      "hard": 1
+    }
+  }
+}
