@@ -1,0 +1,13 @@
+{
+  "id": "08-01",
+  "title": "机器学习：让机器学会思考",
+  "module": "08-ai-ml",
+  "difficulty": 2,
+  "duration": 30,
+  "prerequisites": ["07-01"],
+  "tags": ["machine-learning", "ai", "python", "scikit-learn"],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

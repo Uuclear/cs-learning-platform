@@ -1,0 +1,12 @@
+{
+  "id": "08-02",
+  "title": "神经网络：模拟大脑的算法",
+  "module": "08-ai-ml",
+  "difficulty": 3,
+  "duration": 35,
+  "prerequisites": ["08-01"],
+  "tags": ["neural-networks", "machine-learning", "ai", "backpropagation", "deep-learning"],
+  "author": "CS Professor",
+  "created": "2026-05-03",
+  "version": "1.0.0"
+}
