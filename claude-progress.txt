@@ -107,6 +107,37 @@
 
 ---
 
+[2026-05-03] 子Agent完成课程开发: 01-04 I/O设备：计算机如何与外界对话
+
+完成内容:
+- ✅ 主课件 index.mdx (包含8个完整部分)
+  - 开场白：用幽默的方式引入I/O设备概念
+  - 核心概念：输入设备、输出设备、I/O接口、中断机制
+  - 代码演示：3个完整示例
+  - 深入理解：I/O工作原理、中断vs轮询、DMA
+  - 实际应用：游戏手柄、视频直播
+  - 常见误区：3个常见错误认知
+  - 动手实践：3道练习题
+  - 小结与思考：3个思考题
+- ✅ 元数据 metadata.json
+- ✅ 3个代码示例 (example-01/02/03)
+  - example-01-keyboard-interrupt.py - 键盘中断处理模拟
+  - example-02-file-io.py - 文件I/O操作演示
+  - example-03-io-scheduler.py - I/O调度器模拟
+- ✅ 3个练习解答 (solution-01/02/03)
+  - solution-01-simple-editor.py - 简易文本编辑器
+  - solution-02-file-copier.py - 文件复制器（带进度条）
+  - solution-03-device-manager.py - 优先级设备管理器
+- ✅ 8道选择题 (quiz.json)
+- ✅ 3道编程挑战 (challenge-01/02/03)
+  - challenge-01-simple-editor.md - 简易文本编辑器 ⭐
+  - challenge-02-file-copier.md - 文件复制器 ⭐⭐
+  - challenge-03-device-manager.md - 优先级设备管理器 ⭐⭐⭐
+
+代码验证: 所有Python代码已测试通过
+
+---
+
 [2026-05-03] 子Agent完成课程开发: 02-01 数组：排排坐，吃果果
 
 完成内容:
