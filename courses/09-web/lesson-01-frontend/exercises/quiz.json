@@ -1,0 +1,90 @@
+[
+  {
+    "question": "以下哪个HTML元素是语义化的标题元素？",
+    "options": [
+      "<div class=\"title\">标题</div>",
+      "<h1>标题</h1>",
+      "<span style=\"font-size: 24px; font-weight: bold;\">标题</span>",
+      "<p><strong>标题</strong></p>"
+    ],
+    "answer": 1,
+    "explanation": "语义化HTML使用具有明确含义的标签，如<h1>-<h6>表示标题，<article>表示文章内容等。这有助于SEO、无障碍访问和代码可维护性。"
+  },
+  {
+    "question": "CSS盒模型中，以下哪项正确描述了元素的总宽度计算方式？",
+    "options": [
+      "总宽度 = width + padding + border + margin",
+      "总宽度 = width + padding + border",
+      "总宽度 = width + margin",
+      "总宽度 = width"
+    ],
+    "answer": 1,
+    "explanation": "在标准盒模型中，元素的总宽度等于width（内容宽度）+ 左右padding + 左右border + 左右margin。这是理解布局的基础概念。"
+  },
+  {
+    "question": "以下哪个CSS属性用于创建弹性盒子布局？",
+    "options": [
+      "display: grid",
+      "display: flex",
+      "display: block",
+      "display: inline-block"
+    ],
+    "answer": 1,
+    "explanation": "display: flex 是创建弹性盒子布局的CSS属性。Flexbox是一种一维布局模型，非常适合处理组件内的布局和对齐问题。"
+  },
+  {
+    "question": "在JavaScript中，如何正确地为按钮添加点击事件监听器？",
+    "options": [
+      "button.onclick = function() { /* 处理逻辑 */ }",
+      "button.addEventListener('click', function() { /* 处理逻辑 */ })",
+      "button.on('click', function() { /* 处理逻辑 */ })",
+      "button.click = function() { /* 处理逻辑 */ }"
+    ],
+    "answer": 1,
+    "explanation": "addEventListener() 是标准的DOM事件监听方法，它允许为同一个事件添加多个监听器，而onclick只能设置一个处理函数。"
+  },
+  {
+    "question": "以下哪种方法可以安全地获取页面中ID为'myElement'的元素？",
+    "options": [
+      "document.getElement('myElement')",
+      "document.getElementById('myElement')",
+      "document.querySelector('#myElement')",
+      "document.getElementsById('myElement')"
+    ],
+    "answer": 1,
+    "explanation": "document.getElementById() 是获取指定ID元素的标准方法。document.querySelector('#myElement') 也是正确的，但题目要求选择最直接的方法。"
+  },
+  {
+    "question": "React组件中的状态（State）有什么特点？",
+    "options": [
+      "状态可以直接修改，如 this.state.count = 5",
+      "状态是不可变的，应该使用setState()方法来更新",
+      "状态只能在类组件中使用，函数组件不能有状态",
+      "状态的变化不会触发组件重新渲染"
+    ],
+    "answer": 1,
+    "explanation": "React中的状态应该是不可变的，必须使用setState()（类组件）或useState Hook（函数组件）来更新状态。直接修改状态不会触发重新渲染。"
+  },
+  {
+    "question": "以下哪个是正确的React函数组件定义方式？",
+    "options": [
+      "function MyComponent(props) { return <div>Hello {props.name}</div>; }",
+      "const MyComponent = (props) => { return createElement('div', null, 'Hello ' + props.name); }",
+      "class MyComponent extends React.Component { render() { return <div>Hello {this.props.name}</div>; } }",
+      "function MyComponent() { return document.createElement('div'); }"
+    ],
+    "answer": 0,
+    "explanation": "React函数组件应该返回JSX元素，而不是直接操作DOM。选项A是正确的函数组件定义方式，使用JSX语法返回UI。"
+  },
+  {
+    "question": "虚拟DOM（Virtual DOM）的主要优势是什么？",
+    "options": [
+      "减少JavaScript内存使用",
+      "提高DOM操作性能，通过批量更新和最小化实际DOM操作",
+      "让开发者不需要写CSS",
+      "自动处理浏览器兼容性问题"
+    ],
+    "answer": 1,
+    "explanation": "虚拟DOM是一个轻量级的DOM副本，React通过比较新旧虚拟DOM的差异（Diffing算法），只将必要的更改应用到真实DOM上，从而大大减少了昂贵的DOM操作，提升了性能。"
+  }
+]

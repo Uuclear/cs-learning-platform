@@ -1,0 +1,90 @@
+[
+  {
+    "question": "在RESTful API设计中，以下哪个HTTP方法最适合用于创建新资源？",
+    "options": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE"
+    ],
+    "answer": 1,
+    "explanation": "POST方法用于创建新资源。GET用于获取资源，PUT用于更新完整资源，DELETE用于删除资源。"
+  },
+  {
+    "question": "当API请求的格式正确但包含无效数据时，应该返回哪个HTTP状态码？",
+    "options": [
+      "200 OK",
+      "400 Bad Request",
+      "401 Unauthorized",
+      "404 Not Found"
+    ],
+    "answer": 1,
+    "explanation": "400 Bad Request表示客户端发送的请求有语法错误或包含无效数据。200表示成功，401表示未认证，404表示资源不存在。"
+  },
+  {
+    "question": "JWT (JSON Web Token) 的主要优势是什么？",
+    "options": [
+      "提供加密存储",
+      "无状态认证，服务器不需要存储会话信息",
+      "自动处理跨域问题",
+      "内置数据库连接"
+    ],
+    "answer": 1,
+    "explanation": "JWT的主要优势是无状态认证，Token本身包含所有必要信息，服务器不需要存储会话状态，这使得系统更容易扩展。"
+  },
+  {
+    "question": "在API设计中，以下哪种URL设计符合REST最佳实践？",
+    "options": [
+      "/api/getUsers",
+      "/api/deletePost/123",
+      "/api/v1/users",
+      "/api?action=get_users"
+    ],
+    "answer": 2,
+    "explanation": "使用名词而非动词，复数形式，并包含版本号是REST最佳实践。/api/v1/users符合这些原则，而其他选项使用了动词或查询参数。"
+  },
+  {
+    "question": "当用户已通过身份验证但没有执行某操作的权限时，应返回哪个HTTP状态码？",
+    "options": [
+      "400 Bad Request",
+      "401 Unauthorized",
+      "403 Forbidden",
+      "404 Not Found"
+    ],
+    "answer": 2,
+    "explanation": "403 Forbidden表示用户已认证但没有权限执行该操作。401表示未认证（需要登录），400表示请求格式错误，404表示资源不存在。"
+  },
+  {
+    "question": "在实现API分页时，游标分页(cursor-based pagination)相比偏移分页(offset-based pagination)的主要优势是什么？",
+    "options": [
+      "实现更简单",
+      "性能更好，特别是在大数据集上",
+      "支持随机访问任意页面",
+      "占用更少的内存"
+    ],
+    "answer": 1,
+    "explanation": "游标分页在大数据集上性能更好，因为它避免了OFFSET操作的性能问题，并且在数据实时变化时能提供更一致的结果。"
+  },
+  {
+    "question": "以下哪个HTTP状态码表示资源已成功创建？",
+    "options": [
+      "200 OK",
+      "201 Created",
+      "202 Accepted",
+      "204 No Content"
+    ],
+    "answer": 1,
+    "explanation": "201 Created专门用于表示资源已成功创建。200表示一般成功，202表示请求已接受但未完成处理，204表示成功但无返回内容。"
+  },
+  {
+    "question": "在API错误响应设计中，以下哪项是最佳实践？",
+    "options": [
+      "返回空响应体",
+      "返回详细的堆栈跟踪信息",
+      "使用统一的错误响应格式，包含错误代码和描述",
+      "只返回HTTP状态码，不包含任何响应体"
+    ],
+    "answer": 2,
+    "explanation": "使用统一的错误响应格式让客户端更容易处理错误。包含错误代码（便于程序处理）和人类可读的描述（便于调试），同时避免泄露敏感的堆栈信息。"
+  }
+]
