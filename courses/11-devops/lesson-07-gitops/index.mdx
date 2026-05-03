@@ -1,0 +1,208 @@
+import { Exercise, Quiz } from '@components'
+
+## 开场白
+
+在现代软件开发中，基础设施即代码（Infrastructure as Code）已经成为标准实践。然而，如何有效地管理和部署这些基础设施配置仍然是一个挑战。GitOps 应运而生，它将 Git 作为单一事实源（Single Source of Truth），通过声明式的方式管理整个系统的状态。本课程将带你深入了解 GitOps 的核心理念、工作流程以及实际应用场景。
+
+想象一下，你的整个生产环境的状态都存储在 Git 仓库中，任何变更都需要通过 Pull Request 进行代码审查，自动化工具会持续监控 Git 仓库并将实际状态与期望状态保持同步。这就是 GitOps 的魅力所在——它不仅提高了部署的可靠性，还增强了安全性和合规性。
+
+## 核心概念
+
+### 什么是 GitOps？
+
+GitOps 是一种实现持续交付（Continuous Delivery）的方法论，它使用 Git 作为声明式基础设施和应用程序的单一事实源。在 GitOps 模型中：
+
+- **Git 作为单一事实源**：所有基础设施和应用程序配置都存储在 Git 仓库中
+- **声明式配置**：定义系统"应该是什么样子"，而不是"如何变成那样"
+- **自动化同步**：专用工具（如 ArgoCD、Flux）持续监控 Git 仓库并自动应用变更
+- **可审计性**：所有变更都有完整的版本历史和审计跟踪
+
+### GitOps vs 传统 DevOps
+
+传统 DevOps 通常采用命令式（Imperative）方法，运维人员直接对基础设施执行命令。而 GitOps 采用声明式（Declarative）方法：
+
+| 方面 | 传统 DevOps | GitOps |
+|------|------------|--------|
+| 部署方式 | 命令式（Push-based） | 声明式（Pull-based） |
+| 变更流程 | 直接操作基础设施 | 通过 Git 提交变更 |
+| 回滚机制 | 手动或脚本化回滚 | Git revert 或 checkout |
+| 审计跟踪 | 分散的日志记录 | Git 提交历史 |
+| 权限控制 | 基于角色的访问控制 | Git 代码审查 |
+
+### 声明式 vs 命令式基础设施
+
+- **命令式**：告诉系统"如何做"（例如：`kubectl create deployment nginx --image=nginx:1.21`）
+- **声明式**：告诉系统"应该是什么样子"（例如：YAML 文件定义 Deployment 的期望状态）
+
+声明式方法的优势在于幂等性（Idempotency）——多次应用相同的配置会产生相同的结果，这使得系统更加可靠和可预测。
+
+## 代码演示
+
+让我们通过几个 Python 示例来模拟 GitOps 的核心概念：
+
+### 示例 1：GitOps 工作流程
+
+```python
+# code/examples/example-01-gitops-workflow.py
+```
+
+这个示例模拟了 GitOps 的拉取式部署工作流程，展示了如何从 Git 仓库获取期望状态并应用到目标环境中。
+
+### 示例 2：状态协调
+
+```python
+# code/examples/example-02-state-reconciliation.py
+```
+
+此示例演示了 GitOps 工具如何持续比较期望状态（来自 Git）和实际状态（来自运行环境），并执行必要的协调操作。
+
+### 示例 3：GitOps vs 传统 DevOps
+
+```python
+# code/examples/example-03-gitops-vs-devops.py
+```
+
+这个对比示例展示了 GitOps 和传统 DevOps 在部署模式上的根本差异。
+
+## 深入理解
+
+### GitOps 工具链
+
+**ArgoCD** 和 **Flux** 是两个主流的 GitOps 工具：
+
+- **ArgoCD**：CNCF 毕业项目，提供强大的可视化界面和丰富的功能集
+- **Flux**：同样为 CNCF 项目，轻量级且高度可扩展
+
+两者都支持：
+- 多集群管理
+- 自动同步（Auto-sync）和手动同步（Manual sync）
+- 健康检查和状态监控
+- Webhook 集成
+
+### 拉取式 vs 推送式部署
+
+- **推送式（Push-based）**：CI/CD 系统主动将变更推送到目标环境
+  - 优点：简单直观
+  - 缺点：需要在 CI/CD 系统中存储目标环境的凭证
+  
+- **拉取式（Pull-based）**：目标环境中的代理主动从 Git 仓库拉取变更
+  - 优点：更好的安全性（凭证保留在目标环境中）、更强的一致性保证
+  - 缺点：需要在每个目标环境中部署代理
+
+### GitOps 工作流程详解
+
+1. **提交（Commit）**：开发者将期望状态的变更提交到 Git 仓库
+2. **同步（Sync）**：GitOps 工具检测到 Git 仓库的变更
+3. **协调（Reconcile）**：工具将实际状态调整为期望状态
+4. **验证（Verify）**：确认协调成功并报告状态
+
+这个循环持续运行，确保系统始终处于期望状态。
+
+## 实际应用
+
+### Kubernetes 中的 GitOps
+
+GitOps 最常见的应用场景是 Kubernetes 集群管理：
+
+```yaml
+# 示例：Kubernetes Deployment 声明
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: app
+        image: myapp:v1.2.0
+```
+
+通过将这样的 YAML 文件存储在 Git 中，GitOps 工具可以确保集群中的实际状态与 Git 中的声明保持一致。
+
+### 多环境管理
+
+GitOps 支持多种环境管理策略：
+
+- **单仓库多分支**：main（生产）、staging、development 分支
+- **多仓库**：每个环境一个独立仓库
+- **目录结构**：单仓库内不同目录代表不同环境
+
+### 安全性和合规性优势
+
+- **最小权限原则**：运维人员不需要直接访问生产环境
+- **完整的审计跟踪**：所有变更都有 Git 提交记录
+- **灾难恢复**：整个环境可以从 Git 仓库完全重建
+- **合规性**：满足 SOC2、HIPAA 等合规要求
+
+## 常见误区
+
+### 误区 1：GitOps 只适用于 Kubernetes
+
+虽然 GitOps 在 Kubernetes 生态中最流行，但其原则可以应用于任何声明式系统，包括：
+- Terraform 基础设施
+- 数据库 schema 管理  
+- 配置文件管理
+- 任何支持声明式配置的系统
+
+### 误区 2：GitOps 会减慢开发速度
+
+实际上，GitOps 通过自动化减少了人为错误，长期来看会加速开发：
+- 自动化的部署减少了手动操作
+- 快速回滚能力降低了变更风险
+- 代码审查流程提高了代码质量
+
+### 误区 3：需要复杂的工具链
+
+虽然 ArgoCD 和 Flux 功能强大，但简单的 GitOps 实现也可以很轻量：
+- 使用 shell 脚本定期同步 Git 仓库
+- 结合 webhook 实现事件驱动的同步
+- 从小规模开始，逐步增加复杂性
+
+### 误区 4：GitOps 无法处理敏感数据
+
+敏感数据可以通过以下方式安全处理：
+- 使用外部密钥管理系统（如 HashiCorp Vault）
+- GitOps 工具的加密支持（如 ArgoCD 的 GPG 加密）
+- 在部署时动态注入密钥
+
+## 动手实践
+
+现在让我们通过实际练习来巩固所学知识：
+
+<Exercise id="exercise-01" title="GitOps 工作流程模拟">
+运行 `example-01-gitops-workflow.py` 并观察 GitOps 的拉取式部署流程。
+</Exercise>
+
+<Exercise id="exercise-02" title="状态协调机制">
+修改 `example-02-state-reconciliation.py` 中的期望状态，观察协调过程如何工作。
+</Exercise>
+
+<Exercise id="exercise-03" title="部署模式对比">
+比较 `example-03-gitops-vs-devops.py` 中两种部署模式的差异和适用场景。
+</Exercise>
+
+<Exercise id="exercise-04" title="GitOps 工具选择">
+研究 ArgoCD 和 Flux 的文档，分析它们在你当前项目中的适用性。
+</Exercise>
+
+## 小结与思考
+
+GitOps 代表了基础设施管理的范式转变，它将软件工程的最佳实践（版本控制、代码审查、自动化测试）应用到运维领域。通过将 Git 作为单一事实源，GitOps 提供了：
+
+- **更高的可靠性**：声明式配置和自动化协调
+- **更好的安全性**：最小权限原则和凭证隔离  
+- **更强的合规性**：完整的审计跟踪和变更历史
+- **更快的恢复能力**：从 Git 仓库完全重建环境
+
+### 思考题
+
+1. 在你的组织中，哪些系统适合采用 GitOps 方法？
+2. 如何处理 GitOps 中的紧急修复（hotfix）场景？
+3. GitOps 如何与现有的 CI/CD 流水线集成？
+4. 对于非声明式系统，如何设计适配层来支持 GitOps？
+
+记住，GitOps 不仅仅是一个工具或技术，更是一种文化和思维方式的转变。成功的 GitOps 实施需要团队的协作、清晰的流程定义，以及对自动化和可靠性的持续追求。
+
+<Quiz questions={8} />

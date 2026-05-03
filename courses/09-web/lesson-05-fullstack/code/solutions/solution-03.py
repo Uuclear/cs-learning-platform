@@ -85,9 +85,19 @@ class OptimizedDataFetcher:
         else:
             return {"data": "模拟数据", "timestamp": datetime.now().isoformat()}
 
-    @cache_with_ttl(ttl_seconds=60)
     async def get_static_props_optimized(self, page_context: Dict) -> Dict:
         """优化的getStaticProps实现"""
+        # Apply caching manually instead of using decorator
+        cache_key = f"get_static_props_optimized:{hash(str(page_context))}"
+        current_time = time.time()
+
+        if cache_key in self.cache:
+            cached_data, expiry_time = self.cache[cache_key]
+            if current_time < expiry_time:
+                self.cache_stats['hits'] += 1
+                return cached_data
+
+        self.cache_stats['misses'] += 1
         print("🔄 执行优化的 getStaticProps...")
 
         # 并行获取多个数据源
@@ -95,49 +105,79 @@ class OptimizedDataFetcher:
         users_task = self.fetch_api_data("/api/users")
         config_task = self.fetch_api_data("/api/config")
 
-        posts, users, config = await asyncio.gather(posts_task, users_task, config_task)
+        try:
+            posts, users, config = await asyncio.gather(posts_task, users_task, config_task)
 
-        return {
-            "posts": [posts],
-            "users": [users],
-            "config": config,
-            "buildTime": datetime.now().isoformat(),
-            "pageContext": page_context
-        }
+            result = {
+                "posts": [posts],
+                "users": [users],
+                "config": config,
+                "buildTime": datetime.now().isoformat(),
+                "pageContext": page_context
+            }
 
-    @cache_with_ttl(ttl_seconds=10)
+            # 缓存结果 (60秒TTL)
+            self.cache[cache_key] = (result, current_time + 60)
+            return result
+        except Exception as e:
+            self.request_stats['errors'] += 1
+            raise e
+        finally:
+            self.request_stats['total'] += 1
+
     async def get_server_side_props_optimized(self, page_context: Dict) -> Dict:
         """优化的getServerSideProps实现"""
+        # Apply caching manually instead of using decorator
+        cache_key = f"get_server_side_props_optimized:{hash(str(page_context))}"
+        current_time = time.time()
+
+        if cache_key in self.cache:
+            cached_data, expiry_time = self.cache[cache_key]
+            if current_time < expiry_time:
+                self.cache_stats['hits'] += 1
+                return cached_data
+
+        self.cache_stats['misses'] += 1
         print("🔄 执行优化的 getServerSideProps...")
 
         # 根据用户上下文个性化数据获取
         user_id = page_context.get("user", {}).get("id")
-        if user_id:
-            user_profile_task = self.fetch_api_data(f"/api/users/{user_id}")
-            user_posts_task = self.fetch_api_data(f"/api/posts?user={user_id}")
-            featured_posts_task = self.fetch_api_data("/api/posts/featured")
+        try:
+            if user_id:
+                user_profile_task = self.fetch_api_data(f"/api/users/{user_id}")
+                user_posts_task = self.fetch_api_data(f"/api/posts?user={user_id}")
+                featured_posts_task = self.fetch_api_data("/api/posts/featured")
 
-            user_profile, user_posts, featured_posts = await asyncio.gather(
-                user_profile_task, user_posts_task, featured_posts_task
-            )
-        else:
-            # 匿名用户获取通用数据
-            featured_posts_task = self.fetch_api_data("/api/posts/featured")
-            popular_posts_task = self.fetch_api_data("/api/posts/popular")
-            featured_posts, popular_posts = await asyncio.gather(
-                featured_posts_task, popular_posts_task
-            )
-            user_profile = None
-            user_posts = []
+                user_profile, user_posts, featured_posts = await asyncio.gather(
+                    user_profile_task, user_posts_task, featured_posts_task
+                )
+            else:
+                # 匿名用户获取通用数据
+                featured_posts_task = self.fetch_api_data("/api/posts/featured")
+                popular_posts_task = self.fetch_api_data("/api/posts/popular")
+                featured_posts, popular_posts = await asyncio.gather(
+                    featured_posts_task, popular_posts_task
+                )
+                user_profile = None
+                user_posts = []
 
-        return {
-            "userProfile": user_profile,
-            "userPosts": user_posts,
-            "featuredPosts": [featured_posts],
-            "popularPosts": [popular_posts] if not user_id else [],
-            "serverRenderTime": datetime.now().isoformat(),
-            "requestContext": page_context
-        }
+            result = {
+                "userProfile": user_profile,
+                "userPosts": user_posts,
+                "featuredPosts": [featured_posts],
+                "popularPosts": [popular_posts] if not user_id else [],
+                "serverRenderTime": datetime.now().isoformat(),
+                "requestContext": page_context
+            }
+
+            # 缓存结果 (10秒TTL)
+            self.cache[cache_key] = (result, current_time + 10)
+            return result
+        except Exception as e:
+            self.request_stats['errors'] += 1
+            raise e
+        finally:
+            self.request_stats['total'] += 1
 
     async def incremental_static_regeneration_optimized(self, slug: str, revalidate: int = 60) -> Dict:
         """优化的增量静态再生"""

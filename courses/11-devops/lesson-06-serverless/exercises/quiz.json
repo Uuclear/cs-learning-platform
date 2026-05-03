@@ -1,0 +1,90 @@
+[
+  {
+    "question": "Serverless架构中的FaaS指的是什么？",
+    "options": [
+      "Function as a Service（函数即服务）",
+      "File as a Service（文件即服务）",
+      "Framework as a Service（框架即服务）",
+      "Feature as a Service（特性即服务）"
+    ],
+    "answer": 0,
+    "explanation": "FaaS代表Function as a Service（函数即服务），是Serverless架构的核心组件，允许开发者部署单个函数而无需管理服务器。"
+  },
+  {
+    "question": "以下哪项不是Serverless架构的主要优势？",
+    "options": [
+      "自动扩缩容",
+      "按使用付费",
+      "完全控制底层基础设施",
+      "降低运维复杂度"
+    ],
+    "answer": 2,
+    "explanation": "Serverless架构的特点是抽象掉底层基础设施，开发者不需要也不应该控制底层基础设施，这是与传统服务器或容器部署的区别。"
+  },
+  {
+    "question": "Serverless函数的'冷启动'问题主要影响什么？",
+    "options": [
+      "函数的内存使用量",
+      "函数的首次调用延迟",
+      "函数的最大并发数",
+      "函数的代码大小限制"
+    ],
+    "answer": 1,
+    "explanation": "冷启动是指函数实例首次启动时需要加载运行时、初始化代码等，导致首次调用的延迟较高，这是Serverless架构的一个重要性能考虑因素。"
+  },
+  {
+    "question": "在AWS生态系统中，哪个服务通常与Lambda函数配合构建Serverless API？",
+    "options": [
+      "S3",
+      "DynamoDB",
+      "API Gateway",
+      "CloudWatch"
+    ],
+    "answer": 2,
+    "explanation": "API Gateway是AWS中用于创建、发布、维护、监控和保护REST和WebSocket API的服务，通常与Lambda函数配合使用来构建完整的Serverless API。"
+  },
+  {
+    "question": "Serverless架构最适合以下哪种应用场景？",
+    "options": [
+      "长时间运行的后台服务",
+      "高频率、可预测的请求负载",
+      "事件驱动的短期任务处理",
+      "需要固定IP地址的应用"
+    ],
+    "answer": 2,
+    "explanation": "Serverless架构最适合事件驱动的短期任务处理，因为函数按需执行、自动扩缩容，并且按实际执行时间计费，非常适合突发性、不可预测的工作负载。"
+  },
+  {
+    "question": "BaaS（Backend as a Service）在Serverless架构中通常提供什么功能？",
+    "options": [
+      "函数执行环境",
+      "数据库、身份验证、存储等后端服务",
+      "网络负载均衡",
+      "容器编排"
+    ],
+    "answer": 1,
+    "explanation": "BaaS提供数据库、身份验证、文件存储、推送通知等后端服务，让开发者无需自己构建和维护这些基础设施组件。"
+  },
+  {
+    "question": "以下哪种策略不能有效缓解Serverless函数的冷启动问题？",
+    "options": [
+      "定期发送'保持活跃'请求",
+      "优化函数代码减少初始化时间",
+      "增加函数的内存配置",
+      "将所有业务逻辑放在初始化代码中"
+    ],
+    "answer": 3,
+    "explanation": "将所有业务逻辑放在初始化代码中会加剧冷启动问题，因为初始化时间会变得更长。正确的做法是将业务逻辑放在处理函数中，只在初始化阶段加载必要的依赖。"
+  },
+  {
+    "question": "在选择Serverless架构时，以下哪个因素最需要谨慎考虑？",
+    "options": [
+      "开发语言的选择",
+      "供应商锁定风险",
+      "代码版本控制",
+      "单元测试覆盖率"
+    ],
+    "answer": 1,
+    "explanation": "供应商锁定是Serverless架构的重要考虑因素，因为不同云提供商的Serverless服务在API、功能和集成方面存在差异，迁移到其他平台可能需要大量重构工作。"
+  }
+]

@@ -7,14 +7,9 @@
   "module_name": "DevOps与云原生",
   "difficulty": 3,
   "duration": 30,
-  "prerequisites": [],
-  "tags": [
-    "aws",
-    "gcp",
-    "azure",
-    "cloud"
-  ],
-  "learning_objectives": [],
+  "prerequisites": ["11-01"],
+  "tags": ["aws", "gcp", "azure", "cloud", "iaas", "paas", "multi-cloud"],
+  "learning_objectives": ["理解三大云平台的核心服务对比", "掌握云成本估算和优化方法", "能够根据需求选择合适的云平台"],
   "files": [
     "index.mdx",
     "metadata.json",

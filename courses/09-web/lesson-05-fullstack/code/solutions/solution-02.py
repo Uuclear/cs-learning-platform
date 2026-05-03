@@ -209,9 +209,15 @@ class AdvancedRouter:
             for part in parts[:-1]:
                 if part not in current:
                     current[part] = {}
+                elif not isinstance(current[part], dict):
+                    # 如果已经是一个字符串，转换为字典
+                    current[part] = {'__duplicate__': current[part]}
                 current = current[part]
 
-            current[parts[-1]] = 'page'
+            if parts[-1] in current and isinstance(current[parts[-1]], dict):
+                current[parts[-1]]['__value__'] = 'page'
+            else:
+                current[parts[-1]] = 'page'
 
         # API路由
         for route, file_path in self.api_routes.items():
@@ -222,9 +228,14 @@ class AdvancedRouter:
             for part in parts[:-1]:
                 if part not in current:
                     current[part] = {}
+                elif not isinstance(current[part], dict):
+                    current[part] = {'__duplicate__': current[part]}
                 current = current[part]
 
-            current[parts[-1]] = 'api'
+            if parts[-1] in current and isinstance(current[parts[-1]], dict):
+                current[parts[-1]]['__value__'] = 'api'
+            else:
+                current[parts[-1]] = 'api'
 
         return tree
 

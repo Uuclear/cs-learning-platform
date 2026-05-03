@@ -1,0 +1,25 @@
+{
+  "id": "13-06",
+  "title": "数据治理：质量、血缘与目录",
+  "module": "13-data-engineering",
+  "slug": "lesson-06-data-governance",
+  "status": "draft",
+  "module_name": "数据工程",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": [],
+  "tags": [
+    "data-governance",
+    "data-quality",
+    "lineage"
+  ],
+  "learning_objectives": [],
+  "files": [
+    "index.mdx",
+    "metadata.json"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

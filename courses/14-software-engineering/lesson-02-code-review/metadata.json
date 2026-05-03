@@ -7,13 +7,9 @@
   "module_name": "软件工程实践",
   "difficulty": 2,
   "duration": 25,
-  "prerequisites": [],
-  "tags": [
-    "code-review",
-    "quality",
-    "best-practices"
-  ],
-  "learning_objectives": [],
+  "prerequisites": ["14-01"],
+  "tags": ["code-review", "pull-request", "quality", "feedback", "checklist"],
+  "learning_objectives": ["理解代码审查的价值和最佳实践", "掌握有效的代码审查方法", "能够提供建设性的审查反馈"],
   "files": [
     "index.mdx",
     "metadata.json",

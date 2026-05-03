@@ -1,0 +1,90 @@
+[
+  {
+    "question": "GitOps 的核心原则是什么？",
+    "options": [
+      "使用 Git 作为单一事实源（Single Source of Truth）",
+      "使用 Jenkins 进行持续集成",
+      "手动部署到生产环境",
+      "避免使用版本控制系统"
+    ],
+    "answer": 0,
+    "explanation": "GitOps 的核心原则是将 Git 作为声明式基础设施和应用程序的单一事实源，所有配置都存储在 Git 仓库中。"
+  },
+  {
+    "question": "GitOps 采用的是哪种部署模式？",
+    "options": [
+      "推送式（Push-based）部署",
+      "拉取式（Pull-based）部署",
+      "手动部署",
+      "随机部署"
+    ],
+    "answer": 1,
+    "explanation": "GitOps 采用拉取式部署模式，目标环境中的代理主动从 Git 仓库拉取变更，而不是由 CI/CD 系统推送变更。"
+  },
+  {
+    "question": "声明式基础设施与命令式基础设施的主要区别是什么？",
+    "options": [
+      "声明式定义'应该是什么样子'，命令式定义'如何做'",
+      "声明式更复杂，命令式更简单",
+      "声明式只能用于 Kubernetes，命令式用于所有系统",
+      "两者没有实质区别"
+    ],
+    "answer": 0,
+    "explanation": "声明式基础设施定义系统的期望状态（'应该是什么样子'），而命令式基础设施定义具体的执行步骤（'如何做'）。"
+  },
+  {
+    "question": "以下哪个是主流的 GitOps 工具？",
+    "options": [
+      "Docker Compose",
+      "Jenkins",
+      "ArgoCD",
+      "Postman"
+    ],
+    "answer": 2,
+    "explanation": "ArgoCD 是 CNCF 毕业的主流 GitOps 工具，另一个主流工具是 Flux。两者都支持 Kubernetes 的声明式持续交付。"
+  },
+  {
+    "question": "GitOps 如何处理回滚操作？",
+    "options": [
+      "手动删除所有资源并重新创建",
+      "使用 Git revert 或 checkout 到之前的提交",
+      "联系运维团队手动修复",
+      "等待自动恢复"
+    ],
+    "answer": 1,
+    "explanation": "GitOps 利用 Git 的版本控制能力，通过 git revert 或 git checkout 回滚到之前的提交来实现快速、可靠的回滚。"
+  },
+  {
+    "question": "GitOps 的状态协调（Reconciliation）过程是什么？",
+    "options": [
+      "定期备份数据库",
+      "比较期望状态和实际状态，并使它们保持一致",
+      "手动检查配置文件",
+      "重启所有服务"
+    ],
+    "answer": 1,
+    "explanation": "状态协调是 GitOps 的核心机制，它持续比较 Git 中的期望状态和运行环境中的实际状态，并执行必要的操作使两者保持一致。"
+  },
+  {
+    "question": "GitOps 在安全性方面的主要优势是什么？",
+    "options": [
+      "不需要任何安全措施",
+      "凭证存储在 CI/CD 系统中",
+      "最小权限原则和凭证隔离",
+      "完全依赖网络防火墙"
+    ],
+    "answer": 2,
+    "explanation": "GitOps 遵循最小权限原则，运维人员不需要直接访问生产环境，凭证保留在目标环境中，提高了安全性。"
+  },
+  {
+    "question": "GitOps 是否仅适用于 Kubernetes？",
+    "options": [
+      "是的，只能用于 Kubernetes",
+      "不，可以应用于任何声明式系统",
+      "只能用于云原生应用",
+      "只适用于大型企业"
+    ],
+    "answer": 1,
+    "explanation": "虽然 GitOps 在 Kubernetes 生态中最流行，但其原则可以应用于任何声明式系统，如 Terraform 基础设施、数据库 schema 管理等。"
+  }
+]

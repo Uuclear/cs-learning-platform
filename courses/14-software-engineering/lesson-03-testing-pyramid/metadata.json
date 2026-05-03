@@ -7,14 +7,9 @@
   "module_name": "软件工程实践",
   "difficulty": 3,
   "duration": 30,
-  "prerequisites": [],
-  "tags": [
-    "testing",
-    "unit-test",
-    "integration-test",
-    "e2e"
-  ],
-  "learning_objectives": [],
+  "prerequisites": ["14-02"],
+  "tags": ["testing", "unit-test", "integration-test", "e2e", "coverage", "mocking"],
+  "learning_objectives": ["理解测试金字塔的结构和原理", "掌握不同层级测试的编写方法", "能够设计合理的测试策略"],
   "files": [
     "index.mdx",
     "metadata.json",
