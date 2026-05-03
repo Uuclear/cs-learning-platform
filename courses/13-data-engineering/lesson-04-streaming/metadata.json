@@ -1,0 +1,42 @@
+{
+  "id": "13-04",
+  "title": "流式处理：Flink/Spark Streaming",
+  "module": "13-data-engineering",
+  "slug": "lesson-04-streaming",
+  "status": "completed",
+  "module_name": "数据工程",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": [
+    "13-03"
+  ],
+  "tags": [
+    "streaming",
+    "flink",
+    "spark-streaming",
+    "watermark",
+    "windowing"
+  ],
+  "learning_objectives": [
+    "理解流式处理的核心概念",
+    "掌握窗口和水印的机制",
+    "能够构建实时数据处理管道"
+  ],
+  "files": [
+    "index.mdx",
+    "metadata.json",
+    "code/examples/example-01-windowing-simulation.py",
+    "code/examples/example-02-watermark-simulation.py",
+    "code/examples/example-03-stream-processing.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

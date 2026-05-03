@@ -1,0 +1,90 @@
+[
+  {
+    "question": "Terraform 的核心优势是什么？",
+    "options": [
+      "提供图形化界面管理基础设施",
+      "通过代码定义和管理基础设施，实现版本控制和自动化",
+      "仅适用于 AWS 云平台",
+      "替代传统的监控和日志系统"
+    ],
+    "answer": 1,
+    "explanation": "Terraform 的核心优势是基础设施即代码（IaC），允许通过声明式配置文件定义基础设施，并支持版本控制、自动化部署和状态管理。"
+  },
+  {
+    "question": "Terraform 状态文件（state file）的主要作用是什么？",
+    "options": [
+      "存储用户的身份验证凭据",
+      "记录实际基础设施的状态，用于检测漂移和规划变更",
+      "包含 Terraform 配置的备份副本",
+      "存储模块的源代码"
+    ],
+    "answer": 1,
+    "explanation": "Terraform 状态文件记录了实际部署的基础设施资源及其属性，用于在后续运行中检测配置与实际状态之间的差异（漂移），并确定需要执行的变更。"
+  },
+  {
+    "question": "在 Terraform 中，模块（Module）的主要目的是什么？",
+    "options": [
+      "提高代码执行速度",
+      "创建可重用和参数化的基础设施组件",
+      "加密敏感数据",
+      "替代 provider 插件"
+    ],
+    "answer": 2,
+    "explanation": "Terraform 模块允许将基础设施代码封装成可重用、参数化的组件，可以在不同环境和项目中重复使用，提高代码的组织性和维护性。"
+  },
+  {
+    "question": "Terraform 的典型工作流程顺序是什么？",
+    "options": [
+      "init → apply → plan → destroy",
+      "plan → init → apply → destroy",
+      "init → plan → apply → destroy",
+      "apply → init → plan → destroy"
+    ],
+    "answer": 2,
+    "explanation": "标准的 Terraform 工作流程是：1) init 初始化工作目录，2) plan 生成执行计划，3) apply 应用变更，4) destroy 销毁基础设施。"
+  },
+  {
+    "question": "为什么 Terraform 推荐使用远程状态存储而不是本地状态文件？",
+    "options": [
+      "远程状态文件更小，节省磁盘空间",
+      "支持团队协作、状态锁定和自动备份",
+      "远程状态执行速度更快",
+      "本地状态文件不支持加密"
+    ],
+    "answer": 1,
+    "explanation": "远程状态存储（如 S3、Azure Storage）支持多用户协作、提供状态锁定防止并发修改冲突，并通常具有自动备份和版本控制功能。"
+  },
+  {
+    "question": "Terraform 中的 '漂移检测'（Drift Detection）指的是什么？",
+    "options": [
+      "检测网络连接的稳定性",
+      "比较 Terraform 配置与实际基础设施状态的差异",
+      "监控资源使用率的变化",
+      "检测代码中的语法错误"
+    ],
+    "answer": 1,
+    "explanation": "漂移检测是指 Terraform 比较其状态文件中记录的实际基础设施状态与当前配置文件定义的期望状态之间的差异，以识别手动修改或其他外部变更。"
+  },
+  {
+    "question": "在 Terraform 配置中，Provider 的作用是什么？",
+    "options": [
+      "提供用户界面",
+      "与特定云平台或服务进行交互的插件",
+      "管理 Terraform 版本",
+      "处理身份验证和授权"
+    ],
+    "answer": 1,
+    "explanation": "Provider 是 Terraform 与特定云平台（如 AWS、Azure）或服务（如 Kubernetes、Docker）进行交互的插件，负责实际的 API 调用和资源管理。"
+  },
+  {
+    "question": "关于 Terraform 的声明式配置，以下哪项描述是正确的？",
+    "options": [
+      "需要编写详细的步骤来创建资源",
+      "只需要描述期望的最终状态，Terraform 自动确定如何达到该状态",
+      "只能用于创建新资源，不能管理现有资源",
+      "配置必须用 Python 编写"
+    ],
+    "answer": 1,
+    "explanation": "Terraform 使用声明式配置，用户只需描述期望的基础设施最终状态，Terraform 会自动分析当前状态与期望状态的差异，并确定创建、更新或删除哪些资源来达到目标状态。"
+  }
+]
