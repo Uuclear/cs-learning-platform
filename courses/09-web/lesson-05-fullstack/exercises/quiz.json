@@ -1,0 +1,90 @@
+[
+  {
+    "question": "SSR（服务器端渲染）和SSG（静态站点生成）的主要区别是什么？",
+    "options": [
+      "SSR在构建时生成HTML，SSG在每次请求时生成HTML",
+      "SSR在每次请求时生成HTML，SSG在构建时生成HTML",
+      "SSR和SSG都在客户端生成HTML",
+      "SSR使用JavaScript，SSG使用CSS"
+    ],
+    "answer": 1,
+    "explanation": "SSR（服务器端渲染）在每次用户请求时在服务器上动态生成HTML，而SSG（静态站点生成）在构建时预先生成所有页面的HTML文件。这是两者最核心的区别。"
+  },
+  {
+    "question": "Next.js的文件系统路由中，pages/blog/[slug].js 对应的URL路径是什么？",
+    "options": [
+      "/blog/[slug]",
+      "/blog/slug",
+      "/blog/任意字符串",
+      "/blog"
+    ],
+    "answer": 2,
+    "explanation": "在Next.js的文件系统路由中，方括号[]表示动态路由参数。pages/blog/[slug].js会匹配/blog/后面跟任意字符串的路径，比如/blog/hello-world或/blog/123。"
+  },
+  {
+    "question": "getStaticProps 和 getServerSideProps 的主要使用场景分别是什么？",
+    "options": [
+      "getStaticProps用于需要实时数据的页面，getServerSideProps用于静态内容",
+      "getStaticProps用于静态内容，getServerSideProps用于需要实时数据的页面",
+      "两者都可以用于任何场景，没有区别",
+      "getStaticProps只能用于API路由，getServerSideProps只能用于页面"
+    ],
+    "answer": 1,
+    "explanation": "getStaticProps在构建时执行，适合内容不经常变化的静态页面；getServerSideProps在每次请求时执行，适合需要实时数据、个性化内容或基于请求上下文的动态页面。"
+  },
+  {
+    "question": "增量静态再生（ISR）的主要优势是什么？",
+    "options": [
+      "完全替代SSR，不需要服务器",
+      "结合SSG的性能优势和SSR的数据新鲜度",
+      "只适用于小型网站",
+      "增加服务器负载但提高SEO"
+    ],
+    "answer": 1,
+    "explanation": "ISR（Incremental Static Regeneration）允许在构建后重新生成静态页面，既保持了SSG的高性能（从CDN提供静态文件），又能定期更新内容以保证数据的新鲜度。"
+  },
+  {
+    "question": "Remix的loader和action模式主要用于什么？",
+    "options": [
+      "loader用于样式加载，action用于动画",
+      "loader用于数据获取，action用于表单提交和数据修改",
+      "loader用于路由配置，action用于错误处理",
+      "loader用于缓存管理，action用于状态管理"
+    ],
+    "answer": 1,
+    "explanation": "在Remix中，loader函数用于在渲染页面前获取数据（类似于Next.js的getServerSideProps），而action函数用于处理表单提交和其他数据修改操作，实现了清晰的数据获取和变更分离。"
+  },
+  {
+    "question": "Hydration（注水）在SSR中的作用是什么？",
+    "options": [
+      "将服务器生成的HTML转换为纯文本",
+      "在客户端JavaScript接管服务器渲染的HTML，使其具有交互性",
+      "压缩HTML文件大小",
+      "将CSS注入到HTML中"
+    ],
+    "answer": 1,
+    "explanation": "Hydration是SSR的关键步骤，它让客户端JavaScript'接管'服务器生成的静态HTML，附加事件监听器和交互逻辑，使页面变成完全交互式的React应用。"
+  },
+  {
+    "question": "在选择Next.js还是Remix时，以下哪个因素最重要？",
+    "options": [
+      "团队对TypeScript的熟悉程度",
+      "项目对Web标准和渐进增强的重视程度",
+      "框架的GitHub星数",
+      "是否支持CSS Modules"
+    ],
+    "answer": 1,
+    "explanation": "Remix更强调Web标准、渐进增强和优雅降级，而Next.js提供了更多的灵活性和生态系统集成。选择时应考虑团队对这些理念的认同度和项目需求。"
+  },
+  {
+    "question": "Edge Runtime在全栈框架中的主要优势是什么？",
+    "options": [
+      "提供更好的本地开发体验",
+      "在全球边缘节点运行代码，降低延迟",
+      "增加服务器内存使用",
+      "简化数据库连接"
+    ],
+    "answer": 1,
+    "explanation": "Edge Runtime允许代码在全球分布的边缘节点上运行，而不是集中在单一数据中心，这大大降低了用户的请求延迟，特别适合地理位置分散的全球用户。"
+  }
+]

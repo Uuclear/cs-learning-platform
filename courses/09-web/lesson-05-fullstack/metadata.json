@@ -1,0 +1,43 @@
+{
+  "id": "09-05",
+  "title": "全栈框架：Next.js/Remix",
+  "module": "09-web",
+  "slug": "lesson-05-fullstack",
+  "status": "completed",
+  "module_name": "Web开发",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": [
+    "09-01"
+  ],
+  "tags": [
+    "nextjs",
+    "remix",
+    "ssr",
+    "ssg",
+    "isr",
+    "fullstack"
+  ],
+  "learning_objectives": [
+    "理解SSR/SSG/ISR的区别和应用场景",
+    "掌握Next.js的核心概念和路由系统",
+    "能够构建全栈应用"
+  ],
+  "files": [
+    "index.mdx",
+    "metadata.json",
+    "code/examples/example-01-ssr-vs-ssg.py",
+    "code/examples/example-02-routing-simulation.py",
+    "code/examples/example-03-data-fetching.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}
