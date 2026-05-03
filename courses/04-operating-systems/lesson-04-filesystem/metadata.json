@@ -1,11 +1,17 @@
 {
-  "lessonId": "04-04",
   "title": "文件系统：数据的\"档案室\"",
   "module": "04-operating-systems",
   "difficulty": 2,
   "duration": 25,
-  "prerequisites": ["04-01"],
-  "tags": ["operating-systems", "filesystem", "inode", "file-operations"],
+  "prerequisites": [
+    "04-01"
+  ],
+  "tags": [
+    "operating-systems",
+    "filesystem",
+    "inode",
+    "file-operations"
+  ],
   "learningObjectives": [
     "理解文件系统的基本概念和作用",
     "掌握inode的工作原理",
@@ -16,5 +22,6 @@
   "version": "1.0.0",
   "author": "CS Professor",
   "createdAt": "2026-05-03",
-  "updatedAt": "2026-05-03"
+  "updatedAt": "2026-05-03",
+  "id": "04-04"
 }
