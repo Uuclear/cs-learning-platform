@@ -1,0 +1,90 @@
+[
+  {
+    "question": "OAuth2 和 OpenID Connect (OIDC) 的主要区别是什么？",
+    "options": [
+      "OAuth2 用于身份验证，OIDC 用于授权",
+      "OAuth2 用于授权，OIDC 在 OAuth2 基础上添加了身份验证功能",
+      "OAuth2 和 OIDC 是完全相同的标准",
+      "OIDC 是 OAuth2 的简化版本"
+    ],
+    "answer": 1,
+    "explanation": "OAuth2 是一个授权框架，而 OIDC 是在 OAuth2 基础上构建的身份验证层，提供了用户身份信息。"
+  },
+  {
+    "question": "JWT (JSON Web Token) 的三个组成部分是什么？",
+    "options": [
+      "Header, Payload, Signature",
+      "Username, Password, Token",
+      "Client ID, Client Secret, Access Token",
+      "Issuer, Subject, Audience"
+    ],
+    "answer": 0,
+    "explanation": "JWT 由三部分组成：头部(Header)、载荷(Payload)和签名(Signature)，用点号(.)分隔。"
+  },
+  {
+    "question": "PKCE (Proof Key for Code Exchange) 主要解决了什么安全问题？",
+    "options": [
+      "防止令牌被盗用",
+      "防止授权码拦截攻击",
+      "防止密码暴力破解",
+      "防止跨站脚本攻击"
+    ],
+    "answer": 1,
+    "explanation": "PKCE 主要防止授权码拦截攻击，特别适用于公共客户端（如移动应用和单页应用）。"
+  },
+  {
+    "question": "在 OAuth2 授权码流程中，访问令牌应该在哪里传输？",
+    "options": [
+      "URL 查询参数中",
+      "HTTP 请求头的 Authorization 字段中",
+      "Cookie 中",
+      "请求体中作为表单数据"
+    ],
+    "answer": 1,
+    "explanation": "访问令牌应该通过 HTTP Authorization 头传输，格式为 'Bearer <access_token>'，这样更安全且符合标准。"
+  },
+  {
+    "question": "刷新令牌轮换 (Refresh Token Rotation) 的主要目的是什么？",
+    "options": [
+      "提高令牌生成速度",
+      "减少服务器存储负担",
+      "增强安全性，防止令牌被盗用后的长期访问",
+      "简化客户端实现"
+    ],
+    "answer": 2,
+    "explanation": "刷新令牌轮换每次使用刷新令牌时都会发放新的刷新令牌，并使旧的失效，这样即使令牌被盗，攻击者也只能使用一次。"
+  },
+  {
+    "question": "JWT 中的 'exp' 声明表示什么？",
+    "options": [
+      "令牌签发者",
+      "令牌主题",
+      "令牌过期时间",
+      "令牌受众"
+    ],
+    "answer": 3,
+    "explanation": "'exp' (expiration time) 声明定义了 JWT 的过期时间，超过此时间后令牌不应被接受。"
+  },
+  {
+    "question": "在客户端存储 JWT 时，以下哪种方式最安全？",
+    "options": [
+      "localStorage",
+      "sessionStorage",
+      "HttpOnly Cookie",
+      "JavaScript 变量"
+    ],
+    "answer": 2,
+    "explanation": "HttpOnly Cookie 最安全，因为它不能被 JavaScript 访问，可以防止 XSS 攻击窃取令牌。"
+  },
+  {
+    "question": "OAuth2 客户端凭证授权类型 (Client Credentials Grant) 适用于什么场景？",
+    "options": [
+      "用户登录到 Web 应用",
+      "移动应用获取用户数据",
+      "服务间通信，无需用户参与",
+      "单页应用的用户认证"
+    ],
+    "answer": 2,
+    "explanation": "客户端凭证授权类型适用于机器对机器的通信场景，客户端直接使用自己的凭证获取访问令牌，无需用户参与。"
+  }
+]

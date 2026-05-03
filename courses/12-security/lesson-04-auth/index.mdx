@@ -1,0 +1,195 @@
+---
+title: 认证与授权：OAuth2/OIDC/JWT
+description: 深入理解现代 Web 应用的认证与授权机制
+---
+
+## 开场白
+
+想象一下，你正在使用一个新应用，点击"使用 Google 登录"按钮。几秒钟后，你就成功登录了，无需注册账号或记住新密码。这背后发生了什么？
+
+这个看似简单的操作涉及了复杂的认证和授权流程。应用并没有直接获取你的 Google 密码，而是通过 OAuth2 协议请求访问权限。Google 验证你的身份后，向应用发放一个临时令牌，允许它在你的授权范围内访问你的数据。
+
+在这个课程中，我们将深入探讨这些现代认证和授权技术的工作原理，包括 OAuth2、OpenID Connect 和 JWT。你将学会如何安全地实现这些机制，并避免常见的安全陷阱。
+
+## 核心概念
+
+### 认证 vs 授权
+
+首先，我们需要区分两个关键概念：
+- **认证 (Authentication)**: 验证"你是谁"。例如，通过用户名和密码证明身份。
+- **授权 (Authorization)**: 验证"你能做什么"。例如，确定用户是否有权限访问特定资源。
+
+### OAuth2 授权框架
+
+OAuth2 是一个行业标准的授权框架，允许第三方应用在用户授权下访问受保护的资源，而无需获取用户的凭据。
+
+**主要授权类型：**
+1. **授权码流程 (Authorization Code)**: 适用于 Web 应用和移动应用，最安全的流程
+2. **客户端凭证流程 (Client Credentials)**: 适用于服务间通信
+3. **隐式流程 (Implicit)**: 已被 PKCE 取代，不推荐使用
+4. **密码流程 (Resource Owner Password)**: 不推荐，仅用于遗留系统
+
+**PKCE (Proof Key for Code Exchange)**: 为公共客户端（如 SPA 和移动应用）提供额外安全层，防止授权码拦截攻击。
+
+### OpenID Connect (OIDC)
+
+OIDC 是构建在 OAuth2 之上的身份验证层。它在 OAuth2 的基础上添加了 ID 令牌 (ID Token)，提供了标准化的用户身份信息。
+
+- **ID Token**: 包含用户身份信息的 JWT
+- **UserInfo Endpoint**: 提供额外的用户属性
+- **标准化声明**: 如 `sub` (subject)、`name`、`email` 等
+
+### JWT (JSON Web Token)
+
+JWT 是一种开放标准 (RFC 7519)，用于在各方之间安全地传输信息作为 JSON 对象。
+
+**JWT 结构：**
+```
+xxxxx.yyyyy.zzzzz
+```
+- **Header**: 包含令牌类型和签名算法
+- **Payload**: 包含声明 (claims)，如用户信息、过期时间等
+- **Signature**: 用于验证令牌完整性和真实性
+
+**签名算法：**
+- **HMAC (HS256)**: 使用共享密钥，适用于单服务器场景
+- **RSA (RS256)**: 使用公私钥对，适用于分布式系统
+
+## 代码演示
+
+让我们通过三个实际代码示例来理解这些概念：
+
+### 示例 1: OAuth2 授权码流程
+[`example-01-oauth2-flow.py`](code/examples/example-01-oauth2-flow.py) 演示了完整的 OAuth2 授权码流程，包括 PKCE 的实现。你可以看到如何生成 code_verifier 和 code_challenge，以及如何安全地交换授权码获取访问令牌。
+
+### 示例 2: JWT 创建和验证
+[`example-02-jwt-creation.py`](code/examples/example-02-jwt-creation.py) 展示了 JWT 的完整生命周期：从创建头部和载荷，到使用 HMAC-SHA256 签名，再到验证签名和声明的有效性。
+
+### 示例 3: 令牌验证和刷新
+[`example-03-token-validation.py`](code/examples/example-03-token-validation.py) 演示了实际应用中的令牌管理策略，包括自动刷新过期令牌和实现刷新令牌轮换的安全最佳实践。
+
+## 深入理解
+
+### PKCE 流程详解
+
+PKCE 解决了传统授权码流程在公共客户端中的安全问题：
+
+1. **Code Verifier 生成**: 客户端生成一个高熵的随机字符串
+2. **Code Challenge 计算**: 对 code_verifier 进行 SHA256 哈希并 base64url 编码
+3. **授权请求**: 将 code_challenge 发送给授权服务器
+4. **令牌请求**: 在交换令牌时提供原始的 code_verifier
+5. **服务器验证**: 授权服务器重新计算 code_challenge 并与之前存储的比较
+
+这种方法确保即使授权码被拦截，攻击者也无法使用它，因为他们不知道原始的 code_verifier。
+
+### 令牌刷新和轮换
+
+**令牌刷新流程：**
+1. 客户端检测到访问令牌即将过期
+2. 使用刷新令牌向授权服务器请求新令牌
+3. 授权服务器验证刷新令牌并发放新的访问令牌（和可选的新刷新令牌）
+
+**刷新令牌轮换：**
+- 每次使用刷新令牌时，都发放一个新的刷新令牌
+- 旧的刷新令牌立即失效
+- 这样即使刷新令牌被盗，攻击者也只能使用一次
+
+这种策略大大减少了令牌被盗用的风险窗口。
+
+## 实际应用
+
+### 实现 OAuth2 登录的步骤
+
+1. **配置 OAuth2 客户端**
+   - 在授权服务器注册应用
+   - 获取 client_id 和 client_secret
+   - 配置重定向 URI
+
+2. **发起授权请求**
+   ```python
+   auth_url = f"https://auth-server.com/authorize?{urlencode({
+       'client_id': CLIENT_ID,
+       'redirect_uri': REDIRECT_URI,
+       'response_type': 'code',
+       'scope': 'openid profile email',
+       'state': generate_secure_state(),
+       'code_challenge': code_challenge,
+       'code_challenge_method': 'S256'
+   })}"
+   ```
+
+3. **处理回调**
+   - 验证 state 参数防止 CSRF
+   - 提取授权码
+
+4. **交换令牌**
+   - 向令牌端点发送 POST 请求
+   - 存储访问令牌和刷新令牌
+
+5. **调用受保护的 API**
+   - 在 Authorization 头中包含 Bearer 令牌
+   - 处理令牌过期和刷新
+
+### 安全最佳实践
+
+- **始终使用 HTTPS**
+- **实施 PKCE**（即使是机密客户端）
+- **使用短期访问令牌**（通常 5-15 分钟）
+- **实现刷新令牌轮换**
+- **正确存储令牌**（HttpOnly Cookie 优于 localStorage）
+- **验证所有令牌声明**（aud、iss、exp 等）
+
+## 常见误区
+
+### 误区 1: "OAuth2 是身份验证协议"
+实际上，OAuth2 是授权框架，不是身份验证协议。OIDC 才是在 OAuth2 基础上构建的身份验证层。
+
+### 误区 2: "JWT 是加密的"
+JWT 默认是签名的，不是加密的。任何人都可以解码头部和载荷，只有签名确保了完整性。如果需要保密性，应该使用 JWE (JSON Web Encryption)。
+
+### 误区 3: "存储在 localStorage 中的令牌是安全的"
+localStorage 容易受到 XSS 攻击。HttpOnly Cookie 是更安全的选择，因为它不能被 JavaScript 访问。
+
+### 误区 4: "刷新令牌不需要轮换"
+不实施刷新令牌轮换会增加安全风险。一旦刷新令牌被盗，攻击者可以无限期地获取新的访问令牌。
+
+### 误区 5: "授权码流程不需要 PKCE"
+即使是机密客户端，也应该实施 PKCE。这提供了额外的安全层，并且已经成为现代 OAuth2 实现的标准。
+
+### 误区 6: "JWT 过期后立即无效"
+服务器应该实现令牌吊销机制。仅仅依赖过期时间是不够的，因为用户可能在令牌过期前注销。
+
+### 误区 7: "Scope 足以控制权限"
+Scope 控制的是授权范围，但细粒度的权限控制应该在应用层面实现，基于用户角色和具体业务逻辑。
+
+### 误区 8: "OAuth2 可以替代密码"
+OAuth2 不是密码的替代品，而是委托授权的机制。用户仍然需要某种形式的身份验证（通常是密码）来授权第三方应用。
+
+## 动手实践
+
+### 挑战 1: JWT 验证中间件 ⭐⭐⭐
+实现一个安全的 JWT 验证中间件，能够验证令牌的签名、过期时间和受众，并正确处理各种错误情况。
+
+[查看挑战详情](exercises/challenges/challenge-01.md)
+
+### 挑战 2: OAuth2 PKCE 客户端 ⭐⭐⭐⭐
+为单页应用实现完整的 OAuth2 PKCE 客户端，包括授权流程、令牌管理和安全存储。
+
+[查看挑战详情](exercises/challenges/challenge-02.md)
+
+## 小结与思考
+
+### 关键要点
+- OAuth2 是授权框架，OIDC 提供身份验证功能
+- PKCE 为公共客户端提供必要的安全保护
+- JWT 由头部、载荷和签名三部分组成
+- 刷新令牌轮换是重要的安全最佳实践
+- 正确的令牌存储方式对安全性至关重要
+
+### 思考问题
+1. 为什么 OAuth2 授权码流程比隐式流程更安全？
+2. 在什么情况下应该使用 RS256 而不是 HS256 签名算法？
+3. 如何在分布式系统中安全地管理 JWT 密钥？
+
+### 下一课预览
+在下一课中，我们将探讨**安全令牌存储和传输的最佳实践**，包括 HttpOnly Cookie、SameSite 属性、CSP 策略，以及如何防御常见的 Web 攻击如 XSS 和 CSRF。

@@ -1,0 +1,90 @@
+[
+  {
+    "question": "为什么现代前端开发需要构建工具？",
+    "options": [
+      "因为浏览器不支持 JavaScript",
+      "为了转译、打包、优化代码，并提供更好的开发体验",
+      "因为 HTML 和 CSS 已经过时",
+      "为了增加项目复杂度"
+    ],
+    "answer": 1,
+    "explanation": "构建工具用于转译（如 Babel）、打包（如 Webpack）、代码优化和提供开发服务器等功能。"
+  },
+  {
+    "question": "Webpack 中 loaders 的主要作用是什么？",
+    "options": [
+      "压缩图片文件",
+      "转换非 JavaScript 文件为模块",
+      "删除未使用的代码",
+      "启动开发服务器"
+    ],
+    "answer": 1,
+    "explanation": "Loaders 用于将各种文件类型（如 CSS、图片、TypeScript）转换为 JavaScript 模块。"
+  },
+  {
+    "question": "Vite 为什么比传统打包工具更快？",
+    "options": [
+      "因为它使用更少的内存",
+      "因为它在开发时直接使用原生 ES 模块，无需打包",
+      "因为它只支持小项目",
+      "因为它跳过了语法检查"
+    ],
+    "answer": 1,
+    "explanation": "Vite 利用现代浏览器对原生 ES 模块的支持，在开发时直接提供源文件，无需预先打包。"
+  },
+  {
+    "question": "Tree Shaking 的主要目的是什么？",
+    "options": [
+      "美化代码格式",
+      "移除未使用的代码以减小包体积",
+      "加密敏感代码",
+      "自动修复 bug"
+    ],
+    "answer": 1,
+    "explanation": "Tree Shaking 是一种死代码消除技术，通过静态分析移除未使用的导出，减小最终包大小。"
+  },
+  {
+    "question": "Hot Module Replacement (HMR) 的主要优势是什么？",
+    "options": [
+      "提高生产环境性能",
+      "在开发时更新模块而不刷新整个页面，保留应用状态",
+      "自动部署到服务器",
+      "减少代码行数"
+    ],
+    "answer": 1,
+    "explanation": "HMR 允许在开发过程中替换、添加或删除模块，而无需完全重新加载页面，保持应用状态。"
+  },
+  {
+    "question": "Babel 的主要功能是什么？",
+    "options": [
+      "打包所有 JavaScript 文件",
+      "将现代 JavaScript 转译为向后兼容的版本",
+      "压缩 CSS 文件",
+      "管理 npm 包依赖"
+    ],
+    "answer": 1,
+    "explanation": "Babel 是一个 JavaScript 编译器，主要用于将 ECMAScript 2015+ 代码转译为向后兼容的 JavaScript 版本。"
+  },
+  {
+    "question": "在选择前端构建工具时，以下哪个因素最重要？",
+    "options": [
+      "工具的 logo 设计",
+      "项目的具体需求、团队熟悉度和生态系统支持",
+      "工具的 GitHub 星星数量",
+      "工具的发布时间"
+    ],
+    "answer": 1,
+    "explanation": "选择构建工具应基于项目需求、团队经验、文档质量、社区支持和长期维护性等因素。"
+  },
+  {
+    "question": "ESLint 和 Prettier 在前端工具链中的作用分别是什么？",
+    "options": [
+      "ESLint 格式化代码，Prettier 检查代码错误",
+      "ESLint 检查代码质量和潜在错误，Prettier 格式化代码样式",
+      "两者都用于打包 JavaScript",
+      "两者都用于转译 TypeScript"
+    ],
+    "answer": 1,
+    "explanation": "ESLint 是代码检查工具，用于发现代码问题和强制编码规范；Prettier 是代码格式化工具，用于统一代码风格。"
+  }
+]

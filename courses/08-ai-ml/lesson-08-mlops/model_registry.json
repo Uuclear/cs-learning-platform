@@ -1,0 +1,34 @@
+{
+  "sentiment_classifier": [
+    {
+      "model_id": "sentiment_classifier",
+      "version": "v1.0",
+      "metrics": {
+        "accuracy": 0.85,
+        "f1_score": 0.83
+      },
+      "parameters": {
+        "learning_rate": 0.01,
+        "epochs": 10,
+        "batch_size": 32
+      },
+      "timestamp": "2026-05-03T10:45:21.377492",
+      "model_hash": "48a8275a2c2f16b22432ccfbd27d7db2"
+    },
+    {
+      "model_id": "sentiment_classifier",
+      "version": "v2.0",
+      "metrics": {
+        "accuracy": 0.89,
+        "f1_score": 0.87
+      },
+      "parameters": {
+        "learning_rate": 0.005,
+        "epochs": 15,
+        "batch_size": 64
+      },
+      "timestamp": "2026-05-03T10:45:21.377920",
+      "model_hash": "da4ec665a3a63ab50fb25273dd50a3df"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "question": "CI/CD 中的 CI 代表什么？",
+    "options": [
+      "Continuous Integration (持续集成)",
+      "Continuous Improvement (持续改进)",
+      "Code Inspection (代码检查)",
+      "Configuration Integration (配置集成)"
+    ],
+    "answer": 0,
+    "explanation": "CI代表Continuous Integration（持续集成），指开发者频繁地将代码集成到主分支，每次集成都会触发自动构建和测试。"
+  },
+  {
+    "question": "以下哪种部署策略可以实现零停机时间？",
+    "options": [
+      "直接部署",
+      "蓝绿部署",
+      "手动部署",
+      "单实例部署"
+    ],
+    "answer": 1,
+    "explanation": "蓝绿部署通过维护两个相同环境（蓝和绿），将流量从蓝切换到绿实现零停机，切换过程用户无感知。"
+  },
+  {
+    "question": "GitHub Actions 工作流文件通常存放在哪个目录？",
+    "options": [
+      ".github/workflows/",
+      "ci-cd/",
+      "actions/",
+      "workflows/"
+    ],
+    "answer": 0,
+    "explanation": "GitHub Actions的工作流文件(.yml/.yaml)必须存放在.github/workflows/目录下，GitHub会自动检测并执行。"
+  },
+  {
+    "question": "金丝雀发布的主要优势是什么？",
+    "options": [
+      "部署速度最快",
+      "资源使用最少",
+      "风险控制最好",
+      "配置最简单"
+    ],
+    "answer": 2,
+    "explanation": "金丝雀发布通过只向一小部分用户推送新版本来逐步验证变更，相比蓝绿部署风险控制更精细，可以在发现问题时快速回滚。"
+  },
+  {
+    "question": "在 CI/CD 流水线中，'fail fast' 原则的含义是？",
+    "options": [
+      "尽可能快地完成所有阶段",
+      "在早期阶段发现问题时立即停止",
+      "跳过失败的测试以加快构建",
+      "并行执行所有阶段"
+    ],
+    "answer": 1,
+    "explanation": "fail fast原则要求在流水线早期阶段（如lint、单元测试）发现问题时立即停止，避免浪费资源在已知失败的构建上。"
+  },
+  {
+    "question": "以下哪项不是 CI/CD 流水线的典型阶段？",
+    "options": [
+      "代码检查",
+      "单元测试",
+      "用户培训",
+      "部署到生产环境"
+    ],
+    "answer": 2,
+    "explanation": "CI/CD流水线的典型阶段包括代码检查、单元测试、集成测试、构建、安全扫描、部署等，用户培训不属于流水线阶段。"
+  },
+  {
+    "question": "GitHub Actions 中，如何实现作业之间的依赖关系？",
+    "options": [
+      "使用 depends_on 字段",
+      "使用 needs 字段",
+      "使用 requires 字段",
+      "使用 after 字段"
+    ],
+    "answer": 1,
+    "explanation": "GitHub Actions中使用needs字段定义作业依赖关系，只有当依赖的作业成功完成后，当前作业才会开始执行。"
+  },
+  {
+    "question": "滚动更新部署策略的特点是什么？",
+    "options": [
+      "一次性替换所有实例",
+      "同时维护两个完整的环境",
+      "逐步替换实例，保持服务可用",
+      "只在非工作时间部署"
+    ],
+    "answer": 2,
+    "explanation": "滚动更新逐步替换实例而不是一次性全部替换，在替换过程中始终有足够的实例提供服务，保证服务可用性。"
+  }
+]

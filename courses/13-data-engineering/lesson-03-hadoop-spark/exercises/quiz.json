@@ -1,0 +1,90 @@
+[
+  {
+    "question": "MapReduce 编程模型包含哪两个主要阶段？",
+    "options": [
+      "Map 和 Filter",
+      "Map 和 Reduce",
+      "Filter 和 Reduce",
+      "Shuffle 和 Sort"
+    ],
+    "answer": 1,
+    "explanation": "Hadoop的三个核心组件是HDFS（分布式存储）、MapReduce（计算框架）和YARN（资源调度器），共同构成大数据处理平台。"
+  },
+  {
+    "question": "HDFS (Hadoop Distributed File System) 的主要特点是什么？",
+    "options": [
+      "低延迟访问",
+      "高吞吐量、容错性好",
+      "支持随机读写",
+      "适合小文件存储"
+    ],
+    "answer": 1,
+    "explanation": "MapReduce的Map阶段负责将输入数据转换为键值对并进行初步处理，Shuffle阶段按键分组，Reduce阶段对每组值进行聚合。"
+  },
+  {
+    "question": "Spark 比 Hadoop MapReduce 更快的主要原因是什么？",
+    "options": [
+      "使用更少的内存",
+      "基于磁盘的计算",
+      "基于内存的计算和 DAG 执行引擎",
+      "使用更多的 CPU 核心"
+    ],
+    "answer": 2,
+    "explanation": "Spark将中间结果存储在内存中而不用频繁读写磁盘，加上DAG执行引擎优化，比Hadoop MapReduce快10-100倍。"
+  },
+  {
+    "question": "在 Spark 中，以下哪个操作是转换操作 (transformation)？",
+    "options": [
+      "collect()",
+      "count()",
+      "reduce()",
+      "map()"
+    ],
+    "answer": 3,
+    "explanation": "RDD（弹性分布式数据集）是Spark的基本数据抽象，具有分布式、容错、不可变、可并行操作的特点。"
+  },
+  {
+    "question": "RDD (弹性分布式数据集) 的主要特性不包括：",
+    "options": [
+      "不可变性",
+      "分区性",
+      "可序列化",
+      "自动索引"
+    ],
+    "answer": 3,
+    "explanation": "Spark的Transformation操作（如map、filter）是惰性求值的，只记录操作不立即执行，直到遇到Action操作（如collect、count）才会触发实际计算。"
+  },
+  {
+    "question": "大数据的 3V 特征指的是：",
+    "options": [
+      "Volume, Velocity, Variety",
+      "Value, Volume, Validity",
+      "Velocity, Variety, Veracity",
+      "Volume, Value, Variety"
+    ],
+    "answer": 0,
+    "explanation": "Spark的Shuffle操作需要在不同节点间重新分布数据（如groupByKey、reduceByKey），是性能瓶颈所在，应尽量减少。"
+  },
+  {
+    "question": "YARN 在 Hadoop 生态系统中的作用是什么？",
+    "options": [
+      "分布式文件存储",
+      "资源管理和作业调度",
+      "数据处理引擎",
+      "数据查询接口"
+    ],
+    "answer": 1,
+    "explanation": "Spark DataFrame是基于列的分布式数据集，比RDD更高级，内置优化（如Catalyst优化器），支持SQL查询。"
+  },
+  {
+    "question": "在 Spark 中，行动操作 (action) 和转换操作 (transformation) 的主要区别是：",
+    "options": [
+      "行动操作返回 RDD，转换操作返回具体值",
+      "转换操作立即执行，行动操作延迟执行",
+      "行动操作返回具体值，转换操作返回 RDD",
+      "两者没有区别"
+    ],
+    "answer": 2,
+    "explanation": "Spark通过checkpointing机制将RDD写入磁盘来切断 lineage，避免过长lineage导致恢复时计算量过大。"
+  }
+]

@@ -1,0 +1,90 @@
+[
+  {
+    "question": "在Cache-Aside模式中，当缓存未命中时，数据从哪里加载？",
+    "options": [
+      "直接返回空值",
+      "从数据库加载并写入缓存",
+      "从其他缓存节点同步",
+      "等待缓存自动更新"
+    ],
+    "answer": 1,
+    "explanation": "Cache-Aside模式中，缓存未命中时从数据库加载数据，并写入缓存，避免下次相同查询再次穿透到数据库。"
+  },
+  {
+    "question": "LRU缓存淘汰策略的全称是什么？",
+    "options": [
+      "Least Recently Used",
+      "Last Requested Unit",
+      "Lowest Response Utilization",
+      "Linear Rate Update"
+    ],
+    "answer": 0,
+    "explanation": "LRU (Least Recently Used) 是最久未使用淘汰策略，会优先淘汰最长时间未被访问的数据。"
+  },
+  {
+    "question": "Redis和Memcached的主要区别之一是什么？",
+    "options": [
+      "Redis只支持字符串，Memcached支持多种数据结构",
+      "Memcached支持持久化，Redis不支持",
+      "Redis支持多种数据结构，Memcached主要支持字符串",
+      "Memcached是单线程，Redis是多线程"
+    ],
+    "answer": 2,
+    "explanation": "Redis支持字符串、哈希、列表、集合、有序集等多种数据结构，而Memcached主要支持简单的key-value字符串存储。"
+  },
+  {
+    "question": "在Write-Through缓存模式中，写操作如何处理？",
+    "options": [
+      "只写入缓存",
+      "先写入数据库，再删除缓存",
+      "同时写入缓存和数据库",
+      "只写入数据库，缓存下次读取时更新"
+    ],
+    "answer": 2,
+    "explanation": "Write-Through模式将数据同时写入缓存和后端数据库，保证缓存和数据库的一致性，但写操作延迟较高。"
+  },
+  {
+    "question": "缓存穿透问题通常如何解决？",
+    "options": [
+      "增加缓存容量",
+      "使用布隆过滤器或缓存空值",
+      "提高数据库性能",
+      "减少缓存过期时间"
+    ],
+    "answer": 1,
+    "explanation": "缓存穿透指查询不存在的数据，可通过布隆过滤器快速判断key是否存在，或对空结果也进行缓存来避免。"
+  },
+  {
+    "question": "令牌桶算法主要用于实现什么功能？",
+    "options": [
+      "数据压缩",
+      "限流控制",
+      "负载均衡",
+      "数据加密"
+    ],
+    "answer": 1,
+    "explanation": "令牌桶算法通过控制令牌生成速率来实现限流，请求需要获取令牌才能执行，是经典的流量控制算法。"
+  },
+  {
+    "question": "Redis的Sorted Set数据结构基于什么实现？",
+    "options": [
+      "哈希表",
+      "跳跃表和哈希表",
+      "二叉搜索树",
+      "链表"
+    ],
+    "answer": 1,
+    "explanation": "Redis的Sorted Set使用跳跃表(SkipList)和哈希表的组合实现，跳跃表保证有序性，哈希表提供O(1)查找。"
+  },
+  {
+    "question": "缓存雪崩问题的最佳解决方案是什么？",
+    "options": [
+      "设置相同的过期时间",
+      "使用随机过期时间避免同时失效",
+      "禁用缓存过期",
+      "只使用数据库查询"
+    ],
+    "answer": 1,
+    "explanation": "缓存雪崩指大量缓存在同一时间失效导致数据库压力骤增，通过设置随机过期时间可避免集中失效。"
+  }
+]

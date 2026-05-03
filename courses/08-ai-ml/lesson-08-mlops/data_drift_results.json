@@ -1,0 +1,34 @@
+{
+  "drift_detected": true,
+  "features_with_drift": [
+    "click_rate",
+    "age"
+  ],
+  "feature_statistics": {
+    "income": {
+      "training_mean": 49409.89704719245,
+      "training_std": 14854.27059083308,
+      "production_mean": 50220.99804745049,
+      "production_std": 15339.48973726806,
+      "ks_statistic": 0.04999999999999999,
+      "has_drift": false
+    },
+    "click_rate": {
+      "training_mean": 0.290208749246643,
+      "training_std": 0.158718342522424,
+      "production_mean": 0.1956758450825931,
+      "production_std": 0.1354791691647932,
+      "ks_statistic": 0.27799999999999997,
+      "has_drift": true
+    },
+    "age": {
+      "training_mean": 34.73731483606112,
+      "training_std": 9.988054643677998,
+      "production_mean": 39.713735582064075,
+      "production_std": 11.960748473206015,
+      "ks_statistic": 0.20900000000000007,
+      "has_drift": true
+    }
+  },
+  "overall_assessment": "⚠️  检测到数据漂移！影响特征: click_rate, age"
+}

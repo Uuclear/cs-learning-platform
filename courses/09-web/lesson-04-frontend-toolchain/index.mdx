@@ -1,0 +1,273 @@
+---
+title: 现代前端工具链：从Webpack到Vite
+---
+
+## 开场白
+
+想象一下，你刚刚开始学习前端开发。你创建了一个简单的 HTML 文件，引入了一些 CSS 和 JavaScript，一切都很美好。但很快，你的项目开始膨胀：你需要支持新的 JavaScript 特性、处理模块依赖、优化图片、压缩代码、进行代码检查...突然间，你发现自己花了更多时间配置工具而不是编写实际功能！
+
+这就是现代前端开发的现实。在没有构建工具的时代，开发者需要手动处理所有这些任务，导致项目配置混乱、构建过程缓慢、错误频发。幸运的是，我们有了 Webpack、Vite、Babel 这样的工具，它们自动化了这些繁琐的工作，让我们能够专注于创造价值。
+
+在这个课程中，我们将深入探索现代前端工具链的核心概念，理解它们如何工作，以及如何为你的项目选择合适的工具组合。
+
+## 核心概念
+
+### 构建工具的必要性
+现代前端开发面临几个核心挑战：
+- **浏览器兼容性**：新 JavaScript 特性需要转译为旧版本
+- **模块系统**：ES6 模块需要打包成浏览器可识别的格式
+- **性能优化**：代码分割、压缩、缓存策略等
+- **开发体验**：热重载、快速反馈、调试支持
+
+### 关键组件解析
+
+**Bundlers（打包器）**
+- **Webpack**：基于依赖图的静态模块打包器
+- **Vite**：利用原生 ES 模块的下一代前端构建工具
+- **Rollup**：专注于库打包的工具
+
+**Transpilers（转译器）**
+- **Babel**：JavaScript 编译器，支持最新的 ECMAScript 特性
+- 处理 polyfills 以支持旧浏览器
+
+**Development Servers**
+- 提供本地开发服务器
+- 支持 Hot Module Replacement (HMR)
+- API 代理和 HTTPS 支持
+
+**Code Quality Tools**
+- **ESLint**：静态代码分析，发现潜在问题
+- **Prettier**：代码格式化，统一代码风格
+- **TypeScript**：静态类型检查
+
+**Package Managers**
+- **npm**：Node.js 默认包管理器
+- **yarn**：Facebook 开发的高性能包管理器  
+- **pnpm**：节省磁盘空间的高效包管理器
+
+## 代码演示
+
+让我们通过三个 Python 模拟程序来理解前端工具链的核心概念：
+
+### 1. 模块打包模拟 (`example-01-bundler-simulation.py`)
+这个程序模拟了 Webpack 等打包器如何解析模块依赖并生成单一输出文件。它展示了：
+- 模块依赖图的构建
+- 递归解析导入语句
+- 循环依赖检测
+- 最终打包输出
+
+运行此示例可以看到一个完整的模块打包过程，类似于 Webpack 的工作方式。
+
+### 2. Tree Shaking 模拟 (`example-02-tree-shaking.py`)
+Tree Shaking 是现代打包工具的重要优化技术。这个程序演示了：
+- 静态代码分析识别未使用代码
+- 死代码消除过程
+- 包体积优化效果
+
+通过这个示例，你可以直观地看到如何移除未使用的导出，减小最终包大小。
+
+### 3. HMR 模拟 (`example-03-hmr-simulation.py`)
+Hot Module Replacement 是提升开发体验的关键功能。这个程序展示了：
+- 文件变化监听
+- 模块热替换而非完整页面刷新
+- 应用状态保留
+
+HMR 让开发者能够在不丢失应用状态的情况下实时查看代码更改效果。
+
+## 深入理解
+
+### 打包器工作原理
+现代打包器的工作流程通常包括：
+
+1. **入口点分析**：从配置的入口文件开始
+2. **依赖解析**：递归分析所有导入/导出语句
+3. **模块转换**：通过 loaders/plugins 处理不同文件类型
+4. **依赖图构建**：创建完整的模块依赖关系图
+5. **代码生成**：将所有模块打包成目标格式
+
+### Tree Shaking 深入
+Tree Shaking 依赖于 ES6 模块的静态特性：
+- **静态分析**：编译时确定模块依赖关系
+- **副作用检测**：识别可能产生副作用的代码
+- **死代码标记**：标记未被使用的导出
+- **代码移除**：在最终输出中移除死代码
+
+关键前提：必须使用 ES6 模块语法（`import/export`），CommonJS 不支持 Tree Shaking。
+
+### HMR 实现机制
+HMR 的实现涉及多个层面：
+- **客户端**：接收更新通知，执行替换逻辑
+- **服务器**：监听文件变化，发送更新消息
+- **运行时**：管理模块状态，处理更新回调
+
+Vite 的 HMR 更快是因为它直接利用浏览器的 ES 模块支持，无需重新打包整个应用。
+
+### 性能优化策略
+- **代码分割**：按路由或组件分割代码
+- **懒加载**：动态导入非关键代码
+- **缓存策略**：长期缓存 + 内容哈希
+- **压缩优化**：Terser 压缩、CSS 压缩
+
+## 实际应用
+
+### Webpack 基础配置
+```javascript
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: 'babel-loader'
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  },
+  plugins: [
+    // 插件配置
+  ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
+};
+```
+
+### Vite 基础配置
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom']
+        }
+      }
+    }
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000'
+    }
+  }
+});
+```
+
+### Babel 配置
+```json
+// babel.config.json
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": "> 0.25%, not dead",
+      "useBuiltIns": "usage",
+      "corejs": 3
+    }],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
+  ]
+}
+```
+
+### ESLint + Prettier 集成
+```json
+// .eslintrc.json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier"
+  ],
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  }
+}
+```
+
+## 常见误区
+
+### 1. "Vite 完全取代了 Webpack"
+**事实**：Vite 和 Webpack 各有优势。Vite 在开发体验上更优，但 Webpack 在生产构建和复杂配置方面仍然强大。许多项目在开发时使用 Vite，生产时仍用 Webpack。
+
+### 2. "Tree Shaking 自动工作"
+**事实**：Tree Shaking 需要满足特定条件：使用 ES6 模块、避免副作用、正确配置打包器。CommonJS 模块无法进行有效的 Tree Shaking。
+
+### 3. "Babel 可以转译所有新特性"
+**事实**：Babel 主要处理语法转换，对于新的内置对象和方法（如 `Promise.allSettled`），需要额外的 polyfills。过度使用 polyfills 会增加包体积。
+
+### 4. "更多的插件总是更好"
+**事实**：每个插件都会增加构建时间和复杂性。应该只添加真正需要的插件，并定期审查和移除不再使用的插件。
+
+### 5. "开发环境配置不需要优化"
+**事实**：良好的开发环境配置直接影响团队生产力。慢的 HMR、频繁的错误、不一致的代码风格都会降低开发效率。
+
+### 6. "打包工具配置一次就够"
+**事实**：随着项目演进，工具链配置需要持续维护和优化。定期更新依赖、调整配置以适应新需求是必要的。
+
+### 7. "所有项目都需要相同的工具链"
+**事实**：工具链选择应该基于项目规模、团队经验、性能要求等因素。小型项目可能只需要简单的配置，而大型应用需要复杂的优化策略。
+
+### 8. "TypeScript 替代了 ESLint"
+**事实**：TypeScript 提供类型检查，但 ESLint 能发现逻辑错误、代码风格问题和潜在 bug。两者应该配合使用，而不是互相替代。
+
+## 动手实践
+
+### 挑战 1：自定义 Webpack Loader（⭐⭐⭐）
+实现一个处理自定义 `.greet` 文件格式的 Webpack loader。这个挑战将帮助你深入理解 Webpack 的 loader 机制和文件处理流程。
+
+**目标**：创建一个 loader，能够将简单的模板文件转换为可执行的 JavaScript 函数。
+
+**学习收获**：
+- 理解 Webpack loader 的工作原理
+- 掌握文件内容解析和代码生成技巧
+- 学习如何测试和调试自定义 loader
+
+### 挑战 2：完整前端工具链配置（⭐⭐⭐⭐）
+为一个新的 React + TypeScript 项目配置完整的前端工具链。这个挑战涵盖了现代前端开发的所有关键方面。
+
+**目标**：创建一个生产就绪的构建配置，支持开发、测试和生产环境。
+
+**学习收获**：
+- 掌握完整的工具链集成
+- 理解不同工具之间的协作关系
+- 学习性能优化和最佳实践
+- 获得实际项目配置经验
+
+## 小结与思考
+
+### 核心要点回顾
+1. **构建工具的必要性**：现代前端开发离不开自动化工具链
+2. **Webpack vs Vite**：理解两种架构的差异和适用场景
+3. **优化技术**：Tree Shaking、代码分割、HMR 等关键技术
+4. **质量保证**：ESLint、Prettier、TypeScript 的协同作用
+5. **配置哲学**：平衡功能、性能和可维护性
+
+### 思考问题
+1. 在什么情况下你会选择 Webpack 而不是 Vite？考虑项目规模、团队经验、特殊需求等因素。
+2. 如何在保持开发体验的同时确保生产构建的最优性能？
+3. 随着浏览器对新特性的支持越来越好，前端构建工具的未来会如何演变？
+
+### 下一课预告
+在下一课《09-05 前端性能优化实战》中，我们将深入探讨如何测量和优化前端应用的性能，包括加载性能、运行时性能和用户体验优化。你将学习使用 Lighthouse、Web Vitals 等工具，并掌握实际的优化策略。
+
+记住，工具链的目的是服务开发，而不是增加复杂性。选择适合你项目的工具，保持配置的简洁和可维护性，这才是现代前端工程化的真谛。

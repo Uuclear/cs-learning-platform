@@ -1,0 +1,43 @@
+{
+  "id": "10-03",
+  "title": "缓存策略：Redis/Memcached",
+  "module": "10-system-arch",
+  "slug": "lesson-03-caching",
+  "status": "completed",
+  "module_name": "系统架构",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": [
+    "10-01"
+  ],
+  "tags": [
+    "cache",
+    "redis",
+    "memcached",
+    "lru",
+    "invalidation",
+    "rate-limiting"
+  ],
+  "learning_objectives": [
+    "理解缓存的核心概念和应用场景",
+    "掌握Redis的数据结构和常用模式",
+    "能够设计合理的缓存策略和解决缓存问题"
+  ],
+  "files": [
+    "index.mdx",
+    "metadata.json",
+    "code/examples/example-01-cache-patterns.py",
+    "code/examples/example-02-lru-cache.py",
+    "code/examples/example-03-rate-limiter.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}
