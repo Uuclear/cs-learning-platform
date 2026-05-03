@@ -1,0 +1,21 @@
+{
+  "id": "19-02",
+  "title": "所有权与借用：Rust的核心魔法",
+  "slug": "lesson-02-ownership-borrowing",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 2,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["19-01"],
+  "tags": ["ownership", "borrowing", "move-semantics", "memory-management"],
+  "description": "深入学习 Rust 的所有权系统、借用检查和移动语义，理解 Rust 如何在编译时保证内存安全。",
+  "learning_objectives": [
+    "理解所有权的三条规则",
+    "掌握 move 语义和 Copy trait 的区别",
+    "理解借用（不可变和可变引用）的规则",
+    "能够写出通过借用检查的 Rust 代码"
+  ]
+}

@@ -1,0 +1,383 @@
+---
+title: 结构体与枚举：数据建模
+module: 19-rust
+lesson: 19-03
+---
+
+# 结构体与枚举：数据建模
+
+## 开场白：编程世界的积木搭建
+
+想象一下，你是一个乐高积木大师。在你的工具箱里，有两种神奇的积木：
+
+1. **结构体（Struct）** - 就像那些可以组合成复杂形状的标准积木块，每个积木都有特定的位置和功能
+2. **枚举（Enum）** - 就像那些特殊形状的积木，每一块都代表一种独特的可能性
+
+在 Rust 的世界里，结构体和枚举就是我们构建复杂数据模型的基本积木。它们让我们能够以类型安全的方式描述现实世界中的各种概念，从简单的用户信息到复杂的系统状态。
+
+今天，我们将深入探索这两种强大的数据类型，学习如何用它们来构建健壮、安全的程序。准备好了吗？让我们开始搭建我们的 Rust 数据模型！
+
+## 核心概念：结构体与枚举语法
+
+### 结构体（Structs）
+
+Rust 提供了三种不同类型的结构体，每种都有其特定的用途：
+
+#### 1. 普通结构体（Classic Structs）
+
+这是最常见的结构体形式，使用命名字段：
+
+```rust
+struct User {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+}
+```
+
+普通结构体就像一个数据容器，每个字段都有明确的名称和类型。这种形式最适合表示具有多个属性的实体。
+
+#### 2. 元组结构体（Tuple Structs）
+
+元组结构体看起来像元组，但有自己独特的类型：
+
+```rust
+struct Color(u8, u8, u8);
+struct Point(i32, i32);
+```
+
+元组结构体的字段通过索引访问（如 `color.0`, `point.1`），而不是通过名称。它们通常用于创建新类型来包装现有类型，提供类型安全。
+
+#### 3. 单元结构体（Unit Structs）
+
+单元结构体不包含任何数据：
+
+```rust
+struct AlwaysEqual;
+```
+
+虽然看起来没什么用，但单元结构体在泛型编程和 trait 实现中非常有用，特别是当你需要一个标记类型时。
+
+### 枚举（Enums）
+
+枚举允许你定义一个类型，该类型可以是多种可能变体中的一种。Rust 的枚举比其他语言的枚举更强大，因为每个变体都可以携带不同类型的数据：
+
+```rust
+enum Message {
+    Quit,                           // 不携带数据
+    Move { x: i32, y: i32 },       // 携带匿名结构体
+    Write(String),                 // 携带字符串
+    ChangeColor(i32, i32, i32),    // 携带元组
+}
+```
+
+每个枚举变体都是同一个枚举类型的一部分，这使得我们可以安全地处理所有可能的情况。
+
+### Impl 块：为类型添加方法
+
+无论是结构体还是枚举，我们都可以使用 `impl` 块为它们添加方法：
+
+```rust
+impl User {
+    // 关联函数（类似构造函数）
+    fn new(username: String, email: String) -> User {
+        User {
+            username,
+            email,
+            sign_in_count: 1,
+            active: true,
+        }
+    }
+
+    // 实例方法
+    fn activate(&mut self) {
+        self.active = true;
+    }
+}
+```
+
+关联函数通过类型名调用（`User::new()`），而实例方法通过实例调用（`user.activate()`）。
+
+## 代码演示：Rust 数据建模示例
+
+让我们通过几个实际的例子来看看结构体和枚举是如何工作的。
+
+### 示例 1：用户管理系统
+
+```rust
+// 定义用户结构体
+struct User {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+}
+
+impl User {
+    fn new(username: String, email: String) -> User {
+        User {
+            username,
+            email,
+            sign_in_count: 1,
+            active: true,
+        }
+    }
+
+    fn deactivate(&mut self) {
+        self.active = false;
+    }
+
+    fn get_username(&self) -> &str {
+        &self.username
+    }
+}
+
+fn main() {
+    let mut user = User::new("alice".to_string(), "alice@example.com".to_string());
+    println!("用户名: {}", user.get_username());
+    user.deactivate();
+}
+```
+
+### 示例 2：消息处理系统
+
+```rust
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+impl Message {
+    fn call(&self) {
+        match self {
+            Message::Quit => println!("退出程序"),
+            Message::Move { x, y } => println!("移动到 ({}, {})", x, y),
+            Message::Write(text) => println!("写入: {}", text),
+            Message::ChangeColor(r, g, b) => println!("颜色: RGB({}, {}, {})", r, g, b),
+        }
+    }
+}
+```
+
+### 示例 3：错误处理与可选值
+
+Rust 的标准库提供了两个非常重要的枚举：`Option` 和 `Result`。
+
+```rust
+// Option<T> 表示可能存在或不存在的值
+fn find_user(id: u32) -> Option<String> {
+    match id {
+        1 => Some("Alice".to_string()),
+        _ => None,
+    }
+}
+
+// Result<T, E> 表示可能成功或失败的操作
+fn divide(a: f64, b: f64) -> Result<f64, String> {
+    if b == 0.0 {
+        Err("除数不能为零".to_string())
+    } else {
+        Ok(a / b)
+    }
+}
+```
+
+## 深入理解：Match 表达式与模式匹配
+
+`match` 表达式是 Rust 中处理枚举的核心工具。它强制你处理所有可能的情况，确保不会遗漏任何变体。
+
+### 基本模式匹配
+
+```rust
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+```
+
+### 解构枚举变体
+
+当枚举变体携带数据时，我们可以同时匹配变体并提取数据：
+
+```rust
+enum Message {
+    Move { x: i32, y: i32 },
+    Write(String),
+}
+
+fn process_message(msg: Message) {
+    match msg {
+        Message::Move { x, y } => println!("移动到 ({}, {})", x, y),
+        Message::Write(text) => println!("写入: {}", text),
+    }
+}
+```
+
+### If Let 表达式
+
+当只关心一种情况时，可以使用 `if let`：
+
+```rust
+let some_u8_value = Some(0u8);
+if let Some(3) = some_u8_value {
+    println!("找到了三");
+} else {
+    println!("不是三");
+}
+```
+
+## 实际应用：游戏角色设计与 API 响应建模
+
+### 游戏角色设计
+
+在游戏开发中，结构体和枚举是建模游戏实体的理想选择：
+
+```rust
+// 角色状态
+enum CharacterStatus {
+    Alive { health: u32, mana: u32 },
+    Dead,
+    Stunned { turns_remaining: u32 },
+}
+
+// 角色类别
+enum CharacterClass {
+    Warrior,
+    Mage,
+    Archer,
+}
+
+// 角色结构体
+struct Character {
+    name: String,
+    class: CharacterClass,
+    level: u32,
+    status: CharacterStatus,
+}
+
+impl Character {
+    fn take_damage(&mut self, damage: u32) {
+        match &mut self.status {
+            CharacterStatus::Alive { health, .. } => {
+                *health = health.saturating_sub(damage);
+                if *health == 0 {
+                    self.status = CharacterStatus::Dead;
+                }
+            }
+            _ => {} // 已经死亡或眩晕的角色不受伤害
+        }
+    }
+}
+```
+
+### API 响应建模
+
+在 Web 开发中，我们可以用枚举来表示不同的 API 响应类型：
+
+```rust
+// API 响应状态
+enum ApiResponse<T> {
+    Success(T),
+    Error { code: u32, message: String },
+    RateLimited { retry_after: u64 },
+}
+
+// 用户数据
+struct User {
+    id: u32,
+    username: String,
+    email: String,
+}
+
+// 使用示例
+fn handle_user_response(response: ApiResponse<User>) {
+    match response {
+        ApiResponse::Success(user) => println!("用户: {}", user.username),
+        ApiResponse::Error { code, message } => println!("错误 {}: {}", code, message),
+        ApiResponse::RateLimited { retry_after } => println!("请 {} 秒后重试", retry_after),
+    }
+}
+```
+
+## 常见误区：枚举变体不是类型
+
+一个常见的误解是认为枚举的每个变体都是独立的类型。实际上，所有变体都属于同一个枚举类型。
+
+**错误的理解：**
+```rust
+// 这是错误的！Message::Quit 不是独立的类型
+let quit_msg: Message::Quit = Message::Quit; // 编译错误！
+```
+
+**正确的理解：**
+```rust
+// 所有变体都是 Message 类型
+let quit_msg: Message = Message::Quit;
+let write_msg: Message = Message::Write("hello".to_string());
+```
+
+这意味着你不能直接将一个枚举变体赋值给期望该变体的变量，因为变体本身不是类型。所有的变体都必须通过完整的枚举类型来引用。
+
+另一个常见误区是试图绕过模式匹配：
+
+```rust
+// 不要这样做！
+let msg = Message::Write("hello".to_string());
+// 无法直接访问 Write 变体的数据而不进行模式匹配
+```
+
+正确的做法是始终使用 `match` 或 `if let` 来安全地访问枚举变体中的数据。
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+### 练习 1：图书管理系统
+
+创建一个 `Book` 结构体，包含书名、作者、页数和借阅状态。实现借书和还书的方法。
+
+### 练习 2：交通信号灯模拟器
+
+创建一个 `TrafficLight` 枚举，包含红、黄、绿三种状态。实现一个 `next()` 方法来切换到下一个状态。
+
+### 练习 3：安全的数值操作
+
+使用 `Option` 和 `Result` 实现安全的数组访问和字符串转数字功能。
+
+你可以在 `code/examples/` 目录中找到相关的示例代码，在 `code/solutions/` 目录中查看参考解决方案。
+
+## 小结与思考
+
+今天我们学习了 Rust 中两个最重要的数据类型：结构体和枚举。
+
+**关键要点回顾：**
+
+1. **结构体的三种形式**：普通结构体、元组结构体和单元结构体，各有其适用场景
+2. **枚举的强大功能**：每个变体可以携带不同类型的数据，非常适合表示多种可能的状态
+3. **Impl 块的作用**：为类型添加方法和关联函数，实现面向对象的编程风格
+4. **Match 表达式的重要性**：确保处理所有可能的情况，提供编译时的安全性
+5. **Option 和 Result 的价值**：提供类型安全的方式来处理可空值和错误
+
+**思考题：**
+
+1. 在什么情况下你应该选择使用结构体而不是枚举？
+2. 如何利用枚举来避免使用 null 值？
+3. 为什么 Rust 的枚举比其他语言的枚举更强大？
+
+记住，结构体和枚举是 Rust 类型系统的基石。掌握它们不仅能让你写出更安全的代码，还能帮助你更好地建模现实世界的问题。继续练习，你会发现它们的威力远远超出今天的介绍！
+
+在下一节课中，我们将学习 Rust 的所有权系统，这将是理解 Rust 内存安全保证的关键。敬请期待！

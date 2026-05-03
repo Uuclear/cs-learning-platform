@@ -1,0 +1,21 @@
+{
+  "id": "19-01",
+  "title": "Rust初探：内存安全的系统语言",
+  "slug": "lesson-01-rust-intro",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 1,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": [],
+  "tags": ["rust", "memory-safety", "systems-programming", "cargo", "ownership-preview"],
+  "description": "了解 Rust 语言的设计哲学、内存安全保证和零运行时开销特性，安装 Rust 工具链并编写第一个程序。",
+  "learning_objectives": [
+    "了解 Rust 的设计哲学和为什么需要 Rust",
+    "掌握 Rust 的内存安全保证（无 GC、无悬空指针）",
+    "能够安装 Rust 工具链（rustup + cargo）",
+    "编写并运行第一个 Rust 程序（Hello World）"
+  ]
+}

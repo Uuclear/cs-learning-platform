@@ -1,0 +1,274 @@
+---
+title: 集合框架：List、Set、Map
+description: 学习 Java 集合框架，掌握 List、Set、Map 三大接口及其常用实现类，理解迭代器和泛型在集合中的应用。
+---
+
+# 集合框架：List、Set、Map
+
+## 开场白：你的编程储物柜和书架
+
+想象一下，你刚搬进新家，面对一堆杂乱的物品：书籍、衣服、餐具、工具……你会怎么整理它们？
+
+如果你把所有东西都堆在一个大箱子里，每次找东西都要翻遍整个箱子，那简直是噩梦！聪明的做法是：
+- **书籍**放在书架上，按类别排列（List - 有序列表）
+- **餐具**放在抽屉里，每样只保留一个（Set - 去重集合）  
+- **工具**放在工具箱里，每个工具都有明确的标签（Map - 键值对）
+
+Java 集合框架就是你的编程"家居整理系统"！它提供了各种高效的"储物柜"和"书架"，让你的数据井井有条。今天，我们就来认识这个强大的工具箱。
+
+## 核心概念：Collection 和 Map 的家族谱系
+
+Java 集合框架主要分为两大阵营：**Collection 家族**和 **Map 家族**。
+
+### Collection 家族：存储单个元素
+
+Collection 是所有集合的根接口，它有两个主要子接口：
+
+1. **List 接口**：有序、可重复的集合
+   - `ArrayList`：基于动态数组，随机访问快（O(1)），插入删除慢（O(n)）
+   - `LinkedList`：基于双向链表，插入删除快（O(1)），随机访问慢（O(n)）
+
+2. **Set 接口**：无序、不可重复的集合
+   - `HashSet`：基于哈希表，查找、插入、删除都很快（O(1)平均）
+   - `TreeSet`：基于红黑树，元素自动排序（O(log n)）
+
+### Map 家族：存储键值对
+
+Map 不继承 Collection 接口，它是独立的体系：
+
+- **HashMap**：基于哈希表，键不能重复，值可以重复（O(1)平均）
+- **TreeMap**：基于红黑树，键自动排序（O(log n)）
+- **LinkedHashMap**：保持插入顺序的 HashMap
+
+```java
+// 泛型让集合更安全
+List<String> names = new ArrayList<>();        // 只能存字符串
+Set<Integer> numbers = new HashSet<>();         // 只能存整数
+Map<String, Student> studentMap = new HashMap<>(); // 键是字符串，值是Student对象
+```
+
+## 代码演示：集合操作实战
+
+让我们通过实际代码来看看这些集合是如何工作的！
+
+### ArrayList vs LinkedList 性能对比
+
+```java
+// 创建 ArrayList 和 LinkedList
+List<Integer> arrayList = new ArrayList<>();
+List<Integer> linkedList = new LinkedList<>();
+
+// 在末尾添加元素 - 两者都很高效
+arrayList.add(1);
+linkedList.add(1);
+
+// 在开头插入元素 - LinkedList 更快
+arrayList.add(0, 0);    // 需要移动所有元素
+linkedList.add(0, 0);   // 只需修改几个指针
+
+// 随机访问 - ArrayList 更快
+int firstElement1 = arrayList.get(0);   // 直接通过索引访问
+int firstElement2 = linkedList.get(0);  // 需要从头开始遍历
+```
+
+### HashMap 词频统计
+
+```java
+public static Map<String, Integer> countWords(String text) {
+    Map<String, Integer> wordCount = new HashMap<>();
+    String[] words = text.toLowerCase().split("\\s+");
+    
+    for (String word : words) {
+        // 如果单词已存在，计数加1；否则设为1
+        wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+    }
+    
+    return wordCount;
+}
+```
+
+### HashSet 去重与遍历
+
+```java
+// 自动去重
+Set<String> uniqueNames = new HashSet<>();
+uniqueNames.add("张三");
+uniqueNames.add("李四");
+uniqueNames.add("张三"); // 这个会被忽略
+
+// 使用迭代器遍历
+Iterator<String> iterator = uniqueNames.iterator();
+while (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+
+// 使用增强 for 循环（推荐）
+for (String name : uniqueNames) {
+    System.out.println(name);
+}
+```
+
+## 深入理解：equals() 和 hashCode() 的重要性
+
+为什么 HashMap 和 HashSet 能快速查找元素？秘密就在于 `hashCode()` 和 `equals()` 方法！
+
+### 哈希表的工作原理
+
+1. **计算哈希码**：调用对象的 `hashCode()` 方法，得到一个整数
+2. **定位桶位置**：用哈希码对桶数组长度取模，确定存储位置
+3. **处理冲突**：如果多个对象哈希到同一个位置，用链表或红黑树存储
+4. **精确匹配**：在桶内使用 `equals()` 方法确认是否是同一个对象
+
+### 重写规则（黄金法则）
+
+如果你重写了 `equals()`，**必须**重写 `hashCode()`！而且要保证：
+- 如果 `a.equals(b)` 返回 `true`，那么 `a.hashCode() == b.hashCode()` 必须成立
+- 如果两个对象相等，它们的哈希码必须相同
+
+```java
+public class Person {
+    private String name;
+    private int age;
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age);
+    }
+}
+```
+
+## 实际应用：解决真实问题
+
+### 应用场景1：学生成绩管理系统
+
+```java
+public class GradeManager {
+    // 学号 -> 学生成绩映射
+    private Map<String, Double> grades = new HashMap<>();
+    // 所有学生姓名（自动去重）
+    private Set<String> studentNames = new HashSet<>();
+    
+    public void addGrade(String studentId, String name, double grade) {
+        grades.put(studentId, grade);
+        studentNames.add(name);
+    }
+    
+    public double getAverageGrade() {
+        if (grades.isEmpty()) return 0.0;
+        return grades.values().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .average()
+                    .orElse(0.0);
+    }
+    
+    public List<String> getTopStudents(int topN) {
+        return grades.entrySet().stream()
+                    .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                    .limit(topN)
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+    }
+}
+```
+
+### 应用场景2：缓存系统
+
+```java
+public class SimpleCache<K, V> {
+    private final Map<K, V> cache = new LinkedHashMap<K, V>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+            return size() > 100; // 最多缓存100个条目
+        }
+    };
+    
+    public V get(K key) {
+        return cache.get(key);
+    }
+    
+    public void put(K key, V value) {
+        cache.put(key, value);
+    }
+}
+```
+
+## 常见误区：避开这些陷阱
+
+### 误区1：遍历集合时直接删除元素
+
+```java
+// ❌ 错误做法 - 会抛出 ConcurrentModificationException
+for (String item : list) {
+    if (item.equals("删除我")) {
+        list.remove(item); // 危险！
+    }
+}
+
+// ✅ 正确做法1：使用迭代器
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    if (iterator.next().equals("删除我")) {
+        iterator.remove(); // 安全！
+    }
+}
+
+// ✅ 正确做法2：使用 removeIf（Java 8+）
+list.removeIf(item -> item.equals("删除我"));
+```
+
+### 误区2：HashMap 的 Key 要求
+
+- **Key 必须是不可变的**：如果 Key 对象在放入 Map 后被修改，可能导致无法找到该条目
+- **正确实现 equals() 和 hashCode()**：这是 HashMap 正常工作的基础
+- **避免 null key**：虽然 HashMap 允许一个 null key，但最好避免使用
+
+### 误区3：选择错误的集合类型
+
+- 需要频繁随机访问？→ 选择 `ArrayList`
+- 需要在中间频繁插入删除？→ 选择 `LinkedList`
+- 需要去重且不关心顺序？→ 选择 `HashSet`
+- 需要按键排序？→ 选择 `TreeMap`
+- 需要保持插入顺序？→ 选择 `LinkedHashMap`
+
+## 动手实践
+
+现在轮到你了！完成以下练习来巩固所学知识：
+
+### 练习1：购物车实现
+创建一个购物车类，支持添加商品、删除商品、计算总价等功能。商品用 `Map<String, Integer>` 表示（商品名 -> 数量）。
+
+### 练习2：单词频率分析器
+实现一个方法，接收一段文本，返回出现频率最高的前5个单词及其出现次数。
+
+### 练习3：去重电话号码
+给定一个包含重复电话号码的列表，使用合适的集合类型去除重复，并按字母顺序排序输出。
+
+## 小结与思考
+
+今天我们学习了 Java 集合框架的核心内容：
+
+✅ **理解了 Collection 和 Map 两大体系的层次关系**
+✅ **掌握了 ArrayList、LinkedList、HashSet、HashMap 的使用场景**
+✅ **学会了迭代器遍历和增强 for 循环的正确用法**
+✅ **明白了如何根据实际需求选择合适的集合类型**
+
+记住这些关键点：
+- **泛型**让集合类型安全，避免运行时错误
+- **equals() 和 hashCode()** 是哈希集合正常工作的基石
+- **选择合适的集合**比盲目使用更重要
+- **遍历时删除元素**要使用迭代器或 `removeIf()`
+
+思考题：
+1. 为什么 ArrayList 的初始容量是10？这个设计有什么考虑？
+2. 如果你需要一个线程安全的集合，应该怎么办？
+3. ConcurrentHashMap 和 HashMap 有什么区别？什么时候使用前者？
+
+集合框架是 Java 编程的基础，掌握好它会让你的代码更加高效和优雅。继续练习，你很快就能成为"集合大师"了！

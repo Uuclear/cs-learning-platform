@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Spring Boot 的核心理念是什么？",
+      "options": [
+        "配置优于约定",
+        "约定优于配置",
+        "完全手动配置",
+        "无需任何配置"
+      ],
+      "answer": 1,
+      "explanation": "Spring Boot 的核心理念是'约定优于配置'，通过合理的默认配置减少开发者的配置工作。"
+    },
+    {
+      "question": "以下哪个注解用于创建 REST 控制器？",
+      "options": [
+        "@Controller",
+        "@Service",
+        "@RestController",
+        "@Component"
+      ],
+      "answer": 2,
+      "explanation": "@RestController 是 @Controller 和 @ResponseBody 的组合，专门用于创建 REST API。"
+    },
+    {
+      "question": "在 Spring Boot 中，依赖注入的主要目的是什么？",
+      "options": [
+        "增加代码复杂度",
+        "实现控制反转和松耦合",
+        "提高运行速度",
+        "减少内存使用"
+      ],
+      "answer": 1,
+      "explanation": "依赖注入实现了控制反转（IoC），让对象的创建和依赖关系由容器管理，从而实现松耦合。"
+    },
+    {
+      "question": "@Autowired 注解可以用于哪些地方？",
+      "options": [
+        "只能用于字段",
+        "只能用于构造器",
+        "字段、构造器、方法都可以",
+        "只能用于方法"
+      ],
+      "answer": 2,
+      "explanation": "@Autowired 可以用于字段、构造器和 setter 方法，但推荐使用构造器注入。"
+    },
+    {
+      "question": "Spring Boot Starter 的作用是什么？",
+      "options": [
+        "启动应用程序",
+        "提供一组预配置的依赖",
+        "编译 Java 代码",
+        "运行测试用例"
+      ],
+      "answer": 1,
+      "explanation": "Spring Boot Starter 是一组预配置的依赖描述符，简化了 Maven/Gradle 依赖管理。"
+    },
+    {
+      "question": "以下哪个注解用于标记服务类？",
+      "options": [
+        "@Controller",
+        "@Repository",
+        "@Service",
+        "@Component"
+      ],
+      "answer": 2,
+      "explanation": "@Service 专门用于标记业务逻辑层的服务类，它是 @Component 的特化版本。"
+    },
+    {
+      "question": "Spring Boot 应用的主类通常使用哪个注解？",
+      "options": [
+        "@SpringBootApplication",
+        "@EnableAutoConfiguration",
+        "@ComponentScan",
+        "@Configuration"
+      ],
+      "answer": 0,
+      "explanation": "@SpringBootApplication 是一个组合注解，包含了 @Configuration、@EnableAutoConfiguration 和 @ComponentScan。"
+    },
+    {
+      "question": "在 REST API 设计中，创建资源通常使用哪个 HTTP 方法？",
+      "options": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "answer": 1,
+      "explanation": "POST 方法通常用于创建新资源，GET 用于获取，PUT 用于更新，DELETE 用于删除。"
+    }
+  ]
+}

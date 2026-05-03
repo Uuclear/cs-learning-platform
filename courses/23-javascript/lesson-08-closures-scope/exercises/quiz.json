@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "JavaScript的作用域是在什么时候确定的？",
+      "options": [
+        "A. 函数调用时（动态作用域）",
+        "B. 代码编写时（词法作用域）",
+        "C. 变量声明时",
+        "D. 程序运行时"
+      ],
+      "correct_answer": 1,
+      "explanation": "JavaScript使用词法作用域（也称为静态作用域），这意味着函数的作用域在代码编写时就已经确定了，而不是在运行时动态决定的。"
+    },
+    {
+      "id": 2,
+      "question": "以下关于变量提升的说法，哪一个是正确的？",
+      "options": [
+        "A. let和const声明不会被提升",
+        "B. var声明会被提升到全局作用域",
+        "C. var声明会被提升但初始化留在原地",
+        "D. 函数表达式会被完全提升"
+      ],
+      "correct_answer": 2,
+      "explanation": "var声明会被提升到其作用域的顶部，但赋值操作仍然留在原来的位置。这就是为什么访问未初始化的var变量会返回undefined而不是ReferenceError。"
+    },
+    {
+      "id": 3,
+      "question": "什么是闭包？",
+      "options": [
+        "A. 一个可以访问全局变量的函数",
+        "B. 一个嵌套在另一个函数内部的函数",
+        "C. 一个能够记住并访问其词法作用域的函数，即使该函数在其词法作用域之外执行",
+        "D. 一个返回另一个函数的函数"
+      ],
+      "correct_answer": 2,
+      "explanation": "闭包是一个能够记住并访问其词法作用域的函数，即使该函数在其词法作用域之外执行。闭包的核心是函数能够'记住'其创建时的环境。"
+    },
+    {
+      "id": 4,
+      "question": "以下代码的输出是什么？\n\n```javascript\nfor (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 100);\n}\n```",
+      "options": [
+        "A. 0, 1, 2",
+        "B. 3, 3, 3",
+        "C. undefined, undefined, undefined",
+        "D. 报错"
+      ],
+      "correct_answer": 1,
+      "explanation": "由于var声明的i是函数作用域，所有setTimeout回调都引用同一个i变量。当循环结束时，i的值为3，所以所有回调都输出3。"
+    },
+    {
+      "id": 5,
+      "question": "如何正确解决循环中的闭包问题？",
+      "options": [
+        "A. 使用var代替let",
+        "B. 使用let声明循环变量",
+        "C. 在循环外部声明变量",
+        "D. 使用setTimeout的第三个参数传递参数"
+      ],
+      "correct_answer": 1,
+      "explanation": "使用let声明循环变量可以解决这个问题，因为let具有块级作用域，每次循环迭代都会创建一个新的绑定。立即执行函数（IIFE）也是另一种解决方案。"
+    },
+    {
+      "id": 6,
+      "question": "闭包可能导致什么问题？",
+      "options": [
+        "A. 性能显著下降",
+        "B. 内存泄漏",
+        "C. 语法错误",
+        "D. 无法进行代码压缩"
+      ],
+      "correct_answer": 1,
+      "explanation": "闭包可能导致内存泄漏，因为闭包会保持对外部作用域变量的引用，阻止垃圾回收器释放这些内存。不过现代JavaScript引擎对此有很好的优化。"
+    },
+    {
+      "id": 7,
+      "question": "以下哪个是闭包的典型应用场景？",
+      "options": [
+        "A. 创建私有变量和方法",
+        "B. 提高循环性能",
+        "C. 减少代码行数",
+        "D. 避免使用全局变量"
+      ],
+      "correct_answer": 0,
+      "explanation": "闭包的典型应用场景包括创建私有变量和方法（模块模式）、工厂函数、事件处理器等。通过闭包可以实现数据封装和信息隐藏。"
+    },
+    {
+      "id": 8,
+      "question": "关于暂时性死区（Temporal Dead Zone），以下说法正确的是？",
+      "options": [
+        "A. 只影响var声明的变量",
+        "B. let和const声明的变量在声明前访问会抛出ReferenceError",
+        "C. 暂时性死区只存在于全局作用域",
+        "D. 暂时性死区可以通过'use strict'避免"
+      ],
+      "correct_answer": 1,
+      "explanation": "暂时性死区是指let和const声明的变量在声明之前不能被访问，否则会抛出ReferenceError。这是ES6引入的重要特性，有助于避免变量提升带来的问题。"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "20-08",
+  "title": "文件操作与预处理器",
+  "slug": "lesson-08-files-preprocessor",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 8,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["20-05"],
+  "tags": ["file-io", "fopen", "fread", "preprocessor", "macros", "conditional-compilation"],
+  "description": "学习 C 语言的文件操作（fopen/fread/fwrite/fclose）和预处理器（#define、#ifdef、#include），掌握配置文件读写和条件编译。",
+  "learning_objectives": [
+    "掌握文件的打开、读写和关闭操作",
+    "理解文本模式和二进制模式的区别",
+    "掌握预处理指令（#define、#ifdef、#include）",
+    "能够编写带条件编译的跨平台代码"
+  ]
+}

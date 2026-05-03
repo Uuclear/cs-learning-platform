@@ -1,0 +1,37 @@
+{
+  "id": "17-07",
+  "title": "三极管与放大电路：信号放大的秘密",
+  "slug": "lesson-07-transistors-amplifiers",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 7,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["17-04"],
+  "tags": ["transistor", "amplifier", "bjt", "biasing", "gain"],
+  "author": "CS Professor",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "published",
+  "description": "学习三极管（BJT）的工作原理和放大特性，掌握共射极放大电路的设计方法。",
+  "learning_objectives": [
+    "理解三极管的三种工作状态（截止、放大、饱和）",
+    "掌握共射极放大电路的结构和放大倍数计算",
+    "理解偏置电路的作用和设计方法",
+    "能够用三极管搭建简单的音频放大电路"
+  ],
+  "files": [
+    "index.mdx",
+    "code/examples/example-01.py",
+    "code/examples/example-02.py",
+    "code/examples/example-03.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ]
+}

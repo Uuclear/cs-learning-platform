@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "JavaScript最初是由哪家公司开发的？",
+      "options": [
+        "微软 (Microsoft)",
+        "网景 (Netscape)",
+        "谷歌 (Google)",
+        "苹果 (Apple)"
+      ],
+      "answer": 1,
+      "explanation": "JavaScript最初由网景公司的Brendan Eich在1995年开发，最初名为LiveScript。"
+    },
+    {
+      "question": "以下哪个关键字声明的变量具有块级作用域？",
+      "options": [
+        "var",
+        "let",
+        "const",
+        "let 和 const 都是"
+      ],
+      "answer": 3,
+      "explanation": "let和const都具有块级作用域（在{}内有效），而var具有函数作用域。"
+    },
+    {
+      "question": "在JavaScript中，typeof null 返回什么？",
+      "options": [
+        "null",
+        "undefined",
+        "object",
+        "string"
+      ],
+      "answer": 2,
+      "explanation": "这是一个JavaScript的历史bug，typeof null返回'object'，但实际上null是一个独立的数据类型。"
+    },
+    {
+      "question": "以下哪种方式是现代JavaScript推荐的变量声明方式？",
+      "options": [
+        "优先使用var",
+        "优先使用let",
+        "优先使用const",
+        "三种方式都可以随意使用"
+      ],
+      "answer": 2,
+      "explanation": "现代JavaScript开发中，优先使用const声明变量，只有在确实需要重新赋值时才使用let，尽量避免使用var。"
+    },
+    {
+      "question": "如何在浏览器中打开JavaScript控制台？",
+      "options": [
+        "按F12键，然后选择Console标签",
+        "按Ctrl+C",
+        "在地址栏输入javascript:console",
+        "右键点击页面选择'打开控制台'"
+      ],
+      "answer": 0,
+      "explanation": "按F12键（或右键选择'检查'）打开开发者工具，然后选择Console标签即可访问JavaScript控制台。"
+    },
+    {
+      "question": "以下代码的输出是什么？\n```javascript\nlet x = 5;\nconsole.log(typeof x);\n```",
+      "options": [
+        "number",
+        "string",
+        "integer",
+        "5"
+      ],
+      "answer": 0,
+      "explanation": "在JavaScript中，所有数字都是Number类型，typeof操作符返回'number'。"
+    },
+    {
+      "question": "JavaScript和Java的关系是什么？",
+      "options": [
+        "JavaScript是Java的子集",
+        "Java是JavaScript的超集",
+        "两者完全无关，只是名字相似",
+        "JavaScript是在Java基础上开发的"
+      ],
+      "answer": 2,
+      "explanation": "尽管名字相似，但JavaScript和Java是完全不同的编程语言，它们的关系就像'汽车'和'地毯'一样——毫无关系！"
+    },
+    {
+      "question": "以下哪个表达式的结果是true？",
+      "options": [
+        "Boolean('')",
+        "Boolean(0)",
+        "Boolean(null)",
+        "Boolean('false')"
+      ],
+      "answer": 3,
+      "explanation": "在JavaScript中，只有少数几个值转换为布尔值时是false：空字符串、0、null、undefined、NaN和false本身。非空字符串'false'转换为true。"
+    }
+  ]
+}

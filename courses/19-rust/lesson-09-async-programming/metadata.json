@@ -1,0 +1,21 @@
+{
+  "id": "19-09",
+  "title": "异步编程：Tokio与async/await",
+  "slug": "lesson-09-async-programming",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 9,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 40,
+  "prerequisites": ["19-08"],
+  "tags": ["async", "await", "tokio", "futures", "async-runtime", "io"],
+  "description": "学习 Rust 的异步编程模型，掌握 async/await 语法、Future trait 和 Tokio 运行时，能够编写高效的异步 I/O 程序。",
+  "learning_objectives": [
+    "理解 Future trait 和 async/await 语法",
+    "掌握 Tokio 运行时的配置和使用",
+    "能够编写异步网络请求和文件 I/O 代码",
+    "理解 async 与线程模型的区别和适用场景"
+  ]
+}

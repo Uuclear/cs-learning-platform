@@ -1,0 +1,21 @@
+{
+  "id": "19-03",
+  "title": "结构体与枚举：数据建模",
+  "slug": "lesson-03-structs-enums",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 3,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["19-02"],
+  "tags": ["structs", "enums", "data-modeling", "impl", "methods"],
+  "description": "学习 Rust 的结构体和枚举类型，掌握 impl 块定义方法，理解元组结构体、单元结构体和带数据的枚举变体。",
+  "learning_objectives": [
+    "掌握结构体的三种定义方式（普通、元组、单元）",
+    "理解枚举类型和带数据的枚举变体",
+    "能够使用 impl 块为结构体定义方法",
+    "理解 Option 和 Result 枚举的用途"
+  ]
+}

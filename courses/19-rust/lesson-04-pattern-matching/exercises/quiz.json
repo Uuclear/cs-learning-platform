@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Rust中的match表达式必须满足什么条件？",
+      "options": [
+        "至少包含一个分支",
+        "必须覆盖所有可能的情况（穷尽性）",
+        "必须包含通配符_",
+        "只能用于枚举类型"
+      ],
+      "answer": 1,
+      "explanation": "Rust的match表达式必须满足穷尽性检查，即覆盖所有可能的情况，这是编译器强制要求的。"
+    },
+    {
+      "question": "以下哪种模式是不可反驳模式（irrefutable pattern）？",
+      "options": [
+        "Some(x)",
+        "(x, y)",
+        "Ok(value)",
+        "1"
+      ],
+      "answer": 1,
+      "explanation": "(x, y)是不可反驳模式，因为它能够匹配任何二元组，而其他选项都是可反驳模式。"
+    },
+    {
+      "question": "if let语句主要用于简化哪种情况的处理？",
+      "options": [
+        "循环遍历数组",
+        "处理Option和Result类型",
+        "字符串匹配",
+        "数学计算"
+      ],
+      "answer": 2,
+      "explanation": "if let主要用于简化Option和Result等枚举类型的处理，避免冗长的match表达式。"
+    },
+    {
+      "question": "在模式匹配中，..的作用是什么？",
+      "options": [
+        "表示范围",
+        "忽略结构体或元组中的剩余字段",
+        "重复模式",
+        "表示可选字段"
+      ],
+      "answer": 3,
+      "explanation": "..用于忽略结构体或元组中的剩余字段，避免需要显式列出所有字段。"
+    },
+    {
+      "question": "以下代码会如何？\nlet Some(x) = some_option;",
+      "options": [
+        "正常编译并运行",
+        "编译错误，因为Some(x)是可反驳模式",
+        "运行时panic",
+        "返回None"
+      ],
+      "answer": 1,
+      "explanation": "这会导致编译错误，因为在let语句中只能使用不可反驳模式，而Some(x)是可反驳模式。"
+    },
+    {
+      "question": "模式守卫（pattern guard）的作用是什么？",
+      "options": [
+        "提高性能",
+        "在模式匹配基础上添加额外条件",
+        "保护内存安全",
+        "简化语法"
+      ],
+      "answer": 1,
+      "explanation": "模式守卫允许在模式匹配的基础上添加额外的条件判断，使用if关键字。"
+    },
+    {
+      "question": "在结构体解构中，如何将字段值绑定到同名变量？",
+      "options": [
+        "Point { x: x, y: y }",
+        "Point { x, y }",
+        "Point(x, y)",
+        "必须显式指定每个绑定"
+      ],
+      "answer": 1,
+      "explanation": "在Rust中，Point { x, y }是Point { x: x, y: y }的简写形式，自动将字段绑定到同名变量。"
+    },
+    {
+      "question": "while let循环最适合处理什么场景？",
+      "options": [
+        "固定次数的循环",
+        "处理可能产生Option的迭代操作",
+        "无限循环",
+        "数组遍历"
+      ],
+      "answer": 1,
+      "explanation": "while let最适合处理像栈弹出、迭代器等可能产生Option的操作，当遇到None时自动退出循环。"
+    }
+  ]
+}

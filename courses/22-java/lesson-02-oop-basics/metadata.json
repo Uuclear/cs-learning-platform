@@ -1,0 +1,21 @@
+{
+  "id": "22-02",
+  "title": "面向对象基础：类、继承、接口",
+  "slug": "lesson-02-oop-basics",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 2,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 30,
+  "prerequisites": ["22-01"],
+  "tags": ["oop", "classes", "inheritance", "interfaces", "encapsulation", "polymorphism"],
+  "description": "学习 Java 的面向对象编程，掌握类与对象、继承、接口和封装、多态的核心概念。",
+  "learning_objectives": [
+    "理解类和对象的关系，掌握类的定义",
+    "掌握继承语法和 super 关键字",
+    "理解接口的概念和实现多继承效果",
+    "掌握封装原则和访问修饰符"
+  ]
+}

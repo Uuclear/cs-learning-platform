@@ -1,0 +1,308 @@
+---
+title: "I/O与NIO"
+description: "学习 Java 的 I/O 和 NIO 系统，掌握字节流、字符流、文件操作和 NIO 的 Channel/Buffer 模型。"
+---
+
+# I/O与NIO：Java中的数据搬运工
+
+## 开场白：水管工的故事
+
+想象一下你家里的水管系统。当你打开水龙头，水流就从水源（比如水库）通过管道流向你的水槽。在这个过程中，水是**数据**，管道就是**流（Stream）**，而水源和水槽分别对应**输入源**和**输出目标**。
+
+在Java的世界里，I/O（Input/Output，输入/输出）系统就是这套精密的"水管网络"。无论是读取文件、写入日志、接收网络数据还是处理用户输入，都离不开这套系统。但随着时代发展，传统的"水管"已经不能满足高性能需求，于是Java引入了NIO（New I/O），就像升级到了现代化的智能管道系统！
+
+今天，我们就来深入探索Java的I/O和NIO世界，学会如何高效地搬运数据。
+
+## 核心概念：字节流 vs 字符流、File、Path、Files
+
+### 字节流与字符流：两种不同的"水管"
+
+Java的I/O系统主要分为两大类：
+
+**1. 字节流（Byte Streams）**
+- 处理原始的8位字节数据
+- 主要类：`InputStream`（输入）和 `OutputStream`（输出）
+- 适用于处理二进制数据，如图片、音频、视频等
+
+**2. 字符流（Character Streams）**
+- 处理16位Unicode字符数据
+- 主要类：`Reader`（输入）和 `Writer`（输出）
+- 适用于处理文本数据，自动处理字符编码转换
+
+简单记忆：**字节流处理"字节"，字符流处理"文字"**。
+
+### File、Path、Files：文件操作的三剑客
+
+随着Java的发展，文件操作API也在不断进化：
+
+**1. java.io.File（传统方式）**
+- Java 1.0就存在的老将
+- 功能有限，很多操作会抛出异常而不是返回布尔值
+- 跨平台兼容性问题较多
+
+**2. java.nio.file.Path（现代路径表示）**
+- Java 7引入的新API
+- 表示文件系统中的路径，不一定是真实存在的文件
+- 提供了丰富的路径操作方法
+
+**3. java.nio.file.Files（现代文件工具类）**
+- 配合Path使用的静态工具类
+- 提供了大量便捷的文件操作方法
+- 支持自动资源管理和更好的异常处理
+
+```java
+// 传统File方式
+File file = new File("example.txt");
+
+// 现代Path方式  
+Path path = Paths.get("example.txt");
+```
+
+## 代码演示：I/O操作实战
+
+让我们通过几个实际例子来看看这些API是如何工作的。
+
+### 示例1：现代文件读写（Files.readString/writeString）
+
+Java 11为我们带来了最简单的文件读写方式：
+
+```java
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+
+public class Example01 {
+    public static void main(String[] args) {
+        Path filePath = Paths.get("hello.txt");
+        
+        // 写入文件 - 超级简单！
+        try {
+            Files.writeString(filePath, "Hello, Java I/O!");
+            System.out.println("文件写入成功！");
+        } catch (IOException e) {
+            System.err.println("写入文件失败: " + e.getMessage());
+        }
+        
+        // 读取文件 - 同样简单！
+        try {
+            String content = Files.readString(filePath);
+            System.out.println("文件内容: " + content);
+        } catch (IOException e) {
+            System.err.println("读取文件失败: " + e.getMessage());
+        }
+    }
+}
+```
+
+### 示例2：BufferedReader逐行处理大文件
+
+当处理大文件时，我们通常需要逐行读取以节省内存：
+
+```java
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Example02 {
+    public static void main(String[] args) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("large-file.txt"))) {
+            String line;
+            int lineNumber = 0;
+            
+            // 逐行读取
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                System.out.println("第" + lineNumber + "行: " + line);
+                
+                // 如果文件很大，可以在这里添加处理逻辑
+                // 比如只处理包含特定关键词的行
+                if (line.contains("ERROR")) {
+                    System.out.println("发现错误日志！");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("读取文件失败: " + e.getMessage());
+        }
+    }
+}
+```
+
+注意这里使用了**try-with-resources**语法，它会自动关闭流，避免资源泄漏。
+
+## 深入理解：NIO的Channel和Buffer模型
+
+NIO的核心是**Channel**和**Buffer**模型，这与传统的流模型有本质区别。
+
+### 传统I/O vs NIO对比
+
+| 特性 | 传统I/O | NIO |
+|------|---------|-----|
+| 方向性 | 单向（InputStream/OutputStream） | 双向（Channel可读可写） |
+| 数据传输 | 流式传输 | 基于Buffer的块传输 |
+| 阻塞模式 | 阻塞式 | 支持非阻塞式 |
+| 性能 | 相对较低 | 更高，支持零拷贝 |
+
+### Buffer：数据的临时仓库
+
+Buffer就像一个临时的数据仓库，所有数据都要先放入Buffer，再通过Channel传输。
+
+```java
+// 创建一个容量为1024字节的ByteBuffer
+ByteBuffer buffer = ByteBuffer.allocate(1024);
+
+// 写入数据到Buffer
+buffer.put("Hello, NIO!".getBytes());
+
+// 切换到读模式
+buffer.flip();
+
+// 从Buffer读取数据
+byte[] bytes = new byte[buffer.remaining()];
+buffer.get(bytes);
+String message = new String(bytes);
+```
+
+### Channel：数据的高速公路
+
+Channel是连接数据源和目标的通道，可以同时进行读写操作。
+
+```java
+// 文件Channel示例
+try (FileChannel inputChannel = FileChannel.open(inputPath, StandardOpenOption.READ);
+     FileChannel outputChannel = FileChannel.open(outputPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+    
+    // 直接在Channel间传输数据
+    inputChannel.transferTo(0, inputChannel.size(), outputChannel);
+}
+```
+
+## 实际应用：文件复制与CSV读写
+
+### 高效文件复制
+
+使用NIO可以实现高效的文件复制：
+
+```java
+// 使用Files.copy() - 最简单
+Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+// 使用FileChannel - 最高效（支持零拷贝）
+try (FileChannel source = FileChannel.open(sourcePath, StandardOpenOption.READ);
+     FileChannel target = FileChannel.open(targetPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
+    source.transferTo(0, source.size(), target);
+}
+```
+
+### CSV文件读写
+
+处理CSV文件是常见的需求：
+
+```java
+// 读取CSV文件
+List<String> lines = Files.readAllLines(csvPath);
+for (String line : lines) {
+    String[] fields = line.split(",");
+    // 处理每个字段
+}
+
+// 写入CSV文件
+List<String> csvLines = Arrays.asList(
+    "姓名,年龄,城市",
+    "张三,25,北京",
+    "李四,30,上海"
+);
+Files.write(csvPath, csvLines, StandardCharsets.UTF_8);
+```
+
+## 常见误区：避坑指南
+
+### 1. 不关闭流导致资源泄漏
+
+**错误做法：**
+```java
+FileInputStream fis = new FileInputStream("file.txt");
+// 忘记关闭流！
+```
+
+**正确做法：**
+```java
+// 使用try-with-resources自动关闭
+try (FileInputStream fis = new FileInputStream("file.txt")) {
+    // 使用流
+}
+```
+
+### 2. 混用字节流和字符流
+
+**错误做法：**
+```java
+// 用字节流读取文本文件，可能乱码
+FileInputStream fis = new FileInputStream("text.txt");
+```
+
+**正确做法：**
+```java
+// 用字符流读取文本文件
+FileReader reader = new FileReader("text.txt", StandardCharsets.UTF_8);
+```
+
+### 3. 忽略字符编码
+
+总是明确指定字符编码，避免跨平台乱码问题：
+
+```java
+// 明确指定UTF-8编码
+Files.readString(path, StandardCharsets.UTF_8);
+```
+
+### 4. 处理大文件时一次性加载到内存
+
+对于大文件，应该使用流式处理或分块处理：
+
+```java
+// 错误：一次性加载大文件到内存
+String content = Files.readString(largeFilePath); // 可能OOM！
+
+// 正确：逐行处理
+try (BufferedReader reader = Files.newBufferedReader(largeFilePath)) {
+    // 逐行处理
+}
+```
+
+## 动手实践
+
+现在轮到你动手了！完成以下练习：
+
+**练习1：文件内容统计**
+- 编写程序读取一个文本文件
+- 统计文件的总行数、单词数和字符数
+- 使用现代Files API和try-with-resources
+
+**练习2：日志文件分析**
+- 创建一个模拟的日志文件（包含INFO、WARN、ERROR级别）
+- 编写程序读取日志文件，统计各错误级别的数量
+- 将统计结果写入新的报告文件
+
+**练习3：高效文件备份**
+- 实现一个文件备份功能
+- 使用NIO的FileChannel进行高效复制
+- 添加时间戳到备份文件名
+
+## 小结与思考
+
+今天我们深入学习了Java的I/O和NIO系统：
+
+1. **理解了字节流和字符流的区别**：字节流处理二进制数据，字符流处理文本数据
+2. **掌握了现代文件操作API**：Path和Files提供了更简洁、安全的文件操作方式
+3. **了解了NIO的Channel/Buffer模型**：这是高性能I/O的基础
+4. **学会了避免常见误区**：资源管理、编码处理、大文件处理等
+
+**思考题：**
+- 为什么NIO比传统I/O性能更好？
+- 在什么场景下应该选择传统I/O而不是NIO？
+- 如何处理不同操作系统的路径分隔符差异？
+
+记住，I/O操作虽然看起来简单，但却是程序性能的关键瓶颈之一。掌握这些知识，你就能写出更高效、更健壮的Java程序！
+
+下次课程，我们将探索Java的并发编程，学习如何让程序同时做多件事情。敬请期待！

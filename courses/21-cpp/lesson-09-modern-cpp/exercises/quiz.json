@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "以下关于 auto 关键字的说法，哪一个是正确的？",
+      "options": [
+        "auto 会在运行时推导变量类型，影响性能",
+        "auto 只能用于基本数据类型，不能用于复杂类型",
+        "auto 在编译时推导类型，不会影响运行时性能",
+        "使用 auto 会导致类型不安全，应该避免使用"
+      ],
+      "answer": 2,
+      "explanation": "auto 在编译时进行类型推导，生成的代码与显式指定类型完全相同，不会影响运行时性能。"
+    },
+    {
+      "question": "Lambda 表达式中的捕获列表 [x, &y] 表示什么？",
+      "options": [
+        "按值捕获 x，按引用捕获 y",
+        "按引用捕获 x，按值捕获 y",
+        "按值捕获 x 和 y",
+        "按引用捕获 x 和 y"
+      ],
+      "answer": 0,
+      "explanation": "在 Lambda 捕获列表中，变量名前没有 & 表示按值捕获，有 & 表示按引用捕获。"
+    },
+    {
+      "question": "std::optional 的主要用途是什么？",
+      "options": [
+        "替代指针，提供更好的内存管理",
+        "表示可能不存在的值，提供类型安全的空值处理",
+        "提高容器的性能",
+        "简化模板编程"
+      ],
+      "answer": 1,
+      "explanation": "std::optional 用于表示一个值可能存在也可能不存在的情况，相比使用特殊值或指针更安全。"
+    },
+    {
+      "question": "结构化绑定的语法 auto [x, y] = point; 要求 point 必须是什么类型？",
+      "options": [
+        "必须是 std::pair 或 std::tuple 类型",
+        "必须是数组类型",
+        "必须是具有公开成员变量的结构体",
+        "可以是任何可解构的类型，包括 pair、tuple、数组和某些结构体"
+      ],
+      "answer": 3,
+      "explanation": "结构化绑定支持多种类型，包括 std::pair、std::tuple、数组，以及满足特定条件的结构体。"
+    },
+    {
+      "question": "std::string_view 的主要优势是什么？",
+      "options": [
+        "提供更多的字符串操作函数",
+        "自动管理字符串内存",
+        "避免不必要的字符串复制，提高性能",
+        "支持 Unicode 字符串处理"
+      ],
+      "answer": 2,
+      "explanation": "std::string_view 是一个轻量级的字符串视图，不拥有数据，因此可以避免不必要的字符串复制。"
+    },
+    {
+      "question": "以下哪个代码片段正确使用了范围 for 循环？",
+      "options": [
+        "for (auto i = 0; i < vec.size(); ++i) { /* ... */ }",
+        "for (const auto& item : container) { /* ... */ }",
+        "for (auto item in container) { /* ... */ }",
+        "for each (auto item in container) { /* ... */ }"
+      ],
+      "answer": 1,
+      "explanation": "C++11 的范围 for 循环语法是 'for (declaration : range)'，其中 declaration 可以是引用或值。"
+    },
+    {
+      "question": "初始化列表 {} 在 C++11 中的主要作用是什么？",
+      "options": [
+        "只能用于数组初始化",
+        "提供统一的初始化语法，适用于各种类型",
+        "替代传统的构造函数调用",
+        "只用于 STL 容器的初始化"
+      ],
+      "answer": 1,
+      "explanation": "C++11 引入了统一初始化语法，使用大括号 {} 可以一致地初始化各种类型的对象。"
+    },
+    {
+      "question": "使用 std::string_view 时需要注意什么重要问题？",
+      "options": [
+        "string_view 会自动复制底层数据",
+        "string_view 拥有其指向的数据",
+        "必须确保底层数据的生命周期长于 string_view",
+        "string_view 不能与 std::string 互操作"
+      ],
+      "answer": 2,
+      "explanation": "std::string_view 不拥有数据，只是一个视图，因此必须确保它所指向的数据在其使用期间保持有效。"
+    }
+  ]
+}

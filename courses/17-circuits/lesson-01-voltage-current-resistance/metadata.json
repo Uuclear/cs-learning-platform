@@ -1,0 +1,25 @@
+{
+  "id": "17-01",
+  "title": "电压、电流与电阻：电路的三剑客",
+  "slug": "lesson-01-voltage-current-resistance",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 1,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": [],
+  "tags": ["voltage", "current", "resistance", "circuit-basics", "electricity"],
+  "author": "sub-agent",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "学习电压、电流和电阻的基本概念，它们是电路分析的三要素，理解它们的关系是电路学习的基础。",
+  "learning_objectives": ["理解电压、电流、电阻的物理含义", "掌握它们的单位和测量方法", "了解三者之间的基本关系"],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": { "quiz_questions": 8, "programming_challenges": 2 }
+  }
+}

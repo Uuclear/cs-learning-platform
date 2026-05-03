@@ -1,0 +1,315 @@
+---
+title: "Promise与async/await"
+description: "深入学习Promise对象和async/await语法，掌握现代JavaScript异步编程的最佳实践。"
+---
+
+# Promise与async/await
+
+## 开场白：为什么我们需要异步编程？
+
+同学们好！今天我们来聊聊JavaScript中一个非常重要但又常常让人困惑的概念——异步编程。想象一下这样的场景：你点了一份外卖，是选择站在门口一直等着（同步），还是继续做自己的事情，等外卖小哥打电话告诉你到了再下楼取（异步）？
+
+在JavaScript的世界里，我们经常需要处理一些耗时的操作，比如：
+- 从服务器获取数据（网络请求）
+- 读取文件内容
+- 数据库查询
+- 定时器操作
+
+如果这些操作都是同步的，那么我们的程序就会像那个站在门口等外卖的人一样，什么事情都做不了，直到操作完成。这显然不是我们想要的！
+
+这就是Promise和async/await登场的时候了。它们就像我们的"外卖订单系统"，让我们可以下单后继续做其他事情，等结果准备好时再处理。
+
+## 核心概念：Promise的三种状态
+
+Promise是JavaScript中处理异步操作的核心对象。它有三种状态：
+
+1. **pending（等待中）**：初始状态，既不是成功也不是失败
+2. **fulfilled（已成功）**：操作成功完成
+3. **rejected（已失败）**：操作失败
+
+```javascript
+// 创建一个Promise
+const myPromise = new Promise((resolve, reject) => {
+  // 异步操作
+  setTimeout(() => {
+    const success = Math.random() > 0.5;
+    if (success) {
+      resolve("操作成功！");
+    } else {
+      reject("操作失败！");
+    }
+  }, 1000);
+});
+```
+
+Promise的状态一旦改变，就无法再次改变。也就是说，一个Promise只能从pending变成fulfilled或rejected，不能反复横跳。
+
+### Promise的链式调用
+
+Promise最强大的地方在于它可以链式调用。每次调用`.then()`都会返回一个新的Promise，这样我们就可以把多个异步操作串联起来：
+
+```javascript
+fetchUserData()
+  .then(user => fetchUserPosts(user.id))
+  .then(posts => processPosts(posts))
+  .then(result => console.log("处理完成:", result))
+  .catch(error => console.error("出错了:", error));
+```
+
+## 代码演示：Promise基础与链式调用
+
+让我们通过一个具体的例子来理解Promise的工作原理：
+
+```javascript
+// example-01.js - Promise基础与链式调用
+console.log("=== Promise基础演示 ===");
+
+// 模拟网络请求的函数
+function fetchData(url, delay = 1000) {
+  return new Promise((resolve, reject) => {
+    console.log(`开始请求: ${url}`);
+    setTimeout(() => {
+      const success = Math.random() > 0.3; // 70%成功率
+      if (success) {
+        resolve({ url, data: `来自${url}的数据`, timestamp: Date.now() });
+      } else {
+        reject(new Error(`请求失败: ${url}`));
+      }
+    }, delay);
+  });
+}
+
+// 基本使用
+fetchData("/api/users")
+  .then(response => {
+    console.log("用户数据:", response.data);
+    return fetchData("/api/posts", 800); // 链式调用
+  })
+  .then(response => {
+    console.log("文章数据:", response.data);
+    return fetchData("/api/comments", 600);
+  })
+  .then(response => {
+    console.log("评论数据:", response.data);
+    console.log("所有数据获取完成！");
+  })
+  .catch(error => {
+    console.error("请求链中出现错误:", error.message);
+  });
+
+// 并发请求示例
+console.log("\n=== 并发请求演示 ===");
+Promise.all([
+  fetchData("/api/users", 500),
+  fetchData("/api/posts", 700),
+  fetchData("/api/comments", 600)
+])
+  .then(results => {
+    console.log("所有并发请求完成:");
+    results.forEach((result, index) => {
+      console.log(`  请求${index + 1}:`, result.data);
+    });
+  })
+  .catch(error => {
+    console.error("并发请求中有一个失败:", error.message);
+  });
+```
+
+运行这个例子，你会发现Promise让异步代码变得非常清晰和可控！
+
+## 深入理解：async/await语法糖
+
+虽然Promise已经很好用了，但是有时候链式调用还是会显得有点复杂。这时候，async/await就派上用场了！
+
+async/await实际上是Promise的语法糖，它让我们可以用同步的方式写异步代码。想象一下，这就像等快递时，你不用一直刷新物流信息，而是可以直接"等待"快递到达，然后继续下一步。
+
+```javascript
+// 使用async/await重写上面的例子
+async function fetchAllData() {
+  try {
+    console.log("开始获取用户数据...");
+    const userData = await fetchData("/api/users");
+    console.log("用户数据:", userData.data);
+    
+    console.log("开始获取文章数据...");
+    const postData = await fetchData("/api/posts", 800);
+    console.log("文章数据:", postData.data);
+    
+    console.log("开始获取评论数据...");
+    const commentData = await fetchData("/api/comments", 600);
+    console.log("评论数据:", commentData.data);
+    
+    console.log("所有数据获取完成！");
+    return { userData, postData, commentData };
+  } catch (error) {
+    console.error("获取数据过程中出错:", error.message);
+    throw error; // 重新抛出错误，让调用者处理
+  }
+}
+```
+
+### async/await的优势
+
+1. **代码更简洁**：看起来就像同步代码
+2. **错误处理更直观**：可以使用try-catch
+3. **调试更容易**：断点调试更自然
+4. **逻辑更清晰**：避免回调地狱
+
+## 实际应用：fetch API与真实场景
+
+在实际开发中，我们最常遇到的异步操作就是网络请求。现代浏览器提供了`fetch` API，它本身就是基于Promise的：
+
+```javascript
+// 获取用户信息并显示
+async function displayUserInfo(userId) {
+  try {
+    // 获取用户基本信息
+    const userResponse = await fetch(`/api/users/${userId}`);
+    if (!userResponse.ok) {
+      throw new Error(`HTTP错误! 状态: ${userResponse.status}`);
+    }
+    const user = await userResponse.json();
+    
+    // 同时获取用户的帖子和关注列表
+    const [postsResponse, followsResponse] = await Promise.all([
+      fetch(`/api/users/${userId}/posts`),
+      fetch(`/api/users/${userId}/follows`)
+    ]);
+    
+    const posts = await postsResponse.json();
+    const follows = await followsResponse.json();
+    
+    // 更新UI
+    updateUserInfo(user);
+    updatePostsList(posts);
+    updateFollowsList(follows);
+    
+  } catch (error) {
+    console.error("加载用户信息失败:", error);
+    showErrorMessage("无法加载用户信息，请稍后重试");
+  }
+}
+```
+
+### 并发控制方法
+
+除了`Promise.all`，我们还有其他有用的并发控制方法：
+
+- **Promise.allSettled()**：等待所有Promise完成，无论成功还是失败
+- **Promise.race()**：返回第一个完成的Promise的结果
+- **Promise.any()**：返回第一个成功的Promise的结果
+
+```javascript
+// 超时控制示例
+function withTimeout(promise, timeoutMs) {
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error("请求超时")), timeoutMs);
+  });
+  
+  return Promise.race([promise, timeoutPromise]);
+}
+
+// 使用示例
+async function fetchWithTimeout(url) {
+  try {
+    const data = await withTimeout(fetch(url), 5000);
+    return await data.json();
+  } catch (error) {
+    console.error("请求超时或失败:", error.message);
+  }
+}
+```
+
+## 常见误区与最佳实践
+
+### 误区1：忘记处理错误
+
+```javascript
+// ❌ 错误做法：没有错误处理
+async function badExample() {
+  const data = await fetchData("/api/data");
+  console.log(data);
+}
+
+// ✅ 正确做法：始终处理错误
+async function goodExample() {
+  try {
+    const data = await fetchData("/api/data");
+    console.log(data);
+  } catch (error) {
+    console.error("处理数据时出错:", error);
+  }
+}
+```
+
+### 误区2：不必要的async/await
+
+```javascript
+// ❌ 不必要的await（如果不需要立即使用结果）
+async function unnecessaryAwait() {
+  await someAsyncFunction(); // 如果后面不依赖这个结果
+  return anotherAsyncFunction(); // 可以直接返回Promise
+}
+
+// ✅ 更好的做法
+function betterApproach() {
+  someAsyncFunction(); // fire and forget
+  return anotherAsyncFunction();
+}
+```
+
+### 误区3：串行 vs 并行
+
+```javascript
+// ❌ 串行执行（效率低）
+async function serialExecution() {
+  const user = await fetchUser();
+  const posts = await fetchPosts();
+  const comments = await fetchComments();
+  return { user, posts, comments };
+}
+
+// ✅ 并行执行（效率高）
+async function parallelExecution() {
+  const [user, posts, comments] = await Promise.all([
+    fetchUser(),
+    fetchPosts(),
+    fetchComments()
+  ]);
+  return { user, posts, comments };
+}
+```
+
+## 动手实践：编程挑战
+
+现在让我们通过两个实际的编程挑战来巩固所学知识：
+
+### 挑战1：实现一个简单的图片加载器
+
+创建一个函数，能够同时加载多张图片，并在所有图片加载完成后执行回调。如果任何一张图片加载失败，应该能够优雅地处理错误。
+
+### 挑战2：实现API请求重试机制
+
+创建一个函数，能够在请求失败时自动重试最多3次，每次重试之间有适当的延迟。如果所有重试都失败，才抛出最终的错误。
+
+这些挑战的答案可以在`solutions`目录中找到。
+
+## 小结与思考
+
+今天我们深入学习了JavaScript中的Promise和async/await：
+
+1. **Promise是异步编程的基础**，它有三种状态：pending、fulfilled、rejected
+2. **链式调用**让多个异步操作可以有序执行
+3. **async/await是Promise的语法糖**，让异步代码看起来像同步代码
+4. **并发控制**方法如Promise.all、Promise.race等能帮助我们更好地管理多个异步操作
+5. **错误处理**在异步编程中至关重要，不要忘记使用try-catch或.catch()
+
+记住，异步编程就像点外卖——你下单后可以继续做其他事情，等结果准备好时再处理。Promise就是你的订单号，async/await就是你的智能提醒系统！
+
+### 思考题
+
+1. 在什么情况下应该使用Promise.all而不是单独的await？
+2. 如何处理那些可能永远不会resolve的Promise（比如网络请求卡住）？
+3. async/await和传统的回调函数相比，有什么优势和劣势？
+
+希望大家通过今天的课程，能够更加自信地处理JavaScript中的异步操作。下节课我们将学习更高级的异步模式和最佳实践！

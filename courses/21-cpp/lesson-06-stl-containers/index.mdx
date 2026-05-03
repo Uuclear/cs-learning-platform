@@ -1,0 +1,385 @@
+---
+title: STL容器：vector、map、set
+description: 学习 C++ STL 的标准容器库，掌握 vector、list、map、set 等常用容器及其迭代器的使用。
+---
+
+# STL容器：vector、map、set
+
+## 开场白：程序员的瑞士军刀
+
+想象一下你是一个准备远足的冒险家。你会带什么工具？一把瑞士军刀！为什么？因为它集成了各种实用的小工具——剪刀、小刀、开瓶器、螺丝刀……每种工具都有其特定用途，但都装在一个紧凑的包里。
+
+C++ STL（Standard Template Library，标准模板库）就是程序员的"瑞士军刀"！它提供了各种高效、可靠的容器和算法，让你不必每次都从头造轮子。今天我们要学习的就是STL中最常用的几种容器：`vector`、`map`和`set`。掌握了它们，你就拥有了处理大部分数据存储和操作问题的强大武器！
+
+## 核心概念：STL容器家族
+
+STL容器可以分为三大类，每类都有其独特的特性和适用场景：
+
+### 1. 序列容器（Sequence Containers）
+
+序列容器按线性顺序存储元素，就像一排整齐的座位。
+
+- **`vector`**：动态数组，支持随机访问，尾部插入/删除效率高
+- **`list`**：双向链表，任意位置插入/删除效率高，但不支持随机访问
+- **`deque`**：双端队列，两端插入/删除都高效
+
+### 2. 关联容器（Associative Containers）
+
+关联容器通过键值对或唯一值来组织数据，内部通常使用平衡二叉搜索树（红黑树）实现，保证元素有序。
+
+- **`set`**：存储唯一值的有序集合
+- **`map`**：存储键值对的有序映射
+- **`multiset`**：允许重复值的有序集合
+- **`multimap`**：允许重复键的有序映射
+
+### 3. 无序容器（Unordered Containers）
+
+无序容器在C++11中引入，使用哈希表实现，提供平均常数时间的查找性能，但不保证元素顺序。
+
+- **`unordered_set`**：基于哈希的唯一值集合
+- **`unordered_map`**：基于哈希的键值对映射
+- **`unordered_multiset`**：基于哈希的可重复值集合
+- **`unordered_multimap`**：基于哈希的可重复键映射
+
+选择哪种容器？记住这个简单规则：
+- 需要快速随机访问？选 `vector`
+- 需要保持元素有序？选 `set`/`map`
+- 需要最快查找速度且不在乎顺序？选 `unordered_set`/`unordered_map`
+- 需要在中间频繁插入删除？选 `list`
+
+## 代码演示：STL容器实战
+
+让我们通过具体的代码示例来看看这些容器是如何工作的。
+
+### Vector：动态数组的魅力
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    // 创建一个空的vector
+    std::vector<int> numbers;
+    
+    // 添加元素
+    numbers.push_back(10);
+    numbers.push_back(20);
+    numbers.push_back(30);
+    
+    // 访问元素（两种方式）
+    std::cout << "第一个元素: " << numbers[0] << std::endl;
+    std::cout << "第二个元素: " << numbers.at(1) << std::endl;
+    
+    // 获取大小
+    std::cout << "vector大小: " << numbers.size() << std::endl;
+    
+    // 遍历元素
+    for (size_t i = 0; i < numbers.size(); ++i) {
+        std::cout << numbers[i] << " ";
+    }
+    std::cout << std::endl;
+    
+    return 0;
+}
+```
+
+### Map：键值对的魔法
+
+```cpp
+#include <iostream>
+#include <map>
+#include <string>
+
+int main() {
+    // 创建一个字符串到整数的映射
+    std::map<std::string, int> ageMap;
+    
+    // 插入数据
+    ageMap["张三"] = 25;
+    ageMap["李四"] = 30;
+    ageMap["王五"] = 28;
+    
+    // 访问数据
+    std::cout << "张三的年龄: " << ageMap["张三"] << std::endl;
+    
+    // 检查是否存在
+    if (ageMap.find("赵六") != ageMap.end()) {
+        std::cout << "找到了赵六!" << std::endl;
+    } else {
+        std::cout << "没找到赵六，他可能还在妈妈肚子里~" << std::endl;
+    }
+    
+    // 遍历map（自动按键排序）
+    for (const auto& pair : ageMap) {
+        std::cout << pair.first << ": " << pair.second << "岁" << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+### Set：去重专家
+
+```cpp
+#include <iostream>
+#include <set>
+
+int main() {
+    // 创建一个set
+    std::set<int> uniqueNumbers;
+    
+    // 插入重复数据
+    uniqueNumbers.insert(5);
+    uniqueNumbers.insert(3);
+    uniqueNumbers.insert(5); // 重复！会被自动忽略
+    uniqueNumbers.insert(1);
+    uniqueNumbers.insert(3); // 又重复了！
+    
+    // set会自动去重并排序
+    std::cout << "set中的元素（已排序且无重复）: ";
+    for (const auto& num : uniqueNumbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "set大小: " << uniqueNumbers.size() << std::endl; // 输出3，不是5！
+    
+    return 0;
+}
+```
+
+## 深入理解：迭代器与范围for循环
+
+STL的另一个重要概念是**迭代器（Iterator）**。迭代器就像是指向容器中元素的智能指针，让你能够遍历容器而不必关心底层实现细节。
+
+### 传统迭代器用法
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> vec = {1, 2, 3, 4, 5};
+    
+    // 使用迭代器遍历
+    for (auto it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    
+    // 反向遍历
+    for (auto rit = vec.rbegin(); rit != vec.rend(); ++rit) {
+        std::cout << *rit << " ";
+    }
+    std::cout << std::endl;
+    
+    return 0;
+}
+```
+
+### 范围for循环（C++11）
+
+C++11引入了更简洁的范围for循环，让代码更加优雅：
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <map>
+
+int main() {
+    std::vector<int> vec = {1, 2, 3, 4, 5};
+    std::map<std::string, int> scores = {{"Alice", 95}, {"Bob", 87}, {"Charlie", 92}};
+    
+    // 遍历vector
+    for (const auto& value : vec) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+    
+    // 遍历map
+    for (const auto& [name, score] : scores) { // C++17结构化绑定
+        std::cout << name << ": " << score << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+**注意**：在范围for循环中，使用`const auto&`可以避免不必要的拷贝，提高性能！
+
+## 实际应用：解决真实问题
+
+让我们看看如何用STL容器解决实际编程问题。
+
+### 词频统计
+
+统计一段文本中每个单词出现的频率：
+
+```cpp
+#include <iostream>
+#include <map>
+#include <string>
+#include <sstream>
+
+std::map<std::string, int> countWordFrequency(const std::string& text) {
+    std::map<std::string, int> wordCount;
+    std::istringstream iss(text);
+    std::string word;
+    
+    while (iss >> word) {
+        // 简单的单词标准化（转换为小写）
+        for (char& c : word) {
+            c = std::tolower(c);
+        }
+        wordCount[word]++;
+    }
+    
+    return wordCount;
+}
+
+int main() {
+    std::string text = "Hello world hello C++ world programming C++ is fun";
+    auto frequencies = countWordFrequency(text);
+    
+    for (const auto& [word, count] : frequencies) {
+        std::cout << word << ": " << count << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+### 数据去重与排序
+
+从用户输入的一组数字中去除重复并排序：
+
+```cpp
+#include <iostream>
+#include <set>
+#include <vector>
+
+std::vector<int> removeDuplicatesAndSort(const std::vector<int>& input) {
+    // 使用set自动去重和排序
+    std::set<int> uniqueSet(input.begin(), input.end());
+    
+    // 转换回vector
+    return std::vector<int>(uniqueSet.begin(), uniqueSet.end());
+}
+
+int main() {
+    std::vector<int> numbers = {5, 2, 8, 2, 1, 5, 9, 1};
+    auto result = removeDuplicatesAndSort(numbers);
+    
+    std::cout << "去重排序后: ";
+    for (const auto& num : result) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    return 0;
+}
+```
+
+## 常见误区：避坑指南
+
+学习STL容器时，有几个常见的陷阱需要注意：
+
+### 1. 迭代器失效
+
+当你修改容器时，某些操作可能导致迭代器失效：
+
+```cpp
+// 危险！迭代器失效的例子
+std::vector<int> vec = {1, 2, 3, 4, 5};
+for (auto it = vec.begin(); it != vec.end(); ++it) {
+    if (*it == 3) {
+        vec.erase(it); // 删除元素后，it失效了！
+        // 继续使用it会导致未定义行为
+    }
+}
+
+// 正确的做法
+for (auto it = vec.begin(); it != vec.end(); ) {
+    if (*it == 3) {
+        it = vec.erase(it); // erase返回下一个有效迭代器
+    } else {
+        ++it;
+    }
+}
+```
+
+### 2. map vs unordered_map的选择
+
+- **`map`**：基于红黑树，O(log n)查找，元素有序，内存使用较少
+- **`unordered_map`**：基于哈希表，平均O(1)查找，元素无序，可能有哈希冲突
+
+选择建议：
+- 需要有序遍历？选 `map`
+- 只关心查找速度？选 `unordered_map`
+- 内存敏感？通常 `map` 更节省内存
+- 键类型没有好的哈希函数？只能选 `map`
+
+### 3. vector的性能陷阱
+
+```cpp
+// 不好的做法：频繁重新分配内存
+std::vector<int> badVec;
+for (int i = 0; i < 1000000; ++i) {
+    badVec.push_back(i); // 可能触发多次内存重新分配
+}
+
+// 好的做法：预先分配空间
+std::vector<int> goodVec;
+goodVec.reserve(1000000); // 预先分配足够空间
+for (int i = 0; i < 1000000; ++i) {
+    goodVec.push_back(i); // 不会触发重新分配
+}
+```
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+### 练习1：学生成绩管理系统
+
+创建一个程序，使用`map<string, vector<int>>`来存储每个学生的多门课程成绩。实现以下功能：
+- 添加学生和成绩
+- 计算每个学生的平均分
+- 找出最高分的学生
+
+### 练习2：购物车实现
+
+使用`map<string, int>`实现一个简单的购物车，其中键是商品名称，值是购买数量。支持：
+- 添加商品到购物车
+- 从购物车移除商品
+- 显示购物车总金额（假设你知道每个商品的价格）
+
+### 练习3：电话簿
+
+使用`map<string, string>`实现电话簿，支持：
+- 添加联系人
+- 查找联系人电话
+- 列出所有联系人（按姓名排序）
+
+## 小结与思考
+
+今天我们学习了C++ STL中最常用的三种容器：
+
+- **`vector`**：动态数组，适合需要随机访问和尾部操作的场景
+- **`map`**：有序键值对映射，适合需要按键排序的关联数据
+- **`set`**：有序唯一值集合，适合去重和排序需求
+
+记住选择容器的关键原则：
+1. **考虑访问模式**：随机访问、顺序访问还是按键访问？
+2. **考虑操作频率**：插入、删除、查找哪个操作最频繁？
+3. **考虑内存使用**：不同容器的内存开销不同
+4. **考虑元素顺序**：是否需要保持特定顺序？
+
+STL容器是C++程序员的必备工具，熟练掌握它们会让你的代码更加简洁、高效和可靠。记住，最好的容器不是功能最多的那个，而是最适合你当前问题的那个！
+
+**思考题**：
+1. 如果你需要频繁在容器中间插入和删除元素，应该选择哪种容器？
+2. `unordered_map`在什么情况下性能可能比`map`差？
+3. 为什么`vector`的`push_back`操作在某些情况下会很慢？
+
+继续练习，你很快就能成为STL容器的高手！

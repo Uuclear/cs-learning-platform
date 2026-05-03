@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Rust语言的主要设计目标是什么？",
+      "options": [
+        "提供最快的运行时性能",
+        "内存安全且无垃圾回收",
+        "简化Web开发",
+        "替代Python作为脚本语言"
+      ],
+      "answer": 1,
+      "explanation": "Rust的核心设计目标是在不使用垃圾回收的情况下保证内存安全，通过所有权系统在编译时防止内存错误。"
+    },
+    {
+      "question": "在Rust中，变量默认是：",
+      "options": [
+        "可变的（mutable）",
+        "不可变的（immutable）",
+        "动态类型的",
+        "全局可访问的"
+      ],
+      "answer": 1,
+      "explanation": "Rust中的变量默认是不可变的，这有助于防止意外修改并提高代码的安全性。"
+    },
+    {
+      "question": "println! 中的感叹号表示什么？",
+      "options": [
+        "这是一个函数调用",
+        "这是一个宏调用",
+        "这是一个特殊运算符",
+        "这是一个错误指示符"
+      ],
+      "answer": 1,
+      "explanation": "在Rust中，感叹号表示宏调用。宏在编译时展开，提供零成本抽象。"
+    },
+    {
+      "question": "如何声明一个可变变量？",
+      "options": [
+        "var x = 5;",
+        "let mut x = 5;",
+        "mutable x = 5;",
+        "let x = 5; x.mutable = true;"
+      ],
+      "answer": 1,
+      "explanation": "使用 'let mut' 关键字来声明可变变量。"
+    },
+    {
+      "question": "Rust的包管理器和构建工具叫什么？",
+      "options": [
+        "npm",
+        "pip",
+        "cargo",
+        "rustup"
+      ],
+      "answer": 2,
+      "explanation": "Cargo是Rust的官方包管理器和构建工具，用于管理依赖、编译项目和运行测试。"
+    },
+    {
+      "question": "以下哪个不是Rust的基本数据类型？",
+      "options": [
+        "i32",
+        "f64",
+        "string",
+        "bool"
+      ],
+      "answer": 2,
+      "explanation": "Rust的基本字符串类型是'str'（字符串切片），而'String'是堆分配的字符串类型。'string'（小写）不是有效的Rust类型。"
+    },
+    {
+      "question": "Rust如何保证内存安全？",
+      "options": [
+        "使用垃圾回收器",
+        "通过引用计数",
+        "编译时的所有权系统",
+        "运行时边界检查"
+      ],
+      "answer": 2,
+      "explanation": "Rust通过编译时的所有权系统来保证内存安全，无需垃圾回收或运行时开销。"
+    },
+    {
+      "question": "常量在Rust中如何声明？",
+      "options": [
+        "const MAX_VALUE = 100;",
+        "const MAX_VALUE: i32 = 100;",
+        "let const MAX_VALUE = 100;",
+        "static MAX_VALUE = 100;"
+      ],
+      "answer": 1,
+      "explanation": "Rust中的常量使用'const'关键字声明，并且必须指定类型。"
+    }
+  ]
+}

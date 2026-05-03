@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "以下关于std::vector的描述中，哪一项是正确的？",
+      "options": [
+        "vector在任意位置插入元素的时间复杂度都是O(1)",
+        "vector支持随机访问，时间复杂度为O(1)",
+        "vector的内存分配总是连续的，但容量永远不会改变",
+        "vector在头部插入元素比在尾部插入更高效"
+      ],
+      "answer": 1,
+      "explanation": "vector支持O(1)时间复杂度的随机访问，因为它使用连续内存存储。在尾部插入通常是O(1)（摊销），但在中间或头部插入需要移动元素，时间复杂度为O(n)。"
+    },
+    {
+      "question": "std::map和std::unordered_map的主要区别是什么？",
+      "options": [
+        "map使用红黑树实现，元素有序；unordered_map使用哈希表实现，元素无序",
+        "map只能存储整数类型，unordered_map可以存储任何类型",
+        "map的查找时间复杂度是O(1)，unordered_map是O(log n)",
+        "map不支持自定义比较函数，unordered_map支持"
+      ],
+      "answer": 0,
+      "explanation": "map基于红黑树实现，保证元素按键排序，查找时间复杂度为O(log n)。unordered_map基于哈希表实现，元素无序，平均查找时间复杂度为O(1)。"
+    },
+    {
+      "question": "以下哪种情况最适合使用std::set？",
+      "options": [
+        "需要频繁在容器中间插入和删除元素",
+        "需要存储键值对数据",
+        "需要自动去重并保持元素有序",
+        "需要最快的随机访问性能"
+      ],
+      "answer": 2,
+      "explanation": "std::set的主要特点是自动去重和保持元素有序（基于红黑树）。如果需要键值对，应该使用map；如果需要快速随机访问，应该使用vector。"
+    },
+    {
+      "question": "关于STL迭代器，以下说法正确的是？",
+      "options": [
+        "所有容器的迭代器都支持随机访问",
+        "vector的迭代器在调用push_back()后永远不会失效",
+        "修改容器可能导致迭代器失效，需要特别注意",
+        "迭代器和普通指针完全相同，没有任何区别"
+      ],
+      "answer": 3,
+      "explanation": "修改容器（如插入、删除元素）可能导致迭代器失效。例如，vector在重新分配内存时会使所有迭代器失效。迭代器虽然类似指针，但提供了更多安全性和抽象性。"
+    },
+    {
+      "question": "C++11引入的范围for循环（range-based for loop）相比传统for循环的优势是什么？",
+      "options": [
+        "执行速度更快",
+        "语法更简洁，减少出错机会",
+        "支持更多的容器类型",
+        "内存使用更少"
+      ],
+      "answer": 1,
+      "explanation": "范围for循环的主要优势是语法简洁，减少了手动管理迭代器的复杂性，降低了出错的可能性。性能上通常与传统迭代器循环相当。"
+    },
+    {
+      "question": "如果需要统计大量文本中每个单词的出现频率，应该选择哪种容器？",
+      "options": [
+        "std::vector<std::pair<std::string, int>>",
+        "std::list<std::string>",
+        "std::map<std::string, int>",
+        "std::set<std::string>"
+      ],
+      "answer": 2,
+      "explanation": "std::map<std::string, int>是最合适的选择，因为它是键值对容器，键是单词，值是频率。map会自动处理重复键（通过覆盖或累加），并且按键排序便于后续处理。"
+    },
+    {
+      "question": "以下关于vector::reserve()的说法正确的是？",
+      "options": [
+        "reserve()会改变vector的size()返回值",
+        "reserve()可以减少内存重新分配的次数，提高性能",
+        "reserve()只能用于减少vector的容量",
+        "reserve()会初始化新分配的内存"
+      ],
+      "answer": 1,
+      "explanation": "vector::reserve()预分配内存但不改变size()，只改变capacity()。这可以避免在多次push_back操作中频繁重新分配内存，从而提高性能。"
+    },
+    {
+      "question": "在什么情况下std::unordered_map的性能可能比std::map差？",
+      "options": [
+        "当哈希函数质量差导致大量冲突时",
+        "当容器中的元素很少时",
+        "当需要按顺序遍历元素时",
+        "以上所有情况"
+      ],
+      "answer": 3,
+      "explanation": "所有选项都是正确的。哈希冲突会降低unordered_map的性能；元素很少时map的常数因子可能更小；如果需要有序遍历，map可以直接遍历，而unordered_map需要额外排序。"
+    }
+  ]
+}

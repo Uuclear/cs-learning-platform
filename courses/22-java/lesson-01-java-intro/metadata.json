@@ -1,0 +1,21 @@
+{
+  "id": "22-01",
+  "title": "Java入门：Write Once, Run Anywhere",
+  "slug": "lesson-01-java-intro",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 1,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": [],
+  "tags": ["java", "jvm", "hello-world", "bytecode", "write-once-run-anywhere"],
+  "description": "了解 Java 的设计哲学和\"一次编写，到处运行\"理念，掌握 JVM 和字节码概念，搭建 JDK 环境并编写第一个 Java 程序。",
+  "learning_objectives": [
+    "理解 Java 的跨平台原理（JVM 和字节码）",
+    "能够安装 JDK 并配置环境变量",
+    "掌握 Java 程序的基本结构（类、main 方法）",
+    "能够编译和运行第一个 Java 程序"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "19-08",
+  "title": "并发编程：fearless concurrency",
+  "slug": "lesson-08-concurrency",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 8,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 40,
+  "prerequisites": ["19-05"],
+  "tags": ["concurrency", "threads", "channels", "mutex", "arc", "send", "sync"],
+  "description": "学习 Rust 的并发编程模型，掌握线程创建、通道通信、Mutex 和 Arc 共享状态，理解 Send 和 Sync trait 的并发安全保障。",
+  "learning_objectives": [
+    "掌握 spawn 和 scoped 线程的创建方法",
+    "理解 channel（mpsc）的消息传递机制",
+    "掌握 Mutex + Arc 实现共享状态",
+    "理解 Send 和 Sync trait 的并发安全保证"
+  ]
+}

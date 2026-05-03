@@ -1,0 +1,356 @@
+---
+title: "并发编程：fearless concurrency"
+description: "学习 Rust 的并发编程模型，掌握线程创建、通道通信、Mutex 和 Arc 共享状态，理解 Send 和 Sync trait 的并发安全保障。"
+---
+
+# 并发编程：fearless concurrency
+
+## 开场白：工厂流水线的魔法
+
+想象一下你是一家巧克力工厂的老板。最初，你一个人负责所有工作：融化可可豆、搅拌、成型、包装。效率低下，对吧？后来你雇佣了几个工人，每个人负责一个环节，生产效率大幅提升！
+
+但是，问题来了：如果两个工人同时去拿同一个搅拌碗，或者在包装时互相抢夺成品，工厂就会陷入混乱。这就是传统并发编程的困境——**数据竞争**（data race）。
+
+现在，Rust 就像一位极其严格的工厂安全主管。他不允许任何可能导致混乱的操作发生。如果你试图让两个工人同时操作同一个资源而没有适当的协调机制，Rust 会在**编译时**就阻止你，而不是等到运行时才发现问题！
+
+这就是 Rust 的 "fearless concurrency"（无畏并发）——不是说并发变得简单了，而是说 Rust 让你在编译时就能发现并修复并发问题，避免了那些令人头疼的运行时错误。
+
+## 核心概念：Rust 并发的三大法宝
+
+### 1. 线程（Threads）：工作的基本单位
+
+Rust 中创建线程非常简单：
+
+```rust
+use std::thread;
+
+let handle = thread::spawn(|| {
+    // 这里是新线程执行的代码
+    println!("Hello from another thread!");
+});
+
+// 等待线程完成并获取返回值
+handle.join().unwrap();
+```
+
+每个线程都有自己的栈空间，但可以共享堆上的数据（需要特殊处理，我们稍后会讲）。
+
+### 2. 通道（Channels）：消息传递的艺术
+
+Rust 鼓励使用**消息传递**而非共享内存来进行线程间通信。这就像工人们通过传送带传递半成品，而不是直接争抢同一个工作台。
+
+```rust
+use std::sync::mpsc;
+
+let (sender, receiver) = mpsc::channel();
+
+// 发送消息
+sender.send("Hello!").unwrap();
+
+// 接收消息  
+let message = receiver.recv().unwrap();
+println!("{}", message);
+```
+
+这种模式避免了大部分并发问题，因为数据的所有权在传递过程中是清晰的。
+
+### 3. 共享状态：Mutex + Arc 的完美组合
+
+有时候我们确实需要多个线程访问同一块数据。这时就需要 `Mutex`（互斥锁）和 `Arc`（原子引用计数）的组合：
+
+```rust
+use std::sync::{Arc, Mutex};
+
+let shared_data = Arc::new(Mutex::new(0));
+
+// 多个线程可以克隆 Arc 来共享所有权
+let data_clone = Arc::clone(&shared_data);
+let handle = thread::spawn(move || {
+    let mut value = data_clone.lock().unwrap();
+    *value += 1;
+});
+```
+
+`Arc` 允许多个线程拥有同一数据的所有权，`Mutex` 确保同一时间只有一个线程能修改数据。
+
+## 代码演示：Rust 并发编程实战
+
+让我们通过三个实际例子来深入理解这些概念。
+
+### 示例 1：多线程任务处理
+
+```rust
+// code/examples/example-01.rs
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let handles: Vec<_> = (0..5).map(|i| {
+        thread::spawn(move || {
+            println!("线程 {} 开始执行", i);
+            thread::sleep(Duration::from_millis(100 * i));
+            i * 2 // 返回值
+        })
+    }).collect();
+
+    for (i, handle) in handles.into_iter().enumerate() {
+        match handle.join() {
+            Ok(result) => println!("收到结果: {}", result),
+            Err(e) => println!("线程出错: {:?}", e),
+        }
+    }
+}
+```
+
+这个例子展示了如何创建多个线程并收集它们的结果。注意 `join()` 方法的重要性——它确保主线程等待所有子线程完成。
+
+### 示例 2：生产者-消费者模式
+
+```rust
+// code/examples/example-02.rs
+use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+    let (sender, receiver) = mpsc::channel();
+    
+    // 多个生产者
+    let sender1 = sender.clone();
+    let producer1 = thread::spawn(move || {
+        sender1.send("消息1").unwrap();
+    });
+    
+    let sender2 = sender.clone();
+    let producer2 = thread::spawn(move || {
+        sender2.send("消息2").unwrap();
+    });
+    
+    // 消费者接收所有消息
+    drop(sender); // 重要：释放主发送端
+    for msg in receiver {
+        println!("收到: {}", msg);
+    }
+}
+```
+
+这里的关键是 `drop(sender)` —— 它告诉接收端不再有新的消息，可以安全退出循环。
+
+### 示例 3：共享计数器
+
+```rust
+// code/examples/example-03.rs
+use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..5 {
+        let counter_clone = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            for _ in 0..100 {
+                let mut num = counter_clone.lock().unwrap();
+                *num += 1;
+            }
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+    
+    println!("最终计数: {}", *counter.lock().unwrap());
+}
+```
+
+这个例子完美展示了 `Arc<Mutex<T>>` 模式的威力——线程安全的共享可变状态！
+
+## 深入理解：Send 和 Sync trait 的魔法
+
+Rust 的并发安全性建立在两个关键 trait 上：`Send` 和 `Sync`。
+
+### Send trait：安全的所有权转移
+
+`Send` 表示类型的所有权可以在不同线程间安全转移。几乎所有 Rust 类型都实现了 `Send`，除了那些包含原始指针或外部资源的类型。
+
+```rust
+// 这些类型都实现了 Send
+let string = String::from("hello");
+let vec = vec![1, 2, 3];
+let arc = Arc::new(42);
+
+// 可以安全地在线程间传递
+thread::spawn(move || {
+    println!("{}, {:?}, {}", string, vec, arc);
+});
+```
+
+### Sync trait：安全的引用共享
+
+`Sync` 表示类型的引用可以在多个线程间安全共享。如果 `T` 实现了 `Sync`，那么 `&T` 就实现了 `Send`。
+
+```rust
+// Arc<T> 实现 Sync 当且仅当 T 实现 Send
+let shared = Arc::new(Mutex::new(0)); // Mutex<i32> 实现 Sync
+
+// 多个线程可以同时持有 &shared
+let clone1 = Arc::clone(&shared);
+let clone2 = Arc::clone(&shared);
+// ...
+```
+
+### 编译器的保护
+
+Rust 编译器会自动检查这些约束。如果你试图在线程间传递非 `Send` 类型，或者共享非 `Sync` 类型，编译器会立即报错：
+
+```rust
+// ❌ 这不会编译！Rc 不是 Send（使用非原子引用计数）
+let rc = Rc::new(42);
+thread::spawn(move || {
+    println!("{}", rc); // 编译错误！
+});
+```
+
+这种编译时检查消除了绝大多数并发 bug，让你可以真正 "无畏" 地编写并发代码。
+
+## 实际应用：解决真实世界问题
+
+### 并行文件处理
+
+假设你需要处理大量日志文件。使用 Rust 并发，你可以轻松实现并行处理：
+
+```rust
+use std::sync::mpsc;
+use std::thread;
+use std::fs;
+
+fn process_logs(file_paths: Vec<String>) -> Vec<usize> {
+    let (sender, receiver) = mpsc::channel();
+    
+    for path in file_paths {
+        let sender_clone = sender.clone();
+        thread::spawn(move || {
+            let content = fs::read_to_string(&path).unwrap();
+            let line_count = content.lines().count();
+            sender_clone.send(line_count).unwrap();
+        });
+    }
+    
+    drop(sender);
+    receiver.iter().collect()
+}
+```
+
+### 生产者-消费者队列
+
+在 Web 服务器中，你可能需要一个任务队列：
+
+```rust
+use std::sync::{Arc, Mutex};
+use std::collections::VecDeque;
+
+struct TaskQueue {
+    queue: Arc<Mutex<VecDeque<String>>>,
+}
+
+impl TaskQueue {
+    fn new() -> Self {
+        Self {
+            queue: Arc::new(Mutex::new(VecDeque::new())),
+        }
+    }
+    
+    fn add_task(&self, task: String) {
+        self.queue.lock().unwrap().push_back(task);
+    }
+    
+    fn get_task(&self) -> Option<String> {
+        self.queue.lock().unwrap().pop_front()
+    }
+}
+```
+
+这种模式在实际应用中非常常见，比如数据库连接池、HTTP 请求处理等。
+
+## 常见误区：Rust 并发的真相
+
+### 误区 1：Rust 完全消除了所有并发问题
+
+**真相**：Rust 消除了**数据竞争**，但其他并发问题仍然存在：
+
+- **死锁**：两个线程互相等待对方释放锁
+- **活锁**：线程不断重试但无法取得进展  
+- **性能问题**：过度同步导致串行化
+
+```rust
+// 死锁示例（虽然编译通过，但运行时会死锁）
+let mutex1 = Arc::new(Mutex::new(0));
+let mutex2 = Arc::new(Mutex::new(0));
+
+let m1_clone = Arc::clone(&mutex1);
+let m2_clone = Arc::clone(&mutex2);
+let t1 = thread::spawn(move || {
+    let _lock1 = m1_clone.lock().unwrap();
+    thread::sleep(Duration::from_millis(10));
+    let _lock2 = m2_clone.lock().unwrap(); // 等待 mutex2
+});
+
+let m1_clone2 = Arc::clone(&mutex1);
+let m2_clone2 = Arc::clone(&mutex2);
+let t2 = thread::spawn(move || {
+    let _lock2 = m2_clone2.lock().unwrap();
+    thread::sleep(Duration::from_millis(10));
+    let _lock1 = m1_clone2.lock().unwrap(); // 等待 mutex1
+});
+```
+
+### 误区 2：Arc<Mutex<T>> 总是最好的选择
+
+**真相**：消息传递通常比共享状态更安全、更高效。只有在确实需要共享状态时才使用 `Arc<Mutex<T>>`。
+
+### 误区 3：Rust 并发很复杂
+
+**真相**：Rust 的并发模型其实很直观。一旦你理解了所有权、`Send`/`Sync` 和消息传递的概念，编写正确的并发代码反而比其他语言更容易。
+
+## 动手实践：从理论到实践
+
+现在轮到你了！尝试完成以下练习：
+
+1. **基础练习**：运行并修改提供的三个示例代码，观察不同参数下的行为
+2. **挑战 1**：实现并行文件处理器，处理多个文本文件的统计信息
+3. **挑战 2**：构建线程安全的缓存系统，支持 LRU 淘汰策略
+
+记住，在 Rust 中：
+- 优先考虑消息传递而非共享状态
+- 使用 `Arc<Mutex<T>>` 时要小心死锁
+- 利用编译器的错误信息来指导你的设计
+
+## 小结与思考
+
+Rust 的 "fearless concurrency" 不是一个营销口号，而是一个实实在在的工程优势。通过结合：
+
+- **所有权系统**：确保内存安全
+- **Send/Sync trait**：保证并发安全  
+- **丰富的标准库**：提供实用的并发原语
+
+Rust 让你能够编写既高效又正确的并发程序。
+
+### 关键要点回顾
+
+1. **线程创建**：使用 `thread::spawn()` 创建新线程
+2. **消息传递**：优先使用 `mpsc` 通道进行线程通信
+3. **共享状态**：使用 `Arc<Mutex<T>>` 实现线程安全的共享可变数据
+4. **类型安全**：`Send` 和 `Sync` trait 在编译时保证并发安全
+5. **错误处理**：正确处理 `Mutex` 的 poisoned 状态
+
+### 进一步学习
+
+- 探索 `crossbeam` crate 提供的更高级并发原语
+- 学习异步编程（async/await）与并发的关系
+- 研究无锁数据结构（lock-free data structures）的实现
+
+记住：并发编程的目标不是写出最复杂的代码，而是写出最正确、最高效的代码。Rust 给了你强大的工具，现在就去创造吧！
+
+> "并发不是关于同时做很多事情，而是关于正确地管理资源共享。" —— Rust 哲学

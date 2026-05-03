@@ -1,0 +1,21 @@
+{
+  "id": "19-04",
+  "title": "模式匹配：强大的解构工具",
+  "slug": "lesson-04-pattern-matching",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 4,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["19-03"],
+  "tags": ["pattern-matching", "match", "if-let", "destructuring", "exhaustiveness"],
+  "description": "深入学习 Rust 的模式匹配能力，包括 match 表达式、if let 解构、元组解构和枚举变体匹配。",
+  "learning_objectives": [
+    "掌握 match 表达式的语法和穷尽性检查",
+    "理解 if let 和 while let 的简写用法",
+    "能够解构元组、结构体和枚举",
+    "理解模式匹配中的绑定、守卫和通配符"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "22-05",
+  "title": "泛型与类型擦除",
+  "slug": "lesson-05-generics",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 5,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["22-03"],
+  "tags": ["generics", "type-erasure", "bounded-types", "wildcard", "generic-classes"],
+  "description": "学习 Java 泛型编程，掌握泛型类、泛型方法、通配符（? extends/super），理解 Java 类型擦除机制。",
+  "learning_objectives": [
+    "掌握泛型类和泛型方法的定义语法",
+    "理解通配符 ? extends 和 ? super 的区别（PECS原则）",
+    "了解 Java 泛型的类型擦除机制",
+    "能够使用泛型编写类型安全的通用工具"
+  ]
+}

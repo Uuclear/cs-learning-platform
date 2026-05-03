@@ -1,0 +1,21 @@
+{
+  "id": "22-09",
+  "title": "JVM内存模型与GC",
+  "slug": "lesson-09-jvm-gc",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 9,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 35,
+  "prerequisites": ["22-06"],
+  "tags": ["jvm", "garbage-collection", "memory-model", "heap", "stack", "gc-tuning"],
+  "description": "学习 JVM 内存模型和垃圾回收机制，理解堆、栈、方法区的结构，掌握常见 GC 算法调优参数。",
+  "learning_objectives": [
+    "理解 JVM 内存区域划分（堆、栈、方法区）",
+    "掌握垃圾回收的基本原理和常见算法",
+    "了解 G1、CMS、ZGC 等垃圾回收器",
+    "能够分析简单的内存泄漏和 GC 日志"
+  ]
+}

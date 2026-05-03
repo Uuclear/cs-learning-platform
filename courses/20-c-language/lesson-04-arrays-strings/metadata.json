@@ -1,0 +1,21 @@
+{
+  "id": "20-04",
+  "title": "数组与字符串",
+  "slug": "lesson-04-arrays-strings",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 4,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["20-03"],
+  "tags": ["arrays", "strings", "char-array", "string-functions", "buffer-overflow"],
+  "description": "学习 C 语言的数组和字符串处理，掌握字符串操作函数（strcpy、strlen、strcat）和缓冲区溢出的危险性。",
+  "learning_objectives": [
+    "掌握一维和二维数组的定义与初始化",
+    "理解 C 字符串的本质（以 null 结尾的字符数组）",
+    "掌握常用字符串函数的使用",
+    "了解缓冲区溢出的危害和安全编码实践"
+  ]
+}

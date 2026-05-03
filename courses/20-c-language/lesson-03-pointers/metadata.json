@@ -1,0 +1,21 @@
+{
+  "id": "20-03",
+  "title": "指针：C语言的灵魂与噩梦",
+  "slug": "lesson-03-pointers",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 3,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 40,
+  "prerequisites": ["20-02"],
+  "tags": ["pointers", "memory-address", "pointer-arithmetic", "null-pointer", "void-pointer"],
+  "description": "深入学习 C 语言的指针概念，理解内存地址、指针运算、空指针和 void 指针，掌握指针与数组的关系。",
+  "learning_objectives": [
+    "理解指针的本质（存储内存地址的变量）",
+    "掌握指针声明、初始化和解引用操作",
+    "理解指针运算和数组-指针等价关系",
+    "能够识别和避免野指针和空指针解引用"
+  ]
+}

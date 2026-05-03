@@ -1,0 +1,34 @@
+{
+  "id": "23-02",
+  "title": "数据类型与函数",
+  "slug": "lesson-02-types-functions",
+  "module": "23-javascript",
+  "module_name": "JavaScript",
+  "module_order": 23,
+  "lesson_order": 2,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 25,
+  "prerequisites": ["23-01"],
+  "tags": ["data-types", "functions", "javascript", "primitives", "objects"],
+  "author": "CS Professor",
+  "created_at": "2026-05-03",
+  "updated_at": "2026-05-03",
+  "status": "completed",
+  "description": "深入学习JavaScript的数据类型（基本类型和引用类型）和函数的各种声明方式。",
+  "learning_objectives": [
+    "理解JavaScript的基本类型：string、number、boolean、null、undefined、symbol",
+    "掌握引用类型：object、array、function",
+    "了解var、let、const声明变量的区别",
+    "掌握函数的声明方式和箭头函数",
+    "理解值传递和引用传递的区别"
+  ],
+  "files": {
+    "main_content": "index.mdx",
+    "code_examples": 3,
+    "exercises": {
+      "quiz_questions": 8,
+      "programming_challenges": 2
+    }
+  }
+}

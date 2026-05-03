@@ -1,0 +1,371 @@
+---
+title: PWM与电机控制：让东西动起来
+description: 学习 PWM（脉宽调制）技术原理，掌握使用 PWM 控制直流电机速度、舵机角度和 LED 亮度的方法。
+---
+
+# PWM与电机控制：让东西动起来
+
+## 开场白：开关灯的快速闪烁魔法
+
+想象一下，你有一个老式的电灯开关，每秒能按100次。如果你快速地开关闭合，会发生什么？人眼会觉得灯光在闪烁，但如果速度足够快——比如每秒上千次——你的大脑就会"欺骗"自己，认为灯光是持续亮着的，只是亮度变暗了！
+
+这就是PWM（脉宽调制）的魔力所在。PWM不是真的改变电压大小，而是通过快速开关来"模拟"不同的电压效果。就像你在餐厅里快速翻动菜单，服务员会以为你在犹豫，但实际上你只是在用速度创造一种错觉。
+
+在单片机世界里，PWM是我们让电子设备"动起来"的关键技术。无论是让风扇转得更快、让舵机精确转向，还是让LED灯温柔地呼吸，背后都有PWM的身影。
+
+## 核心概念：PWM原理、占空比与频率
+
+### 什么是PWM？
+
+PWM（Pulse Width Modulation，脉宽调制）是一种通过改变脉冲信号的宽度来控制平均功率输出的技术。它产生一个周期性的方波信号，通过调整高电平（ON）时间与整个周期时间的比例来控制输出效果。
+
+### 占空比（Duty Cycle）
+
+占空比是PWM的核心概念，它表示在一个完整周期内，高电平时间所占的百分比。
+
+```
+占空比 = (高电平时间 / 周期时间) × 100%
+```
+
+- **0%占空比**：始终低电平，相当于关
+- **50%占空比**：一半时间高，一半时间低，相当于50%亮度或速度
+- **100%占空比**：始终高电平，相当于全开
+
+### 频率的重要性
+
+PWM信号的频率决定了脉冲重复的速度。频率太低会产生可见的闪烁（对于LED）或可听见的噪音（对于电机），频率太高则可能超出硬件的处理能力。
+
+- **LED调光**：通常使用几百Hz到几kHz
+- **舵机控制**：标准频率为50Hz（周期20ms）
+- **电机控制**：通常使用几kHz到几十kHz
+
+### Arduino中的PWM实现
+
+Arduino通过`analogWrite()`函数实现PWM输出。虽然函数名中有"analog"，但实际上输出的是数字PWM信号。
+
+```cpp
+// 在支持PWM的引脚上输出50%占空比
+analogWrite(9, 128); // 128/255 ≈ 50%
+```
+
+Arduino的PWM分辨率通常是8位（0-255），这意味着可以有256个不同的占空比级别。
+
+## 代码演示：Python PWM波形生成与分析
+
+让我们用Python来可视化PWM信号，理解占空比如何影响输出效果。
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+def generate_pwm_waveform(duty_cycle, frequency=1000, duration=0.01):
+    """生成PWM波形"""
+    sample_rate = 100000  # 采样率100kHz
+    t = np.linspace(0, duration, int(sample_rate * duration))
+    
+    # 生成方波
+    period = 1.0 / frequency
+    pwm_signal = np.where((t % period) < (duty_cycle * period), 1.0, 0.0)
+    
+    return t, pwm_signal
+
+# 创建不同占空比的PWM波形
+duty_cycles = [0.25, 0.5, 0.75]
+plt.figure(figsize=(12, 8))
+
+for i, dc in enumerate(duty_cycles):
+    t, signal = generate_pwm_waveform(dc)
+    plt.subplot(3, 1, i+1)
+    plt.plot(t[:1000], signal[:1000], 'b-', linewidth=2)
+    plt.title(f'PWM波形 - 占空比: {dc*100:.0f}%')
+    plt.xlabel('时间 (秒)')
+    plt.ylabel('电压 (V)')
+    plt.ylim(-0.1, 1.1)
+    plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+这段代码展示了不同占空比下的PWM波形。你可以看到：
+- 25%占空比：大部分时间是低电平
+- 50%占空比：高低电平时间相等
+- 75%占空比：大部分时间是高电平
+
+## 深入理解：H桥电路原理
+
+要真正控制直流电机，仅仅有PWM还不够，我们还需要能够控制电机的旋转方向。这就需要H桥电路。
+
+### H桥是什么？
+
+H桥是一种电子电路，形状像字母"H"，由四个开关（通常是晶体管）组成，可以控制电流流向电机的方向。
+
+```
+    Vcc
+     |
+    [S1]   [S2]
+     |      |
+     +--+--+
+        |
+       电机
+        |
+     +--+--+
+    [S3]   [S4]
+     |      |
+    GND    GND
+```
+
+### H桥的工作模式
+
+1. **正转**：S1和S4导通，S2和S3断开 → 电流从左到右
+2. **反转**：S2和S3导通，S1和S4断开 → 电流从右到左  
+3. **刹车**：S1和S2导通（或S3和S4导通）→ 电机两端短路，快速停止
+4. **自由停止**：所有开关断开 → 电机靠惯性慢慢停止
+
+### 实际应用中的H桥芯片
+
+在实际项目中，我们通常使用集成的H桥芯片，如：
+- **L298N**：双H桥，可同时控制两个电机
+- **L293D**：类似L298N，但电流较小
+- **TB6612FNG**：现代高效H桥，功耗更低
+
+这些芯片通常有使能引脚（Enable），我们可以连接PWM信号到使能引脚来控制电机速度。
+
+## 实际应用：风扇调速、舵机控制、LED调光
+
+### 风扇调速
+
+电脑CPU风扇就是PWM控制的经典例子。主板通过PWM信号告诉风扇应该以多快的速度运转。
+
+```cpp
+// Arduino风扇控制示例
+const int fanPin = 9;  // 连接到风扇的PWM引脚
+
+void setup() {
+  pinMode(fanPin, OUTPUT);
+}
+
+void loop() {
+  // 温度越高，风扇转速越快
+  int temperature = readTemperature(); // 假设的温度读取函数
+  int fanSpeed = map(temperature, 30, 80, 0, 255); // 映射到PWM范围
+  fanSpeed = constrain(fanSpeed, 0, 255); // 限制在有效范围内
+  
+  analogWrite(fanPin, fanSpeed);
+  delay(1000);
+}
+```
+
+### 舵机控制
+
+舵机（Servo Motor）是一种特殊的电机，可以精确控制角度。标准舵机使用50Hz的PWM信号，脉冲宽度决定角度：
+
+- **1ms脉冲**：0度
+- **1.5ms脉冲**：90度（中间位置）
+- **2ms脉冲**：180度
+
+```cpp
+#include <Servo.h>
+
+Servo myServo;
+const int servoPin = 9;
+
+void setup() {
+  myServo.attach(servoPin);
+}
+
+void loop() {
+  // 让舵机从0度扫到180度再返回
+  for(int angle = 0; angle <= 180; angle++) {
+    myServo.write(angle);
+    delay(15);
+  }
+  for(int angle = 180; angle >= 0; angle--) {
+    myServo.write(angle);
+    delay(15);
+  }
+}
+```
+
+### LED调光
+
+PWM最简单的应用就是LED调光，创造出渐变、呼吸等效果。
+
+```cpp
+const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  // 呼吸灯效果
+  for(int brightness = 0; brightness <= 255; brightness++) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+  for(int brightness = 255; brightness >= 0; brightness--) {
+    analogWrite(ledPin, brightness);
+    delay(10);
+  }
+}
+```
+
+## 常见误区：PWM频率选择不当产生噪音
+
+### 频率太低的问题
+
+如果PWM频率设置得太低（比如低于100Hz），会出现以下问题：
+
+1. **LED闪烁**：人眼能明显看到闪烁，造成视觉疲劳
+2. **电机噪音**：电机会发出明显的"嗡嗡"声，因为线圈在低频振动
+3. **控制不稳定**：某些设备对低频PWM响应不佳
+
+### 频率太高的问题
+
+频率过高也会带来问题：
+
+1. **开关损耗增加**：晶体管频繁开关会产生热量
+2. **电磁干扰**：高频信号可能干扰其他电子设备
+3. **硬件限制**：某些微控制器无法产生过高的PWM频率
+
+### 如何选择合适的频率
+
+- **LED调光**：200Hz - 1kHz（高于人眼感知阈值）
+- **直流电机**：5kHz - 20kHz（高于人耳听觉范围，减少噪音）
+- **舵机**：严格使用50Hz（这是舵机的标准协议）
+
+### Arduino PWM频率调整
+
+默认情况下，Arduino的PWM频率约为490Hz（引脚5、6为980Hz）。如果需要调整频率，可以修改定时器寄存器：
+
+```cpp
+// 修改Timer2的预分频器来改变PWM频率
+// 注意：这会影响millis()和delay()函数！
+TCCR2B = TCCR2B & 0b11111000 | 0x01; // 设置预分频器为1，提高频率
+```
+
+## 动手实践
+
+现在让我们动手实践PWM控制！
+
+### 实验1：PWM波形观察
+
+**材料**：
+- Arduino Uno
+- 示波器或逻辑分析仪（可选）
+- LED和220Ω电阻
+
+**步骤**：
+1. 将LED连接到Arduino的PWM引脚（如引脚9）
+2. 上传以下代码，观察LED亮度变化：
+
+```cpp
+const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  for(int duty = 0; duty <= 255; duty += 5) {
+    analogWrite(ledPin, duty);
+    delay(50);
+  }
+  for(int duty = 255; duty >= 0; duty -= 5) {
+    analogWrite(ledPin, duty);
+    delay(50);
+  }
+}
+```
+
+### 实验2：舵机角度控制
+
+**材料**：
+- 舵机（如SG90）
+- 电位器
+- Arduino Uno
+
+**步骤**：
+1. 连接舵机到引脚9，电位器到A0
+2. 上传代码，旋转电位器控制舵机角度：
+
+```cpp
+#include <Servo.h>
+
+Servo myservo;
+const int potPin = A0;
+const int servoPin = 9;
+
+void setup() {
+  myservo.attach(servoPin);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);
+  int angle = map(potValue, 0, 1023, 0, 180);
+  myservo.write(angle);
+  delay(15);
+}
+```
+
+### 实验3：电机速度控制
+
+**材料**：
+- L298N H桥模块
+- 直流电机
+- 电位器
+- Arduino Uno
+
+**步骤**：
+1. 按照L298N接线图连接电机和Arduino
+2. 使用PWM控制电机速度：
+
+```cpp
+const int enA = 9;   // PWM使能引脚
+const int in1 = 8;   // 方向控制
+const int in2 = 7;   // 方向控制
+const int potPin = A0;
+
+void setup() {
+  pinMode(enA, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+}
+
+void loop() {
+  int potValue = analogRead(potPin);
+  int motorSpeed = map(potValue, 0, 1023, 0, 255);
+  
+  // 设置正转
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  
+  // 控制速度
+  analogWrite(enA, motorSpeed);
+}
+```
+
+## 小结与思考
+
+PWM技术是嵌入式系统中的基础而强大的工具。通过本课程，你应该已经掌握了：
+
+✅ **PWM基本原理**：理解占空比如何控制平均功率输出  
+✅ **实际应用技能**：能够控制LED亮度、舵机角度和电机速度  
+✅ **电路知识**：了解H桥如何实现电机正反转控制  
+✅ **调试经验**：知道如何选择合适的PWM频率避免常见问题  
+
+### 进一步思考
+
+1. **为什么不能直接用模拟电压控制电机？**
+   - 数字PWM效率更高，发热少，控制精度好
+   
+2. **PWM在电源管理中的应用？**
+   - 开关电源（如手机充电器）大量使用PWM技术提高效率
+   
+3. **如何实现更平滑的电机控制？**
+   - 可以结合PID控制算法，根据反馈调整PWM占空比
+
+记住，PWM不仅是技术，更是一种思维方式——用数字的方式解决模拟的问题。掌握了这个思维，你在嵌入式开发的道路上就又前进了一步！
+
+下次当你看到LED灯温柔地呼吸，或者无人机精准地悬停时，就知道背后是PWM在默默工作。现在，轮到你用PWM创造属于自己的动态世界了！

@@ -1,0 +1,21 @@
+{
+  "id": "21-07",
+  "title": "STL算法：sort、find、transform",
+  "slug": "lesson-07-stl-algorithms",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 7,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["21-06"],
+  "tags": ["stl-algorithms", "sort", "find", "transform", "lambda", "functional"],
+  "description": "学习 STL 标准算法库，掌握排序、查找、变换和累积算法，结合 Lambda 表达式写出简洁高效的代码。",
+  "learning_objectives": [
+    "掌握 sort、find、count、transform 等常用算法",
+    "理解 Lambda 表达式的语法和捕获列表",
+    "能够使用函数对象和 Lambda 定制算法行为",
+    "了解算法复杂度选择正确的算法"
+  ]
+}

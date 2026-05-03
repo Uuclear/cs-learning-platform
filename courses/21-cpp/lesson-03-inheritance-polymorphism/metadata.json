@@ -1,0 +1,21 @@
+{
+  "id": "21-03",
+  "title": "继承与多态",
+  "slug": "lesson-03-inheritance-polymorphism",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 3,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["21-02"],
+  "tags": ["inheritance", "polymorphism", "virtual-functions", "override", "abstract-class"],
+  "description": "学习 C++ 的继承和多态机制，掌握虚函数、纯虚函数、抽象类和动态绑定，理解继承体系的设计原则。",
+  "learning_objectives": [
+    "掌握继承的语法和访问控制影响",
+    "理解虚函数和动态绑定的原理",
+    "掌握纯虚函数和抽象类的定义",
+    "能够设计合理的继承体系"
+  ]
+}

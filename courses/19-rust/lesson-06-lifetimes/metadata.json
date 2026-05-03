@@ -1,0 +1,21 @@
+{
+  "id": "19-06",
+  "title": "生命周期：引用安全的保障",
+  "slug": "lesson-06-lifetimes",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 6,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 35,
+  "prerequisites": ["19-02"],
+  "tags": ["lifetimes", "borrowing", "references", "lifetime-annotation", "static"],
+  "description": "学习 Rust 的生命周期系统，理解编译器如何通过生命周期标注保证引用有效性，掌握生命周期省略规则和 'static 标记。",
+  "learning_objectives": [
+    "理解生命周期的概念和为什么需要标注",
+    "掌握函数和结构体中的生命周期标注语法",
+    "理解生命周期省略规则（三条规则）",
+    "能够识别和修复常见生命周期错误"
+  ]
+}

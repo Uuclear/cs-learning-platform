@@ -1,0 +1,21 @@
+{
+  "id": "20-01",
+  "title": "C语言入门：系统编程的起点",
+  "slug": "lesson-01-c-intro",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 1,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": [],
+  "tags": ["c-language", "systems-programming", "hello-world", "compilation", "gcc"],
+  "description": "了解 C 语言的历史地位、设计哲学和编译流程，搭建开发环境并编写第一个 C 程序。",
+  "learning_objectives": [
+    "了解 C 语言的历史和对现代编程语言的影响",
+    "掌握 C 程序的编译流程（预处理→编译→汇编→链接）",
+    "能够安装 GCC/Clang 并编译第一个 C 程序",
+    "理解 main 函数和 C 程序的基本结构"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "21-10",
+  "title": "异常处理与最佳实践",
+  "slug": "lesson-10-exceptions-best-practices",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 10,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["21-09"],
+  "tags": ["exceptions", "try-catch", "noexcept", "best-practices", "error-handling"],
+  "description": "学习 C++ 的异常处理机制，掌握 try-catch-throw、自定义异常类、noexcept 规范，了解 C++ 最佳实践和现代编程规范。",
+  "learning_objectives": [
+    "掌握 try-catch-throw 的基本语法",
+    "能够设计和实现自定义异常类层次",
+    "理解 noexcept 规范的作用和使用场景",
+    "了解现代 C++ 最佳实践（const 正确性、RAII、智能指针等）"
+  ]
+}

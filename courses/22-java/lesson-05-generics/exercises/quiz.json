@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Java泛型的类型擦除机制意味着什么？",
+      "options": [
+        "泛型类型信息在编译期被保留，在运行时可用",
+        "泛型类型信息只存在于编译期，运行时会被擦除为原始类型",
+        "泛型类型信息在运行时被转换为具体的类型",
+        "泛型类型信息在编译期和运行时都完全保留"
+      ],
+      "answer": 1,
+      "explanation": "Java泛型使用类型擦除机制，泛型信息只存在于编译期用于类型检查，运行时会被擦除为原始类型（如List<String>在运行时就是List）。"
+    },
+    {
+      "question": "根据PECS原则，当需要从数据结构中读取数据时应该使用哪种通配符？",
+      "options": [
+        "? super T",
+        "? extends T",
+        "?",
+        "不需要使用通配符"
+      ],
+      "answer": 1,
+      "explanation": "PECS原则：Producer Extends, Consumer Super。当从数据结构中读取数据（生产者）时，应使用? extends T。"
+    },
+    {
+      "question": "以下哪个代码片段是正确的泛型方法定义？",
+      "options": [
+        "public static void <T> print(T item) { System.out.println(item); }",
+        "public static <T> void print(T item) { System.out.println(item); }",
+        "public static void print<T>(T item) { System.out.println(item); }",
+        "public static T void print(T item) { System.out.println(item); }"
+      ],
+      "answer": 1,
+      "explanation": "泛型方法的正确语法是在返回类型前声明类型参数：<T>，所以正确答案是 'public static <T> void print(T item)'。"
+    },
+    {
+      "question": "为什么不能创建泛型数组（如 new T[size]）？",
+      "options": [
+        "因为泛型数组会导致内存泄漏",
+        "因为类型擦除后无法确定数组的实际类型",
+        "因为泛型数组不支持自动装箱/拆箱",
+        "因为泛型数组会降低性能"
+      ],
+      "answer": 1,
+      "explanation": "由于类型擦除，运行时T会被替换为Object，但数组需要在创建时就知道确切的组件类型，所以不能直接创建泛型数组。"
+    },
+    {
+      "question": "以下关于通配符的说法哪个是正确的？",
+      "options": [
+        "List<? extends Number> 可以添加Integer类型的元素",
+        "List<? super Integer> 可以安全地读取为Integer类型",
+        "List<?> 表示包含某种未知类型的列表，可以安全地读取为Object",
+        "List<? extends Number> 和 List<Number> 是完全等价的"
+      ],
+      "answer": 2,
+      "explanation": "List<?> 表示包含某种未知类型的列表，可以安全地读取为Object类型。其他选项都是错误的：? extends 列表不能添加元素（除了null），? super 列表读取只能得到Object类型。"
+    },
+    {
+      "question": "静态方法能否使用类的泛型类型参数？",
+      "options": [
+        "可以，静态方法可以自由使用类的泛型参数",
+        "不可以，静态方法不能使用类的泛型参数",
+        "只有在特定条件下可以",
+        "取决于Java版本"
+      ],
+      "answer": 1,
+      "explanation": "静态方法属于类本身，而不是类的实例。而泛型类型参数是实例级别的概念，所以静态方法不能使用类的泛型参数。"
+    },
+    {
+      "question": "如何在运行时获取泛型的实际类型信息？",
+      "options": [
+        "使用 T.class 直接获取",
+        "通过反射调用 getType() 方法",
+        "传递Class对象作为参数，或使用匿名内部类配合反射",
+        "泛型类型信息无法在运行时获取"
+      ],
+      "answer": 2,
+      "explanation": "由于类型擦除，无法直接获取泛型类型。常用解决方案包括：传递Class对象、使用匿名内部类配合反射、或使用类型令牌模式。"
+    },
+    {
+      "question": "以下哪个场景最适合使用 ? super T 通配符？",
+      "options": [
+        "需要从集合中读取元素并进行计算",
+        "需要向集合并入新元素",
+        "需要同时读取和写入集合",
+        "只需要检查集合是否为空"
+      ],
+      "answer": 1,
+      "explanation": "根据PECS原则，? super T 适用于消费者场景，即需要向数据结构中写入数据的情况。"
+    }
+  ]
+}

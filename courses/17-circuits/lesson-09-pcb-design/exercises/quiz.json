@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "在PCB设计中，IPC-2221标准主要用于计算什么？",
+      "options": [
+        "元件封装尺寸",
+        "走线宽度",
+        "过孔数量",
+        "板子厚度"
+      ],
+      "answer": 1,
+      "explanation": "IPC-2221标准提供了根据电流和允许温升计算PCB走线宽度的公式。"
+    },
+    {
+      "question": "0805封装的贴片元件实际尺寸大约是多少？",
+      "options": [
+        "0.8mm × 0.5mm",
+        "2.0mm × 1.2mm",
+        "1.6mm × 0.8mm",
+        "3.2mm × 1.6mm"
+      ],
+      "answer": 1,
+      "explanation": "0805封装表示0.08英寸×0.05英寸，约等于2.0mm×1.2mm。"
+    },
+    {
+      "question": "在高速PCB设计中，为什么要控制走线的特征阻抗？",
+      "options": [
+        "为了美观",
+        "防止信号反射",
+        "节省铜箔",
+        "便于制造"
+      ],
+      "answer": 2,
+      "explanation": "阻抗不匹配会导致信号反射，引起过冲、下冲和时序问题。"
+    },
+    {
+      "question": "多层PCB中的地平面（GND Plane）主要作用是什么？",
+      "options": [
+        "提供参考电位和降低EMI",
+        "增加板子强度",
+        "便于元件安装",
+        "降低成本"
+      ],
+      "answer": 0,
+      "explanation": "完整的地平面提供稳定的参考电位，降低电磁干扰，并改善信号完整性。"
+    },
+    {
+      "question": "在KiCad中，从原理图同步到PCB布局应该使用哪个功能？",
+      "options": [
+        "Annotate Schematic",
+        "Update PCB from Schematic",
+        "Design Rules Editor",
+        "Interactive Router"
+      ],
+      "answer": 1,
+      "explanation": "Update PCB from Schematic功能将原理图中的元件和连接关系同步到PCB编辑器中。"
+    },
+    {
+      "question": "PCB设计中的DRC检查主要用来做什么？",
+      "options": [
+        "检查电路功能",
+        "验证制造规则和电气规则",
+        "优化元件布局",
+        "生成Gerber文件"
+      ],
+      "answer": 1,
+      "explanation": "DRC（Design Rule Check）检查最小线宽、线距、过孔尺寸等制造规则以及短路、开路等电气规则。"
+    },
+    {
+      "question": "为什么在IC电源引脚附近要放置去耦电容？",
+      "options": [
+        "增加电路美观性",
+        "滤除高频噪声，稳定电源",
+        "降低功耗",
+        "提高信号速度"
+      ],
+      "answer": 1,
+      "explanation": "去耦电容为IC提供局部储能，滤除电源线上的高频噪声，确保电源稳定。"
+    },
+    {
+      "question": "Gerber文件在PCB制造中的作用是什么？",
+      "options": [
+        "用于电路仿真",
+        "包含各层图形信息供制造商使用",
+        "存储元件库",
+        "进行DRC检查"
+      ],
+      "answer": 1,
+      "explanation": "Gerber文件是PCB制造的标准格式，包含了顶层、底层、丝印、阻焊等各层的图形信息。"
+    }
+  ]
+}

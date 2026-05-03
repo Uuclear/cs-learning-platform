@@ -1,0 +1,377 @@
+---
+title: 函数与作用域
+module: C语言
+---
+
+# 函数与作用域
+
+## 开场白：厨房里的分工合作
+
+想象一下你正在准备一顿丰盛的晚餐。如果你一个人负责洗菜、切菜、炒菜、摆盘、洗碗，那场面会相当混乱！但如果有几个帮手，每个人负责一个特定的任务，比如小明专门洗菜，小红负责切菜，小刚掌勺炒菜，整个流程就会变得井井有条。
+
+C语言中的函数就像厨房里的各个帮手！每个函数都有自己的专长和职责，它们各司其职，协同工作。今天，我们就来深入了解C语言中这个强大的"分工合作"机制——函数，以及它们如何管理自己的"工作空间"——作用域。
+
+## 核心概念：函数的三要素
+
+### 函数声明（Declaration）
+函数声明就像是给帮手发的工作邀请函，告诉编译器："嘿，这里有个叫`calculate_sum`的帮手，他能接收两个整数，然后返回一个整数结果。"
+
+```c
+int calculate_sum(int a, int b);
+```
+
+注意末尾的分号！这就是声明和定义的关键区别。
+
+### 函数定义（Definition）
+函数定义就是帮手的具体工作内容，也就是函数的实现：
+
+```c
+int calculate_sum(int a, int b) {
+    return a + b;
+}
+```
+
+这里没有分号，而是用大括号包含了具体的执行逻辑。
+
+### 函数调用（Call）
+当我们需要帮手工作时，就调用函数：
+
+```c
+int result = calculate_sum(5, 3);
+```
+
+### 参数传递：值传递的奥秘
+C语言中的参数传递是**值传递**（pass by value），这意味着函数接收到的是参数的副本，而不是原始变量本身。
+
+```c
+void modify_value(int x) {
+    x = 100;  // 这只修改了副本，不影响原始变量
+}
+
+int main() {
+    int num = 5;
+    modify_value(num);
+    printf("%d\n", num);  // 输出仍然是 5！
+    return 0;
+}
+```
+
+这就像你把菜谱复印一份给帮手，他在复印件上做修改，你的原件完全不受影响。
+
+### 返回值：函数的产出
+函数可以通过`return`语句返回一个值。记住，C语言函数只能返回一个值（虽然可以通过指针技巧返回多个）：
+
+```c
+// 正确：返回单个值
+int get_max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+// 错误：不能直接返回多个值
+// int get_min_max(int a, int b) {
+//     return min, max;  // 这样不行！
+// }
+```
+
+## 代码演示：函数的实际应用
+
+让我们通过几个实际例子来看看函数的魅力：
+
+### 示例1：多文件结构中的函数
+在大型项目中，我们通常将函数声明放在头文件（.h）中，实现放在源文件（.c）中。
+
+**math_utils.h**
+```c
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
+
+int add(int a, int b);
+int multiply(int a, int b);
+double power(double base, int exponent);
+
+#endif
+```
+
+**math_utils.c**
+```c
+#include "math_utils.h"
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int multiply(int a, int b) {
+    return a * b;
+}
+
+double power(double base, int exponent) {
+    double result = 1.0;
+    for (int i = 0; i < exponent; i++) {
+        result *= base;
+    }
+    return result;
+}
+```
+
+**main.c**
+```c
+#include <stdio.h>
+#include "math_utils.h"
+
+int main() {
+    printf("5 + 3 = %d\n", add(5, 3));
+    printf("4 * 6 = %d\n", multiply(4, 6));
+    printf("2^3 = %.1f\n", power(2.0, 3));
+    return 0;
+}
+```
+
+这种分离让代码更加模块化，便于维护和重用。
+
+## 深入理解：作用域与生命周期
+
+### 局部变量 vs 全局变量
+- **局部变量**：在函数内部定义，只在该函数内可见，函数结束时销毁
+- **全局变量**：在所有函数外部定义，整个程序都可见，程序结束时销毁
+
+```c
+#include <stdio.h>
+
+int global_var = 10;  // 全局变量
+
+void function_a() {
+    int local_var = 20;  // 局部变量
+    printf("global_var: %d, local_var: %d\n", global_var, local_var);
+}
+
+void function_b() {
+    printf("global_var: %d\n", global_var);
+    // printf("local_var: %d\n", local_var);  // 错误！local_var 不可见
+}
+```
+
+### static 关键字的神奇力量
+`static`关键字在不同上下文中有不同含义：
+
+#### 函数内的 static 变量
+保持变量在多次函数调用间的值：
+
+```c
+void counter() {
+    static int count = 0;  // 只初始化一次
+    count++;
+    printf("Called %d times\n", count);
+}
+
+int main() {
+    counter();  // Called 1 times
+    counter();  // Called 2 times  
+    counter();  // Called 3 times
+    return 0;
+}
+```
+
+#### 文件作用域的 static 变量和函数
+限制变量或函数只在当前文件内可见：
+
+```c
+// file1.c
+static int secret_value = 42;  // 只能在 file1.c 中访问
+static void helper_function() { /* ... */ }  // 只能在 file1.c 中调用
+
+// file2.c
+// extern int secret_value;  // 链接错误！secret_value 是 static 的
+```
+
+### 栈帧：函数调用的幕后英雄
+每次函数调用时，系统都会在栈上创建一个"栈帧"（stack frame），用于存储：
+- 函数参数
+- 局部变量  
+- 返回地址
+
+当函数返回时，栈帧被销毁，所有局部变量也随之消失。这就是为什么不能返回局部变量的地址！
+
+```c
+// 危险！不要这样做！
+int* bad_function() {
+    int local_var = 42;
+    return &local_var;  // 返回已销毁变量的地址！
+}
+```
+
+## 实际应用：模块化编程的艺术
+
+### 工具函数库的设计
+好的函数设计应该遵循以下原则：
+
+1. **单一职责**：每个函数只做一件事
+2. **高内聚**：相关的功能放在一起
+3. **低耦合**：减少函数间的依赖
+
+```c
+// string_utils.h - 字符串工具库
+#ifndef STRING_UTILS_H
+#define STRING_UTILS_H
+
+int string_length(const char* str);
+char* string_copy(char* dest, const char* src);
+int string_compare(const char* str1, const char* str2);
+char* string_concat(char* dest, const char* src1, const char* src2);
+
+#endif
+```
+
+### 函数指针：函数的高级用法
+函数指针允许我们将函数作为参数传递，实现回调机制：
+
+```c
+// 排序函数，可以接受不同的比较函数
+void bubble_sort(int arr[], int size, int (*compare)(int, int)) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (compare(arr[j], arr[j + 1]) > 0) {
+                // 交换元素
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int ascending(int a, int b) { return a - b; }
+int descending(int a, int b) { return b - a; }
+
+// 使用示例
+bubble_sort(numbers, 10, ascending);   // 升序
+bubble_sort(numbers, 10, descending);  // 降序
+```
+
+## 常见误区：新手容易踩的坑
+
+### 误区1：全局变量滥用
+```c
+// ❌ 不好的做法
+int global_counter = 0;
+
+void increment() { global_counter++; }
+void decrement() { global_counter--; }
+```
+
+**问题**：难以追踪谁修改了变量，导致调试困难。
+
+**解决方案**：使用函数参数和返回值：
+```c
+// ✅ 更好的做法
+int increment(int counter) { return counter + 1; }
+int decrement(int counter) { return counter - 1; }
+```
+
+### 误区2：未声明就调用
+```c
+// ❌ 编译警告或错误
+int main() {
+    int result = my_function(5);  // my_function 还没声明！
+    return 0;
+}
+
+int my_function(int x) {  // 定义在后面
+    return x * 2;
+}
+```
+
+**解决方案**：要么先声明后使用，要么确保定义在调用之前：
+```c
+// ✅ 方案1：先声明
+int my_function(int x);  // 声明
+
+int main() {
+    int result = my_function(5);
+    return 0;
+}
+
+int my_function(int x) { return x * 2; }
+
+// ✅ 方案2：定义在前面
+int my_function(int x) { return x * 2; }
+
+int main() {
+    int result = my_function(5);
+    return 0;
+}
+```
+
+### 误区3：忽略函数原型
+在旧版本的C中，可以不指定参数类型，但这会导致严重问题：
+```c
+// ❌ 危险！K&R C 风格（已过时）
+my_function(x, y)
+int x;
+float y;
+{
+    // ...
+}
+```
+
+**解决方案**：始终使用现代C函数原型：
+```c
+// ✅ 现代C风格
+int my_function(int x, float y) {
+    // ...
+    return 0;
+}
+```
+
+## 动手实践：编写你的第一个递归函数
+
+递归是函数调用自身的技巧。让我们实现经典的阶乘函数：
+
+```c
+#include <stdio.h>
+
+// 递归阶乘函数
+long long factorial(int n) {
+    // 基础情况：递归的终止条件
+    if (n <= 1) {
+        return 1;
+    }
+    // 递归情况：函数调用自身
+    return n * factorial(n - 1);
+}
+
+int main() {
+    int number = 5;
+    printf("%d! = %lld\n", number, factorial(number));
+    
+    // 尝试计算更大的数
+    for (int i = 1; i <= 10; i++) {
+        printf("%d! = %lld\n", i, factorial(i));
+    }
+    
+    return 0;
+}
+```
+
+**挑战**：尝试实现斐波那契数列的递归版本！
+
+## 小结与思考
+
+今天我们学习了C语言中函数的核心概念：
+
+- **函数的三要素**：声明、定义、调用
+- **作用域规则**：局部变量、全局变量、static变量的区别
+- **参数传递**：值传递的特性及其影响
+- **递归基础**：函数调用自己的强大能力
+
+记住这些关键点：
+1. 函数让代码模块化，易于理解和维护
+2. 合理使用作用域可以避免很多bug
+3. static关键字是控制可见性的有力工具
+4. 递归虽然优雅，但要注意栈溢出的风险
+
+**思考题**：
+- 为什么C语言选择值传递而不是引用传递？
+- 在什么情况下使用全局变量是合理的？
+- 递归和循环各有什么优缺点？
+
+下次课程，我们将深入探讨指针和内存管理，那是C语言最强大也最危险的特性之一！

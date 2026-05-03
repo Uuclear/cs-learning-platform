@@ -1,0 +1,447 @@
+---
+title: 结构体、联合体与位域
+description: 学习 C 语言的结构体和联合体，掌握自定义数据类型、typedef 别名、位域的使用，理解内存对齐和结构体大小计算。
+---
+
+# 结构体、联合体与位域
+
+## 开场白：你的编程档案袋
+
+想象一下，你是一个档案管理员，每天都要处理各种各样的文件。有些文件只有姓名，有些文件包含姓名、年龄、电话号码，还有些文件甚至包含了家庭住址、工作经历和兴趣爱好。
+
+在 C 语言的世界里，**结构体（struct）** 就是你最好的档案袋！它允许你把不同类型的数据打包在一起，形成一个有机的整体。就像你的个人档案一样，可以把相关的个人信息都放在同一个地方，而不是散落在各个角落。
+
+但是，有时候你需要更灵活的存储方式。比如，你可能需要在同一块内存空间里存储不同类型的数据，或者你想要极致地节省内存空间，只用几个比特位来存储信息。这时候，C 语言还为你准备了两个强大的工具：**联合体（union）** 和 **位域（bit-field）**。
+
+今天，我们就一起来探索这三个神奇的数据组织工具，看看它们是如何帮助我们更好地管理数据的！
+
+## 核心概念
+
+### 结构体（Struct）
+
+结构体是 C 语言中最常用的用户自定义数据类型。它允许你将多个不同类型的变量组合成一个单一的实体。
+
+```c
+struct Student {
+    char name[50];
+    int age;
+    float gpa;
+    char major[30];
+};
+```
+
+在这个例子中，我们定义了一个 `Student` 结构体，它包含了学生的姓名、年龄、GPA 和专业。现在，我们可以创建 `Student` 类型的变量：
+
+```c
+struct Student alice;
+strcpy(alice.name, "Alice");
+alice.age = 20;
+alice.gpa = 3.8;
+strcpy(alice.major, "Computer Science");
+```
+
+### 联合体（Union）
+
+联合体看起来很像结构体，但有一个关键区别：**所有成员共享同一块内存空间**。这意味着联合体的大小等于其最大成员的大小，而且任何时候只能有一个成员包含有效值。
+
+```c
+union Data {
+    int i;
+    float f;
+    char str[20];
+};
+```
+
+这个联合体可以存储整数、浮点数或字符串，但不能同时存储多个。当你给一个成员赋值时，会覆盖其他成员的值。
+
+### 位域（Bit-field）
+
+位域允许你在结构体中指定成员占用的比特位数，这对于需要精确控制内存使用的场景非常有用。
+
+```c
+struct Flags {
+    unsigned int is_valid : 1;    // 只用 1 位
+    unsigned int is_active : 1;   // 只用 1 位  
+    unsigned int priority : 3;    // 用 3 位 (0-7)
+    unsigned int reserved : 27;   // 剩余的 27 位
+};
+```
+
+在这个例子中，整个 `Flags` 结构体只需要 4 字节（32 位），但却可以存储 4 个不同的标志位。
+
+## 代码演示
+
+让我们通过几个实际的例子来看看这些概念是如何工作的。
+
+### 示例 1：结构体的基本操作
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+struct Point {
+    int x;
+    int y;
+};
+
+struct Rectangle {
+    struct Point topLeft;
+    struct Point bottomRight;
+};
+
+int main() {
+    // 直接初始化结构体
+    struct Point p1 = {10, 20};
+    
+    // 逐个成员赋值
+    struct Point p2;
+    p2.x = 30;
+    p2.y = 40;
+    
+    // 嵌套结构体
+    struct Rectangle rect = {{0, 0}, {100, 50}};
+    
+    printf("Point 1: (%d, %d)\n", p1.x, p1.y);
+    printf("Point 2: (%d, %d)\n", p2.x, p2.y);
+    printf("Rectangle: (%d,%d) to (%d,%d)\n", 
+           rect.topLeft.x, rect.topLeft.y,
+           rect.bottomRight.x, rect.bottomRight.y);
+    
+    return 0;
+}
+```
+
+### 示例 2：联合体和位域的实际应用
+
+```c
+#include <stdio.h>
+
+// 联合体示例：IP 地址的不同表示方式
+union IPAddress {
+    unsigned char bytes[4];  // 4 个字节
+    unsigned int value;      // 作为一个整数
+};
+
+// 位域示例：权限标志
+struct Permissions {
+    unsigned int read : 1;
+    unsigned int write : 1;
+    unsigned int execute : 1;
+    unsigned int reserved : 29;
+};
+
+int main() {
+    // 联合体演示
+    union IPAddress ip;
+    ip.value = 0x12345678;  // 设置为十六进制值
+    
+    printf("IP as integer: 0x%08X\n", ip.value);
+    printf("IP as bytes: %d.%d.%d.%d\n", 
+           ip.bytes[0], ip.bytes[1], ip.bytes[2], ip.bytes[3]);
+    
+    // 位域演示
+    struct Permissions perm = {1, 1, 0, 0};  // 读写权限，无执行权限
+    
+    printf("Permissions - Read: %d, Write: %d, Execute: %d\n",
+           perm.read, perm.write, perm.execute);
+    
+    return 0;
+}
+```
+
+### 示例 3：结构体指针和动态数组
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Book {
+    char title[100];
+    char author[50];
+    int pages;
+    float price;
+};
+
+int main() {
+    // 动态分配结构体数组
+    int numBooks = 3;
+    struct Book *library = malloc(numBooks * sizeof(struct Book));
+    
+    if (library == NULL) {
+        printf("Memory allocation failed!\n");
+        return 1;
+    }
+    
+    // 初始化书籍信息
+    strcpy(library[0].title, "The C Programming Language");
+    strcpy(library[0].author, "Kernighan & Ritchie");
+    library[0].pages = 272;
+    library[0].price = 45.99;
+    
+    strcpy(library[1].title, "Programming in C");
+    strcpy(library[1].author, "Stephen Kochan");
+    library[1].pages = 600;
+    library[1].price = 39.99;
+    
+    strcpy(library[2].title, "C Primer Plus");
+    strcpy(library[2].author, "Stephen Prata");
+    library[2].pages = 944;
+    library[2].price = 54.99;
+    
+    // 使用指针访问结构体成员
+    for (int i = 0; i < numBooks; i++) {
+        struct Book *book = &library[i];
+        printf("Book %d: \"%s\" by %s (%d pages, $%.2f)\n",
+               i+1, book->title, book->author, book->pages, book->price);
+    }
+    
+    free(library);
+    return 0;
+}
+```
+
+## 深入理解：内存对齐与大小计算
+
+理解结构体的内存布局对于编写高效的 C 程序至关重要。C 编译器会对结构体成员进行**内存对齐**，以提高访问速度。
+
+### 内存对齐规则
+
+1. **基本对齐**：每个数据类型都有其自然对齐要求（通常是其大小）
+2. **结构体对齐**：结构体的对齐要求等于其最大成员的对齐要求
+3. **填充字节**：编译器会在成员之间插入填充字节以满足对齐要求
+
+### 计算结构体大小
+
+让我们看一个例子：
+
+```c
+struct Example1 {
+    char a;      // 1 字节
+    int b;       // 4 字节
+    char c;      // 1 字节
+};
+```
+
+你可能会认为这个结构体的大小是 1 + 4 + 1 = 6 字节，但实际上它通常是 **12 字节**！这是因为：
+
+- `char a` 占用第 0 字节
+- 为了对齐 `int b`（需要 4 字节对齐），编译器在第 1-3 字节插入 3 个填充字节
+- `int b` 占用第 4-7 字节
+- `char c` 占用第 8 字节
+- 为了使整个结构体大小是 4 的倍数（因为最大成员 `int` 需要 4 字节对齐），编译器在第 9-11 字节插入 3 个填充字节
+
+### 优化结构体布局
+
+你可以通过重新排列成员来减少填充：
+
+```c
+struct OptimizedExample {
+    int b;       // 4 字节 (位置 0-3)
+    char a;      // 1 字节 (位置 4)
+    char c;      // 1 字节 (位置 5)
+    // 填充 2 字节 (位置 6-7) 使总大小为 8 字节
+};
+```
+
+这样，结构体的大小就从 12 字节减少到了 8 字节！
+
+### 使用 `#pragma pack`
+
+如果你需要精确控制对齐，可以使用 `#pragma pack`：
+
+```c
+#pragma pack(push, 1)  // 设置对齐为 1 字节
+struct PackedStruct {
+    char a;
+    int b;
+    char c;
+};
+#pragma pack(pop)      // 恢复默认对齐
+```
+
+这样，`PackedStruct` 的大小就是 6 字节，没有填充字节。
+
+## 实际应用
+
+### 学生信息管理系统
+
+结构体非常适合用于构建学生信息管理系统：
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_COURSES 10
+
+struct Course {
+    char name[50];
+    char code[10];
+    int credits;
+    float grade;
+};
+
+struct Student {
+    int id;
+    char name[50];
+    char email[30];
+    int numCourses;
+    struct Course courses[MAX_COURSES];
+    float gpa;
+};
+
+void addCourse(struct Student *student, const char *name, const char *code, 
+               int credits, float grade) {
+    if (student->numCourses < MAX_COURSES) {
+        strcpy(student->courses[student->numCourses].name, name);
+        strcpy(student->courses[student->numCourses].code, code);
+        student->courses[student->numCourses].credits = credits;
+        student->courses[student->numCourses].grade = grade;
+        student->numCourses++;
+    }
+}
+
+float calculateGPA(struct Student *student) {
+    float totalPoints = 0.0;
+    int totalCredits = 0;
+    
+    for (int i = 0; i < student->numCourses; i++) {
+        totalPoints += student->courses[i].grade * student->courses[i].credits;
+        totalCredits += student->courses[i].credits;
+    }
+    
+    return totalCredits > 0 ? totalPoints / totalCredits : 0.0;
+}
+```
+
+### 网络协议头解析
+
+联合体在处理网络协议时特别有用，因为你可以用不同的方式解释同一块数据：
+
+```c
+#include <stdint.h>
+
+// TCP 头部结构
+struct TCPHeader {
+    uint16_t source_port;
+    uint16_t dest_port;
+    uint32_t sequence_num;
+    uint32_t ack_num;
+    uint8_t data_offset : 4;
+    uint8_t reserved : 3;
+    uint8_t flags : 9;
+    uint16_t window_size;
+    uint16_t checksum;
+    uint16_t urgent_ptr;
+};
+
+// 使用联合体来处理字节序转换
+union TCPHeaderConverter {
+    struct TCPHeader header;
+    uint8_t bytes[sizeof(struct TCPHeader)];
+};
+
+// 解析网络数据包
+void parseTCPHeader(const uint8_t *packet_data) {
+    union TCPHeaderConverter converter;
+    
+    // 复制数据到联合体
+    memcpy(converter.bytes, packet_data, sizeof(struct TCPHeader));
+    
+    // 现在可以直接访问结构体成员
+    printf("Source Port: %u\n", ntohs(converter.header.source_port));
+    printf("Destination Port: %u\n", ntohs(converter.header.dest_port));
+    printf("Sequence Number: %u\n", ntohl(converter.header.sequence_num));
+}
+```
+
+## 常见误区
+
+### 联合体的覆盖问题
+
+记住，联合体的所有成员共享同一块内存。给一个成员赋值会覆盖其他成员：
+
+```c
+union Data {
+    int i;
+    float f;
+};
+
+union Data d;
+d.i = 100;      // d.i = 100
+d.f = 3.14f;    // 现在 d.i 的值变得毫无意义！
+```
+
+### 结构体指针与成员访问
+
+使用结构体指针时，要使用 `->` 操作符而不是 `.`：
+
+```c
+struct Point *p = malloc(sizeof(struct Point));
+p->x = 10;    // 正确
+// p.x = 10;  // 错误！这是语法错误
+```
+
+### 内存对齐的陷阱
+
+不要假设结构体的大小就是各成员大小之和：
+
+```c
+struct BadAssumption {
+    char c;
+    int i;
+};
+
+// sizeof(struct BadAssumption) != sizeof(char) + sizeof(int)
+// 它通常等于 sizeof(int) * 2
+```
+
+### typedef 的正确使用
+
+`typedef` 可以让你避免重复写 `struct` 关键字：
+
+```c
+// 不使用 typedef
+struct Point p1;
+
+// 使用 typedef
+typedef struct {
+    int x, y;
+} Point;
+
+Point p2;  // 更简洁！
+```
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+1. **创建一个图书管理系统**：定义一个 `Book` 结构体，包含书名、作者、ISBN、出版年份和价格。然后创建一个函数来打印图书信息。
+
+2. **实现一个简单的颜色系统**：使用联合体来表示颜色，既可以作为 RGB 值（三个字节），也可以作为一个 32 位整数。
+
+3. **优化内存使用**：创建一个包含多种数据类型的结构体，然后重新排列成员顺序来最小化结构体的大小。
+
+4. **位域练习**：创建一个表示日期的结构体，使用位域来存储年（12 位）、月（4 位）和日（5 位）。
+
+## 小结与思考
+
+今天我们学习了 C 语言中三个重要的数据组织工具：
+
+- **结构体（struct）**：将相关数据打包成一个整体，是最常用的用户自定义类型
+- **联合体（union）**：允许多种数据类型共享同一块内存，节省空间但需要谨慎使用
+- **位域（bit-field）**：提供对内存使用的精细控制，适合需要极致优化的场景
+
+记住这些关键点：
+
+1. **结构体是值语义的**：当你复制结构体时，会复制所有成员的值
+2. **联合体是内存共享的**：任何时候只有一个成员包含有效数据
+3. **位域节省内存但可能影响性能**：现代处理器对字节/字对齐访问更快
+4. **内存对齐很重要**：理解对齐规则可以帮助你写出更高效的代码
+
+思考题：
+- 在什么情况下你会选择使用联合体而不是结构体？
+- 如何在保证性能的同时最小化结构体的内存占用？
+- 位域在嵌入式系统开发中有什么特殊的应用价值？
+
+掌握这些概念后，你就拥有了组织复杂数据的强大工具。在下一课中，我们将学习如何将这些数据结构与函数结合，构建更复杂的程序！

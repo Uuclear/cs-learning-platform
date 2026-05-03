@@ -1,0 +1,21 @@
+{
+  "id": "17-04",
+  "title": "电容与电感：储能元件的充放电特性",
+  "slug": "lesson-04-capacitor-inductor",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 4,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["17-01"],
+  "tags": ["capacitor", "inductor", "charging", "discharging", "energy-storage"],
+  "description": "学习电容和电感两种储能元件的特性，理解充放电过程和时间常数的概念。",
+  "learning_objectives": [
+    "理解电容的储能原理和充放电过程",
+    "理解电感的储能原理和瞬态响应",
+    "掌握时间常数 tau=RC 和 tau=L/R 的计算",
+    "了解电容电感在滤波电路中的应用"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "关于malloc和calloc的区别，以下哪项描述是正确的？",
+      "options": [
+        "malloc分配的内存会被初始化为0，而calloc不会",
+        "calloc分配的内存会被初始化为0，而malloc不会",
+        "malloc和calloc都会将内存初始化为0",
+        "malloc和calloc都不会初始化内存"
+      ],
+      "answer": 1,
+      "explanation": "calloc会将分配的内存初始化为0，而malloc分配的内存包含未定义的垃圾值。"
+    },
+    {
+      "question": "以下哪种情况会导致内存泄漏？",
+      "options": [
+        "调用malloc后立即调用free",
+        "调用malloc但忘记调用free",
+        "对NULL指针调用free",
+        "调用free后将指针设为NULL"
+      ],
+      "answer": 1,
+      "explanation": "内存泄漏发生在分配了内存但没有释放的情况下。调用malloc但忘记调用free是最常见的内存泄漏原因。"
+    },
+    {
+      "question": "关于realloc函数，以下哪项说法是错误的？",
+      "options": [
+        "realloc可能移动内存块到新的地址",
+        "如果realloc失败，原来的内存块仍然有效",
+        "可以直接将realloc的返回值赋给原指针变量",
+        "realloc(NULL, size)等同于malloc(size)"
+      ],
+      "answer": 2,
+      "explanation": "不能直接将realloc的返回值赋给原指针，因为如果realloc失败返回NULL，原来的指针就会丢失，导致内存泄漏。应该使用临时指针。"
+    },
+    {
+      "question": "什么是悬空指针（Dangling Pointer）？",
+      "options": [
+        "指向NULL的指针",
+        "指向已释放内存的指针",
+        "未初始化的指针",
+        "指向栈内存的指针"
+      ],
+      "answer": 1,
+      "explanation": "悬空指针是指向已经被free()释放的内存的指针。使用悬空指针会导致未定义行为。"
+    },
+    {
+      "question": "在多级指针（如二维数组）的内存管理中，正确的释放顺序是什么？",
+      "options": [
+        "先释放外层指针数组，再释放内层数据数组",
+        "先释放内层数据数组，再释放外层指针数组",
+        "同时释放内外层指针",
+        "只需要释放外层指针数组"
+      ],
+      "answer": 1,
+      "explanation": "必须先释放每个内层的数据数组，然后再释放外层的指针数组。如果顺序颠倒，内层数据的地址信息会丢失，导致内存泄漏。"
+    },
+    {
+      "question": "Valgrind报告中的'definitely lost'表示什么？",
+      "options": [
+        "程序结束时仍可访问的内存",
+        "肯定的内存泄漏，无法再访问的内存",
+        "可能的内存泄漏，需要进一步确认",
+        "间接引用导致的内存泄漏"
+      ],
+      "answer": 1,
+      "explanation": "'definitely lost'表示肯定的内存泄漏，这些内存已经无法通过任何指针访问，是最严重的内存泄漏类型。"
+    },
+    {
+      "question": "以下哪个做法有助于避免双重释放（Double Free）错误？",
+      "options": [
+        "每次free后将指针设为NULL",
+        "避免使用realloc函数",
+        "只使用calloc而不使用malloc",
+        "在程序开始时分配所有内存"
+      ],
+      "answer": 0,
+      "explanation": "每次调用free后将指针设为NULL是一个良好的习惯。这样即使不小心再次调用free(NULL)，也不会造成问题，因为free(NULL)是安全的。"
+    },
+    {
+      "question": "在动态数组实现中，为什么通常选择2倍扩容策略？",
+      "options": [
+        "为了确保数组大小始终是偶数",
+        "为了减少realloc调用次数，提高时间效率",
+        "因为realloc只能处理2的幂次方大小",
+        "为了避免内存对齐问题"
+      ],
+      "answer": 1,
+      "explanation": "2倍扩容策略是一种摊销分析下的最优策略，它能保证在多次插入操作中的平均时间复杂度为O(1)，同时减少realloc的调用次数。"
+    }
+  ]
+}

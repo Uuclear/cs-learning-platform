@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "RAII（Resource Acquisition Is Initialization）的核心思想是什么？",
+      "options": [
+        "在程序启动时初始化所有资源",
+        "将资源的生命周期绑定到对象的生命周期上",
+        "使用智能指针替代所有原始指针",
+        "在构造函数中分配内存，在析构函数中释放内存"
+      ],
+      "answer": 1,
+      "explanation": "RAII的核心思想是将资源的生命周期绑定到对象的生命周期上，利用C++的构造函数和析构函数自动管理资源。"
+    },
+    {
+      "question": "std::unique_ptr的主要特点是什么？",
+      "options": [
+        "支持多个指针共享同一块内存",
+        "使用引用计数管理内存",
+        "代表独占所有权，不可复制但可移动",
+        "可以自动转换为std::shared_ptr"
+      ],
+      "answer": 2,
+      "explanation": "std::unique_ptr代表独占所有权，不能被复制（因为所有权是独占的），但可以通过移动语义转移所有权。"
+    },
+    {
+      "question": "std::shared_ptr如何管理内存的生命周期？",
+      "options": [
+        "通过垃圾回收机制",
+        "通过引用计数",
+        "通过作用域规则",
+        "通过手动调用release()方法"
+      ],
+      "answer": 1,
+      "explanation": "std::shared_ptr通过引用计数来管理内存生命周期，当引用计数变为0时自动释放内存。"
+    },
+    {
+      "question": "std::weak_ptr的主要用途是什么？",
+      "options": [
+        "提供比std::shared_ptr更快的访问速度",
+        "减少内存使用量",
+        "打破循环引用并观察shared_ptr管理的对象",
+        "替代std::unique_ptr用于性能优化"
+      ],
+      "answer": 2,
+      "explanation": "std::weak_ptr不增加引用计数，主要用于打破循环引用和临时观察shared_ptr管理的对象。"
+    },
+    {
+      "question": "以下哪种情况会导致循环引用问题？",
+      "options": [
+        "使用std::unique_ptr管理对象",
+        "两个std::shared_ptr互相持有对方",
+        "使用std::weak_ptr观察对象",
+        "在函数内部创建局部变量"
+      ],
+      "answer": 1,
+      "explanation": "当两个std::shared_ptr互相持有对方时，会形成循环引用，导致引用计数永远不会变为0，从而造成内存泄漏。"
+    },
+    {
+      "question": "为什么推荐使用std::make_shared而不是直接使用new创建std::shared_ptr？",
+      "options": [
+        "make_shared语法更简洁",
+        "make_shared可以避免内存泄漏",
+        "make_shared更高效，只需要一次内存分配",
+        "make_shared支持更多的数据类型"
+      ],
+      "answer": 2,
+      "explanation": "std::make_shared更高效，因为它将控制块和对象分配在同一个内存块中，只需要一次内存分配操作。"
+    },
+    {
+      "question": "如何正确使用std::weak_ptr访问它所观察的对象？",
+      "options": [
+        "直接解引用weak_ptr",
+        "调用weak_ptr的get()方法",
+        "使用weak_ptr的lock()方法获取shared_ptr",
+        "将weak_ptr转换为原始指针"
+      ],
+      "answer": 2,
+      "explanation": "应该使用weak_ptr的lock()方法，它返回一个shared_ptr，如果对象仍然存在则可以安全使用，否则返回空指针。"
+    },
+    {
+      "question": "在什么情况下应该优先选择std::unique_ptr而不是std::shared_ptr？",
+      "options": [
+        "当需要在多个线程间共享对象时",
+        "当对象的生命周期需要复杂管理时",
+        "当只需要独占所有权且不需要共享时",
+        "当对象很大需要节省内存时"
+      ],
+      "answer": 2,
+      "explanation": "当只需要独占所有权且不需要共享时，应该优先选择std::unique_ptr，因为它零开销且更高效。"
+    }
+  ]
+}

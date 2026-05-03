@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "在Java中，以下哪种方式创建线程更推荐？",
+      "options": [
+        "继承Thread类",
+        "实现Runnable接口",
+        "直接调用run()方法",
+        "使用System.createThread()方法"
+      ],
+      "answer": 1,
+      "explanation": "实现Runnable接口更推荐，因为它避免了单继承的限制，更加灵活。"
+    },
+    {
+      "question": "synchronized关键字的作用是什么？",
+      "options": [
+        "提高程序运行速度",
+        "确保同一时间只有一个线程可以访问被保护的代码块",
+        "自动关闭线程",
+        "创建新的线程池"
+      ],
+      "answer": 1,
+      "explanation": "synchronized确保线程安全，同一时间只有一个线程可以执行被synchronized保护的代码。"
+    },
+    {
+      "question": "以下关于volatile关键字的说法正确的是？",
+      "options": [
+        "volatile可以保证原子性操作",
+        "volatile主要用于保证变量的可见性",
+        "volatile比synchronized性能更差",
+        "volatile可以替代所有synchronized的使用场景"
+      ],
+      "answer": 1,
+      "explanation": "volatile主要保证变量的可见性，即一个线程修改了volatile变量，其他线程能立即看到修改后的值。"
+    },
+    {
+      "question": "ExecutorService的主要优势是什么？",
+      "options": [
+        "自动创建无限数量的线程",
+        "提供线程池管理，避免频繁创建和销毁线程的开销",
+        "强制所有任务串行执行",
+        "自动处理所有异常"
+      ],
+      "answer": 1,
+      "explanation": "ExecutorService通过线程池管理线程，避免了频繁创建和销毁线程的性能开销。"
+    },
+    {
+      "question": "什么是死锁（Deadlock）？",
+      "options": [
+        "线程执行速度过慢",
+        "两个或多个线程互相等待对方释放资源而无法继续执行",
+        "线程池中的线程数量不足",
+        "程序内存泄漏"
+      ],
+      "answer": 1,
+      "explanation": "死锁发生在两个或多个线程互相持有对方需要的资源并等待对方释放，导致所有相关线程都无法继续执行。"
+    },
+    {
+      "question": "AtomicInteger类的主要用途是什么？",
+      "options": [
+        "存储大整数",
+        "提供线程安全的原子整数操作",
+        "自动转换字符串为整数",
+        "生成随机整数"
+      ],
+      "answer": 1,
+      "explanation": "AtomicInteger提供了线程安全的原子操作，如incrementAndGet()、compareAndSet()等。"
+    },
+    {
+      "question": "使用线程池后，正确的关闭方式是？",
+      "options": [
+        "直接设置executor = null",
+        "调用shutdown()方法，然后等待任务完成",
+        "调用System.exit(0)",
+        "不需要关闭，JVM会自动处理"
+      ],
+      "answer": 1,
+      "explanation": "应该调用shutdown()方法通知线程池不再接受新任务，然后使用awaitTermination()等待现有任务完成。"
+    },
+    {
+      "question": "以下哪个不是Java并发包(java.util.concurrent)中的类？",
+      "options": [
+        "ConcurrentHashMap",
+        "BlockingQueue",
+        "ThreadLocal",
+        "SimpleDateFormat"
+      ],
+      "answer": 3,
+      "explanation": "SimpleDateFormat不是线程安全的，也不属于java.util.concurrent包，它是java.text包中的类。"
+    }
+  ]
+}

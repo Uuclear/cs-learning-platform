@@ -1,0 +1,21 @@
+{
+  "id": "17-10",
+  "title": "电路板维修与故障诊断：万用表、示波器实战",
+  "slug": "lesson-10-pcb-repair-debugging",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 10,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["17-09"],
+  "tags": ["troubleshooting", "multimeter", "oscilloscope", "pcb-repair", "debugging", "soldering"],
+  "description": "学习使用万用表、示波器等工具进行电路板故障诊断和维修，掌握焊接、元件更换和常见故障排查技巧。",
+  "learning_objectives": [
+    "熟练使用万用表测量电压、电流和电阻",
+    "掌握示波器的基本操作和波形分析",
+    "能够识别常见电路板故障（短路、开路、元件损坏）",
+    "掌握基本的焊接和元件更换技巧"
+  ]
+}

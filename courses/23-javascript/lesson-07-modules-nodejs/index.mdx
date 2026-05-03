@@ -1,0 +1,422 @@
+---
+title: 模块化与Node.js
+description: 学习JavaScript模块化编程和Node.js运行环境，掌握从前端到后端的跨越。
+---
+
+# 模块化与Node.js
+
+同学们好！今天我们来探索JavaScript世界中一个非常重要的概念——**模块化**，以及如何使用**Node.js**让JavaScript脱离浏览器的束缚，在服务器端大展身手。
+
+想象一下，如果你要搭建一座复杂的乐高城堡，你会选择把所有积木都混在一起，还是按照颜色、形状、功能分类存放？显然，分类存放会让搭建过程更加有序和高效。JavaScript的模块化就是这个道理——它让我们能够将代码拆分成独立、可重用的小单元，就像整理好的乐高积木一样。
+
+## 1. 为什么需要模块化？
+
+在早期的JavaScript开发中，所有的代码都写在一个或少数几个文件中，这带来了许多问题：
+
+- **命名冲突**：不同开发者定义的变量名可能重复
+- **代码混乱**：随着项目增长，代码变得难以维护
+- **复用困难**：想要在其他项目中使用某段代码变得很麻烦
+- **依赖管理**：不清楚哪些代码依赖于哪些其他代码
+
+模块化解决了这些问题，它提供了：
+
+- **封装性**：每个模块都有自己的作用域，不会污染全局命名空间
+- **可复用性**：模块可以在不同项目中重复使用
+- **可维护性**：代码被组织成逻辑单元，更容易理解和修改
+- **依赖明确**：清楚地声明模块之间的依赖关系
+
+```javascript
+// 传统的全局变量方式（不推荐）
+var userName = "张三";
+var userAge = 25;
+
+// 如果另一个文件也定义了userName，就会发生冲突！
+```
+
+## 2. CommonJS vs ES Modules
+
+JavaScript有两种主要的模块系统：**CommonJS**和**ES Modules (ESM)**。
+
+### CommonJS（Node.js的传统模块系统）
+
+CommonJS是Node.js最初采用的模块系统，使用`require()`和`module.exports`：
+
+```javascript
+// math.js - 导出模块
+function add(a, b) {
+  return a + b;
+}
+
+function multiply(a, b) {
+  return a * b;
+}
+
+// 导出函数
+module.exports = {
+  add: add,
+  multiply: multiply
+};
+
+// 或者简写为：
+// module.exports = { add, multiply };
+```
+
+```javascript
+// main.js - 导入模块
+const math = require('./math');
+console.log(math.add(2, 3)); // 输出: 5
+console.log(math.multiply(4, 5)); // 输出: 20
+```
+
+### ES Modules（现代标准）
+
+ES Modules是ECMAScript官方标准，使用`import`和`export`关键字：
+
+```javascript
+// math.mjs - 导出模块
+export function add(a, b) {
+  return a + b;
+}
+
+export function multiply(a, b) {
+  return a * b;
+}
+
+// 也可以导出默认值
+export default function subtract(a, b) {
+  return a - b;
+}
+```
+
+```javascript
+// main.mjs - 导入模块
+import subtract, { add, multiply } from './math.mjs';
+
+console.log(add(2, 3)); // 输出: 5
+console.log(multiply(4, 5)); // 输出: 20
+console.log(subtract(10, 3)); // 输出: 7
+```
+
+### 主要区别
+
+| 特性 | CommonJS | ES Modules |
+|------|----------|------------|
+| 加载时机 | 运行时加载 | 编译时加载 |
+| 导入语法 | `require()` | `import` |
+| 导出语法 | `module.exports` | `export` |
+| 默认导出 | `module.exports = value` | `export default value` |
+| 循环依赖 | 支持但有风险 | 更安全的处理 |
+
+## 3. Node.js中的模块系统演进
+
+Node.js最初只支持CommonJS，但随着ES Modules成为标准，Node.js也逐渐支持了ESM。
+
+### 在Node.js中使用ES Modules
+
+要在Node.js中使用ES Modules，你有两种选择：
+
+1. **使用.mjs扩展名**：所有.mjs文件自动被视为ES Modules
+2. **在package.json中设置"type": "module"**：这样.js文件也会被视为ES Modules
+
+```json
+// package.json
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "type": "module"
+}
+```
+
+### 混合使用两种模块系统
+
+Node.js允许你在同一个项目中混合使用CommonJS和ES Modules，但需要注意一些限制：
+
+- CommonJS不能直接使用ES Modules的默认导出
+- ES Modules可以导入CommonJS模块，但会将其视为默认导出
+
+```javascript
+// 在ESM中导入CommonJS模块
+import fs from 'fs'; // fs是CommonJS模块，但在ESM中作为默认导入
+import { readFile } from 'fs/promises'; // 使用promises版本
+
+// 在CommonJS中导入ESM模块（需要异步）
+async function loadESM() {
+  const { add } = await import('./math.mjs');
+  return add(1, 2);
+}
+```
+
+## 4. npm包管理器
+
+**npm**（Node Package Manager）是JavaScript生态系统中最流行的包管理器，它让我们能够轻松地安装、管理和分享代码包。
+
+### 初始化项目
+
+首先，我们需要初始化一个Node.js项目：
+
+```bash
+npm init -y
+```
+
+这会创建一个`package.json`文件，记录项目的元数据和依赖信息。
+
+### 安装依赖
+
+```bash
+# 安装生产依赖
+npm install lodash
+
+# 安装开发依赖
+npm install --save-dev jest
+
+# 全局安装（通常用于CLI工具）
+npm install -g nodemon
+```
+
+### package.json结构
+
+```json
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "description": "我的Node.js项目",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
+```
+
+### 使用第三方模块
+
+安装完成后，就可以在代码中使用这些模块：
+
+```javascript
+// 使用lodash
+import _ from 'lodash';
+
+const numbers = [1, 2, 3, 4, 5];
+console.log(_.sum(numbers)); // 输出: 15
+console.log(_.chunk(numbers, 2)); // 输出: [[1,2], [3,4], [5]]
+```
+
+## 5. Node.js核心模块
+
+Node.js提供了许多内置的核心模块，无需安装即可使用：
+
+### 文件系统模块（fs）
+
+```javascript
+import { readFile, writeFile } from 'fs/promises';
+
+try {
+  // 读取文件
+  const data = await readFile('example.txt', 'utf8');
+  console.log('文件内容:', data);
+  
+  // 写入文件
+  await writeFile('output.txt', 'Hello Node.js!');
+  console.log('文件写入成功！');
+} catch (error) {
+  console.error('文件操作错误:', error.message);
+}
+```
+
+### HTTP模块
+
+```javascript
+import http from 'http';
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello from Node.js Server!\n');
+});
+
+server.listen(3000, () => {
+  console.log('服务器运行在 http://localhost:3000');
+});
+```
+
+### 路径模块（path）
+
+```javascript
+import path from 'path';
+
+const filePath = path.join(__dirname, 'data', 'config.json');
+console.log('完整路径:', filePath);
+
+const ext = path.extname('app.js');
+console.log('文件扩展名:', ext); // 输出: .js
+```
+
+## 6. Node.js事件驱动架构
+
+Node.js的核心是**事件驱动**和**非阻塞I/O**模型，这让它能够高效处理大量并发连接。
+
+### EventEmitter类
+
+Node.js中的许多对象都继承自EventEmitter，可以发射和监听事件：
+
+```javascript
+import { EventEmitter } from 'events';
+
+class MyEmitter extends EventEmitter {}
+
+const myEmitter = new MyEmitter();
+
+// 监听事件
+myEmitter.on('event', () => {
+  console.log('事件被触发了！');
+});
+
+// 发射事件
+myEmitter.emit('event');
+```
+
+### 异步编程模式
+
+Node.js鼓励使用异步编程来避免阻塞：
+
+```javascript
+// 回调函数（传统方式）
+fs.readFile('file.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+
+// Promise（现代方式）
+fs.promises.readFile('file.txt', 'utf8')
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+
+// async/await（最简洁的方式）
+try {
+  const data = await fs.promises.readFile('file.txt', 'utf8');
+  console.log(data);
+} catch (err) {
+  console.error(err);
+}
+```
+
+## 7. 构建简单的Node.js应用
+
+让我们结合所学知识，构建一个简单的Node.js应用：
+
+### 项目结构
+
+```
+my-app/
+├── package.json
+├── index.js
+├── utils/
+│   └── logger.js
+└── routes/
+    └── api.js
+```
+
+### 创建模块
+
+```javascript
+// utils/logger.js
+export function log(message) {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${message}`);
+}
+
+export function error(message) {
+  const timestamp = new Date().toISOString();
+  console.error(`[${timestamp}] ERROR: ${message}`);
+}
+```
+
+```javascript
+// routes/api.js
+import { log } from '../utils/logger.js';
+
+export function handleRequest(req, res) {
+  log(`收到请求: ${req.url}`);
+  
+  if (req.url === '/api/hello') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'Hello World!' }));
+  } else {
+    res.writeHead(404);
+    res.end('Not Found');
+  }
+}
+```
+
+```javascript
+// index.js
+import http from 'http';
+import { handleRequest } from './routes/api.js';
+import { log, error } from './utils/logger.js';
+
+const server = http.createServer(handleRequest);
+
+server.listen(3000, () => {
+  log('服务器启动成功，监听端口 3000');
+});
+
+server.on('error', (err) => {
+  error(`服务器错误: ${err.message}`);
+});
+```
+
+### 运行应用
+
+```bash
+node index.js
+```
+
+现在你可以访问 `http://localhost:3000/api/hello` 来测试你的应用！
+
+## 8. 最佳实践和常见陷阱
+
+### 最佳实践
+
+1. **优先使用ES Modules**：它们是现代JavaScript的标准
+2. **明确的导入/导出**：避免使用通配符导入，明确指定需要的内容
+3. **合理的模块划分**：按功能而非文件类型组织模块
+4. **使用TypeScript**：为大型项目提供更好的类型安全
+5. **依赖锁定**：使用`package-lock.json`确保依赖版本一致
+
+### 常见陷阱
+
+1. **循环依赖**：模块A依赖模块B，模块B又依赖模块A
+2. **同步vs异步**：不要在异步环境中使用同步方法
+3. **路径问题**：注意相对路径和绝对路径的区别
+4. **内存泄漏**：忘记移除事件监听器会导致内存泄漏
+5. **错误处理**：总是处理Promise拒绝和异步错误
+
+### 调试技巧
+
+```javascript
+// 使用console.log进行基本调试
+console.log('变量值:', variable);
+
+// 使用Node.js内置调试器
+node --inspect-brk index.js
+
+// 使用环境变量控制日志级别
+if (process.env.NODE_ENV === 'development') {
+  console.log('开发环境日志');
+}
+```
+
+## 总结
+
+今天我们学习了JavaScript模块化的两个主要系统（CommonJS和ES Modules），了解了Node.js的核心概念和架构，掌握了npm包管理器的使用，并动手构建了一个简单的Node.js应用。
+
+记住，模块化不仅仅是一种技术，更是一种思维方式——将复杂问题分解为简单、可管理的部分。Node.js则为我们打开了JavaScript在服务器端应用的大门，让我们能够用熟悉的语言构建全栈应用。
+
+在下一课中，我们将深入探讨Node.js的高级特性，包括流处理、集群模式和性能优化。现在，去练习一下今天学到的知识吧！
+
+> **小贴士**：模块就像乐高积木，Node.js就是让你能在任何地方（不仅是浏览器）搭建这些积木的工具箱。掌握它们，你就拥有了构建现代Web应用的强大能力！

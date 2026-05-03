@@ -1,0 +1,369 @@
+---
+title: 泛型与类型擦除
+---
+
+import Exercise from "@site/src/components/Exercise";
+import Quiz from "@site/src/components/Quiz";
+
+# 泛型与类型擦除
+
+## 开场白：万能模具的魔法
+
+想象一下，你是一个烘焙大师，需要制作各种形状的饼干。如果没有模具，你只能用手捏，不仅效率低，而且每个饼干的形状都不一样。但如果你有一个**万能模具**，只需要调整一下参数，就能制作出圆形、方形、心形等各种形状的完美饼干！
+
+Java 泛型就是编程世界的"万能模具"。在泛型出现之前，我们经常需要编写重复的代码来处理不同类型的数据。比如，一个存储整数的列表和一个存储字符串的列表，在底层实现上几乎完全相同，只是数据类型不同。这不仅浪费时间，还容易出错。
+
+泛型让我们能够编写**一次代码，适用于多种类型**，同时还能保证**类型安全**。就像万能模具一样，我们定义一个通用的模板，然后在使用时指定具体的类型参数。
+
+## 核心概念：泛型语法、通配符、类型擦除
+
+### 泛型的基本语法
+
+泛型的核心思想是在类、接口或方法的定义中使用**类型参数**。这些类型参数用尖括号 `<>` 包围，通常用大写字母表示（如 `T`, `U`, `E`, `K`, `V` 等）。
+
+```java
+// 泛型类
+public class Box<T> {
+    private T content;
+    
+    public void setContent(T content) {
+        this.content = content;
+    }
+    
+    public T getContent() {
+        return content;
+    }
+}
+
+// 使用泛型类
+Box<String> stringBox = new Box<>();
+Box<Integer> integerBox = new Box<>();
+```
+
+### 通配符（Wildcard）
+
+有时候，我们需要处理**未知但相关**的类型。这时就用到了通配符 `?`。
+
+- **无界通配符**：`List<?>` 表示包含某种未知类型的列表
+- **上界通配符**：`List<? extends Number>` 表示包含 Number 或其子类型的列表
+- **下界通配符**：`List<? super Integer>` 表示包含 Integer 或其父类型的列表
+
+### 类型擦除（Type Erasure）
+
+这是 Java 泛型最神秘的部分！**类型擦除**意味着泛型信息只存在于编译期，在运行时会被"擦除"。
+
+```java
+// 编译前
+List<String> strings = new ArrayList<>();
+List<Integer> integers = new ArrayList<>();
+
+// 编译后（运行时）
+List strings = new ArrayList(); // 实际上都是原始类型
+List integers = new ArrayList();
+```
+
+这种设计是为了向后兼容 Java 1.4 及更早版本的代码。虽然带来了便利，但也有一些限制，比如无法在运行时获取泛型的实际类型。
+
+## 代码演示：泛型类和泛型方法
+
+让我们通过几个实际的例子来看看泛型的强大之处。
+
+### 泛型类示例
+
+```java
+// 一个简单的键值对类
+public class Pair<T, U> {
+    private T first;
+    private U second;
+    
+    public Pair(T first, U second) {
+        this.first = first;
+        this.second = second;
+    }
+    
+    public T getFirst() { return first; }
+    public U getSecond() { return second; }
+    
+    public void setFirst(T first) { this.first = first; }
+    public void setSecond(U second) { this.second = second; }
+    
+    @Override
+    public String toString() {
+        return "(" + first + ", " + second + ")";
+    }
+}
+```
+
+### 泛型方法示例
+
+```java
+// 静态泛型方法
+public static <T> void printArray(T[] array) {
+    for (T element : array) {
+        System.out.print(element + " ");
+    }
+    System.out.println();
+}
+
+// 实例泛型方法
+public <T extends Comparable<T>> T findMax(T a, T b) {
+    return a.compareTo(b) > 0 ? a : b;
+}
+```
+
+### 使用示例
+
+```java
+// 创建不同类型的 Pair
+Pair<String, Integer> nameAge = new Pair<>("张三", 25);
+Pair<Double, Boolean> priceAvailable = new Pair<>(99.99, true);
+
+System.out.println(nameAge); // (张三, 25)
+System.out.println(priceAvailable); // (99.99, true)
+
+// 使用泛型方法
+String[] names = {"Alice", "Bob", "Charlie"};
+printArray(names); // Alice Bob Charlie
+
+Integer max = findMax(10, 20); // 20
+```
+
+## 深入理解：PECS 原则详解
+
+PECS 是 "Producer Extends, Consumer Super" 的缩写，这是理解和使用通配符的关键原则。
+
+### Producer Extends（生产者用 extends）
+
+当你需要从某个结构中**读取**数据（生产数据）时，使用 `? extends T`。
+
+```java
+// 这个方法从列表中读取数据，是生产者
+public double sumOfList(List<? extends Number> list) {
+    double sum = 0.0;
+    for (Number num : list) {
+        sum += num.doubleValue();
+    }
+    return sum;
+}
+
+// 可以传入 List<Integer>, List<Double> 等
+List<Integer> integers = Arrays.asList(1, 2, 3);
+List<Double> doubles = Arrays.asList(1.0, 2.0, 3.0);
+double sum1 = sumOfList(integers); // OK
+double sum2 = sumOfList(doubles);  // OK
+```
+
+### Consumer Super（消费者用 super）
+
+当你需要向某个结构中**写入**数据（消费数据）时，使用 `? super T`。
+
+```java
+// 这个方法向列表中写入数据，是消费者
+public void addNumbers(List<? super Integer> list) {
+    for (int i = 1; i <= 5; i++) {
+        list.add(i); // 可以添加 Integer
+    }
+}
+
+// 可以传入 List<Integer>, List<Number>, List<Object>
+List<Integer> integers = new ArrayList<>();
+List<Number> numbers = new ArrayList<>();
+addNumbers(integers); // OK
+addNumbers(numbers);  // OK
+```
+
+### 为什么这样设计？
+
+- `? extends T` 保证了你可以安全地**读取**为 `T` 类型
+- `? super T` 保证了你可以安全地**写入** `T` 类型
+
+记住这个口诀：**读取用 extends，写入用 super**！
+
+## 实际应用：通用比较器、类型安全的容器
+
+### 通用比较器
+
+```java
+// 泛型比较器
+public class GenericComparator<T extends Comparable<T>> implements Comparator<T> {
+    @Override
+    public int compare(T o1, T o2) {
+        return o1.compareTo(o2);
+    }
+}
+
+// 使用
+List<String> words = Arrays.asList("banana", "apple", "cherry");
+words.sort(new GenericComparator<>()); // 按字母顺序排序
+```
+
+### 类型安全的容器
+
+```java
+// 类型安全的栈
+public class SafeStack<T> {
+    private final List<T> stack = new ArrayList<>();
+    
+    public void push(T item) {
+        stack.add(item);
+    }
+    
+    public T pop() {
+        if (stack.isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+        return stack.remove(stack.size() - 1);
+    }
+    
+    public boolean isEmpty() {
+        return stack.isEmpty();
+    }
+}
+
+// 使用
+SafeStack<String> stringStack = new SafeStack<>();
+stringStack.push("Hello");
+stringStack.push("World");
+String popped = stringStack.pop(); // "World"
+```
+
+### 泛型工厂方法
+
+```java
+// 泛型工厂方法避免重复的类型声明
+public static <T> SafeStack<T> createStack() {
+    return new SafeStack<T>();
+}
+
+// 使用时更加简洁
+SafeStack<String> stack = createStack(); // 不需要重复写 <String>
+```
+
+## 常见误区：泛型数组、擦除后无法获取类型
+
+### 误区一：不能创建泛型数组
+
+```java
+// 这是不允许的！
+T[] array = new T[size]; // 编译错误
+
+// 正确的做法：使用反射或 Object 数组
+@SuppressWarnings("unchecked")
+T[] array = (T[]) new Object[size]; // 需要强制转换和警告抑制
+
+// 更好的做法：使用 ArrayList
+List<T> list = new ArrayList<>();
+```
+
+### 误区二：运行时无法获取泛型类型
+
+```java
+public class GenericClass<T> {
+    public void printType() {
+        // 这样无法获取 T 的实际类型！
+        // T.class 会导致编译错误
+        
+        // 因为类型擦除，运行时只知道这是 Object
+    }
+}
+
+// 解决方案：传递 Class 对象
+public class GenericClassWithClass<T> {
+    private final Class<T> type;
+    
+    public GenericClassWithClass(Class<T> type) {
+        this.type = type;
+    }
+    
+    public void printType() {
+        System.out.println("Type: " + type.getName());
+    }
+}
+```
+
+### 误区三：静态成员不能使用类型参数
+
+```java
+public class BadExample<T> {
+    // 这是不允许的！
+    private static T staticField; // 编译错误
+    
+    // 这也是不允许的！
+    public static T staticMethod() { // 编译错误
+        return null;
+    }
+}
+```
+
+原因：静态成员属于类本身，而不是类的实例。而泛型类型参数是实例级别的概念。
+
+## 动手实践
+
+现在让我们通过一些练习来巩固所学知识。
+
+### 练习 1：实现泛型缓存
+
+创建一个简单的泛型缓存类，支持基本的 put/get 操作。
+
+<Exercise id="generic-cache" difficulty="medium">
+实现一个 `GenericCache<K, V>` 类，包含以下方法：
+- `put(K key, V value)`：存储键值对
+- `get(K key)`：获取值，如果不存在返回 null
+- `containsKey(K key)`：检查是否包含指定键
+
+提示：可以使用 `HashMap<K, V>` 作为内部存储。
+</Exercise>
+
+### 练习 2：通配符应用
+
+编写一个方法，能够计算任意数值类型列表的平均值。
+
+<Exercise id="wildcard-average" difficulty="medium">
+实现 `calculateAverage(List<? extends Number> numbers)` 方法，返回列表中所有数字的平均值（double 类型）。
+
+提示：使用 `Number` 的 `doubleValue()` 方法。
+</Exercise>
+
+### 练习 3：泛型工具类
+
+创建一个泛型工具类，包含常用的集合操作方法。
+
+<Exercise id="generic-utils" difficulty="hard">
+实现 `CollectionUtils` 类，包含以下静态泛型方法：
+- `<T> void swap(List<T> list, int i, int j)`：交换列表中两个位置的元素
+- `<T extends Comparable<T>> T findMin(List<T> list)`：找到列表中的最小元素
+- `<T> List<T> reverse(List<T> original)`：返回原列表的反转副本
+</Exercise>
+
+## 小结与思考
+
+### 关键要点回顾
+
+1. **泛型提供编译时类型安全**：在编译期就能发现类型错误，避免运行时的 `ClassCastException`
+2. **类型擦除机制**：泛型信息只存在于编译期，运行时会被擦除为原始类型
+3. **PECS 原则**：Producer Extends, Consumer Super — 这是使用通配符的黄金法则
+4. **泛型的限制**：不能创建泛型数组、静态成员不能使用类型参数、运行时无法获取泛型类型
+
+### 思考题
+
+1. **为什么 Java 选择类型擦除而不是像 C# 那样保留泛型信息到运行时？**
+   
+   答案：主要是为了向后兼容。Java 泛型是在 JDK 1.5 中引入的，为了确保新代码能够与旧代码无缝协作，选择了类型擦除的设计。
+
+2. **在什么情况下应该使用通配符，什么时候应该使用具体的类型参数？**
+   
+   答案：当方法只需要处理某种类型的对象而不关心具体类型时，使用通配符；当需要在多个地方使用相同的具体类型时，使用类型参数。
+
+3. **如何绕过类型擦除的限制，在运行时获取泛型类型信息？**
+   
+   答案：可以通过传递 `Class` 对象、使用匿名内部类配合反射、或者使用类型令牌（Type Token）模式。
+
+### 进一步学习
+
+- 探索 Guava 库中的泛型工具类
+- 学习 Java 8+ 中的泛型与函数式编程结合
+- 了解 Kotlin 或 Scala 中的泛型实现，对比 Java 的设计
+
+泛型是 Java 中一个强大但复杂的特性。掌握它不仅能让你写出更安全、更灵活的代码，还能帮助你更好地理解现代 Java 库的设计思想。记住，**泛型的目标是让编译器帮你做更多的工作，而不是让运行时承担类型检查的负担**！
+
+现在，拿起你的"万能模具"，开始创造类型安全的代码吧！

@@ -1,0 +1,314 @@
+---
+title: Lambda与Stream API
+description: 学习 Java 8 的 Lambda 表达式和 Stream API，掌握函数式编程风格的数据处理链。
+---
+
+import { Exercise, Quiz } from '@learn/components'
+
+# Lambda与Stream API
+
+## 开场白：数据处理的流水线革命
+
+想象一下，你是一家工厂的老板，需要处理一批原材料。在过去，你可能会这样做：
+
+1. 派工人A检查每个原材料是否合格（过滤）
+2. 把合格的材料交给工人B进行加工（转换）
+3. 再把加工好的产品交给工人C进行包装（收集）
+
+这个过程很繁琐，每个工人都要等前一个工人完成所有工作才能开始。而且如果材料很多，整个过程会非常慢。
+
+现在，Java 8 给你带来了一个神奇的**自动化流水线**！你可以这样设置：
+
+- 在流水线入口放上所有原材料
+- 设置第一个工作站自动筛选合格品
+- 第二个工作站自动对合格品进行加工  
+- 第三个工作站自动包装成品
+- 流水线末端直接输出最终产品
+
+这就是 **Stream API** 的魔力！配合 **Lambda 表达式**，你可以用声明式的方式描述数据处理流程，而不是一步步告诉计算机怎么做。代码变得更简洁、更易读，而且还能自动利用多核处理器的优势！
+
+## 核心概念：Lambda 语法与 Stream 操作
+
+### Lambda 表达式：匿名函数的优雅写法
+
+在 Java 8 之前，如果你想传递一段代码作为参数，通常需要创建一个匿名内部类：
+
+```java
+// 老式写法 - 匿名内部类
+Collections.sort(persons, new Comparator<Person>() {
+    @Override
+    public int compare(Person p1, Person p2) {
+        return p1.getAge() - p2.getAge();
+    }
+});
+```
+
+Lambda 表达式让这个过程变得超级简洁：
+
+```java
+// 新式写法 - Lambda 表达式
+persons.sort((p1, p2) -> p1.getAge() - p2.getAge());
+```
+
+Lambda 表达式的基本语法是：`(参数) -> {表达式或语句}`
+
+- **无参数**：`() -> System.out.println("Hello")`
+- **单参数**：`x -> x * 2`（可以省略括号）
+- **多参数**：`(x, y) -> x + y`
+- **多行代码**：`(x, y) -> { int sum = x + y; return sum * 2; }`
+
+### 函数式接口：Lambda 的舞台
+
+Lambda 表达式只能用在**函数式接口**上。函数式接口是只有一个抽象方法的接口，比如：
+
+- `Runnable`：`void run()`
+- `Comparator<T>`：`int compare(T o1, T o2)`
+- `Function<T, R>`：`R apply(T t)`
+- `Predicate<T>`：`boolean test(T t)`
+- `Consumer<T>`：`void accept(T t)`
+
+Java 8 在 `java.util.function` 包中提供了大量预定义的函数式接口。
+
+### Stream API：数据处理的流水线
+
+Stream 不是数据结构，而是一种**数据处理的抽象**。它有三个重要特征：
+
+1. **不存储数据**：Stream 只是对数据源（如集合、数组）的操作视图
+2. **惰性求值**：中间操作不会立即执行，只有终端操作才会触发整个流水线
+3. **不可重复使用**：Stream 只能被消费一次
+
+Stream 操作分为两类：
+
+**中间操作（Intermediate Operations）**：
+- 返回新的 Stream，可以链式调用
+- 常见操作：`filter()`, `map()`, `sorted()`, `distinct()`, `limit()`, `skip()`
+
+**终端操作（Terminal Operations）**：
+- 触发 Stream 的执行并产生结果
+- 常见操作：`collect()`, `forEach()`, `reduce()`, `count()`, `findFirst()`
+
+## 代码演示：Stream 数据处理示例
+
+让我们通过几个实际例子来看看 Stream API 的强大之处。
+
+### 示例1：基本的过滤和转换
+
+假设我们有一个学生列表，想要找出年龄大于18岁的学生，并获取他们的姓名：
+
+```java
+// 传统方式
+List<String> adultNames = new ArrayList<>();
+for (Student student : students) {
+    if (student.getAge() > 18) {
+        adultNames.add(student.getName());
+    }
+}
+
+// Stream 方式
+List<String> adultNames = students.stream()
+    .filter(student -> student.getAge() > 18)
+    .map(Student::getName)
+    .collect(Collectors.toList());
+```
+
+看！代码从6行减少到3行，而且逻辑更加清晰：先过滤，再映射，最后收集。
+
+### 示例2：复杂的链式操作
+
+找出身高最高的前3名成年学生的平均分数：
+
+```java
+double averageScore = students.stream()
+    .filter(student -> student.getAge() >= 18)           // 过滤成年人
+    .sorted(Comparator.comparing(Student::getHeight).reversed()) // 按身高降序
+    .limit(3)                                           // 取前3名
+    .mapToDouble(Student::getScore)                     // 获取分数
+    .average()                                          // 计算平均值
+    .orElse(0.0);                                       // 如果没有结果返回0
+```
+
+这种链式调用就像组装乐高积木一样，每个操作都很小，但组合起来就能完成复杂的任务！
+
+## 深入理解：惰性求值与并行流
+
+### 惰性求值的奥秘
+
+Stream 的中间操作是**惰性求值**的，这意味着它们不会立即执行，而是等到终端操作被调用时才一起执行。
+
+```java
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+Stream<Integer> stream = numbers.stream()
+    .filter(n -> {
+        System.out.println("filter: " + n);
+        return n % 2 == 0;
+    })
+    .map(n -> {
+        System.out.println("map: " + n);
+        return n * n;
+    });
+
+// 此时没有任何输出！因为还没有终端操作
+
+stream.forEach(n -> System.out.println("forEach: " + n));
+// 现在才会输出：
+// filter: 1
+// filter: 2
+// map: 2
+// forEach: 4
+// filter: 3
+// ...
+```
+
+惰性求值的好处：
+- **性能优化**：避免不必要的计算
+- **短路操作**：像 `findFirst()` 这样的操作可以在找到第一个元素后立即停止
+- **内存友好**：不需要一次性加载所有中间结果
+
+### 并行流：轻松利用多核处理器
+
+如果你的数据量很大，可以轻松地将串行流转换为并行流：
+
+```java
+// 串行流
+long count = numbers.stream()
+    .filter(n -> n % 2 == 0)
+    .count();
+
+// 并行流
+long count = numbers.parallelStream()
+    .filter(n -> n % 2 == 0)
+    .count();
+```
+
+只需将 `stream()` 改为 `parallelStream()`，Java 就会自动将数据分片并在多个线程上并行处理！
+
+但是要注意：
+- **不是所有场景都适合并行**：数据量小的时候，并行的开销可能超过收益
+- **避免有状态的操作**：并行流中的操作应该是无状态的
+- **注意线程安全**：确保你的 Lambda 表达式是线程安全的
+
+## 实际应用：数据分析与分组统计
+
+Stream API 在实际开发中最常用的就是数据分析和分组统计。
+
+### 分组统计
+
+假设我们有一个订单列表，想要按客户分组统计：
+
+```java
+// 按客户分组
+Map<Customer, List<Order>> ordersByCustomer = orders.stream()
+    .collect(Collectors.groupingBy(Order::getCustomer));
+
+// 按客户分组并计算总金额
+Map<Customer, Double> totalAmountByCustomer = orders.stream()
+    .collect(Collectors.groupingBy(
+        Order::getCustomer,
+        Collectors.summingDouble(Order::getAmount)
+    ));
+
+// 多级分组：按客户和订单状态分组
+Map<Customer, Map<OrderStatus, List<Order>>> multiLevelGrouping = orders.stream()
+    .collect(Collectors.groupingBy(
+        Order::getCustomer,
+        Collectors.groupingBy(Order::getStatus)
+    ));
+```
+
+### 数据汇总
+
+计算各种统计数据：
+
+```java
+// 计算最大值、最小值、平均值、总和
+IntSummaryStatistics stats = numbers.stream()
+    .mapToInt(Integer::intValue)
+    .summaryStatistics();
+
+System.out.println("Max: " + stats.getMax());
+System.out.println("Min: " + stats.getMin());
+System.out.println("Average: " + stats.getAverage());
+System.out.println("Sum: " + stats.getSum());
+```
+
+## 常见误区：避坑指南
+
+### 误区1：Stream 只能消费一次
+
+```java
+// 错误示例
+Stream<String> stream = list.stream();
+stream.forEach(System.out::println);
+stream.forEach(System.out::println); // java.lang.IllegalStateException: stream has already been operated upon or closed
+```
+
+正确的做法是每次都创建新的 Stream：
+
+```java
+// 正确示例
+list.stream().forEach(System.out::println);
+list.stream().forEach(System.out::println);
+```
+
+### 误区2：并行流不是万能药
+
+并行流并不总是更快！对于小数据集或者简单的操作，并行化的开销可能超过收益：
+
+```java
+// 对于小数组，串行可能更快
+List<Integer> smallList = Arrays.asList(1, 2, 3, 4, 5);
+// smallList.stream() vs smallList.parallelStream()
+
+// 对于大数组，特别是 CPU 密集型操作，并行才有优势
+List<Integer> largeList = // ... 一百万个元素
+// largeList.parallelStream() 可能更快
+```
+
+### 误区3：在 Stream 中修改外部变量
+
+```java
+// 错误示例 - 试图修改外部变量
+int sum = 0;
+numbers.stream().forEach(n -> sum += n); // 编译错误！sum 必须是 final 或 effectively final
+```
+
+正确的做法是使用归约操作：
+
+```java
+// 正确示例
+int sum = numbers.stream().mapToInt(Integer::intValue).sum();
+```
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+### 练习1：基础操作
+给定一个字符串列表，使用 Stream API 找出长度大于5的字符串，并转换为大写。
+
+### 练习2：复杂链式操作
+给定一个员工列表，找出工资最高的前5名已婚员工的平均年龄。
+
+### 练习3：分组统计
+给定一个产品销售记录列表，按产品类别分组，并计算每个类别的总销售额和平均单价。
+
+## 小结与思考
+
+Lambda 表达式和 Stream API 是 Java 8 带来的最重要的特性之一，它们彻底改变了我们处理集合数据的方式。
+
+**核心要点回顾**：
+1. **Lambda 表达式**让代码更简洁，特别适合函数式接口
+2. **Stream API**提供声明式的集合处理方式，代码更易读
+3. **中间操作**和**终端操作**的区分很重要
+4. **惰性求值**机制带来了性能优化
+5. **并行流**可以轻松利用多核处理器，但要谨慎使用
+
+**思考题**：
+- 在什么场景下应该优先使用 Stream API？
+- 如何判断并行流是否真的带来了性能提升？
+- Stream API 和传统的 for 循环相比，各自的适用场景是什么？
+
+记住，Stream API 不是为了替代所有的循环，而是为了让你的代码在处理复杂的数据转换时更加优雅和高效。就像一把瑞士军刀，它有很多功能，但并不是每个螺丝都需要用到最复杂的工具！
+
+Happy coding with Lambda and Streams! 🎯

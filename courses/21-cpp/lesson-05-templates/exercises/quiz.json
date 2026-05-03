@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "C++模板的主要目的是什么？",
+      "options": [
+        "提高程序运行时性能",
+        "实现编译期多态和代码复用",
+        "减少内存使用",
+        "简化调试过程"
+      ],
+      "answer": 1,
+      "explanation": "模板允许编写与类型无关的代码，在编译时根据具体类型生成相应的代码，实现编译期多态和代码复用。"
+    },
+    {
+      "question": "以下哪个是正确的函数模板声明？",
+      "options": [
+        "template <T> void func(T param);",
+        "template <typename T> void func(T param);",
+        "void template<T> func(T param);",
+        "template void<T> func(T param);"
+      ],
+      "answer": 1,
+      "explanation": "正确的函数模板声明使用 template<typename T> 或 template<class T> 语法。"
+    },
+    {
+      "question": "模板特化的作用是什么？",
+      "options": [
+        "为特定类型提供专门的实现",
+        "限制模板可以使用的类型",
+        "提高模板的编译速度",
+        "减少模板代码的大小"
+      ],
+      "answer": 0,
+      "explanation": "模板特化允许为特定类型提供专门的、优化的实现，而不是使用通用模板。"
+    },
+    {
+      "question": "什么是偏特化（Partial Specialization）？",
+      "options": [
+        "只对部分模板参数进行特化",
+        "对模板的部分功能进行特化",
+        "在运行时选择特化版本",
+        "只在Debug模式下使用特化"
+      ],
+      "answer": 0,
+      "explanation": "偏特化是指对类模板的部分模板参数进行特化，而保留其他参数为通用的。"
+    },
+    {
+      "question": "auto关键字在C++11中主要用于什么？",
+      "options": [
+        "声明自动变量",
+        "自动类型推导",
+        "定义模板别名",
+        "启用自动内存管理"
+      ],
+      "answer": 1,
+      "explanation": "auto关键字用于自动类型推导，让编译器根据初始化表达式推断变量类型。"
+    },
+    {
+      "question": "decltype表达式的作用是什么？",
+      "options": [
+        "获取表达式的值",
+        "获取表达式的类型",
+        "声明延迟计算",
+        "定义类型别名"
+      ],
+      "answer": 1,
+      "explanation": "decltype用于获取表达式的类型，而不实际计算表达式的值。"
+    },
+    {
+      "question": "为什么模板代码通常放在头文件中？",
+      "options": [
+        "因为模板需要在编译时可见",
+        "因为头文件编译更快",
+        "因为链接器无法处理模板",
+        "因为这是C++标准要求"
+      ],
+      "answer": 0,
+      "explanation": "模板需要在编译时可见，因为编译器需要根据具体的类型参数生成实际的代码。"
+    },
+    {
+      "question": "SFINAE原则指的是什么？",
+      "options": [
+        "模板必须有默认参数",
+        "无效的替换不会导致编译错误",
+        "所有模板参数必须显式指定",
+        "模板不能有重载"
+      ],
+      "answer": 1,
+      "explanation": "SFINAE (Substitution Failure Is Not An Error) 指的是在模板参数替换过程中，如果替换失败，编译器会尝试其他重载而不是直接报错。"
+    }
+  ]
+}

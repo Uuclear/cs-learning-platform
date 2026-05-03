@@ -1,0 +1,50 @@
+[
+  {
+    "question": "JavaScript中的基本数据类型（Primitive Types）不包括以下哪一项？",
+    "options": ["string", "number", "array", "boolean"],
+    "answer": 2,
+    "explanation": "数组（array）是引用类型，不是基本类型。JavaScript的基本类型包括：string、number、boolean、null、undefined、symbol和bigint。"
+  },
+  {
+    "question": "以下哪种方式可以准确检测一个值是否为数组？",
+    "options": ["typeof arr === 'array'", "arr instanceof Array", "Array.isArray(arr)", "arr.type === 'array'"],
+    "answer": 2,
+    "explanation": "Array.isArray()是检测数组最准确的方法。typeof对数组返回'object'，instanceof在跨iframe时可能失效。"
+  },
+  {
+    "question": "关于JavaScript中的null，以下说法正确的是？",
+    "options": ["typeof null 返回 'null'", "typeof null 返回 'object'", "null是对象类型", "null等于undefined且类型相同"],
+    "answer": 1,
+    "explanation": "typeof null返回'object'，这是JavaScript的一个历史bug。null实际上是基本类型，表示空值。"
+  },
+  {
+    "question": "箭头函数与普通函数的主要区别是什么？",
+    "options": ["箭头函数不能有参数", "箭头函数没有自己的this绑定", "箭头函数不能返回值", "箭头函数只能用于数组方法"],
+    "answer": 1,
+    "explanation": "箭头函数没有自己的this、arguments、super和new.target，它会继承外层作用域的this值。"
+  },
+  {
+    "question": "以下代码的输出结果是什么？\nlet a = [1, 2, 3];\nlet b = a;\nb.push(4);\nconsole.log(a);",
+    "options": ["[1, 2, 3]", "[1, 2, 3, 4]", "[4]", "报错"],
+    "answer": 1,
+    "explanation": "数组是引用类型，b = a让b和a指向同一个数组对象，所以通过b修改数组会影响a。"
+  },
+  {
+    "question": "使用const声明的对象，以下说法正确的是？",
+    "options": ["对象的所有属性都不能修改", "不能重新赋值给该变量，但可以修改对象属性", "对象变成不可变的", "const不能用于声明对象"],
+    "answer": 1,
+    "explanation": "const确保变量绑定不能重新赋值，但不影响对象内容的可变性。对象的属性仍然可以被修改。"
+  },
+  {
+    "question": "以下哪种函数声明方式支持函数提升（hoisting）？",
+    "options": ["箭头函数", "函数表达式", "函数声明", "所有方式都支持"],
+    "answer": 2,
+    "explanation": "只有函数声明（function functionName() {}）支持函数提升，可以在声明前调用。函数表达式和箭头函数必须在声明后才能使用。"
+  },
+  {
+    "question": "在JavaScript中，基本类型和引用类型在内存中的存储方式有什么区别？",
+    "options": ["基本类型存储在栈中，引用类型的引用存储在栈中，实际对象存储在堆中", "都存储在栈中", "都存储在堆中", "基本类型存储在堆中，引用类型存储在栈中"],
+    "answer": 0,
+    "explanation": "基本类型的值直接存储在栈中，而引用类型的变量在栈中存储指向堆中实际对象的引用（指针）。"
+  }
+]

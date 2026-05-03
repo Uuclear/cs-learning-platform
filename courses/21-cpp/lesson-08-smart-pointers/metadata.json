@@ -1,0 +1,21 @@
+{
+  "id": "21-08",
+  "title": "智能指针：RAII与内存安全",
+  "slug": "lesson-08-smart-pointers",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 8,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["21-02"],
+  "tags": ["smart-pointers", "unique-ptr", "shared-ptr", "raii", "memory-safety"],
+  "description": "学习 C++ 的智能指针（unique_ptr、shared_ptr、weak_ptr），掌握 RAII 编程惯用法，实现自动内存管理。",
+  "learning_objectives": [
+    "理解 RAII（资源获取即初始化）的概念",
+    "掌握 unique_ptr 的独占所有权语义",
+    "理解 shared_ptr 的引用计数机制",
+    "了解 weak_ptr 打破循环引用的用法"
+  ]
+}

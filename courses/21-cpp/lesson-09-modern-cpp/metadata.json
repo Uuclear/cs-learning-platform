@@ -1,0 +1,21 @@
+{
+  "id": "21-09",
+  "title": "C++11/14/17 现代特性",
+  "slug": "lesson-09-modern-cpp",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 9,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["21-08"],
+  "tags": ["modern-cpp", "c++11", "c++14", "c++17", "auto", "lambda", "optional", "variant"],
+  "description": "学习 C++11/14/17 的现代特性，掌握 auto、Lambda、optional、variant、结构化绑定等新语法。",
+  "learning_objectives": [
+    "掌握 auto 类型推导和范围 for 循环",
+    "理解 Lambda 表达式的完整语法",
+    "了解 optional 和 variant 类型",
+    "掌握结构化绑定和 std::string_view"
+  ]
+}

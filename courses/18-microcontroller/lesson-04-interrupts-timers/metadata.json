@@ -1,0 +1,21 @@
+{
+  "id": "18-04",
+  "title": "中断与定时器：精确控制时间",
+  "slug": "lesson-04-interrupts-timers",
+  "module": "18-microcontroller",
+  "module_name": "单片机",
+  "module_order": 18,
+  "lesson_order": 4,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["18-02"],
+  "tags": ["interrupt", "timer", "isr", "hardware-timer", "event-driven"],
+  "description": "学习单片机中断系统和定时器的工作原理，掌握中断服务程序编写和精确定时器应用。",
+  "learning_objectives": [
+    "理解中断的概念和与传统轮询的区别",
+    "掌握外部中断和定时器中断的配置方法",
+    "能够编写中断服务程序（ISR）",
+    "利用定时器实现精确延时和周期性任务"
+  ]
+}

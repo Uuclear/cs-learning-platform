@@ -1,0 +1,21 @@
+{
+  "id": "17-09",
+  "title": "PCB设计基础：从原理图到电路板",
+  "slug": "lesson-09-pcb-design",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 9,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["17-08"],
+  "tags": ["pcb", "pcb-design", "schematic", "footprint", "routing", "eda-tool"],
+  "description": "学习 PCB 设计的基本流程，从绘制原理图、放置元件、布线到导出 Gerber 文件，了解使用 KiCad 等工具进行电路板设计。",
+  "learning_objectives": [
+    "了解 PCB 的基本结构和多层板概念",
+    "掌握从原理图到 PCB 布局的设计流程",
+    "理解走线宽度、间距和过孔的设计规则",
+    "能够使用 KiCad 完成简单的双层板设计"
+  ]
+}

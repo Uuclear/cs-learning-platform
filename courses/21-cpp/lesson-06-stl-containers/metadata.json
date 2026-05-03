@@ -1,0 +1,21 @@
+{
+  "id": "21-06",
+  "title": "STL容器：vector、map、set",
+  "slug": "lesson-06-stl-containers",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 6,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["21-05"],
+  "tags": ["stl", "containers", "vector", "map", "set", "iterator"],
+  "description": "学习 C++ STL 的标准容器库，掌握 vector、list、map、set 等常用容器及其迭代器的使用。",
+  "learning_objectives": [
+    "掌握 vector 的动态扩容和常用操作",
+    "理解 map 和 unordered_map 的区别",
+    "掌握 set 的有序集合特性",
+    "能够选择合适的容器解决实际问题"
+  ]
+}

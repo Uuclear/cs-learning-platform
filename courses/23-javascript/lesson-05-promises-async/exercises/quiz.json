@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Promise对象有哪三种状态？",
+      "options": [
+        "pending, resolved, rejected",
+        "waiting, fulfilled, failed",
+        "pending, fulfilled, rejected",
+        "idle, running, completed"
+      ],
+      "correct_answer": 2,
+      "explanation": "Promise的三种状态是：pending（等待中）、fulfilled（已成功）、rejected（已失败）。注意fulfilled有时也被称为resolved，但在规范中正确的术语是fulfilled。"
+    },
+    {
+      "id": 2,
+      "question": "以下哪种方式可以正确处理Promise链中的错误？",
+      "options": [
+        "只在最后一个.then()中处理",
+        "在每个.then()后面都加上.catch()",
+        "在整个链的最后使用.catch()",
+        "不需要处理，Promise会自动处理错误"
+      ],
+      "correct_answer": 2,
+      "explanation": "在整个Promise链的最后使用.catch()可以捕获链中任何一步发生的错误，这是推荐的做法。"
+    },
+    {
+      "id": 3,
+      "question": "async/await语法的主要优势是什么？",
+      "options": [
+        "提高代码执行速度",
+        "让异步代码看起来像同步代码，更容易理解和调试",
+        "减少内存使用",
+        "自动处理所有错误"
+      ],
+      "correct_answer": 1,
+      "explanation": "async/await的主要优势是让异步代码的编写和阅读更像同步代码，提高了代码的可读性和可维护性。"
+    },
+    {
+      "id": 4,
+      "question": "Promise.all()方法的行为是什么？",
+      "options": [
+        "返回第一个完成的Promise的结果",
+        "等待所有Promise都完成，如果任何一个失败则整个失败",
+        "只返回成功的Promise结果，忽略失败的",
+        "按顺序依次执行每个Promise"
+      ],
+      "correct_answer": 1,
+      "explanation": "Promise.all()会等待所有Promise都完成，但如果其中任何一个Promise被rejected，整个Promise.all()就会立即被rejected。"
+    },
+    {
+      "id": 5,
+      "question": "在async函数中，如何正确处理可能抛出的错误？",
+      "options": [
+        "使用if-else语句检查",
+        "使用try-catch语句",
+        "在函数末尾添加.catch()",
+        "async函数不能抛出错误"
+      ],
+      "correct_answer": 1,
+      "explanation": "在async函数中，应该使用try-catch语句来处理可能的错误，这与同步代码的错误处理方式一致。"
+    },
+    {
+      "id": 6,
+      "question": "Promise.race()方法的用途是什么？",
+      "options": [
+        "让多个Promise竞争，看哪个执行得最快",
+        "返回第一个settled（无论是fulfilled还是rejected）的Promise的结果",
+        "只处理成功的Promise，忽略失败的",
+        "按优先级顺序执行Promise"
+      ],
+      "correct_answer": 1,
+      "explanation": "Promise.race()返回第一个settled的Promise的结果，无论是fulfilled还是rejected。常用于实现超时控制。"
+    },
+    {
+      "id": 7,
+      "question": "以下关于并发执行vs串行执行的说法哪个是正确的？",
+      "options": [
+        "并发执行总是比串行执行快",
+        "串行执行可以更好地控制执行顺序和依赖关系",
+        "并发执行无法处理错误",
+        "串行执行使用更多的系统资源"
+      ],
+      "correct_answer": 1,
+      "explanation": "串行执行确实可以更好地控制执行顺序和依赖关系，因为每个步骤都必须等待前一个步骤完成后才能开始。"
+    },
+    {
+      "id": 8,
+      "question": "Promise.allSettled()与Promise.all()的主要区别是什么？",
+      "options": [
+        "allSettled执行得更快",
+        "allSettled会等待所有Promise完成（无论成功或失败），而all在遇到第一个失败时就会失败",
+        "allSettled只能处理成功的Promise",
+        "allSettled不支持async/await"
+      ],
+      "correct_answer": 1,
+      "explanation": "Promise.allSettled()会等待所有Promise都settled（完成），无论成功还是失败，并返回所有结果的状态。而Promise.all()在遇到第一个rejected的Promise时就会立即rejected。"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "18-03",
+  "title": "GPIO与传感器：感知物理世界",
+  "slug": "lesson-03-gpio-sensors",
+  "module": "18-microcontroller",
+  "module_name": "单片机",
+  "module_order": 18,
+  "lesson_order": 3,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["18-02"],
+  "tags": ["gpio", "sensor", "digital-input", "analog-input", "button", "temperature"],
+  "description": "学习 GPIO 输入输出模式，掌握按钮、电位器、温度传感器等常用传感器的连接和读取方法。",
+  "learning_objectives": [
+    "理解 GPIO 的输入和输出模式",
+    "掌握按钮（数字输入）和上拉/下拉电阻的使用",
+    "了解模拟输入（ADC）的基本原理",
+    "能够读取温度、光照等常见传感器数据"
+  ]
+}

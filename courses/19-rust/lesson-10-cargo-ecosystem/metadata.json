@@ -1,0 +1,21 @@
+{
+  "id": "19-10",
+  "title": "Cargo与生态系统：包管理与测试",
+  "slug": "lesson-10-cargo-ecosystem",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 10,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["19-07"],
+  "tags": ["cargo", "package-management", "testing", "documentation", "crates-io"],
+  "description": "学习 Cargo 包管理工具的完整用法，掌握依赖管理、测试框架、文档生成和发布 crate 到 crates.io。",
+  "learning_objectives": [
+    "掌握 Cargo 的常用命令和工作流程",
+    "理解 Cargo.toml 的依赖配置（版本、特性、可选依赖）",
+    "掌握 Rust 的单元测试和集成测试",
+    "能够生成文档和发布 crate"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "20-02",
+  "title": "数据类型与运算符",
+  "slug": "lesson-02-types-operators",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 2,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": ["20-01"],
+  "tags": ["data-types", "operators", "int", "float", "char", "type-casting"],
+  "description": "学习 C 语言的基本数据类型（int、float、char、double）和运算符（算术、关系、逻辑），理解类型转换和 sizeof 运算符。",
+  "learning_objectives": [
+    "掌握 C 语言的基本数据类型和占用字节数",
+    "理解有符号和无符号类型的区别",
+    "掌握算术、关系和逻辑运算符的使用",
+    "理解隐式和显式类型转换的规则"
+  ]
+}

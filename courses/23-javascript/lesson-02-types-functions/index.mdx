@@ -1,0 +1,309 @@
+---
+title: 数据类型与函数
+description: 深入学习JavaScript的数据类型（基本类型和引用类型）和函数的各种声明方式。
+---
+
+# 数据类型与函数
+
+## 开场白
+
+大家好！在上一节课中，我们初步了解了JavaScript的基础语法。今天，我们将深入探讨JavaScript中最核心的两个概念：**数据类型**和**函数**。这两个概念就像是烹饪中的食材和菜谱——食材决定了你能做什么菜，而菜谱则告诉你如何把食材变成美味佳肴。
+
+想象一下，如果你去超市买东西，你会看到各种各样的商品：水果、蔬菜、肉类、调料等等。每种商品都有自己的特性和用途。JavaScript的数据类型也是如此，它们决定了我们能对数据进行什么样的操作。而函数就像是你的烹饪技巧，它接收一些"食材"（参数），经过一系列处理，最终产出一道"菜品"（返回值）。
+
+## 核心概念
+
+### JavaScript的数据类型
+
+JavaScript的数据类型可以分为两大类：**基本类型**（Primitive Types）和**引用类型**（Reference Types）。
+
+#### 基本类型（6种）
+- **string**（字符串）：用于表示文本，如 `"Hello World"`
+- **number**（数字）：用于表示整数和浮点数，如 `42` 或 `3.14`
+- **boolean**（布尔值）：只有两个值 `true` 和 `false`
+- **null**（空值）：表示"有意的空值"
+- **undefined**（未定义）：表示变量已声明但未赋值
+- **symbol**（符号）：ES6新增的唯一标识符类型
+
+#### 引用类型
+- **object**（对象）：键值对的集合，如 `{name: "张三", age: 25}`
+- **array**（数组）：有序的元素列表，如 `[1, 2, 3]`
+- **function**（函数）：可执行的代码块
+
+### 变量声明方式
+
+JavaScript提供了三种变量声明方式：
+
+- **var**：函数作用域，存在变量提升
+- **let**：块级作用域，不存在变量提升
+- **const**：块级作用域，声明后不能重新赋值
+
+### 函数的声明方式
+
+JavaScript中函数有多种声明方式：
+
+1. **函数声明**（Function Declaration）
+2. **函数表达式**（Function Expression）
+3. **箭头函数**（Arrow Function）
+4. **构造函数**（Function Constructor）
+
+## 代码演示
+
+让我们通过具体的代码示例来理解这些概念。
+
+### 基本类型 vs 引用类型
+
+基本类型是按值传递的，而引用类型是按引用传递的。这意味着：
+
+```javascript
+// 基本类型 - 按值传递
+let a = 10;
+let b = a; // b获得a的值的副本
+b = 20;
+console.log(a); // 输出: 10 (a没有改变)
+
+// 引用类型 - 按引用传递
+let obj1 = { name: "张三" };
+let obj2 = obj1; // obj2和obj1指向同一个对象
+obj2.name = "李四";
+console.log(obj1.name); // 输出: "李四" (原对象被修改了)
+```
+
+### 函数声明方式对比
+
+```javascript
+// 1. 函数声明
+function greet(name) {
+  return `你好, ${name}!`;
+}
+
+// 2. 函数表达式
+const sayHello = function(name) {
+  return `你好, ${name}!`;
+};
+
+// 3. 箭头函数
+const sayHi = (name) => `你好, ${name}!`;
+
+console.log(greet("小明"));    // 输出: 你好, 小明!
+console.log(sayHello("小红")); // 输出: 你好, 小红!
+console.log(sayHi("小刚"));    // 输出: 你好, 小刚!
+```
+
+## 深入理解
+
+### 类型检测
+
+在JavaScript中，我们可以使用多种方式来检测数据类型：
+
+- **typeof**：适用于基本类型检测
+- **instanceof**：适用于引用类型检测
+- **Object.prototype.toString.call()**：最准确的类型检测方法
+
+```javascript
+console.log(typeof "hello");        // "string"
+console.log(typeof 42);             // "number"
+console.log(typeof true);           // "boolean"
+console.log(typeof null);           // "object" (这是一个历史bug!)
+console.log(typeof undefined);      // "undefined"
+
+// 对于数组和null，typeof不够准确
+console.log(Array.isArray([1,2,3])); // true
+console.log([1,2,3] instanceof Array); // true
+```
+
+### 作用域和闭包
+
+函数创建了自己的作用域，内部可以访问外部作用域的变量，这就形成了闭包：
+
+```javascript
+function outer() {
+  let outerVar = "外部变量";
+  
+  function inner() {
+    let innerVar = "内部变量";
+    console.log(outerVar); // 可以访问外部变量
+  }
+  
+  return inner;
+}
+
+const myFunc = outer();
+myFunc(); // 输出: 外部变量
+```
+
+## 实际应用
+
+在实际开发中，正确理解和使用数据类型与函数至关重要：
+
+### 1. 避免意外的引用共享
+
+```javascript
+// 错误的做法
+const defaultConfig = { theme: "light", language: "zh" };
+function createUser(config = defaultConfig) {
+  // 如果直接修改config，会影响defaultConfig!
+  config.userId = Math.random();
+  return config;
+}
+
+// 正确的做法 - 使用展开运算符创建新对象
+function createUserSafe(config = {}) {
+  const mergedConfig = { ...defaultConfig, ...config };
+  mergedConfig.userId = Math.random();
+  return mergedConfig;
+}
+```
+
+### 2. 选择合适的函数声明方式
+
+- 使用**箭头函数**处理简单的回调函数
+- 使用**函数声明**处理需要提升的复杂逻辑
+- 使用**函数表达式**当函数需要作为值传递时
+
+### 3. 利用const声明不可变引用
+
+```javascript
+// 对于不会重新赋值的变量，使用const
+const PI = 3.14159;
+const API_ENDPOINT = "https://api.example.com";
+
+// 即使是对象，也可以用const声明（对象内容仍可修改）
+const user = { name: "张三" };
+user.age = 25; // 这是可以的
+// user = {}; // 这会报错，因为不能重新赋值
+```
+
+## 常见误区
+
+### 1. typeof null 返回 "object"
+
+这是一个JavaScript的历史遗留问题。要正确检测null，应该：
+
+```javascript
+// 错误
+if (typeof value === "object") { /* 这会包含null */ }
+
+// 正确
+if (value !== null && typeof value === "object") { /* 排除null */ }
+```
+
+### 2. 数组也是对象
+
+```javascript
+// typeof无法区分数组和普通对象
+console.log(typeof []); // "object"
+console.log(typeof {}); // "object"
+
+// 正确检测数组
+console.log(Array.isArray([])); // true
+```
+
+### 3. 箭头函数没有自己的this
+
+```javascript
+const obj = {
+  name: "张三",
+  regularFunction: function() {
+    console.log(this.name); // "张三"
+  },
+  arrowFunction: () => {
+    console.log(this.name); // undefined (this指向全局对象)
+  }
+};
+```
+
+### 4. var的变量提升陷阱
+
+```javascript
+console.log(x); // undefined (不是ReferenceError)
+var x = 5;
+
+// 等价于:
+var x;
+console.log(x); // undefined
+x = 5;
+```
+
+## 动手实践
+
+现在让我们通过几个小练习来巩固今天学到的知识：
+
+### 练习1：类型检测函数
+
+创建一个函数，能够准确判断任何JavaScript值的类型：
+
+```javascript
+function getType(value) {
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "array";
+  return typeof value;
+}
+
+console.log(getType("hello"));    // "string"
+console.log(getType([1,2,3]));    // "array"
+console.log(getType(null));       // "null"
+console.log(getType({}));         // "object"
+```
+
+### 练习2：深拷贝函数
+
+实现一个简单的深拷贝函数，避免引用类型的意外共享：
+
+```javascript
+function deepClone(obj) {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => deepClone(item));
+  }
+  
+  const cloned = {};
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      cloned[key] = deepClone(obj[key]);
+    }
+  }
+  return cloned;
+}
+```
+
+### 练习3：函数组合
+
+创建一个函数组合工具，将多个函数组合成一个：
+
+```javascript
+function compose(...fns) {
+  return function(value) {
+    return fns.reduceRight((acc, fn) => fn(acc), value);
+  };
+}
+
+const addOne = x => x + 1;
+const multiplyByTwo = x => x * 2;
+const square = x => x * x;
+
+const combined = compose(square, multiplyByTwo, addOne);
+console.log(combined(3)); // ((3 + 1) * 2)² = 64
+```
+
+## 小结与思考
+
+今天我们深入学习了JavaScript的数据类型和函数这两个核心概念。关键要点包括：
+
+1. **数据类型分类**：基本类型（按值传递）vs 引用类型（按引用传递）
+2. **变量声明**：优先使用`const`和`let`，避免使用`var`
+3. **函数多样性**：根据场景选择合适的函数声明方式
+4. **类型检测**：了解不同检测方法的局限性
+5. **避免常见陷阱**：特别是引用共享和`this`绑定问题
+
+思考题：
+- 为什么JavaScript要区分基本类型和引用类型？
+- 在什么情况下你应该使用箭头函数而不是普通函数？
+- 如何在实际项目中避免因引用类型导致的bug？
+
+记住，理解这些基础概念是成为优秀JavaScript开发者的关键。就像学习任何语言一样，掌握词汇（数据类型）和语法规则（函数）是流利表达的基础。继续练习，你很快就能自如地运用这些知识构建复杂的Web应用！
+
+下节课，我们将学习JavaScript中的对象和原型链，这将进一步加深你对引用类型的理解。

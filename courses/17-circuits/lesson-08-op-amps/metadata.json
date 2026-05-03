@@ -1,0 +1,21 @@
+{
+  "id": "17-08",
+  "title": "运算放大器：模拟计算与信号处理",
+  "slug": "lesson-08-op-amps",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 8,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["17-07"],
+  "tags": ["op-amp", "amplifier", "inverting", "non-inverting", "comparator", "analog-computing"],
+  "description": "学习运算放大器的工作原理和典型应用电路，掌握反相放大、同相放大、比较器和积分器设计。",
+  "learning_objectives": [
+    "理解运算放大器的理想特性和虚短虚断概念",
+    "掌握反相放大器和同相放大器的增益计算",
+    "了解比较器、积分器和微分器的工作原理",
+    "能够用运放搭建信号调理电路"
+  ]
+}

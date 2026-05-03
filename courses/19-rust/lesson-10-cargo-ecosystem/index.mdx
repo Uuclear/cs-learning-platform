@@ -1,0 +1,354 @@
+---
+title: Cargo与生态系统：包管理与测试
+---
+
+# Cargo与生态系统：包管理与测试
+
+## 开场白：快递仓库的奇妙世界
+
+想象一下，你是一家大型快递公司的老板。每天都有成千上万的包裹需要处理：有些是发给客户的成品，有些是从供应商那里采购的原材料，还有些是你自己工厂生产的半成品。如果没有一个高效的仓库管理系统，你的公司很快就会陷入混乱。
+
+Rust 的 Cargo 就是这样一个超级智能的快递仓库管理系统！它不仅能帮你管理自己的"货物"（代码），还能自动从全球各地的供应商（crates.io）采购你需要的"原材料"（依赖包），确保每个包裹都准确无误地送达目的地。
+
+在本节课中，我们将深入探索 Cargo 这个强大的工具，学习如何用它来管理我们的 Rust 项目，编写可靠的测试，生成专业的文档，甚至将我们自己的 crate 发布到 crates.io 让全世界都能使用！
+
+## 核心概念：Cargo.toml、依赖管理与特性
+
+### Cargo.toml：项目的身份证
+
+每个 Rust 项目都有一个 `Cargo.toml` 文件，这就像项目的身份证一样，包含了项目的所有基本信息：
+
+```toml
+[package]
+name = "my-awesome-project"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A brief description of your project"
+license = "MIT"
+repository = "https://github.com/your-username/my-awesome-project"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.0", features = ["full"] }
+
+[dev-dependencies]
+anyhow = "1.0"
+```
+
+让我们逐个解析这些字段：
+
+- **`[package]` 部分**：定义了项目的基本信息
+- **`[dependencies]` 部分**：列出了项目运行时需要的依赖
+- **`[dev-dependencies]` 部分**：列出了仅在开发和测试时需要的依赖
+
+### 依赖管理的艺术
+
+Cargo 使用语义化版本控制（SemVer）来管理依赖。版本号格式为 `MAJOR.MINOR.PATCH`：
+
+- **MAJOR**：不兼容的 API 变更
+- **MINOR**：向后兼容的功能新增
+- **PATCH**：向后兼容的问题修正
+
+在 `Cargo.toml` 中，你可以这样指定版本：
+
+```toml
+# 精确版本
+serde = "1.0.152"
+
+# 兼容版本（推荐）
+serde = "1.0"    # 等同于 ^1.0.0，允许 1.x.x 的任何版本
+
+# 版本范围
+serde = ">=1.0, <2.0"
+
+# Git 依赖
+serde = { git = "https://github.com/serde-rs/serde.git", branch = "main" }
+
+# 本地路径依赖
+my-local-crate = { path = "../my-local-crate" }
+```
+
+### 特性（Features）：按需定制
+
+Rust 的特性系统让你可以按需启用或禁用某些功能。比如 `serde` crate 提供了 `derive` 特性来启用派生宏：
+
+```toml
+serde = { version = "1.0", features = ["derive"] }
+```
+
+你也可以定义自己的特性：
+
+```toml
+[features]
+default = ["sqlite"]
+sqlite = ["rusqlite"]
+postgres = ["tokio-postgres"]
+mysql = ["mysql"]
+```
+
+用户可以通过 `--features` 参数来选择启用哪些特性：
+
+```bash
+cargo build --features postgres,mysql
+```
+
+## 代码演示：Rust 测试和 Cargo 脚本
+
+### 编写单元测试
+
+Rust 内置了强大的测试框架。让我们看一个简单的例子：
+
+```rust
+// src/lib.rs
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+pub fn divide(a: f64, b: f64) -> Option<f64> {
+    if b == 0.0 {
+        None
+    } else {
+        Some(a / b)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(add(2, 3), 5);
+        assert_eq!(add(-1, 1), 0);
+    }
+
+    #[test]
+    fn test_divide() {
+        assert_eq!(divide(10.0, 2.0), Some(5.0));
+        assert_eq!(divide(10.0, 0.0), None);
+    }
+
+    #[test]
+    #[should_panic(expected = "attempt to divide by zero")]
+    fn test_divide_by_zero_panics() {
+        let _ = 10 / 0;
+    }
+}
+```
+
+运行测试：
+```bash
+cargo test
+```
+
+### 集成测试
+
+集成测试放在 `tests/` 目录下，它们像外部用户一样使用你的 crate：
+
+```rust
+// tests/integration_test.rs
+use my_crate::add;
+
+#[test]
+fn test_add_integration() {
+    assert_eq!(add(1, 2), 3);
+}
+```
+
+### Cargo 脚本和别名
+
+你可以在 `Cargo.toml` 中定义自定义命令：
+
+```toml
+[package.metadata.docs.rs]
+all-features = true
+
+[workspace]
+members = ["crates/*"]
+
+[profile.release]
+opt-level = 3
+lto = true
+```
+
+还可以创建 `.cargo/config.toml` 来配置 Cargo 行为：
+
+```toml
+# .cargo/config.toml
+[alias]
+check-all = "check --all-targets"
+test-doc = "test --doc"
+```
+
+## 深入理解：工作空间与多 crate 项目
+
+### 工作空间（Workspace）
+
+当你有一个大型项目包含多个相关的 crate 时，工作空间就派上用场了。在项目根目录创建 `Cargo.toml`：
+
+```toml
+# Cargo.toml (workspace root)
+[workspace]
+members = [
+    "crates/core",
+    "crates/web",
+    "crates/cli",
+    "examples/*"
+]
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+strip = true
+```
+
+每个成员 crate 都有自己的 `Cargo.toml`，但它们共享依赖和构建配置。
+
+### 多 crate 项目的优势
+
+1. **模块化**：将大型项目拆分为小的、可重用的组件
+2. **独立版本**：每个 crate 可以独立发布和版本管理
+3. **并行构建**：Cargo 可以并行构建多个 crate
+4. **清晰边界**：强制模块间的清晰接口
+
+## 实际应用：使用 serde 序列化、发布 crate
+
+### 使用 serde 进行序列化
+
+让我们创建一个实际的例子，展示如何使用 serde：
+
+```rust
+// src/main.rs
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Person {
+    name: String,
+    age: u8,
+    email: String,
+}
+
+fn main() {
+    let person = Person {
+        name: "Alice".to_string(),
+        age: 30,
+        email: "alice@example.com".to_string(),
+    };
+
+    // 序列化为 JSON
+    let json = serde_json::to_string(&person).unwrap();
+    println!("JSON: {}", json);
+
+    // 反序列化
+    let deserialized: Person = serde_json::from_str(&json).unwrap();
+    println!("Deserialized: {:?}", deserialized);
+}
+```
+
+对应的 `Cargo.toml`：
+
+```toml
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+```
+
+### 发布 crate 到 crates.io
+
+要发布你的 crate，首先需要在 [crates.io](https://crates.io) 注册账户，然后获取 API token。
+
+1. **准备 crate**：
+   ```toml
+   [package]
+   name = "my-awesome-crate"
+   version = "0.1.0"
+   edition = "2021"
+   description = "A really awesome crate"
+   license = "MIT"
+   repository = "https://github.com/your-username/my-awesome-crate"
+   ```
+
+2. **登录 Cargo**：
+   ```bash
+   cargo login your-api-token
+   ```
+
+3. **发布**：
+   ```bash
+   cargo publish
+   ```
+
+4. **后续版本**：
+   - 更新 `version` 字段
+   - 运行 `cargo publish` 再次发布
+
+## 常见误区：版本号语义、dev-dependencies 混淆
+
+### 版本号语义的陷阱
+
+**误区1：随意升级主版本号**
+- 错误：频繁升级 MAJOR 版本号
+- 正确：只有在确实有破坏性变更时才升级 MAJOR 版本
+
+**误区2：忽略补丁版本的重要性**
+- 错误：只关注 MAJOR.MINOR，忽略 PATCH
+- 正确：PATCH 版本通常包含重要的安全修复
+
+**误区3：过度宽松的版本约束**
+- 错误：使用 `*` 或过于宽泛的范围
+- 正确：使用兼容版本约束 `^1.0` 或精确版本
+
+### dev-dependencies 的正确使用
+
+**误区：在正常代码中使用 dev-dependencies**
+```rust
+// ❌ 错误：在正常代码中使用 anyhow（如果它只在 dev-dependencies 中）
+fn my_function() -> anyhow::Result<()> {
+    // ...
+}
+```
+
+**正确做法**：
+- 将运行时需要的依赖放在 `[dependencies]`
+- 将仅测试需要的依赖放在 `[dev-dependencies]`
+
+### 其他常见问题
+
+1. **忘记更新 Cargo.lock**：团队协作时要提交 `Cargo.lock`
+2. **忽略编译配置**：合理配置 `[profile.release]` 提升性能
+3. **文档注释缺失**：使用 `///` 而不是 `//` 来写文档
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+1. **创建一个新项目**：`cargo new practice-cargo`
+2. **添加 serde 依赖**：在 `Cargo.toml` 中添加 serde 和 serde_json
+3. **编写结构体**：创建一个表示书籍的结构体，包含标题、作者、ISBN
+4. **实现序列化**：为结构体实现 Serialize 和 Deserialize
+5. **编写测试**：为你的代码编写单元测试和集成测试
+6. **生成文档**：运行 `cargo doc --open` 查看生成的文档
+7. **尝试特性**：为你的 crate 添加一个可选特性
+
+记住，最好的学习方式就是动手实践！
+
+## 小结与思考
+
+Cargo 不仅仅是一个包管理器，它是 Rust 生态系统的基石。通过本节课的学习，你应该已经掌握了：
+
+- ✅ Cargo.toml 的基本结构和配置选项
+- ✅ 依赖管理的最佳实践
+- ✅ Rust 测试框架的使用方法
+- ✅ 文档生成和 crate 发布流程
+- ✅ 工作空间的使用场景
+
+思考题：
+1. 为什么 Cargo 要区分 `[dependencies]` 和 `[dev-dependencies]`？
+2. 在什么情况下你应该使用工作空间而不是单个 crate？
+3. 如何设计一个具有良好 API 的 crate，使其易于被其他开发者使用？
+
+记住，Cargo 是你 Rust 开发旅程中的忠实伙伴。花时间了解它的各种功能，会让你的开发体验更加顺畅和高效。下次当你看到那个小小的 `Cargo.toml` 文件时，你会知道它背后隐藏着多么强大的力量！
+
+Happy coding! 🚀

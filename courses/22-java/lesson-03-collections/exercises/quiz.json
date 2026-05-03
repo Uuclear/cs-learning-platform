@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "以下哪个集合类基于动态数组实现，支持快速随机访问？",
+      "options": [
+        "LinkedList",
+        "HashSet",
+        "ArrayList",
+        "HashMap"
+      ],
+      "answer": 2,
+      "explanation": "ArrayList 基于动态数组实现，通过索引可以直接访问元素，时间复杂度为 O(1)。"
+    },
+    {
+      "question": "在 Java 集合框架中，哪个接口表示不允许重复元素的集合？",
+      "options": [
+        "List",
+        "Map",
+        "Collection",
+        "Set"
+      ],
+      "answer": 3,
+      "explanation": "Set 接口表示不允许包含重复元素的集合，这是 Set 的核心特性。"
+    },
+    {
+      "question": "如果要实现一个键值对映射，并且需要保持插入顺序，应该使用哪个类？",
+      "options": [
+        "HashMap",
+        "TreeMap",
+        "LinkedHashMap",
+        "Hashtable"
+      ],
+      "answer": 2,
+      "explanation": "LinkedHashMap 继承自 HashMap，但额外维护了一个双向链表来记录插入顺序。"
+    },
+    {
+      "question": "在遍历集合时安全地删除元素，应该使用什么方法？",
+      "options": [
+        "直接调用集合的 remove() 方法",
+        "使用迭代器的 remove() 方法",
+        "使用增强 for 循环中的 remove()",
+        "先收集要删除的元素，再批量删除"
+      ],
+      "answer": 1,
+      "explanation": "使用迭代器的 remove() 方法是唯一安全的方式，它会正确处理并发修改检查。"
+    },
+    {
+      "question": "关于 HashMap 的 key，以下说法正确的是？",
+      "options": [
+        "Key 可以是任何对象，不需要重写 equals() 和 hashCode()",
+        "Key 必须实现 Comparable 接口",
+        "Key 对象在放入 Map 后不应该被修改",
+        "HashMap 不允许 null 作为 key"
+      ],
+      "answer": 2,
+      "explanation": "Key 对象应该是不可变的，如果在放入 Map 后被修改，可能导致无法正确找到该条目。"
+    },
+    {
+      "question": "以下哪个操作在 LinkedList 中比在 ArrayList 中更高效？",
+      "options": [
+        "通过索引获取元素",
+        "在列表末尾添加元素",
+        "在列表开头插入元素",
+        "检查是否包含某个元素"
+      ],
+      "answer": 2,
+      "explanation": "LinkedList 在开头插入元素只需要修改几个指针，时间复杂度为 O(1)，而 ArrayList 需要移动所有后续元素，时间复杂度为 O(n)。"
+    },
+    {
+      "question": "如果两个对象相等（equals() 返回 true），那么它们的 hashCode() 必须：",
+      "options": [
+        "可以不同",
+        "必须相同",
+        "必须不同",
+        "可以是任意值"
+      ],
+      "answer": 1,
+      "explanation": "这是 equals() 和 hashCode() 的契约要求：相等的对象必须有相同的哈希码。"
+    },
+    {
+      "question": "在 Java 8+ 中，以下哪种方式可以安全地从集合中删除满足条件的元素？",
+      "options": [
+        "collection.removeIf(condition)",
+        "for (item : collection) { if (condition) collection.remove(item); }",
+        "collection.stream().filter(condition).collect(Collectors.toList())",
+        "collection.clear()"
+      ],
+      "answer": 0,
+      "explanation": "removeIf() 方法是 Java 8 引入的安全删除方法，它内部使用迭代器来避免并发修改异常。"
+    }
+  ]
+}

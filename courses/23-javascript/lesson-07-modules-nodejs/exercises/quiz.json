@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "JavaScript中ES Modules和CommonJS的主要区别是什么？",
+      "options": [
+        "ES Modules在运行时加载，CommonJS在编译时加载",
+        "ES Modules在编译时加载，CommonJS在运行时加载",
+        "两者都是在编译时加载",
+        "两者都是在运行时加载"
+      ],
+      "answer": 1,
+      "explanation": "ES Modules在编译时静态分析依赖关系，而CommonJS在运行时动态加载模块。"
+    },
+    {
+      "id": 2,
+      "question": "在Node.js中如何启用ES Modules支持？",
+      "options": [
+        "使用.esm文件扩展名",
+        "在package.json中设置\"type\": \"module\"",
+        "安装esm包",
+        "使用--esm标志启动Node.js"
+      ],
+      "answer": 1,
+      "explanation": "在package.json中设置\"type\": \"module\"可以让.js文件被视为ES Modules，或者使用.mjs扩展名。"
+    },
+    {
+      "id": 3,
+      "question": "以下哪个是正确的ES Modules导入语法？",
+      "options": [
+        "const module = require('./module');",
+        "import module from './module';",
+        "include './module';",
+        "load './module';"
+      ],
+      "answer": 1,
+      "explanation": "ES Modules使用import语句进行导入，而require()是CommonJS的语法。"
+    },
+    {
+      "id": 4,
+      "question": "Node.js的核心特性是什么？",
+      "options": [
+        "多线程处理",
+        "事件驱动和非阻塞I/O",
+        "同步执行模型",
+        "基于Java虚拟机"
+      ],
+      "answer": 1,
+      "explanation": "Node.js采用事件驱动和非阻塞I/O模型，这使得它能够高效处理大量并发连接。"
+    },
+    {
+      "id": 5,
+      "question": "npm init -y命令的作用是什么？",
+      "options": [
+        "安装所有依赖",
+        "初始化Git仓库",
+        "创建package.json文件",
+        "启动开发服务器"
+      ],
+      "answer": 2,
+      "explanation": "npm init -y会快速创建一个默认的package.json文件，-y参数表示使用默认配置而不询问用户。"
+    },
+    {
+      "id": 6,
+      "question": "在Node.js中，哪个模块用于处理文件系统操作？",
+      "options": [
+        "path",
+        "fs",
+        "http",
+        "events"
+      ],
+      "answer": 1,
+      "explanation": "fs（File System）模块提供了文件系统操作的API，包括读取、写入、删除等操作。"
+    },
+    {
+      "id": 7,
+      "question": "以下哪种方式可以正确地从ES Module中导出默认值？",
+      "options": [
+        "export default function myFunction() {}",
+        "export function default myFunction() {}",
+        "default export function myFunction() {}",
+        "function myFunction() {}; export default myFunction;"
+      ],
+      "answer": 0,
+      "explanation": "正确的默认导出语法是'export default'后跟要导出的值或函数。"
+    },
+    {
+      "id": 8,
+      "question": "Node.js中的EventEmitter主要用于什么？",
+      "options": [
+        "处理HTTP请求",
+        "管理文件系统事件",
+        "实现发布-订阅模式",
+        "处理数据库连接"
+      ],
+      "answer": 2,
+      "explanation": "EventEmitter是Node.js中实现发布-订阅（观察者）模式的核心类，用于处理异步事件。"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "18-06",
+  "title": "通信协议：I2C、SPI与UART",
+  "slug": "lesson-06-comm-protocols",
+  "module": "18-microcontroller",
+  "module_name": "单片机",
+  "module_order": 18,
+  "lesson_order": 6,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["18-04"],
+  "tags": ["i2c", "spi", "uart", "serial-communication", "bus-protocol"],
+  "description": "学习单片机间通信的三种主要协议：UART（串口）、I2C（两线制总线）和 SPI（四线制高速总线），掌握设备间数据传输的方法。",
+  "learning_objectives": [
+    "理解 UART 串口通信的基本原理和波特率",
+    "掌握 I2C 总线的主从通信和地址机制",
+    "了解 SPI 总线的四线全双工高速传输",
+    "能够选择合适的通信协议连接不同外设"
+  ]
+}

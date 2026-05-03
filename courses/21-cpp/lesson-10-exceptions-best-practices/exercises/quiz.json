@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "在C++中，以下哪种异常处理方式是最佳实践？",
+      "options": [
+        "抛出基本类型（如int、char*）异常",
+        "总是使用std::exception或其派生类",
+        "避免使用异常，只用返回码",
+        "只在main函数中使用try-catch"
+      ],
+      "answer": 1,
+      "explanation": "最佳实践是使用std::exception或其派生类，因为它们提供了统一的接口和更好的类型安全性。"
+    },
+    {
+      "question": "关于noexcept规范，以下哪项描述是正确的？",
+      "options": [
+        "noexcept函数可以抛出任何异常",
+        "如果noexcept函数抛出异常，程序会调用std::terminate()",
+        "noexcept主要用于性能优化，不影响程序正确性",
+        "所有析构函数都必须显式声明为noexcept"
+      ],
+      "answer": 1,
+      "explanation": "如果声明为noexcept的函数抛出异常，程序会立即终止，这是为了确保异常安全保证。"
+    },
+    {
+      "question": "强异常安全保证（Strong Exception Safety Guarantee）意味着什么？",
+      "options": [
+        "函数永远不会抛出异常",
+        "如果函数抛出异常，对象状态保持不变",
+        "函数总是成功执行",
+        "异常会被自动捕获和处理"
+      ],
+      "answer": 1,
+      "explanation": "强异常安全保证意味着如果操作失败（抛出异常），对象的状态将保持与操作前完全相同，提供'要么全做，要么全不做'的语义。"
+    },
+    {
+      "question": "在自定义异常类时，what()方法应该声明为什么？",
+      "options": [
+        "virtual",
+        "const",
+        "noexcept",
+        "const noexcept"
+      ],
+      "answer": 3,
+      "explanation": "what()方法应该声明为const noexcept，因为它不应该修改对象状态，也不应该抛出异常。"
+    },
+    {
+      "question": "RAII（Resource Acquisition Is Initialization）如何帮助异常安全？",
+      "options": [
+        "通过在构造函数中获取资源，在析构函数中释放资源",
+        "通过使用智能指针替代原始指针",
+        "通过避免在构造函数中抛出异常",
+        "通过使用全局变量管理资源"
+      ],
+      "answer": 0,
+      "explanation": "RAII的核心思想是在构造函数中获取资源，在析构函数中释放资源，这样即使发生异常，栈展开也会确保资源被正确释放。"
+    },
+    {
+      "question": "以下哪个标准异常最适合表示'除零错误'？",
+      "options": [
+        "std::out_of_range",
+        "std::invalid_argument",
+        "std::domain_error",
+        "std::logic_error"
+      ],
+      "answer": 2,
+      "explanation": "std::domain_error最适合表示数学域错误，如除零、负数开平方根等。"
+    },
+    {
+      "question": "移动构造函数为什么通常声明为noexcept？",
+      "options": [
+        "移动操作永远不会失败",
+        "标准库容器在重新分配时依赖于此来提供强异常安全保证",
+        "编译器会自动优化noexcept函数",
+        "这是C++标准的强制要求"
+      ],
+      "answer": 1,
+      "explanation": "标准库容器（如vector）在重新分配内存时，如果元素类型的移动构造函数是noexcept，就会使用移动而不是拷贝，这能提供更好的性能和异常安全保证。"
+    },
+    {
+      "question": "catch(...)块会捕获什么类型的异常？",
+      "options": [
+        "只有std::exception及其派生类",
+        "所有C++异常，包括基本类型",
+        "只有用户自定义异常",
+        "所有异常，但不包括系统异常"
+      ],
+      "answer": 1,
+      "explanation": "catch(...)是一个通配符，会捕获任何类型的异常，包括基本类型、指针、以及所有异常类。但应谨慎使用，因为它会隐藏异常的具体信息。"
+      }
+  ]
+}

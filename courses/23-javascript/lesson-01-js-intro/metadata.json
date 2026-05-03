@@ -1,0 +1,21 @@
+{
+  "id": "23-01",
+  "title": "JavaScript基础：动态网页的语言",
+  "slug": "lesson-01-js-intro",
+  "module": "23-javascript",
+  "module_name": "JavaScript",
+  "module_order": 23,
+  "lesson_order": 1,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": [],
+  "tags": ["javascript", "web", "browser", "console", "variables"],
+  "description": "了解 JavaScript 的历史和在 Web 开发中的地位，掌握基本语法和浏览器控制台的使用，编写第一个 JS 脚本。",
+  "learning_objectives": [
+    "了解 JavaScript 的历史和在 Web 三剑客（HTML/CSS/JS）中的角色",
+    "能够使用浏览器开发者工具的控制台",
+    "掌握变量声明（let/const）、基本数据类型和运算符",
+    "能够编写并运行第一个 JavaScript 脚本"
+  ]
+}

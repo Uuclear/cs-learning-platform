@@ -1,0 +1,21 @@
+{
+  "id": "17-02",
+  "title": "欧姆定律与基尔霍夫定律：电路分析的基石",
+  "slug": "lesson-02-ohm-kirchhoff",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 2,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["17-01"],
+  "tags": ["ohms-law", "kirchhoff-laws", "circuit-analysis", "kvl", "kcl"],
+  "description": "学习欧姆定律和基尔霍夫两大定律，掌握电路分析的核心工具。",
+  "learning_objectives": [
+    "掌握欧姆定律 V=IR 的应用",
+    "理解基尔霍夫电压定律 KVL",
+    "理解基尔霍夫电流定律 KCL",
+    "能够用两大定律分析简单电路"
+  ]
+}

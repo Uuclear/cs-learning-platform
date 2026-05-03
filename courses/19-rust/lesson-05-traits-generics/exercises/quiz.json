@@ -1,0 +1,90 @@
+[
+  {
+    "question": "在Rust中，Trait的主要作用是什么？",
+    "options": [
+      "提供内存管理机制",
+      "定义共享行为的接口",
+      "实现垃圾回收功能",
+      "管理线程同步"
+    ],
+    "answer": 1,
+    "explanation": "Trait在Rust中用于定义类型必须实现的行为契约，类似于其他语言中的接口。"
+  },
+  {
+    "question": "以下哪个语法用于为类型实现Trait？",
+    "options": [
+      "impl MyTrait Type { ... }",
+      "trait MyTrait for Type { ... }",
+      "impl MyTrait for Type { ... }",
+      "type Type impl MyTrait { ... }"
+    ],
+    "answer": 2,
+    "explanation": "正确的语法是 'impl TraitName for TypeName { ... }'，这为指定类型实现了特定的Trait。"
+  },
+  {
+    "question": "泛型函数 fn process<T: Debug>(item: T) 中的 T: Debug 表示什么？",
+    "options": [
+      "T必须是一个Debug类型的变量",
+      "T必须实现Debug trait",
+      "T必须继承Debug类",
+      "T必须包含Debug字段"
+    ],
+    "answer": 2,
+    "explanation": "T: Debug 是trait bound，表示泛型参数T必须实现Debug trait，这样才能使用调试格式打印。"
+  },
+  {
+    "question": "#[derive(Debug)] 宏的作用是什么？",
+    "options": [
+      "自动为结构体实现Debug trait",
+      "启用调试模式编译",
+      "添加调试断点",
+      "生成调试信息文件"
+    ],
+    "answer": 0,
+    "explanation": "derive宏可以自动为结构体或枚举实现指定的trait，如Debug、Clone、Copy等，避免手动实现。"
+  },
+  {
+    "question": "Trait对象（如 Box<dyn Shape>）与泛型的主要区别是什么？",
+    "options": [
+      "Trait对象在编译时确定类型，泛型在运行时确定",
+      "Trait对象支持动态分发，泛型支持静态分发",
+      "Trait对象只能用于结构体，泛型只能用于函数",
+      "Trait对象性能更好，泛型更安全"
+    ],
+    "answer": 1,
+    "explanation": "Trait对象使用动态分发（运行时确定具体类型），而泛型使用静态分发（编译时单态化）。"
+  },
+  {
+    "question": "以下哪个是正确的泛型结构体定义？",
+    "options": [
+      "struct Pair<T> { first: T, second: T }",
+      "struct Pair<T: Type> { first: T, second: T }",
+      "generic struct Pair<T> { first: T, second: T }",
+      "struct Pair { first: <T>, second: <T> }"
+    ],
+    "answer": 0,
+    "explanation": "正确的泛型结构体定义是在结构体名称后跟类型参数，如 struct Pair<T> { ... }。"
+  },
+  {
+    "question": "在Rust中，'孤儿规则'（Orphan Rule）指的是什么？",
+    "options": [
+      "不能为外部类型实现外部trait",
+      "所有trait都必须有默认实现",
+      "泛型类型不能有生命周期参数",
+      "结构体必须实现所有trait方法"
+    ],
+    "answer": 0,
+    "explanation": "孤儿规则规定：要么被实现trait的类型在当前crate中定义，要么trait本身在当前crate中定义，不能同时都是外部的。"
+  },
+  {
+    "question": "impl Trait 返回类型的作用是什么？",
+    "options": [
+      "隐藏具体的返回类型，只暴露实现了指定trait的接口",
+      "强制返回类型必须实现所有trait",
+      "创建新的trait实现",
+      "限制函数只能返回特定类型"
+    ],
+    "answer": 0,
+    "explanation": "impl Trait作为返回类型可以隐藏具体的实现类型，只告诉调用者返回值实现了哪些trait，有助于封装和简化类型签名。"
+  }
+]

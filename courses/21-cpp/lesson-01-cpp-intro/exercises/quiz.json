@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "C++ 的设计哲学核心是什么？",
+      "options": [
+        "尽可能简化语法",
+        "零成本抽象",
+        "完全兼容 C 语言",
+        "优先考虑开发速度"
+      ],
+      "answer": 1,
+      "explanation": "C++ 的核心设计理念是'零成本抽象'，即你不用的功能不会带来性能开销，你使用的功能应该和手写等效代码一样高效。"
+    },
+    {
+      "question": "以下关于命名空间的说法哪个是正确的？",
+      "options": [
+        "命名空间主要用于提高程序运行速度",
+        "命名空间可以避免全局名字冲突",
+        "C++ 中所有代码必须放在命名空间中",
+        "命名空间会增加程序的内存占用"
+      ],
+      "answer": 1,
+      "explanation": "命名空间的主要作用是组织代码并避免不同库或模块之间的名字冲突。"
+    },
+    {
+      "question": "在 C++ 中，标准输出流的正确写法是？",
+      "options": [
+        "cout",
+        "std.cout",
+        "std::cout",
+        "console.out"
+      ],
+      "answer": 2,
+      "explanation": "标准库中的所有内容都在 std 命名空间中，因此需要使用 std::cout 来访问标准输出流。"
+    },
+    {
+      "question": "C++ 与 C 语言相比，在类型系统方面有什么特点？",
+      "options": [
+        "C++ 的类型系统更宽松",
+        "C++ 不支持类型转换",
+        "C++ 的类型系统更严格",
+        "C++ 和 C 的类型系统完全相同"
+      ],
+      "answer": 2,
+      "explanation": "C++ 对类型的要求比 C 更严格，例如 void* 指针不能隐式转换为其他指针类型。"
+    },
+    {
+      "question": "以下哪个说法是 C++ 的常见误区？",
+      "options": [
+        "C++ 支持函数重载",
+        "C++ 就是带类的 C",
+        "C++ 使用命名空间组织代码",
+        "C++ 提供 iostream 进行输入输出"
+      ],
+      "answer": 1,
+      "explanation": "认为'C++ 就是带类的 C'是一个常见误区。现代 C++ 已经发展成为一个具有自己独特设计哲学的独立语言。"
+    },
+    {
+      "question": "编译 C++ 程序通常使用哪个命令？",
+      "options": [
+        "gcc",
+        "g++",
+        "cpp",
+        "compile"
+      ],
+      "answer": 1,
+      "explanation": "g++ 是 GNU C++ 编译器，专门用于编译 C++ 程序。虽然 gcc 也可以编译 C++，但 g++ 会自动链接 C++ 标准库。"
+    },
+    {
+      "question": "为什么在头文件中不应该使用 'using namespace std'？",
+      "options": [
+        "会降低程序性能",
+        "可能导致名字冲突",
+        "C++ 标准禁止这样做",
+        "会增加编译时间"
+      ],
+      "answer": 1,
+      "explanation": "在头文件中使用 'using namespace std' 会将 std 命名空间中的所有名字引入到包含该头文件的所有源文件中，可能导致意外的名字冲突。"
+    },
+    {
+      "question": "C++ 的 iostream 相比 C 的 printf/scanf 有什么优势？",
+      "options": [
+        "iostream 更快",
+        "iostream 支持更多格式化选项",
+        "iostream 具有类型安全性",
+        "iostream 占用更少内存"
+      ],
+      "answer": 2,
+      "explanation": "iostream 在编译时进行类型检查，提供了类型安全性，而 printf/scanf 在运行时才发现类型不匹配的错误。"
+    }
+  ]
+}

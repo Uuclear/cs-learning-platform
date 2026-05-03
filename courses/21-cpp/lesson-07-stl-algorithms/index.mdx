@@ -1,0 +1,363 @@
+---
+title: STL算法：sort、find、transform
+description: 学习 STL 标准算法库，掌握排序、查找、变换和累积算法，结合 Lambda 表达式写出简洁高效的代码。
+---
+
+# STL算法：sort、find、transform
+
+## 开场白：编程界的"装配线"
+
+想象一下，你是一家汽车制造厂的老板。在过去，你需要雇佣一大批工人，每个人都要从头到尾学会如何组装整辆汽车。这不仅效率低下，还容易出错。后来，聪明的工程师们发明了**装配线**——每个工人只需要专注于一个特定的任务，比如安装轮胎、喷漆或者安装座椅。
+
+STL（标准模板库）算法就是C++中的"装配线"！它们为你提供了经过高度优化、经过严格测试的通用算法，让你不用重复造轮子。就像装配线上的工人一样，这些算法各司其职：有的负责排序，有的负责查找，有的负责变换数据。而你，作为程序员，只需要告诉它们"做什么"，而不是"怎么做"。
+
+今天，我们就来学习这条高效编程装配线上的几个核心"工作站"：`sort`、`find`、`transform` 等常用算法，以及让它们变得更加强大的"工具"——Lambda表达式！
+
+## 核心概念：STL算法分类与Lambda表达式
+
+### STL算法的三大类别
+
+STL算法大致可以分为三类：
+
+1. **非修改序列算法**：这类算法只读取数据，不修改原容器。比如 `find`、`count`、`equal` 等。
+
+2. **修改序列算法**：这类算法会修改容器中的元素。比如 `copy`、`transform`、`replace` 等。
+
+3. **排序和相关算法**：这类算法对容器进行排序或基于排序的操作。比如 `sort`、`stable_sort`、`partial_sort`、`nth_element` 等。
+
+所有STL算法都遵循一个重要的原则：**它们操作的是迭代器范围，而不是容器本身**。这意味着同一个算法可以用于不同类型的容器（vector、list、deque等），只要提供正确的迭代器即可。
+
+### Lambda表达式：匿名函数的魔法
+
+在C++11之前，如果你想自定义算法的行为，通常需要定义一个函数对象（functor）或者普通函数。这往往会导致代码分散，阅读起来不够直观。
+
+Lambda表达式改变了这一切！它允许你在需要的地方直接定义匿名函数，语法简洁明了：
+
+```cpp
+[capture](parameters) -> return_type { body }
+```
+
+- **捕获列表 `[capture]`**：指定Lambda如何访问外部变量
+  - `[]`：不捕获任何变量
+  - `[&]`：按引用捕获所有外部变量
+  - `[=]`：按值捕获所有外部变量
+  - `[x, &y]`：按值捕获x，按引用捕获y
+
+- **参数列表 `(parameters)`**：和普通函数一样
+- **返回类型 `-> return_type`**：可选，编译器通常能自动推导
+- **函数体 `{body}`**：包含实际的逻辑
+
+Lambda表达式让我们的代码更加紧凑和直观，特别是在配合STL算法使用时。
+
+## 代码演示：算法使用示例
+
+让我们通过几个具体的例子来看看这些算法是如何工作的。
+
+### 示例1：sort与自定义比较函数
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+struct Student {
+    std::string name;
+    int score;
+};
+
+int main() {
+    std::vector<Student> students = {
+        {"张三", 85},
+        {"李四", 92},
+        {"王五", 78},
+        {"赵六", 96}
+    };
+    
+    // 按分数降序排列
+    std::sort(students.begin(), students.end(), 
+              [](const Student& a, const Student& b) {
+                  return a.score > b.score;
+              });
+    
+    for (const auto& student : students) {
+        std::cout << student.name << ": " << student.score << "\n";
+    }
+    
+    return 0;
+}
+```
+
+### 示例2：find_if、count_if与Lambda
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    // 查找第一个大于5的数
+    auto it = std::find_if(numbers.begin(), numbers.end(),
+                          [](int x) { return x > 5; });
+    
+    if (it != numbers.end()) {
+        std::cout << "第一个大于5的数是: " << *it << "\n";
+    }
+    
+    // 统计偶数的个数
+    int even_count = std::count_if(numbers.begin(), numbers.end(),
+                                   [](int x) { return x % 2 == 0; });
+    
+    std::cout << "偶数个数: " << even_count << "\n";
+    
+    return 0;
+}
+```
+
+### 示例3：transform与accumulate函数式编程
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    std::vector<int> squares(numbers.size());
+    
+    // 将每个数平方
+    std::transform(numbers.begin(), numbers.end(), squares.begin(),
+                   [](int x) { return x * x; });
+    
+    std::cout << "原数组: ";
+    for (int x : numbers) std::cout << x << " ";
+    std::cout << "\n平方后: ";
+    for (int x : squares) std::cout << x << " ";
+    std::cout << "\n";
+    
+    // 计算所有平方数的和
+    int sum_of_squares = std::accumulate(squares.begin(), squares.end(), 0);
+    std::cout << "平方和: " << sum_of_squares << "\n";
+    
+    return 0;
+}
+```
+
+## 深入理解：算法复杂度分析
+
+选择正确的算法不仅要考虑功能，还要考虑性能。让我们看看这些常用算法的时间复杂度：
+
+### 排序算法
+- `std::sort`：平均时间复杂度 O(n log n)，最坏情况通常是 O(n log n)（具体实现可能不同）
+- `std::stable_sort`：保证相等元素的相对顺序不变，时间复杂度 O(n log n)
+- `std::partial_sort`：只对前k个元素排序，时间复杂度 O(n log k)
+
+### 查找算法
+- `std::find`：线性查找，时间复杂度 O(n)
+- `std::find_if`：带条件的线性查找，时间复杂度 O(n)
+- 对于已排序的容器，应该使用 `std::binary_search`、`std::lower_bound`、`std::upper_bound`，时间复杂度 O(log n)
+
+### 变换和累积算法
+- `std::transform`：时间复杂度 O(n)
+- `std::accumulate`：时间复杂度 O(n)
+
+**重要提示**：STL算法都是为性能而优化的。在大多数情况下，使用STL算法比手写循环更高效，因为：
+1. 编译器可以对STL算法进行更好的优化
+2. STL算法通常使用了最适合特定数据结构的实现策略
+3. 减少了出错的可能性
+
+## 实际应用：数据过滤转换与自定义排序
+
+在实际开发中，STL算法的应用场景非常广泛。让我们看几个实用的例子：
+
+### 数据过滤与转换管道
+
+想象你有一个用户数据列表，你需要：
+1. 过滤出年龄大于18岁的用户
+2. 将用户名转换为大写
+3. 按注册时间排序
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+
+struct User {
+    std::string name;
+    int age;
+    std::string registration_date;
+};
+
+// 辅助函数：转换为大写
+std::string to_upper(const std::string& str) {
+    std::string result = str;
+    std::transform(result.begin(), result.end(), result.begin(), 
+                   [](unsigned char c) { return std::toupper(c); });
+    return result;
+}
+
+int main() {
+    std::vector<User> users = {
+        {"alice", 25, "2023-01-15"},
+        {"bob", 17, "2023-02-20"},
+        {"charlie", 30, "2022-12-10"},
+        {"diana", 22, "2023-03-05"}
+    };
+    
+    // 过滤出成年人
+    users.erase(
+        std::remove_if(users.begin(), users.end(),
+                      [](const User& u) { return u.age < 18; }),
+        users.end()
+    );
+    
+    // 转换用户名为大写
+    std::transform(users.begin(), users.end(), users.begin(),
+                   [](User u) {
+                       u.name = to_upper(u.name);
+                       return u;
+                   });
+    
+    // 按注册日期排序（假设日期格式为 YYYY-MM-DD）
+    std::sort(users.begin(), users.end(),
+              [](const User& a, const User& b) {
+                  return a.registration_date < b.registration_date;
+              });
+    
+    for (const auto& user : users) {
+        std::cout << user.name << " (" << user.age << ") - " 
+                  << user.registration_date << "\n";
+    }
+    
+    return 0;
+}
+```
+
+### 自定义排序的高级用法
+
+有时候我们需要根据多个条件进行排序。Lambda表达式让这变得非常简单：
+
+```cpp
+// 按分数降序，如果分数相同则按姓名升序
+std::sort(students.begin(), students.end(),
+          [](const Student& a, const Student& b) {
+              if (a.score != b.score) {
+                  return a.score > b.score;  // 分数高的在前
+              }
+              return a.name < b.name;        // 分数相同时按姓名字母顺序
+          });
+```
+
+## 常见误区：避免陷阱
+
+### 误区1：手写循环替代算法
+
+很多初学者习惯于手写for循环来完成各种操作：
+
+```cpp
+// ❌ 不推荐：手写循环
+int sum = 0;
+for (int x : numbers) {
+    sum += x;
+}
+
+// ✅ 推荐：使用STL算法
+int sum = std::accumulate(numbers.begin(), numbers.end(), 0);
+```
+
+手写循环的问题：
+- 容易出错（边界条件、索引错误等）
+- 性能通常不如STL算法
+- 代码可读性差，意图不明确
+
+### 误区2：Lambda捕获列表的错误使用
+
+Lambda的捕获列表是一个常见的陷阱区域：
+
+```cpp
+// ❌ 危险：按引用捕获局部变量
+std::vector<std::function<int()>> funcs;
+for (int i = 0; i < 3; ++i) {
+    funcs.push_back([&]() { return i; });  // 所有函数都返回相同的值！
+}
+
+// ✅ 正确：按值捕获
+for (int i = 0; i < 3; ++i) {
+    funcs.push_back([i]() { return i; });   // 每个函数返回不同的值
+}
+```
+
+按引用捕获局部变量时，要注意变量的生命周期。如果Lambda在变量销毁后被调用，会导致未定义行为。
+
+### 误区3：忽略算法的前提条件
+
+某些算法要求容器处于特定状态：
+
+```cpp
+// ❌ 错误：对未排序的容器使用二分查找
+std::vector<int> unsorted = {3, 1, 4, 1, 5};
+bool found = std::binary_search(unsorted.begin(), unsorted.end(), 4); // 结果不确定！
+
+// ✅ 正确：先排序再查找
+std::sort(unsorted.begin(), unsorted.end());
+bool found = std::binary_search(unsorted.begin(), unsorted.end(), 4);
+```
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+### 练习1：成绩统计系统
+
+创建一个学生成绩管理系统，要求：
+- 输入若干学生的姓名和成绩
+- 使用 `sort` 按成绩降序排列
+- 使用 `find_if` 查找第一个成绩大于90分的学生
+- 使用 `count_if` 统计不及格（<60分）的学生人数
+- 使用 `transform` 计算每个学生的等级（A: >=90, B: >=80, C: >=70, D: >=60, F: <60）
+
+### 练习2：字符串处理
+
+给定一个字符串向量，要求：
+- 使用 `transform` 将所有字符串转换为小写
+- 使用 `remove_if` 删除长度小于3的字符串
+- 使用 `sort` 按字符串长度排序，长度相同时按字典序排序
+
+### 练习3：数值计算
+
+给定一个整数向量，要求：
+- 使用 `transform` 计算每个数的平方根（只处理正数）
+- 使用 `accumulate` 计算所有正数的平均值
+- 使用 `partition` 将正数和负数分开
+
+记住，所有的解决方案都应该使用STL算法和Lambda表达式，避免手写循环！
+
+## 小结与思考
+
+今天我们学习了STL算法库的核心成员：`sort`、`find`、`transform` 等，以及让它们变得更加强大的Lambda表达式。让我们回顾一下关键要点：
+
+1. **STL算法是你的编程装配线**：它们提供了经过优化的通用算法，让你专注于"做什么"而不是"怎么做"。
+
+2. **Lambda表达式是强大的工具**：它们让你能够简洁地定义自定义行为，使代码更加紧凑和直观。
+
+3. **算法复杂度很重要**：选择正确的算法要考虑时间和空间复杂度，特别是在处理大量数据时。
+
+4. **避免常见陷阱**：不要手写循环替代算法，小心Lambda捕获列表的使用，注意算法的前提条件。
+
+### 思考题
+
+1. 为什么STL算法操作的是迭代器而不是容器？这种设计有什么好处？
+
+2. 在什么情况下应该使用 `stable_sort` 而不是 `sort`？
+
+3. Lambda表达式的捕获列表中，`[=]` 和 `[&]` 各有什么优缺点？
+
+4. 如何将多个STL算法组合起来创建数据处理管道？
+
+记住，熟练掌握STL算法和Lambda表达式不仅能让你写出更高效的代码，还能让你的代码更加清晰、简洁和易于维护。就像装配线让制造业变得更加高效一样，STL算法让你的编程工作变得更加轻松愉快！
+
+继续练习，你会发现这些工具将成为你编程工具箱中不可或缺的利器！

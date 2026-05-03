@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "在Java中，以下哪种异常是受检异常（Checked Exception）？",
+      "options": [
+        "NullPointerException",
+        "ArrayIndexOutOfBoundsException", 
+        "IOException",
+        "IllegalArgumentException"
+      ],
+      "answer": 2,
+      "explanation": "IOException是受检异常，必须在编译时处理或声明。其他选项都是RuntimeException的子类，属于非受检异常。"
+    },
+    {
+      "question": "关于finally块，以下哪个说法是正确的？",
+      "options": [
+        "finally块只有在try块正常执行时才会执行",
+        "finally块只有在catch块执行时才会执行", 
+        "finally块总是执行，无论是否发生异常",
+        "finally块在return语句后不会执行"
+      ],
+      "answer": 2,
+      "explanation": "finally块总是执行，无论try块是否抛出异常，或者是否有return语句。这是确保资源清理的关键机制。"
+    },
+    {
+      "question": "throws关键字的作用是什么？",
+      "options": [
+        "在方法内部抛出异常实例",
+        "在方法签名中声明该方法可能抛出的异常",
+        "捕获并处理异常",
+        "创建自定义异常类"
+      ],
+      "answer": 1,
+      "explanation": "throws关键字用于方法签名中，声明该方法可能抛出的受检异常，调用者必须处理这些异常。"
+    },
+    {
+      "question": "以下哪个是创建自定义异常类的正确方式？",
+      "options": [
+        "继承Object类",
+        "继承Exception类（受检异常）或RuntimeException类（非受检异常）",
+        "实现Exception接口",
+        "使用final关键字修饰"
+      ],
+      "answer": 1,
+      "explanation": "自定义异常类应该继承Exception类（创建受检异常）或RuntimeException类（创建非受检异常）。"
+    },
+    {
+      "question": "在异常处理中，空的catch块（什么也不做）被认为是：",
+      "options": [
+        "最佳实践，因为异常被静默处理了",
+        "可以接受的做法，特别是对于非受检异常",
+        "严重的反模式，应该避免",
+        "只有在调试时才使用"
+      ],
+      "answer": 2,
+      "explanation": "空的catch块是严重的反模式，因为它会吞掉异常信息，使调试变得困难。至少应该记录异常或重新抛出。"
+    },
+    {
+      "question": "try-with-resources语句的主要优势是什么？",
+      "options": [
+        "可以捕获更多类型的异常",
+        "自动管理资源的关闭，无需显式的finally块",
+        "提高程序的执行速度",
+        "减少代码行数"
+      ],
+      "answer": 1,
+      "explanation": "try-with-resources的主要优势是自动管理实现了AutoCloseable接口的资源，确保它们在使用后被正确关闭，无需手动编写finally块。"
+    },
+    {
+      "question": "以下哪种情况适合使用非受检异常（RuntimeException）？",
+      "options": [
+        "文件不存在的情况",
+        "网络连接失败",
+        "方法参数为null的编程错误",
+        "数据库连接超时"
+      ],
+      "answer": 2,
+      "explanation": "非受检异常适合表示编程错误或不应该发生的意外情况，如null参数。而文件不存在、网络失败、数据库超时等可预期的情况应该使用受检异常。"
+    },
+    {
+      "question": "多个catch块的执行顺序应该是：",
+      "options": [
+        "从最一般的异常类型到最具体的异常类型",
+        "从最具体的异常类型到最一般的异常类型",
+        "按照字母顺序排列",
+        "顺序不重要，Java会自动选择最匹配的"
+      ],
+      "answer": 1,
+      "explanation": "catch块应该从最具体的异常类型开始，到最一般的异常类型结束。如果顺序颠倒，具体的异常会被一般的异常捕获，导致编译错误。"
+    }
+  ]
+}

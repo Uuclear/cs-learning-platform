@@ -1,0 +1,320 @@
+---
+title: 内存管理：malloc与free
+description: 学习 C 语言的动态内存管理，掌握 malloc、calloc、realloc 和 free 的使用，理解内存泄漏、悬空指针和常见内存错误。
+---
+
+# 内存管理：malloc与free
+
+## 开场白：酒店房间的比喻
+
+想象一下，你是一家酒店的经理。酒店有两种房间分配方式：
+
+**固定房间（栈内存）**：客人预订时，你就给他们分配一个固定的房间号。这些房间在客人入住期间一直保留，客人离开时自动释放。这种方式简单高效，但不够灵活——你无法根据客人的实际需求动态调整房间大小。
+
+**动态房间（堆内存）**：客人可以随时要求："我需要一个房间"，你就从空闲房间池中找一个合适的给他；客人也可以要求："我需要更大的套房"，你就帮他换到更大的房间；当客人说"我不需要这个房间了"，你就把房间收回重新放入空闲池。
+
+C语言中的内存管理就是这样！栈内存就像固定房间，由编译器自动管理；堆内存就像动态房间，需要程序员手动申请和释放。今天，我们就来学习如何成为一位优秀的"内存酒店经理"！
+
+## 核心概念：堆 vs 栈、malloc/calloc/realloc/free
+
+### 堆内存 vs 栈内存
+
+**栈内存（Stack）**：
+- 自动分配和释放
+- 生命周期与函数调用相关
+- 空间有限（通常几MB）
+- 访问速度快
+- 用于局部变量、函数参数
+
+**堆内存（Heap）**：
+- 手动分配和释放
+- 生命周期由程序员控制
+- 空间大（受限于系统内存）
+- 访问速度稍慢
+- 用于动态数据结构、大数组等
+
+### 四大内存管理函数
+
+#### malloc - 内存申请员
+```c
+void* malloc(size_t size);
+```
+- 申请指定字节数的内存
+- 返回指向内存块的指针
+- 内存内容未初始化（可能包含垃圾数据）
+- 失败时返回NULL
+
+#### calloc - 清洁工兼申请员
+```c
+void* calloc(size_t num, size_t size);
+```
+- 申请num个元素，每个size字节
+- **自动将内存初始化为0**
+- 失败时返回NULL
+
+#### realloc - 房间调整师
+```c
+void* realloc(void* ptr, size_t new_size);
+```
+- 调整已分配内存块的大小
+- 可能移动内存块到新位置
+- 如果ptr为NULL，等同于malloc
+- 如果new_size为0，等同于free
+
+#### free - 内存回收员
+```c
+void free(void* ptr);
+```
+- 释放之前分配的内存
+- **不会改变指针的值**（指针仍指向原地址）
+- 对NULL指针调用是安全的（无操作）
+
+## 代码演示：动态内存分配示例
+
+让我们通过几个实际例子来看看这些函数如何工作：
+
+### 基础使用示例
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    // 使用malloc申请10个整数的空间
+    int* arr = (int*)malloc(10 * sizeof(int));
+    if (arr == NULL) {
+        printf("内存分配失败！\n");
+        return 1;
+    }
+    
+    // 初始化数组
+    for (int i = 0; i < 10; i++) {
+        arr[i] = i * i;
+    }
+    
+    // 使用数组
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+    
+    // 释放内存
+    free(arr);
+    arr = NULL; // 避免悬空指针
+    
+    return 0;
+}
+```
+
+### calloc vs malloc
+```c
+// malloc - 内存包含随机值
+int* arr1 = (int*)malloc(5 * sizeof(int));
+// arr1的内容可能是：{123456, -987654, 0, 42, -1}
+
+// calloc - 内存全部初始化为0
+int* arr2 = (int*)calloc(5, sizeof(int));
+// arr2的内容一定是：{0, 0, 0, 0, 0}
+```
+
+### realloc动态调整
+```c
+int* arr = (int*)malloc(5 * sizeof(int));
+// ... 使用前5个元素
+
+// 需要更多空间？没问题！
+arr = (int*)realloc(arr, 10 * sizeof(int));
+if (arr == NULL) {
+    // realloc失败，原来的内存仍然有效
+    printf("扩容失败！\n");
+    free(arr); // 注意：这里应该是原来的指针
+    return 1;
+}
+// 现在有10个元素的空间了！
+```
+
+## 深入理解：内存泄漏检测工具
+
+### 什么是内存泄漏？
+内存泄漏就像酒店的客人偷偷溜走但没退房——房间被占用着却没人使用，久而久之酒店就没有空房间了！
+
+在程序中，内存泄漏发生在：
+- 分配了内存但忘记调用free()
+- 丢失了指向内存的指针（比如指针被覆盖）
+
+### Valgrind：内存侦探
+Valgrind是最强大的内存调试工具之一。让我们看看如何使用它：
+
+```bash
+# 编译程序（建议加上-g选项以便调试）
+gcc -g -o myprogram myprogram.c
+
+# 使用Valgrind运行程序
+valgrind --leak-check=full --show-leak-kinds=all ./myprogram
+```
+
+Valgrind会告诉你：
+- ** definitely lost**: 肯定的内存泄漏（最严重）
+- ** indirectly lost**: 间接泄漏（通过其他泄漏的指针引用）
+- ** possibly lost**: 可能的泄漏
+- ** still reachable**: 程序结束时仍可访问的内存
+
+### 其他工具
+- **AddressSanitizer (ASan)**: GCC/Clang内置的内存错误检测器
+- **Dr. Memory**: Windows平台的内存调试工具
+- **Visual Studio Diagnostic Tools**: Visual Studio内置的内存分析工具
+
+## 实际应用：动态数组、链表节点
+
+### 动态数组实现
+动态数组是malloc/realloc的经典应用场景：
+
+```c
+typedef struct {
+    int* data;
+    size_t size;
+    size_t capacity;
+} DynamicArray;
+
+DynamicArray* create_array(size_t initial_capacity) {
+    DynamicArray* arr = (DynamicArray*)malloc(sizeof(DynamicArray));
+    arr->data = (int*)malloc(initial_capacity * sizeof(int));
+    arr->size = 0;
+    arr->capacity = initial_capacity;
+    return arr;
+}
+
+void push_back(DynamicArray* arr, int value) {
+    if (arr->size >= arr->capacity) {
+        // 扩容：通常是原来的2倍
+        arr->capacity *= 2;
+        arr->data = (int*)realloc(arr->data, arr->capacity * sizeof(int));
+    }
+    arr->data[arr->size++] = value;
+}
+
+void destroy_array(DynamicArray* arr) {
+    free(arr->data);
+    free(arr);
+}
+```
+
+### 链表节点分配
+链表的每个节点都需要动态分配：
+
+```c
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+Node* create_node(int data) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->data = data;
+    node->next = NULL;
+    return node;
+}
+
+void delete_list(Node* head) {
+    while (head != NULL) {
+        Node* temp = head;
+        head = head->next;
+        free(temp); // 逐个释放节点
+    }
+}
+```
+
+## 常见误区：忘记free、双重释放、悬空指针
+
+### 误区1：忘记free（内存泄漏）
+```c
+// 错误示例
+void bad_function() {
+    int* ptr = (int*)malloc(sizeof(int));
+    *ptr = 42;
+    // 忘记free(ptr) - 内存泄漏！
+}
+
+// 正确示例
+void good_function() {
+    int* ptr = (int*)malloc(sizeof(int));
+    if (ptr == NULL) return;
+    *ptr = 42;
+    // 使用ptr...
+    free(ptr);
+    ptr = NULL; // 良好习惯
+}
+```
+
+### 误区2：双重释放（Double Free）
+```c
+// 危险示例
+int* ptr = (int*)malloc(sizeof(int));
+free(ptr);
+free(ptr); // 第二次free - 未定义行为！
+```
+
+### 误区3：悬空指针（Dangling Pointer）
+```c
+// 问题示例
+int* get_pointer() {
+    int x = 42;
+    return &x; // 返回局部变量地址 - 危险！
+}
+
+// 更隐蔽的问题
+int* ptr = (int*)malloc(sizeof(int));
+free(ptr);
+// ptr现在是悬空指针！
+*ptr = 100; // 使用已释放的内存 - 未定义行为！
+```
+
+### 误区4：realloc失败处理不当
+```c
+// 危险写法
+ptr = realloc(ptr, new_size);
+// 如果realloc失败，ptr变成NULL，原来的内存丢失！
+
+// 安全写法
+void* new_ptr = realloc(ptr, new_size);
+if (new_ptr == NULL) {
+    // 处理错误，原来的ptr仍然有效
+    free(ptr);
+    return;
+}
+ptr = new_ptr;
+```
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+1. **基础练习**：编写一个程序，动态分配一个字符串数组，存储用户输入的名字，最后正确释放所有内存。
+
+2. **进阶练习**：实现一个简单的动态栈，支持push、pop、peek操作，使用realloc进行自动扩容。
+
+3. **调试练习**：故意制造几种内存错误（泄漏、双重释放、悬空指针），然后使用Valgrind或AddressSanitizer来检测它们。
+
+记住黄金法则：
+- **每个malloc/calloc/realloc都要有对应的free**
+- **free后立即将指针设为NULL**
+- **始终检查malloc/realloc的返回值**
+- **使用内存检测工具定期检查你的代码**
+
+## 小结与思考
+
+内存管理是C语言的核心技能，也是最容易出错的地方。今天我们学习了：
+
+✅ **四大函数**：malloc、calloc、realloc、free的正确使用方法  
+✅ **堆栈区别**：理解何时使用动态内存  
+✅ **实际应用**：动态数组、链表等数据结构的内存管理  
+✅ **常见陷阱**：内存泄漏、双重释放、悬空指针的避免方法  
+✅ **调试工具**：Valgrind等工具的使用  
+
+**思考题**：
+1. 为什么calloc比malloc慢？在什么情况下你应该选择calloc？
+2. realloc在什么情况下会移动内存块？这对你的程序有什么影响？
+3. 在多线程环境中使用动态内存分配需要注意什么？
+
+记住，成为一名优秀的C程序员，不仅要会分配内存，更要会正确地释放内存。就像一个好的酒店经理，不仅要会分配房间，更要及时回收空房间供下一位客人使用！
+
+下次课程，我们将学习更高级的内存管理技巧和最佳实践。继续加油！

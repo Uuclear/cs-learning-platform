@@ -1,0 +1,313 @@
+---
+title: "中断与定时器：精确控制时间"
+description: "学习单片机中断系统和定时器的工作原理，掌握中断服务程序编写和精确定时器应用。"
+---
+
+# 中断与定时器：精确控制时间
+
+## 开场白：门铃 vs. 不停地看门口
+
+想象一下你在家等快递。你有两种选择：
+
+**方案A（轮询）**：每隔5秒钟就跑到门口看看快递到了没有。这样做的后果是——你一整天都在门口和客厅之间来回奔波，什么事情都做不了，还累得半死！
+
+**方案B（中断）**：你坐在沙发上悠闲地看书，门铃一响（中断触发），你就立刻去开门拿快递（执行中断服务程序）。拿到快递后，你继续回到沙发上看书（回到主程序）。
+
+这就是中断系统的核心思想！在单片机世界里，中断让我们能够高效地处理突发事件，而不需要浪费宝贵的CPU时间不断地检查状态。
+
+## 核心概念：中断机制、ISR、优先级
+
+### 什么是中断？
+
+中断是单片机的一种硬件机制，允许外部事件或内部定时器"打断"当前正在执行的程序，转而去处理更重要的事情。处理完后再回到原来被打断的地方继续执行。
+
+### 中断服务程序（ISR - Interrupt Service Routine）
+
+当中断发生时，单片机会：
+1. 保存当前程序的上下文（寄存器状态等）
+2. 跳转到对应的中断服务程序地址
+3. 执行ISR中的代码
+4. 恢复之前的上下文
+5. 继续执行被打断的程序
+
+```c
+// 典型的中断服务程序结构
+void EXTI0_IRQHandler(void) {
+    // 1. 清除中断标志位（重要！）
+    EXTI->PR = EXTI_Line0;
+    
+    // 2. 执行中断处理逻辑
+    // 注意：这里要尽量快！不要做耗时操作
+    
+    // 3. 函数自动返回，硬件自动恢复上下文
+}
+```
+
+### 中断优先级
+
+当多个中断同时发生时，单片机需要决定先处理哪个。这就是中断优先级的作用：
+
+- **抢占优先级（Preemption Priority）**：高优先级中断可以打断低优先级中断的执行
+- **子优先级（Subpriority）**：相同抢占优先级的中断按子优先级顺序处理
+
+比如你的门铃（高优先级）响了，即使你正在接电话（中优先级），也会先去开门；但如果两个门铃同时响（相同优先级），那就按先后顺序处理。
+
+## 代码演示：Python 中断模拟
+
+让我们用Python来模拟中断和轮询的区别：
+
+```python
+import time
+import threading
+import random
+
+# 轮询方式
+def polling_approach():
+    print("轮询方式开始...")
+    start_time = time.time()
+    event_occurred = False
+    
+    while not event_occurred:
+        # 模拟检查事件（比如检查按钮是否按下）
+        if random.random() < 0.01:  # 1%概率事件发生
+            event_occurred = True
+            print(f"轮询检测到事件！耗时: {time.time() - start_time:.3f}秒")
+        time.sleep(0.01)  # 模拟检查间隔
+
+# 中断方式（使用线程模拟）
+def interrupt_handler():
+    """中断服务程序"""
+    print(f"中断触发！当前时间: {time.time():.3f}")
+
+def interrupt_approach():
+    print("中断方式开始...")
+    start_time = time.time()
+    
+    # 设置一个定时器模拟外部中断
+    delay = random.uniform(0.1, 2.0)
+    timer = threading.Timer(delay, interrupt_handler)
+    timer.start()
+    
+    # 主程序可以做其他事情
+    for i in range(5):
+        print(f"主程序工作... {i+1}")
+        time.sleep(0.5)
+    
+    timer.join()
+    print(f"总耗时: {time.time() - start_time:.3f}秒")
+
+if __name__ == "__main__":
+    print("=== 轮询 vs 中断性能对比 ===")
+    polling_approach()
+    print("\n" + "="*40 + "\n")
+    interrupt_approach()
+```
+
+这个例子清楚地展示了中断的优势：主程序不需要不断地检查状态，而是专注于自己的工作，只有当中断发生时才去处理。
+
+## 深入理解：定时器原理和预分频器
+
+### 定时器工作原理
+
+定时器本质上是一个计数器，它以固定的频率递增（或递减）。当计数值达到设定值时，就会产生中断。
+
+```
+系统时钟 (72MHz) 
+    ↓
+预分频器 (Prescaler)
+    ↓
+计数器 (Counter)
+    ↓
+自动重载寄存器 (Auto-reload)
+    ↓
+定时器中断
+```
+
+### 预分频器（Prescaler）的作用
+
+预分频器用来降低计数器的计数频率。比如：
+
+- 系统时钟：72MHz（每秒7200万次）
+- 预分频值：7199
+- 计数频率：72MHz / (7199 + 1) = 10kHz（每秒1万次）
+
+这样我们就可以用相对较小的计数值实现较长的定时。
+
+### 精确定时计算公式
+
+```
+定时时间 = (预分频值 + 1) × (自动重载值 + 1) / 系统时钟频率
+```
+
+例如，要在72MHz系统时钟下实现1ms定时：
+- 预分频值 = 7199 → 计数频率 = 10kHz
+- 自动重载值 = 9 → 计数值 = 10
+- 定时时间 = 10 × 10 / 72,000,000 × 7200 = 1ms
+
+## 实际应用：按键中断、精确延时、电机控制
+
+### 1. 按键中断应用
+
+```c
+// 配置外部中断
+void configure_button_interrupt() {
+    // 使能GPIO时钟
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+    
+    // 配置PA0为输入模式
+    GPIOA->CRL &= ~GPIO_CRL_MODE0;
+    GPIOA->CRL |= GPIO_CRL_CNF0_1; // 输入，上拉/下拉
+    
+    // 使能AFIO时钟
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+    
+    // 将PA0映射到EXTI0
+    AFIO->EXTICR[0] &= ~AFIO_EXTICR1_EXTI0;
+    AFIO->EXTICR[0] |= AFIO_EXTICR1_EXTI0_PA;
+    
+    // 配置EXTI0为上升沿触发
+    EXTI->RTSR |= EXTI_RTSR_TR0;
+    
+    // 使能EXTI0中断
+    EXTI->IMR |= EXTI_IMR_MR0;
+    
+    // 配置NVIC优先级并使能
+    NVIC_SetPriority(EXTI0_IRQn, 1);
+    NVIC_EnableIRQ(EXTI0_IRQn);
+}
+```
+
+### 2. 精确延时函数
+
+```c
+volatile uint32_t tick_count = 0;
+
+// SysTick中断服务程序
+void SysTick_Handler(void) {
+    tick_count++;
+}
+
+// 精确延时函数（毫秒）
+void delay_ms(uint32_t ms) {
+    uint32_t start = tick_count;
+    while ((tick_count - start) < ms) {
+        // 可以在这里做其他事情，或者空等待
+    }
+}
+```
+
+### 3. 电机PWM控制
+
+使用定时器的PWM功能可以精确控制电机速度：
+
+```c
+void configure_pwm_timer() {
+    // 配置TIM3_CH1 (PA6) 为PWM输出
+    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+    
+    // PA6配置为复用推挽输出
+    GPIOA->CRL &= ~(GPIO_CRL_MODE6 | GPIO_CRL_CNF6);
+    GPIOA->CRL |= GPIO_CRL_MODE6_1 | GPIO_CRL_CNF6_1;
+    
+    // TIM3配置
+    TIM3->PSC = 7199;    // 预分频
+    TIM3->ARR = 999;     // 自动重载值 (1kHz PWM)
+    TIM3->CCR1 = 500;    // 占空比50%
+    
+    // 使能PWM通道1
+    TIM3->CCMR1 |= TIM_CCMR1_OC1M_2 | TIM_CCMR1_OC1M_1;
+    TIM3->CCER |= TIM_CCER_CC1E;
+    
+    // 使能定时器
+    TIM3->CR1 |= TIM_CR1_CEN;
+}
+```
+
+## 常见误区：ISR 中不能做耗时操作
+
+### 错误做法
+
+```c
+// ❌ 错误：在ISR中做耗时操作
+void EXTI0_IRQHandler(void) {
+    EXTI->PR = EXTI_Line0;
+    
+    // 这些操作都很耗时！
+    printf("Button pressed!\n");        // 串口输出很慢
+    delay_ms(100);                      // 延时会阻塞其他中断
+    complex_calculation();              // 复杂计算占用大量时间
+}
+```
+
+### 正确做法
+
+```c
+// ✅ 正确：ISR只做最必要的事情
+volatile uint8_t button_pressed = 0;
+
+void EXTI0_IRQHandler(void) {
+    EXTI->PR = EXTI_Line0;
+    button_pressed = 1;  // 只设置标志位
+}
+
+// 在主循环中处理
+void main_loop(void) {
+    if (button_pressed) {
+        button_pressed = 0;
+        handle_button_press();  // 在主程序中处理复杂逻辑
+    }
+}
+```
+
+**ISR设计原则：**
+1. **快速**：执行时间尽可能短
+2. **简单**：只做必要的状态更新
+3. **不阻塞**：不要调用可能阻塞的函数
+4. **可重入**：考虑中断嵌套的情况
+
+## 动手实践
+
+### 实验1：按键中断计数器
+
+**目标**：每次按下按键，LED闪烁次数加1，并通过串口输出当前计数。
+
+**步骤**：
+1. 配置按键引脚为外部中断输入
+2. 配置LED引脚为输出
+3. 编写中断服务程序，增加计数器
+4. 在主循环中根据计数器控制LED闪烁
+
+### 实验2：精确1秒定时器
+
+**目标**：使用定时器中断实现精确的1秒定时，每秒翻转一次LED状态。
+
+**步骤**：
+1. 配置系统时钟为72MHz
+2. 配置定时器预分频和自动重载值
+3. 使能定时器中断
+4. 在中断服务程序中翻转LED
+
+### 实验3：多任务调度
+
+**目标**：使用多个定时器实现不同频率的任务调度：
+- 任务1：每100ms执行一次（读取传感器）
+- 任务2：每500ms执行一次（更新显示）
+- 任务3：每1000ms执行一次（发送数据）
+
+## 小结与思考
+
+中断和定时器是单片机编程的核心概念，它们让我们能够：
+
+- **提高效率**：避免无谓的轮询检查
+- **实时响应**：对突发事件做出快速反应  
+- **精确控制**：实现微秒级的时间控制
+- **多任务处理**：在单核处理器上模拟多任务
+
+**思考题**：
+1. 如果两个相同优先级的中断同时发生，会发生什么？
+2. 为什么在ISR中不能使用`printf`这样的函数？
+3. 如何避免中断嵌套导致的栈溢出问题？
+4. 定时器的预分频值和自动重载值应该如何选择才能获得最佳精度？
+
+记住：中断是单片机的"耳朵"，让它能够听到外界的声音；定时器是单片机的"心跳"，让它能够精确地掌控时间。掌握了这两个工具，你就真正踏入了嵌入式系统的大门！

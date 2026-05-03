@@ -1,0 +1,355 @@
+---
+title: 多线程与并发
+description: 学习 Java 的多线程编程，掌握线程创建、synchronized 同步、volatile、线程池和并发工具类。
+---
+
+# 多线程与并发
+
+## 开场白：餐厅里的多服务员哲学
+
+想象一下你去一家餐厅吃饭。如果这家餐厅只有一个服务员，会发生什么情况？
+
+当你点完菜后，服务员要去厨房下单，然后等待厨师做好菜，再端给你。在这期间，其他桌的客人只能干等着，即使他们只是想加杯水或者结账。这显然效率极低！
+
+现在，如果餐厅有多个服务员呢？一个服务员在等厨房做菜的时候，另一个服务员可以去服务其他客人。这样整个餐厅的运转效率就大大提升了。
+
+Java中的多线程就像餐厅里的多个服务员。单线程程序就像只有一个服务员的餐厅——所有任务必须排队等待。而多线程程序则可以同时处理多个任务，大大提高程序的响应性和吞吐量。
+
+但是！多服务员也有问题：如果两个服务员同时去拿同一盘菜，或者同时修改同一个订单，就会出现混乱。这就是并发编程中的**线程安全**问题。
+
+今天，我们就来学习如何在Java中正确地使用多线程，既要享受并发带来的性能提升，又要避免各种陷阱和问题。
+
+## 核心概念：线程创建、同步与线程池
+
+### 线程创建的三种方式
+
+在Java中，我们有多种方式创建线程：
+
+**1. 继承Thread类**
+```java
+class MyThread extends Thread {
+    public void run() {
+        // 线程执行的代码
+    }
+}
+```
+
+**2. 实现Runnable接口（推荐）**
+```java
+class MyRunnable implements Runnable {
+    public void run() {
+        // 线程执行的代码
+    }
+}
+// 使用时：new Thread(new MyRunnable()).start();
+```
+
+**3. 使用Lambda表达式（Java 8+）**
+```java
+new Thread(() -> {
+    // 线程执行的代码
+}).start();
+```
+
+为什么推荐使用Runnable而不是继承Thread？因为Java不支持多重继承，如果你的类已经继承了其他类，就无法再继承Thread。而实现接口则没有这个限制。
+
+### 线程同步：synchronized与volatile
+
+当多个线程访问共享资源时，我们需要确保数据的一致性。
+
+**synchronized关键字**：确保同一时间只有一个线程可以执行被保护的代码块。
+
+```java
+// 方法级别同步
+public synchronized void increment() {
+    count++;
+}
+
+// 代码块级别同步
+public void increment() {
+    synchronized(this) {
+        count++;
+    }
+}
+```
+
+**volatile关键字**：保证变量的可见性。当一个线程修改了volatile变量，其他线程能立即看到修改后的值。
+
+```java
+private volatile boolean running = true;
+
+// 其他线程可以立即看到running的变化
+```
+
+注意：volatile不能保证原子性！比如`count++`操作就不是原子的，即使count是volatile的。
+
+### 线程池：ExecutorService
+
+手动创建和管理线程很麻烦，而且频繁创建销毁线程开销很大。线程池就是为了解决这个问题。
+
+```java
+// 创建固定大小的线程池
+ExecutorService executor = Executors.newFixedThreadPool(4);
+
+// 提交任务
+executor.submit(() -> {
+    // 任务代码
+});
+
+// 关闭线程池
+executor.shutdown();
+```
+
+Java提供了几种常用的线程池：
+- `newFixedThreadPool(n)`：固定大小的线程池
+- `newCachedThreadPool()`：根据需要创建线程的缓存线程池  
+- `newSingleThreadExecutor()`：单线程的线程池
+- `newScheduledThreadPool(n)`：支持定时和周期性任务的线程池
+
+## 代码演示：从基础到进阶
+
+让我们通过几个实际的例子来看看多线程是如何工作的。
+
+### 示例1：线程创建对比
+
+```java
+// 继承Thread
+Thread thread1 = new MyThread("继承Thread");
+thread1.start();
+
+// 实现Runnable  
+Thread thread2 = new Thread(new MyRunnable("实现Runnable"));
+thread2.start();
+
+// Lambda表达式
+Thread thread3 = new Thread(() -> {
+    System.out.println("Lambda线程执行");
+});
+thread3.start();
+```
+
+运行这个例子，你会发现三个线程是并发执行的，输出顺序可能每次都不一样。
+
+### 示例2：线程安全计数器
+
+```java
+class SafeCounter {
+    private int count = 0;
+    
+    public synchronized void increment() {
+        count++; // 现在是线程安全的！
+    }
+    
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+如果我们不用synchronized，10个线程各执行1000次increment，最终结果很可能不是10000，而是小于10000的某个数。
+
+### 示例3：线程池的实际应用
+
+```java
+ExecutorService executor = Executors.newFixedThreadPool(4);
+
+// 提交有返回值的任务
+Future<String> future = executor.submit(() -> {
+    return "任务完成";
+});
+
+// 获取结果（会阻塞直到任务完成）
+String result = future.get();
+```
+
+线程池让我们可以轻松管理大量并发任务，而不用担心线程生命周期管理的问题。
+
+## 深入理解：死锁、竞争条件与解决方案
+
+### 死锁（Deadlock）
+
+死锁是最可怕的并发问题之一。想象两个人互相拿着对方需要的钥匙：
+
+- 线程A持有锁1，想要获取锁2
+- 线程B持有锁2，想要获取锁1
+- 结果：两个线程都在等待对方释放锁，永远无法继续执行
+
+**避免死锁的方法：**
+1. **按固定顺序获取锁**：所有线程都按相同的顺序获取多个锁
+2. **使用超时机制**：`tryLock(timeout, timeUnit)`而不是无限等待
+3. **减少锁的粒度**：尽量减少同时持有多个锁的情况
+
+### 竞争条件（Race Condition）
+
+竞争条件发生在多个线程同时访问共享数据，且至少有一个线程在修改数据时。
+
+```java
+// 危险！这不是原子操作
+count++; // 实际上是：读取count -> count+1 -> 写回count
+```
+
+**解决方案：**
+1. **使用synchronized**：确保操作的原子性
+2. **使用原子类**：如`AtomicInteger`、`AtomicLong`等
+3. **使用volatile + CAS**：比较并交换操作
+
+### Java并发工具包
+
+Java提供了丰富的并发工具类：
+
+- **原子类**：`AtomicInteger`、`AtomicReference`等
+- **并发集合**：`ConcurrentHashMap`、`CopyOnWriteArrayList`等  
+- **同步工具**：`CountDownLatch`、`CyclicBarrier`、`Semaphore`等
+- **锁**：`ReentrantLock`、`ReadWriteLock`等
+
+这些工具类经过精心设计和测试，比手动实现同步机制更可靠、更高效。
+
+## 实际应用：并发下载与生产者消费者
+
+### 并发文件下载
+
+```java
+ExecutorService executor = Executors.newFixedThreadPool(5);
+List<Future<Void>> futures = new ArrayList<>();
+
+for (String url : urls) {
+    Future<Void> future = executor.submit(() -> {
+        downloadFile(url); // 下载单个文件
+        return null;
+    });
+    futures.add(future);
+}
+
+// 等待所有下载完成
+for (Future<Void> future : futures) {
+    future.get(); // 处理异常...
+}
+```
+
+这种方式比串行下载快得多，特别是当网络延迟较高时。
+
+### 生产者-消费者模式
+
+这是经典的并发设计模式：
+
+```java
+// 使用BlockingQueue实现
+BlockingQueue<String> queue = new ArrayBlockingQueue<>(10);
+
+// 生产者
+executor.submit(() -> {
+    while (running) {
+        queue.put("新数据"); // 队列满时自动阻塞
+    }
+});
+
+// 消费者  
+executor.submit(() -> {
+    while (running) {
+        String data = queue.take(); // 队列空时自动阻塞
+        process(data);
+    }
+});
+```
+
+`BlockingQueue`自动处理了同步和等待的问题，让代码变得非常简洁。
+
+## 常见误区：从新手到专家的必经之路
+
+### 误区1：synchronized滥用
+
+很多初学者认为"只要加上synchronized就安全了"，于是到处加锁：
+
+```java
+// 过度同步！性能很差
+public synchronized void method1() { /* ... */ }
+public synchronized void method2() { /* ... */ }
+public synchronized void method3() { /* ... */ }
+```
+
+**正确做法**：只在真正需要同步的地方加锁，并且尽量减小锁的范围。
+
+### 误区2：忘记关闭线程池
+
+```java
+// 错误！程序不会正常退出
+ExecutorService executor = Executors.newFixedThreadPool(4);
+executor.submit(task);
+// 忘记调用 executor.shutdown()
+```
+
+**正确做法**：总是确保在线程池不再需要时调用`shutdown()`，并等待任务完成。
+
+### 误区3：忽略InterruptedException
+
+```java
+// 错误！吞掉了中断信号
+try {
+    Thread.sleep(1000);
+} catch (InterruptedException e) {
+    // 什么都不做！
+}
+```
+
+**正确做法**：要么重新设置中断状态，要么向上抛出异常：
+
+```java
+try {
+    Thread.sleep(1000);
+} catch (InterruptedException e) {
+    Thread.currentThread().interrupt(); // 恢复中断状态
+    return; // 或者抛出异常
+}
+```
+
+### 误区4：认为volatile能解决所有问题
+
+```java
+// 错误！volatile不能保证原子性
+private volatile int count = 0;
+public void increment() {
+    count++; // 仍然不是线程安全的！
+}
+```
+
+**正确做法**：对于复合操作，使用`synchronized`或原子类。
+
+## 动手实践：从理论到实战
+
+现在轮到你了！通过以下练习来巩固所学知识：
+
+### 练习1：线程安全的银行账户
+
+实现一个线程安全的银行账户类，支持存款、取款和查询余额操作。要求多个线程同时操作时不会出现余额错误。
+
+### 练习2：并发任务调度器
+
+实现一个简单的任务调度器，能够并发执行多个任务，并提供任务状态查询功能。
+
+### 练习3：读写锁应用
+
+实现一个缓存系统，使用读写锁来提高并发读取的性能（多个线程可以同时读，但写操作需要独占）。
+
+记住：并发编程的关键是**理解问题本质**，而不是盲目套用模式。每个并发问题都有其特定的场景和约束，需要仔细分析后再选择合适的解决方案。
+
+## 小结与思考
+
+今天我们学习了Java多线程编程的核心概念：
+
+1. **线程创建**：优先使用Runnable接口或Lambda表达式
+2. **线程同步**：正确使用synchronized和volatile，理解它们的适用场景  
+3. **线程池**：使用ExecutorService管理线程生命周期
+4. **并发工具**：善用java.util.concurrent包中的各种工具类
+5. **避免陷阱**：死锁、竞争条件、资源泄漏等问题的预防和解决
+
+**思考题：**
+
+1. 为什么说"过早优化是万恶之源"在并发编程中特别适用？
+2. 在什么情况下，单线程程序可能比多线程程序性能更好？
+3. 如何在保证线程安全的同时，最大化并发性能？
+
+记住：并发编程是一把双刃剑。用得好，可以大幅提升程序性能；用得不好，会带来各种难以调试的问题。始终保持谨慎，充分测试，逐步优化。
+
+下次课程，我们将深入探讨Java内存模型和更高级的并发原语。在此之前，请务必通过实践来巩固今天学到的知识！
+
+> **教授寄语**：并发编程就像开车——规则看似简单，但要开得好需要大量的练习和经验。不要害怕犯错，每个优秀的并发程序员都曾经被死锁困扰过。重要的是从错误中学习，逐步建立起对并发问题的直觉。

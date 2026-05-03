@@ -1,0 +1,335 @@
+---
+title: 继承与多态
+description: 学习 C++ 的继承和多态机制，掌握虚函数、纯虚函数、抽象类和动态绑定，理解继承体系的设计原则。
+---
+
+# 继承与多态
+
+## 开场白：家族遗传的奇妙世界
+
+想象一下，你是一个家族的族长，你的家族有着悠久的历史和独特的传统。你的孩子们天生就继承了你的某些特质——也许是你的聪明才智，也许是你的幽默感，甚至是你的烹饪天赋！但在C++的世界里，这种"遗传"更加精确和可控。
+
+在面向对象编程中，**继承**就像是家族遗传——子类（派生类）从父类（基类）那里继承属性和行为。而**多态**则像是家族成员虽然有着相同的姓氏，但每个人都有自己独特的才能和表现方式。今天，我们就来探索C++中这两个强大的概念，看看它们如何帮助我们构建更加优雅和可维护的代码。
+
+## 核心概念：继承、虚函数与多态
+
+### 继承基础
+
+继承是C++面向对象编程的三大支柱之一（另外两个是封装和多态）。通过继承，我们可以创建一个新的类，它基于现有的类并添加新的功能或修改现有功能。
+
+```cpp
+// 基类（父类）
+class Animal {
+protected:
+    std::string name;
+    
+public:
+    Animal(const std::string& n) : name(n) {}
+    virtual ~Animal() = default;
+    
+    void eat() {
+        std::cout << name << " is eating." << std::endl;
+    }
+    
+    virtual void makeSound() {
+        std::cout << name << " makes a sound." << std::endl;
+    }
+};
+
+// 派生类（子类）
+class Dog : public Animal {
+public:
+    Dog(const std::string& n) : Animal(n) {}
+    
+    void makeSound() override {
+        std::cout << name << " barks: Woof! Woof!" << std::endl;
+    }
+    
+    void wagTail() {
+        std::cout << name << " wags its tail happily." << std::endl;
+    }
+};
+```
+
+在这个例子中，`Dog`类继承自`Animal`类。`Dog`自动获得了`Animal`的所有公共和受保护成员，并且可以重写（override）虚函数`makeSound()`。
+
+### 访问控制修饰符
+
+C++提供了三种继承方式，它们决定了基类成员在派生类中的访问权限：
+
+- **public继承**：基类的public成员在派生类中仍然是public，protected成员仍然是protected
+- **protected继承**：基类的public和protected成员在派生类中都变成protected
+- **private继承**：基类的public和protected成员在派生类中都变成private
+
+通常我们使用public继承，因为它表示"is-a"关系（狗是一种动物）。
+
+### 虚函数与动态绑定
+
+**虚函数**是实现多态的关键。当我们用`virtual`关键字声明一个函数时，编译器会在运行时决定调用哪个版本的函数，而不是在编译时。
+
+```cpp
+Animal* animal1 = new Dog("Buddy");
+animal1->makeSound(); // 输出: Buddy barks: Woof! Woof!
+```
+
+尽管`animal1`的类型是`Animal*`，但由于`makeSound()`是虚函数，程序在运行时会调用`Dog`类的版本。这就是**动态绑定**（也称为后期绑定）。
+
+### 纯虚函数与抽象类
+
+有时我们希望定义一个接口，但不提供具体的实现。这时我们可以使用**纯虚函数**：
+
+```cpp
+class Shape {
+public:
+    virtual ~Shape() = default;
+    virtual double area() const = 0; // 纯虚函数
+    virtual void draw() const = 0;   // 纯虚函数
+};
+```
+
+包含纯虚函数的类称为**抽象类**。抽象类不能被实例化，只能作为基类使用。任何继承抽象类的派生类都必须实现所有的纯虚函数，否则它自己也会成为抽象类。
+
+## 代码演示：构建一个完整的继承体系
+
+让我们通过一个图形编辑器的例子来演示继承和多态的实际应用：
+
+```cpp
+// 抽象基类
+class Shape {
+protected:
+    std::string color;
+    
+public:
+    Shape(const std::string& c) : color(c) {}
+    virtual ~Shape() = default;
+    
+    virtual double area() const = 0;
+    virtual void draw() const = 0;
+    virtual std::string getType() const = 0;
+    
+    std::string getColor() const { return color; }
+};
+
+// 具体的派生类
+class Circle : public Shape {
+private:
+    double radius;
+    
+public:
+    Circle(const std::string& c, double r) : Shape(c), radius(r) {}
+    
+    double area() const override {
+        return 3.14159 * radius * radius;
+    }
+    
+    void draw() const override {
+        std::cout << "Drawing a " << color << " circle with radius " << radius << std::endl;
+    }
+    
+    std::string getType() const override {
+        return "Circle";
+    }
+};
+
+class Rectangle : public Shape {
+private:
+    double width, height;
+    
+public:
+    Rectangle(const std::string& c, double w, double h) : Shape(c), width(w), height(h) {}
+    
+    double area() const override {
+        return width * height;
+    }
+    
+    void draw() const override {
+        std::cout << "Drawing a " << color << " rectangle (" << width << "x" << height << ")" << std::endl;
+    }
+    
+    std::string getType() const override {
+        return "Rectangle";
+    }
+};
+
+// 使用多态
+void processShapes(const std::vector<Shape*>& shapes) {
+    for (const auto& shape : shapes) {
+        shape->draw();
+        std::cout << "Area: " << shape->area() << std::endl;
+        std::cout << "Type: " << shape->getType() << std::endl;
+        std::cout << "---" << std::endl;
+    }
+}
+```
+
+在这个例子中，我们可以将不同类型的形状存储在同一个容器中，并通过统一的接口进行操作。这就是多态的力量！
+
+## 深入理解：虚函数表与动态绑定原理
+
+### 虚函数表（vtable）
+
+每个包含虚函数的类都有一个**虚函数表**（vtable），这是一个函数指针数组，存储了该类所有虚函数的地址。每个对象都有一个指向其类vtable的指针（vptr）。
+
+当调用虚函数时，程序会：
+1. 通过对象的vptr找到对应的vtable
+2. 在vtable中找到对应函数的地址
+3. 调用该函数
+
+这个过程在运行时完成，因此实现了动态绑定。
+
+### 性能考虑
+
+虚函数调用比普通函数调用稍慢，因为需要额外的间接寻址。但在现代处理器上，这种开销通常可以忽略不计。更重要的是，虚函数启用的多态性带来的代码组织优势远远超过了微小的性能损失。
+
+### 构造函数与析构函数中的虚函数
+
+需要注意的是，在构造函数和析构函数中调用虚函数时，不会发生动态绑定。这是因为在构造过程中，派生类的部分还没有完全初始化；在析构过程中，派生类的部分已经被销毁。
+
+```cpp
+class Base {
+public:
+    Base() { 
+        callVirtual(); // 调用Base::callVirtual()，不是派生类的版本
+    }
+    virtual void callVirtual() { 
+        std::cout << "Base version" << std::endl; 
+    }
+};
+
+class Derived : public Base {
+public:
+    Derived() {}
+    void callVirtual() override { 
+        std::cout << "Derived version" << std::endl; 
+    }
+};
+```
+
+## 实际应用：解决真实世界的问题
+
+### 图形编辑器设计
+
+在图形编辑器中，我们可以定义一个抽象的`Shape`基类，然后让各种具体的形状（圆形、矩形、三角形等）继承它。这样，编辑器的核心逻辑只需要处理`Shape*`指针，而不需要关心具体的形状类型。
+
+### 员工管理系统
+
+在员工管理系统中，我们可以定义一个`Employee`基类，然后有`Manager`、`Developer`、`Designer`等派生类。每个员工类型可能有不同的薪资计算方式：
+
+```cpp
+class Employee {
+protected:
+    std::string name;
+    double baseSalary;
+    
+public:
+    Employee(const std::string& n, double salary) : name(n), baseSalary(salary) {}
+    virtual ~Employee() = default;
+    
+    virtual double calculateSalary() const = 0;
+    virtual std::string getRole() const = 0;
+    
+    std::string getName() const { return name; }
+};
+
+class Developer : public Employee {
+private:
+    int experienceYears;
+    
+public:
+    Developer(const std::string& n, double salary, int years) 
+        : Employee(n, salary), experienceYears(years) {}
+    
+    double calculateSalary() const override {
+        return baseSalary + (experienceYears * 1000);
+    }
+    
+    std::string getRole() const override {
+        return "Developer";
+    }
+};
+```
+
+### 插件架构
+
+多态也是实现插件架构的基础。主程序定义抽象接口，插件实现这些接口，主程序通过统一的接口与各种插件交互。
+
+## 常见误区与最佳实践
+
+### 忘记virtual析构函数
+
+这是最常见的错误之一！如果你的类打算被继承，**一定要将析构函数声明为virtual**：
+
+```cpp
+// 错误的做法
+class BadBase {
+public:
+    ~BadBase() { /* 清理资源 */ }
+};
+
+class BadDerived : public BadBase {
+public:
+    ~BadDerived() { /* 清理派生类资源 */ }
+};
+
+// 正确的做法
+class GoodBase {
+public:
+    virtual ~GoodBase() = default; // 或者提供具体实现
+};
+```
+
+如果不这样做，当你通过基类指针删除派生类对象时，只会调用基类的析构函数，导致派生类的资源泄漏。
+
+### 菱形继承问题
+
+当一个类从两个都继承自同一个基类的类派生时，会出现菱形继承问题：
+
+```cpp
+class A { public: int x; };
+class B : public A {};
+class C : public A {};
+class D : public B, public C {}; // D有两个A的副本！
+
+// 解决方案：虚继承
+class B : virtual public A {};
+class C : virtual public A {};
+class D : public B, public C {}; // D只有一个A的副本
+```
+
+### 过度使用继承
+
+继承应该用于"is-a"关系，而不是"has-a"关系。如果只是想复用代码，考虑使用组合而不是继承。
+
+### override关键字
+
+在C++11及以后，使用`override`关键字明确表示你在重写基类的虚函数。这不仅可以提高代码可读性，还能在你不小心改变函数签名时让编译器报错。
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+1. **创建一个交通工具继承体系**：定义`Vehicle`抽象基类，包含纯虚函数`start()`、`stop()`和`getSpeed()`。然后创建`Car`、`Bicycle`和`Airplane`派生类，实现这些函数。
+
+2. **实现一个简单的游戏角色系统**：定义`Character`基类，包含生命值、攻击力等属性，以及`attack()`、`defend()`等虚函数。创建`Warrior`、`Mage`和`Archer`派生类，每个都有不同的攻击和防御策略。
+
+3. **修复内存泄漏**：给定一个没有virtual析构函数的继承体系，识别潜在的内存泄漏问题并修复它。
+
+记住，在编写代码时要始终考虑：
+- 是否真的需要继承？
+- 基类是否应该有virtual析构函数？
+- 虚函数的参数和返回类型是否合理？
+- 派生类是否正确地重写了所有必要的虚函数？
+
+## 小结与思考
+
+继承和多态是C++面向对象编程的核心概念，它们为我们提供了强大的代码组织和复用能力。通过继承，我们可以建立类之间的层次关系；通过多态，我们可以编写更加通用和灵活的代码。
+
+但记住，强大的工具也需要谨慎使用。不要为了使用继承而使用继承，要确保你的设计真正符合"is-a"关系。同时，永远不要忘记virtual析构函数的重要性。
+
+思考题：
+1. 为什么纯虚函数可以让类变成抽象类？
+2. 虚函数调用的性能开销主要来自哪里？
+3. 在什么情况下你应该避免使用多态？
+4. 如何设计一个好的继承体系，使其既灵活又不容易出错？
+
+掌握了继承和多态，你就已经迈入了C++高级编程的大门。下一节课，我们将探讨模板和泛型编程，那将是另一个令人兴奋的世界！

@@ -1,0 +1,21 @@
+{
+  "id": "19-05",
+  "title": "Trait与泛型：多态的Rust之道",
+  "slug": "lesson-05-traits-generics",
+  "module": "19-rust",
+  "module_name": "Rust编程",
+  "module_order": 19,
+  "lesson_order": 5,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 35,
+  "prerequisites": ["19-04"],
+  "tags": ["traits", "generics", "polymorphism", "trait-bounds", "derive"],
+  "description": "学习 Rust 的 Trait 系统和泛型编程，理解如何通过 Trait 实现多态和行为抽象。",
+  "learning_objectives": [
+    "理解 Trait 的概念和与接口的区别",
+    "掌握泛型函数和泛型结构体的定义",
+    "学会使用 trait bounds 约束泛型参数",
+    "了解 derive 宏和常见标准 Trait（Debug、Clone、Copy）"
+  ]
+}

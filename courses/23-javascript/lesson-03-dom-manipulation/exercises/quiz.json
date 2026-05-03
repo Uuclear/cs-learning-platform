@@ -1,0 +1,100 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "以下哪个方法可以获取文档中第一个匹配指定CSS选择器的元素？",
+      "options": [
+        "document.getElementById()",
+        "document.querySelector()",
+        "document.querySelectorAll()",
+        "document.getElementsByClassName()"
+      ],
+      "answer": 1,
+      "explanation": "querySelector() 方法返回文档中匹配指定CSS选择器的第一个元素。"
+    },
+    {
+      "id": 2,
+      "question": "使用 textContent 和 innerHTML 设置元素内容时，主要区别是什么？",
+      "options": [
+        "textContent 更快，innerHTML 更慢",
+        "textContent 不解析HTML标签，innerHTML 会解析HTML标签",
+        "textContent 只能设置纯文本，innerHTML 只能设置HTML",
+        "两者完全相同，只是命名不同"
+      ],
+      "answer": 1,
+      "explanation": "textContent 将内容作为纯文本处理，不会解析HTML标签；而 innerHTML 会将内容作为HTML解析并渲染。"
+    },
+    {
+      "id": 3,
+      "question": "以下哪种方法最适合批量添加多个DOM元素以获得最佳性能？",
+      "options": [
+        "在循环中直接使用 appendChild()",
+        "使用 innerHTML 一次性设置所有HTML",
+        "使用 DocumentFragment 批量操作",
+        "使用 querySelectorAll() 选择后再修改"
+      ],
+      "answer": 2,
+      "explanation": "DocumentFragment 是一个轻量级的文档对象，使用它可以避免多次触发浏览器的重排和重绘，从而提高性能。"
+    },
+    {
+      "id": 4,
+      "question": "classList API 中，哪个方法可以切换元素的CSS类（存在则移除，不存在则添加）？",
+      "options": [
+        "add()",
+        "remove()",
+        "contains()",
+        "toggle()"
+      ],
+      "answer": 3,
+      "explanation": "toggle() 方法用于切换CSS类：如果元素包含该类则移除，如果不包含则添加。"
+    },
+    {
+      "id": 5,
+      "question": "以下关于 querySelectorAll() 返回值的说法，哪一个是正确的？",
+      "options": [
+        "返回一个数组，可以直接使用数组方法",
+        "返回一个静态的 NodeList，现代浏览器支持 forEach",
+        "返回一个动态的 HTMLCollection",
+        "返回单个DOM元素对象"
+      ],
+      "answer": 1,
+      "explanation": "querySelectorAll() 返回一个静态的 NodeList，虽然不是真正的数组，但在现代浏览器中支持 forEach 等数组方法。"
+    },
+    {
+      "id": 6,
+      "question": "在修改CSS样式时，为什么 background-color 要写成 backgroundColor？",
+      "options": [
+        "因为JavaScript不支持连字符",
+        "因为CSS属性在JavaScript中要转换为驼峰命名法",
+        "因为backgroundColor是特殊的保留字",
+        "因为连字符在JavaScript中有特殊含义"
+      ],
+      "answer": 1,
+      "explanation": "在JavaScript中访问CSS属性时，需要将连字符分隔的CSS属性名转换为驼峰命名法，如 background-color → backgroundColor。"
+    },
+    {
+      "id": 7,
+      "question": "以下哪种方式删除DOM元素是最现代且简洁的？",
+      "options": [
+        "element.parentNode.removeChild(element)",
+        "element.remove()",
+        "document.deleteElement(element)",
+        "element.destroy()"
+      ],
+      "answer": 1,
+      "explanation": "element.remove() 是ES6+引入的现代方法，可以直接删除元素，无需通过父元素操作。"
+    },
+    {
+      "id": 8,
+      "question": "使用 innerHTML 时最大的安全风险是什么？",
+      "options": [
+        "性能问题",
+        "跨站脚本攻击（XSS）",
+        "内存泄漏",
+        "浏览器兼容性问题"
+      ],
+      "answer": 1,
+      "explanation": "innerHTML 如果包含用户输入的不可信内容，可能会执行恶意脚本，导致跨站脚本攻击（XSS）。"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "C语言最初是由谁在什么时候开发的？",
+      "options": [
+        "Dennis Ritchie 在1970年代初期",
+        "Ken Thompson 在1960年代末期",
+        "Bjarne Stroustrup 在1980年代",
+        "James Gosling 在1990年代"
+      ],
+      "answer": 0,
+      "explanation": "C语言由Dennis Ritchie在1970年代初期在贝尔实验室开发，用于重写UNIX操作系统。"
+    },
+    {
+      "question": "C程序的编译过程正确顺序是什么？",
+      "options": [
+        "预处理 → 编译 → 汇编 → 链接",
+        "编译 → 预处理 → 链接 → 汇编",
+        "链接 → 汇编 → 编译 → 预处理",
+        "汇编 → 链接 → 预处理 → 编译"
+      ],
+      "answer": 0,
+      "explanation": "C程序的编译过程包括四个步骤：预处理（处理宏和头文件）、编译（生成汇编代码）、汇编（生成目标代码）、链接（生成可执行文件）。"
+    },
+    {
+      "question": "以下哪个命令可以只进行预处理而不进行后续编译步骤？",
+      "options": [
+        "gcc -E program.c",
+        "gcc -S program.c",
+        "gcc -c program.c",
+        "gcc program.c"
+      ],
+      "answer": 0,
+      "explanation": "gcc -E 选项只执行预处理步骤，-S 生成汇编代码，-c 生成目标文件，不带选项则完成完整编译链接。"
+    },
+    {
+      "question": "C语言程序的入口点是哪个函数？",
+      "options": [
+        "main()",
+        "start()",
+        "init()",
+        "program()"
+      ],
+      "answer": 0,
+      "explanation": "每个C程序都必须有一个main()函数，这是程序执行的起点。"
+    },
+    {
+      "question": "头文件通常使用什么扩展名？",
+      "options": [
+        ".h",
+        ".c",
+        ".cpp",
+        ".hpp"
+      ],
+      "answer": 0,
+      "explanation": "C语言头文件通常使用.h扩展名，包含函数声明、宏定义和类型定义。"
+    },
+    {
+      "question": "以下哪个说法关于C语言是正确的？",
+      "options": [
+        "C语言是一种系统编程语言，提供了对硬件的直接访问",
+        "C语言是纯面向对象的语言",
+        "C语言自动管理内存，不需要手动释放",
+        "C语言只能在Windows系统上运行"
+      ],
+      "answer": 0,
+      "explanation": "C语言是一种系统编程语言，允许直接操作内存和硬件，这也是它在操作系统和嵌入式系统中广泛应用的原因。"
+    },
+    {
+      "question": "在多文件C项目中，头文件的主要作用是什么？",
+      "options": [
+        "声明函数和变量，供其他源文件使用",
+        "包含完整的函数实现",
+        "存储程序的配置信息",
+        "定义编译器选项"
+      ],
+      "answer": 0,
+      "explanation": "头文件主要用于声明函数、变量和类型，让多个源文件能够共享这些声明，而具体的实现放在对应的.c文件中。"
+    },
+    {
+      "question": "以下哪个编译器不是C语言的常用编译器？",
+      "options": [
+        "Node.js",
+        "GCC",
+        "Clang",
+        "MSVC"
+      ],
+      "answer": 0,
+      "explanation": "Node.js是JavaScript运行时环境，不是C语言编译器。GCC、Clang和MSVC都是常用的C语言编译器。"
+    }
+  ]
+}

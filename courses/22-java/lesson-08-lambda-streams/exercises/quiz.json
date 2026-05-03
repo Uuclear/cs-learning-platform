@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Lambda表达式的基本语法是什么？",
+      "options": [
+        "(参数) -> {表达式或语句}",
+        "{参数} -> (表达式或语句)",
+        "[参数] => {表达式或语句}",
+        "参数 => 表达式或语句"
+      ],
+      "answer": 0,
+      "explanation": "Lambda表达式的基本语法是 (参数) -> {表达式或语句}，其中箭头操作符 -> 将参数列表与表达式主体分隔开。"
+    },
+    {
+      "question": "以下哪个不是函数式接口？",
+      "options": [
+        "java.util.function.Predicate<T>",
+        "java.util.function.Consumer<T>",
+        "java.util.List<T>",
+        "java.util.function.Function<T, R>"
+      ],
+      "answer": 2,
+      "explanation": "List<T> 是一个集合接口，包含多个抽象方法，不是函数式接口。函数式接口只能有一个抽象方法。"
+    },
+    {
+      "question": "Stream API的中间操作有什么特点？",
+      "options": [
+        "立即执行并返回结果",
+        "返回新的Stream对象，可以链式调用",
+        "只能调用一次",
+        "会修改原始数据源"
+      ],
+      "answer": 1,
+      "explanation": "中间操作返回新的Stream对象，可以进行链式调用，并且是惰性求值的，不会立即执行。"
+    },
+    {
+      "question": "以下哪个操作是终端操作？",
+      "options": [
+        "filter()",
+        "map()",
+        "collect()",
+        "sorted()"
+      ],
+      "answer": 2,
+      "explanation": "collect() 是终端操作，它会触发Stream的执行并产生结果。filter()、map()和sorted()都是中间操作。"
+    },
+    {
+      "question": "关于并行流(parallelStream)，以下说法正确的是？",
+      "options": [
+        "并行流总是比串行流快",
+        "并行流可以自动利用多核处理器的优势",
+        "并行流适用于所有场景",
+        "并行流会保证操作的执行顺序"
+      ],
+      "answer": 1,
+      "explanation": "并行流可以自动利用多核处理器的优势，但并不总是更快，对于小数据集可能因为线程开销而更慢。"
+    },
+    {
+      "question": "使用Collectors.groupingBy()可以实现什么功能？",
+      "options": [
+        "对Stream中的元素进行排序",
+        "按指定条件对元素进行分组",
+        "过滤掉不符合条件的元素",
+        "将元素转换为另一种类型"
+      ],
+      "answer": 1,
+      "explanation": "Collectors.groupingBy()用于按指定条件对Stream中的元素进行分组，返回Map结构。"
+    },
+    {
+      "question": "关于Stream的惰性求值，以下说法错误的是？",
+      "options": [
+        "中间操作不会立即执行",
+        "只有终端操作才会触发整个流水线的执行",
+        "惰性求值可以避免不必要的计算",
+        "Stream可以在多次终端操作中重复使用"
+      ],
+      "answer": 3,
+      "explanation": "Stream只能被消费一次，一旦进行了终端操作，就不能再次使用该Stream对象。"
+    },
+    {
+      "question": "以下代码的输出是什么？\nList<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);\nnumbers.stream().filter(n -> n % 2 == 0).forEach(System.out::print);",
+      "options": [
+        "12345",
+        "24",
+        "135",
+        "编译错误"
+      ],
+      "answer": 1,
+      "explanation": "代码过滤出偶数（2和4），然后打印出来，所以输出是'24'。"
+    }
+  ]
+}

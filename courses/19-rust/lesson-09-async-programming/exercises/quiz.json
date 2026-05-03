@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "在 Rust 中，Future trait 的 poll 方法返回什么类型？",
+      "options": [
+        "Option<T>",
+        "Result<T, E>",
+        "Poll<T>",
+        "Async<T>"
+      ],
+      "answer": 2,
+      "explanation": "Future trait 的 poll 方法返回 Poll<Self::Output>，其中 Poll 是一个枚举类型，包含 Ready 和 Pending 两个变体。"
+    },
+    {
+      "question": "以下哪种说法关于 async/await 是正确的？",
+      "options": [
+        "async 函数会自动在后台线程执行",
+        "await 关键字会阻塞当前线程",
+        "async 函数返回一个实现了 Future trait 的类型",
+        "所有函数都应该标记为 async 以提高性能"
+      ],
+      "answer": 2,
+      "explanation": "async 函数实际上返回一个实现了 Future trait 的匿名类型，只有在被 await 或由运行时执行时才会实际运行。"
+    },
+    {
+      "question": "Tokio 的单线程运行时（current_thread）适合什么场景？",
+      "options": [
+        "CPU 密集型任务",
+        "需要大量并行计算的任务",
+        "I/O 密集型任务且不需要跨线程共享状态",
+        "所有类型的异步任务"
+      ],
+      "answer": 3,
+      "explanation": "单线程运行时适合 I/O 密集型任务，特别是当不需要跨线程共享状态时，因为它避免了线程切换的开销。"
+    },
+    {
+      "question": "在异步函数中，应该使用哪个函数来实现非阻塞的延迟？",
+      "options": [
+        "std::thread::sleep()",
+        "tokio::time::sleep()",
+        "std::time::sleep()",
+        "async_std::sleep()"
+      ],
+      "answer": 1,
+      "explanation": "tokio::time::sleep() 是异步友好的延迟函数，它不会阻塞线程，而是让出控制权给运行时。"
+    },
+    {
+      "question": "以下代码有什么问题？\n\n```rust\nasync fn do_work() {\n    println!(\"工作进行中...\");\n}\n\n#[tokio::main]\nasync fn main() {\n    do_work(); // 注意：没有 .await\n}\n```",
+      "options": [
+        "语法错误，无法编译",
+        "do_work() 不会被执行",
+        "会导致死锁",
+        "会创建内存泄漏"
+      ],
+      "answer": 1,
+      "explanation": "do_work() 只是创建了一个 Future 对象，但没有执行它。要执行异步函数，必须使用 .await 或 tokio::spawn()。"
+    },
+    {
+      "question": "Pin 类型在 Rust 异步系统中的主要作用是什么？",
+      "options": [
+        "提高内存访问速度",
+        "确保 Future 在内存中的位置不会改变",
+        "自动管理内存分配",
+        "防止数据竞争"
+      ],
+      "answer": 1,
+      "explanation": "Pin 确保某些类型（如包含自引用的 Future）在内存中的位置不会改变，这对于内存安全至关重要。"
+    },
+    {
+      "question": "tokio::join! 宏的作用是什么？",
+      "options": [
+        "顺序执行多个异步任务",
+        "并发执行多个异步任务并等待所有完成",
+        "取消正在运行的异步任务",
+        "合并多个 Future 成一个"
+      ],
+      "answer": 1,
+      "explanation": "tokio::join! 宏并发执行多个异步任务，并等待所有任务完成，然后返回所有结果。"
+    },
+    {
+      "question": "在什么情况下应该避免使用异步编程？",
+      "options": [
+        "网络请求",
+        "文件 I/O 操作",
+        "CPU 密集型计算任务",
+        "数据库查询"
+      ],
+      "answer": 2,
+      "explanation": "对于 CPU 密集型任务，异步编程并不能提供性能优势，反而可能增加复杂性。这种情况下，传统的多线程或并行处理更合适。"
+    }
+  ]
+}

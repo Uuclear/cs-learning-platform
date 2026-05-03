@@ -1,0 +1,21 @@
+{
+  "id": "20-06",
+  "title": "结构体、联合体与位域",
+  "slug": "lesson-06-structs-unions",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 6,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["20-04"],
+  "tags": ["structs", "unions", "bit-fields", "data-aggregation", "typedef"],
+  "description": "学习 C 语言的结构体和联合体，掌握自定义数据类型、typedef 别名、位域的使用，理解内存对齐和结构体大小计算。",
+  "learning_objectives": [
+    "掌握结构体的定义、初始化和成员访问",
+    "理解联合体（union）的内存共享机制",
+    "了解位域（bit-field）的紧凑存储方法",
+    "理解内存对齐和 sizeof(struct) 的计算"
+  ]
+}

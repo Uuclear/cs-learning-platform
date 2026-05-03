@@ -1,0 +1,21 @@
+{
+  "id": "18-01",
+  "title": "单片机是什么：嵌入式世界的入口",
+  "slug": "lesson-01-what-is-mcu",
+  "module": "18-microcontroller",
+  "module_name": "单片机",
+  "module_order": 18,
+  "lesson_order": 1,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": [],
+  "tags": ["microcontroller", "mcu", "embedded-systems", "arduino", "hardware"],
+  "description": "了解单片机的基本概念、内部结构和应用场景，认识 Arduino、STM32 等主流平台，搭建第一个开发环境。",
+  "learning_objectives": [
+    "理解单片机的基本概念和与计算机的区别",
+    "了解单片机的内部结构（CPU、RAM、Flash、GPIO）",
+    "认识 Arduino、STM32、ESP32 等主流平台",
+    "能够搭建开发环境并烧录第一个程序"
+  ]
+}

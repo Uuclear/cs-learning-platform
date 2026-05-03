@@ -1,0 +1,21 @@
+{
+  "id": "21-02",
+  "title": "类与对象：面向对象编程",
+  "slug": "lesson-02-classes-objects",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 2,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["21-01"],
+  "tags": ["classes", "objects", "oop", "encapsulation", "constructors", "this-pointer"],
+  "description": "学习 C++ 的类和对象，掌握封装、构造函数、析构函数、this 指针和成员函数，理解面向对象编程的基本概念。",
+  "learning_objectives": [
+    "理解类和对象的概念与关系",
+    "掌握类的定义、成员变量和成员函数",
+    "理解构造函数和析构函数的作用",
+    "掌握访问控制（public/private/protected）和封装原则"
+  ]
+}

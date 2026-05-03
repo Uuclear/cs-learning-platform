@@ -1,0 +1,21 @@
+{
+  "id": "17-03",
+  "title": "串联与并联：电路的排列组合",
+  "slug": "lesson-03-series-parallel",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 3,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["17-02"],
+  "tags": ["series", "parallel", "resistance", "voltage-divider", "current-divider"],
+  "description": "学习串联和并联电路的特点、电阻计算公式、分压和分流原理，掌握复杂电路的简化方法。",
+  "learning_objectives": [
+    "理解串联和并联电路的电流电压特点",
+    "掌握串联电阻和并联电阻的计算公式",
+    "理解分压器原理和分流器原理",
+    "能够对混合电路进行等效电阻计算"
+  ]
+}

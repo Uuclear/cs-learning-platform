@@ -1,0 +1,21 @@
+{
+  "id": "18-02",
+  "title": "Arduino入门：点亮你的第一个LED",
+  "slug": "lesson-02-arduino-basics",
+  "module": "18-microcontroller",
+  "module_name": "单片机",
+  "module_order": 18,
+  "lesson_order": 2,
+  "difficulty": 1,
+  "difficulty_label": "入门",
+  "duration_minutes": 20,
+  "prerequisites": ["18-01"],
+  "tags": ["arduino", "led", "gpio", "blink", "embedded-basics"],
+  "description": "学习 Arduino 开发板的基本使用，从点亮第一个 LED 开始，掌握数字输出、限流电阻选择和面包板搭建电路。",
+  "learning_objectives": [
+    "了解 Arduino UNO 的引脚分布和基本功能",
+    "掌握数字 GPIO 的高低电平输出",
+    "能够正确连接 LED 和限流电阻",
+    "编写并上传第一个 Arduino 程序"
+  ]
+}

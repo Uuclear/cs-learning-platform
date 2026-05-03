@@ -1,0 +1,21 @@
+{
+  "id": "22-10",
+  "title": "Spring Boot入门",
+  "slug": "lesson-10-spring-boot",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 10,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["22-08"],
+  "tags": ["spring-boot", "rest-api", "dependency-injection", "web-framework", "annotations"],
+  "description": "了解 Spring Boot 框架的核心思想，掌握依赖注入、REST API 开发和自动配置，编写第一个 Web 服务。",
+  "learning_objectives": [
+    "理解 Spring Boot 的约定优于配置理念",
+    "掌握依赖注入和 @Autowired/@Component 注解",
+    "能够创建 REST API 接口",
+    "了解 Spring Boot 自动配置和 Starter 机制"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "21-01",
+  "title": "C++入门：C的超集还是新语言？",
+  "slug": "lesson-01-cpp-intro",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 1,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["20-01"],
+  "tags": ["cpp", "c-plus-plus", "iostream", "namespaces", "cin-cout"],
+  "description": "了解 C++ 的设计哲学和与 C 的关系，掌握基本的输入输出、命名空间和编译流程，编写第一个 C++ 程序。",
+  "learning_objectives": [
+    "理解 C++ 的设计哲学和与 C 的区别",
+    "掌握 #include、iostream 和 cin/cout 的使用",
+    "理解命名空间（namespace）的概念和用法",
+    "能够编译和运行第一个 C++ 程序"
+  ]
+}

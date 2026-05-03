@@ -1,0 +1,321 @@
+---
+title: Rust初探：内存安全的系统语言
+description: 了解 Rust 语言的设计哲学、内存安全保证和零运行时开销特性，安装 Rust 工具链并编写第一个程序。
+---
+
+# Rust初探：内存安全的系统语言
+
+## 开场白：安全驾驶的编程世界
+
+想象一下，你正在学习驾驶一辆超级跑车。这辆车拥有惊人的性能，可以让你以极快的速度驰骋，但同时它也要求你具备精确的控制技巧。在传统的系统编程世界中，C和C++就像是这样的超级跑车——它们给你极致的性能和对硬件的完全控制，但也要求你时刻警惕各种潜在的危险：内存泄漏、悬空指针、缓冲区溢出等等。
+
+现在，想象有一辆同样强大的跑车，但它配备了最先进的安全系统：自动防撞、车道保持、盲点监测……这些系统在你犯错之前就帮你纠正，让你既能享受速度的快感，又不用担心安全事故。**Rust就是这样的编程语言**——它提供了C/C++级别的性能，同时通过编译时的严格检查，杜绝了绝大多数内存安全问题。
+
+欢迎来到Rust的世界！在这里，你将学会如何在不牺牲性能的前提下，编写既安全又可靠的系统级代码。
+
+## 核心概念：Rust为什么存在？
+
+### 内存安全的困境
+
+在系统编程领域，内存安全一直是一个老大难问题。据统计，微软在过去12年中70%的安全漏洞都与内存安全相关；Google Chrome浏览器的安全问题中，约70%也是内存安全问题；Linux内核的漏洞中，内存安全问题同样占据了很大比例。
+
+传统的解决方案有两种：
+1. **垃圾回收（GC）**：像Java、Go、Python等语言使用垃圾回收器自动管理内存，但这会带来运行时开销和不可预测的暂停时间
+2. **手动管理**：像C/C++让程序员手动管理内存，但这容易出错且难以维护
+
+Rust选择了一条不同的道路：**编译时内存安全保证**。
+
+### 零成本抽象
+
+Rust的核心哲学之一是"零成本抽象"（Zero-cost abstractions）。这意味着高级的抽象概念在编译后会产生与手写底层代码相同（或几乎相同）的性能。换句话说，使用Rust的高级特性不会带来运行时性能损失。
+
+这听起来很神奇，但它是如何实现的呢？答案就是Rust的**所有权系统**（Ownership System）。
+
+### 所有权系统简介
+
+Rust的所有权系统基于三个简单但强大的规则：
+
+1. **每个值都有一个所有者**
+2. **同一时间只能有一个所有者**
+3. **当所有者离开作用域时，值会被自动释放**
+
+这些规则在编译时被强制执行，不需要任何运行时检查。这意味着：
+- 不会有悬空指针（dangling pointers）
+- 不会有数据竞争（data races）
+- 不会有内存泄漏（memory leaks）
+- 所有这些保证都是零运行时开销的！
+
+## 代码演示：Hello World详解
+
+让我们从最经典的"Hello, World!"程序开始：
+
+```rust filename="code/examples/example-01.rs"
+// main 函数是程序的入口点
+fn main() {
+    // println! 是一个宏（macro），不是函数
+    // 宏在编译时展开，提供零成本抽象
+    // ! 表示这是一个宏调用
+    println!("Hello, world!");
+
+    // 我们也可以打印更复杂的信息
+    println!("欢迎来到 Rust 编程世界！");
+    println!("Rust 让系统编程既安全又高效！");
+}
+```
+
+### 关键概念解析
+
+**`fn main()`**：这是程序的入口点。每个可执行的Rust程序都必须有一个main函数。
+
+**`println!`**：注意这里的感叹号！这不是一个普通函数，而是一个**宏**（macro）。宏在编译时展开，允许我们在不牺牲性能的情况下实现复杂的代码生成。
+
+**分号（;）**：Rust中的语句以分号结尾。但要注意，Rust也有表达式，表达式不以分号结尾。
+
+要运行这个程序，你需要先安装Rust工具链。
+
+## 深入理解：编译时检查 vs 运行时检查
+
+### 安装Rust工具链
+
+首先，安装Rustup（Rust的版本管理工具）：
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+安装完成后，你会获得两个重要工具：
+- **rustc**：Rust编译器
+- **cargo**：Rust的包管理器和构建工具
+
+验证安装：
+
+```bash
+rustc --version
+cargo --version
+```
+
+### 创建你的第一个项目
+
+使用Cargo创建新项目：
+
+```bash
+cargo new hello_rust
+cd hello_rust
+```
+
+Cargo会自动生成项目结构：
+
+```
+hello_rust/
+├── Cargo.toml  # 项目配置文件
+└── src/
+    └── main.rs # 源代码文件
+```
+
+运行项目：
+
+```bash
+cargo run
+```
+
+你会看到输出：
+```
+   Compiling hello_rust v0.1.0
+    Finished dev [unoptimized + debuginfo] target(s) in 0.5s
+     Running `target/debug/hello_rust`
+Hello, world!
+```
+
+### 编译时错误的魅力
+
+让我们看看Rust的编译时检查有多强大。修改main.rs：
+
+```rust filename="code/examples/example-02.rs"
+fn main() {
+    let x = 5;
+    println!("x 的值是: {}", x);
+    
+    // 尝试修改不可变变量
+    x = 6; // 这行会报错！
+}
+```
+
+当你尝试编译时，Rust编译器会给出清晰的错误信息：
+
+```
+error[E0384]: cannot assign twice to immutable variable `x`
+ --> src/main.rs:5:5
+  |
+2 |     let x = 5;
+  |         - first assignment to `x`
+...
+5 |     x = 6;
+  |     ^^^^^ cannot assign twice to immutable variable
+```
+
+这种即时反馈让你在代码运行之前就能发现并修复问题，大大提高了开发效率和代码质量。
+
+## 实际应用：Rust在哪里被使用？
+
+Rust已经从学术研究走向了工业实践，在许多关键领域得到了广泛应用：
+
+### Mozilla Firefox
+Mozilla是Rust的主要推动者之一。Firefox浏览器中的**Quantum CSS引擎**（Stylo）就是用Rust编写的，这使得CSS解析速度提升了4倍以上，同时消除了大量的内存安全漏洞。
+
+### Amazon AWS
+AWS大量使用Rust来构建高性能、高可靠性的基础设施服务：
+- **Firecracker**：轻量级虚拟化技术，用于Lambda和Fargate
+- **S2N**：TLS/SSL实现，用于加密通信
+- 多个核心服务组件都用Rust重写以提高性能和安全性
+
+### Linux内核
+2022年，Linux内核正式接受了Rust作为第二官方语言。这意味着你可以在内核模块中使用Rust编写驱动程序和其他组件，这将大大提高内核的安全性。
+
+### 其他知名用户
+- **Microsoft**：Windows组件、Azure服务
+- **Google**：Android系统、Fuchsia操作系统
+- **Discord**：实时通信服务
+- **Cloudflare**：边缘计算平台
+- **Dropbox**：存储基础设施
+
+这些巨头的选择证明了Rust不仅理论优秀，而且在实际生产环境中表现卓越。
+
+## 常见误区：破除Rust的迷思
+
+### 误区1：Rust很难学
+
+确实，Rust的学习曲线比一些高级语言要陡峭，主要是因为它的所有权系统对大多数程序员来说是全新的概念。但是：
+
+- Rust的编译器错误信息极其友好和详细
+- 社区资源丰富，文档质量极高
+- 一旦掌握了核心概念，后续学习会变得非常顺畅
+- 投资学习Rust的回报是巨大的——你将获得编写安全、高效系统代码的能力
+
+### 误区2：Rust很慢
+
+恰恰相反！Rust的性能与C/C++相当，甚至在某些场景下更优：
+
+- 零运行时开销
+- 优秀的优化能力
+- 无垃圾回收暂停
+- 内存布局可控
+
+实际上，许多组织选择Rust正是因为它的高性能特性。
+
+### 误区3：Rust生态系统不成熟
+
+虽然Rust相对较新（2010年首次发布，2015年1.0版本），但它的生态系统发展迅速：
+
+- **Crates.io**：官方包仓库，拥有超过10万个包
+- Web框架（Actix, Rocket, Axum）
+- 数据库驱动（Diesel, SQLx）
+- 异步运行时（Tokio, async-std）
+- GUI框架（egui, Druid）
+- 游戏引擎（Bevy）
+
+## 动手实践
+
+现在，让我们通过几个小练习来巩固所学知识。
+
+### 练习1：变量和可变性
+
+运行以下代码，观察输出：
+
+```rust filename="code/examples/example-02.rs"
+fn main() {
+    // Rust 中的变量默认是不可变的（immutable）
+    let x = 5;
+    println!("x 的值是: {}", x);
+
+    // 使用 mut 关键字声明可变变量
+    let mut y = 10;
+    println!("y 的初始值是: {}", y);
+    y = 15; // 这是可以的！
+    println!("y 的新值是: {}", y);
+
+    // 常量使用 const 声明，必须指定类型
+    const MAX_POINTS: u32 = 100_000;
+    println!("最大分数是: {}", MAX_POINTS);
+
+    // 变量遮蔽（shadowing）- 重新声明同名变量
+    let z = 5;
+    println!("z 的第一个值是: {}", z);
+
+    let z = z + 1; // 遮蔽了之前的 z
+    println!("z 的第二个值是: {}", z);
+
+    let z = z * 2; // 再次遮蔽
+    println!("z 的最终值是: {}", z);
+}
+```
+
+### 练习2：基本数据类型和控制流
+
+运行以下代码，理解Rust的数据类型和控制结构：
+
+```rust filename="code/examples/example-03.rs"
+fn main() {
+    // 标量类型（Scalar Types）
+    let age: u8 = 25;
+    let temperature: i32 = -10;
+    let pi: f64 = 3.14159;
+    let is_rust_safe = true;
+    let emoji = '🚀';
+
+    println!("年龄: {}, 温度: {}", age, temperature);
+    println!("π ≈ {}, Rust安全吗？{}", pi, if is_rust_safe { "是的！" } else { "不是" });
+
+    // 复合类型
+    let person = ("Alice", 30, true);
+    let colors = ["红", "绿", "蓝"];
+
+    // 控制流
+    let number = 6;
+    if number % 4 == 0 {
+        println!("{} 能被 4 整除", number);
+    } else if number % 3 == 0 {
+        println!("{} 能被 3 整除", number);
+    } else {
+        println!("{} 不能被 4 或 3 整除", number);
+    }
+
+    // 循环
+    for i in 1..=5 {
+        println!("计数: {}", i);
+    }
+}
+```
+
+### 挑战任务
+
+完成两个挑战任务来测试你的理解：
+
+1. **个性化问候程序**：创建一个能读取用户输入并显示个性化消息的程序
+2. **温度转换器**：实现摄氏度和华氏度之间的转换
+
+查看 `exercises/challenges/` 目录下的详细说明。
+
+## 小结与思考
+
+在本节课中，我们：
+
+- 了解了Rust的设计哲学：内存安全 + 零成本抽象
+- 学会了安装Rust工具链（rustup + cargo）
+- 编写了第一个Rust程序（Hello World）
+- 探索了Rust的基本语法：变量、数据类型、控制流
+- 理解了编译时检查的优势
+- 了解了Rust在工业界的广泛应用
+
+### 思考题
+
+1. 为什么Rust选择在编译时而不是运行时进行内存安全检查？
+2. 所有权系统的三个规则如何共同工作来保证内存安全？
+3. 在什么场景下你会选择Rust而不是其他系统编程语言？
+
+### 下一步
+
+在下一节课中，我们将深入探讨Rust的所有权系统，这是理解Rust的关键。我们将学习借用（borrowing）、生命周期（lifetimes）等核心概念，这些概念是Rust内存安全保证的基础。
+
+记住，学习Rust就像学习一种新的思维方式。不要气馁，编译器是你最好的老师。每一次编译错误都是在帮助你写出更好的代码！
+
+**Happy Coding with Rust!** 🦀

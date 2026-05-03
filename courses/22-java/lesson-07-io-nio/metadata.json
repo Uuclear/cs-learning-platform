@@ -1,0 +1,21 @@
+{
+  "id": "22-07",
+  "title": "I/O与NIO",
+  "slug": "lesson-07-io-nio",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 7,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["22-04"],
+  "tags": ["io", "nio", "file", "stream", "buffer", "channel"],
+  "description": "学习 Java 的 I/O 和 NIO 系统，掌握字节流、字符流、文件操作和 NIO 的 Channel/Buffer 模型。",
+  "learning_objectives": [
+    "掌握 InputStream/OutputStream 和 Reader/Writer 的使用",
+    "了解 java.nio.file.Files 和 Path 的现代文件操作",
+    "理解 NIO 的 Channel 和 Buffer 模型",
+    "能够编写高效的文件读写代码"
+  ]
+}

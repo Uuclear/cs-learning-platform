@@ -1,0 +1,21 @@
+{
+  "id": "20-07",
+  "title": "内存管理：malloc与free",
+  "slug": "lesson-07-memory-management",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 7,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 40,
+  "prerequisites": ["20-03"],
+  "tags": ["malloc", "free", "dynamic-memory", "memory-leak", "heap", "realloc"],
+  "description": "学习 C 语言的动态内存管理，掌握 malloc、calloc、realloc 和 free 的使用，理解内存泄漏、悬空指针和常见内存错误。",
+  "learning_objectives": [
+    "掌握 malloc/calloc/realloc/free 的使用",
+    "理解堆和栈的区别",
+    "能够识别和修复内存泄漏",
+    "了解常见内存错误（双重释放、使用已释放内存）"
+  ]
+}

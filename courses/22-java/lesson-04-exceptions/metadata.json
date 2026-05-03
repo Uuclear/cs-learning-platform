@@ -1,0 +1,21 @@
+{
+  "id": "22-04",
+  "title": "异常处理机制",
+  "slug": "lesson-04-exceptions",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 4,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["22-02"],
+  "tags": ["exceptions", "try-catch", "checked-unchecked", "throw", "finally"],
+  "description": "学习 Java 的异常处理机制，掌握 try-catch-finally、throw/throws、自定义异常，理解受检异常和非受检异常的区别。",
+  "learning_objectives": [
+    "掌握 try-catch-finally 的基本语法",
+    "理解受检异常（Checked）和非受检异常（Unchecked）的区别",
+    "能够创建自定义异常类",
+    "掌握 throw 和 throws 的使用场景"
+  ]
+}

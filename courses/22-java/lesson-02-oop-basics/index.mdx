@@ -1,0 +1,507 @@
+---
+title: 面向对象基础：类、继承、接口
+description: 学习 Java 的面向对象编程，掌握类与对象、继承、接口和封装、多态的核心概念。
+---
+
+# 面向对象基础：类、继承、接口
+
+## 开场白：模具与产品的世界
+
+想象一下你是一个巧克力工厂的老板。你想要生产各种形状的巧克力——心形、星形、圆形。你会怎么做？是每个形状都重新设计制作工艺吗？当然不是！聪明的做法是先制作一个**模具**（比如心形模具），然后用这个模具批量生产出无数个相同的心形巧克力。
+
+在 Java 的世界里，**类（Class）就是模具，对象（Object）就是用模具生产出来的产品**。这个简单的比喻揭示了面向对象编程（OOP）最核心的思想：**代码复用**和**抽象建模**。
+
+今天，我们将深入探索 Java 面向对象编程的四大支柱：**类与对象**、**继承**、**接口**、**封装**和**多态**。准备好了吗？让我们开始这段奇妙的 OOP 之旅！
+
+## 核心概念解析
+
+### 类与对象：蓝图与实例
+
+**类（Class）** 是一种用户自定义的数据类型，它定义了对象的属性（字段）和行为（方法）。类就像是建筑的蓝图，描述了房子应该有什么房间、什么结构。
+
+```java
+// 这是一个类的定义 - 蓝图
+public class Person {
+    // 属性（字段）
+    private String name;
+    private int age;
+    
+    // 行为（方法）
+    public void speak() {
+        System.out.println("Hello, I'm " + name);
+    }
+}
+```
+
+**对象（Object）** 是类的具体实例。使用 `new` 关键字，我们可以根据类的蓝图创建无数个具体的对象。
+
+```java
+// 创建对象 - 具体的房子
+Person alice = new Person();
+Person bob = new Person();
+```
+
+每个对象都有自己独立的属性值，但共享相同的方法定义。
+
+### 继承：子承父业
+
+**继承（Inheritance）** 允许一个类（子类）获得另一个类（父类）的属性和方法。这就像生物学中的遗传——孩子继承了父母的特征。
+
+```java
+// 父类
+public class Animal {
+    protected String name;
+    
+    public void eat() {
+        System.out.println(name + " is eating");
+    }
+}
+
+// 子类继承父类
+public class Dog extends Animal {
+    public void bark() {
+        System.out.println(name + " says woof!");
+    }
+}
+```
+
+使用 `extends` 关键字实现继承。子类自动拥有父类的所有非私有成员，并可以添加自己的特有成员。
+
+### 接口：契约与承诺
+
+**接口（Interface）** 定义了一组方法签名，但不提供具体实现。实现接口的类必须提供这些方法的具体实现。接口就像是一个**契约**——"如果你要成为我的实现者，就必须完成这些任务"。
+
+```java
+// 接口定义契约
+public interface Flyable {
+    void fly();  // 所有实现者都必须能飞
+}
+
+// 类实现接口
+public class Bird implements Flyable {
+    @Override
+    public void fly() {
+        System.out.println("Bird is flying with wings");
+    }
+}
+```
+
+Java 支持**单继承多实现**——一个类只能继承一个父类，但可以实现多个接口。
+
+### 封装：信息隐藏的艺术
+
+**封装（Encapsulation）** 是将数据（属性）和操作数据的方法绑定在一起，并对外隐藏内部实现细节。通过访问修饰符控制外部对类成员的访问：
+
+- `private`：仅类内部可访问
+- `protected`：同一包内或子类可访问  
+- `public`：任何地方都可访问
+- 默认（无修饰符）：同一包内可访问
+
+```java
+public class BankAccount {
+    private double balance; // 私有属性，外部无法直接访问
+    
+    // 公共方法提供受控访问
+    public double getBalance() {
+        return balance;
+    }
+    
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        }
+    }
+}
+```
+
+### 多态：一物多形
+
+**多态（Polymorphism）** 允许同一个接口被不同的对象以不同的方式实现。这意味着我们可以用统一的方式处理不同类型的对象。
+
+```java
+// 多态示例
+Flyable[] flyers = {new Bird(), new Airplane(), new Superman()};
+for (Flyable flyer : flyers) {
+    flyer.fly(); // 每个对象都有自己的飞行方式
+}
+```
+
+多态让代码更加灵活和可扩展。
+
+## 代码演示：Java OOP 实战
+
+让我们通过三个完整的代码示例来深入理解这些概念。
+
+### 示例1：银行账户类（封装实践）
+
+```java
+// Example01.java
+public class BankAccount {
+    private String accountNumber;
+    private String ownerName;
+    private double balance;
+    
+    // 构造方法
+    public BankAccount(String accountNumber, String ownerName, double initialBalance) {
+        this.accountNumber = accountNumber;
+        this.ownerName = ownerName;
+        this.balance = initialBalance >= 0 ? initialBalance : 0;
+    }
+    
+    // Getter 方法
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public String getOwnerName() {
+        return ownerName;
+    }
+    
+    public double getBalance() {
+        return balance;
+    }
+    
+    // Setter 方法（带验证）
+    public void setOwnerName(String ownerName) {
+        if (ownerName != null && !ownerName.trim().isEmpty()) {
+            this.ownerName = ownerName;
+        }
+    }
+    
+    // 业务方法
+    public boolean deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Account[%s]: %s, Balance: $%.2f", 
+                           accountNumber, ownerName, balance);
+    }
+}
+```
+
+### 示例2：动物继承体系（继承与重写）
+
+```java
+// Example02.java
+// 父类
+abstract class Animal {
+    protected String name;
+    protected int age;
+    
+    public Animal(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    // 抽象方法，子类必须实现
+    public abstract void makeSound();
+    
+    // 具体方法，子类可以继承或重写
+    public void sleep() {
+        System.out.println(name + " is sleeping");
+    }
+    
+    public void introduce() {
+        System.out.println("I'm " + name + ", " + age + " years old");
+    }
+}
+
+// 子类1
+class Dog extends Animal {
+    public Dog(String name, int age) {
+        super(name, age); // 调用父类构造方法
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " says: Woof! Woof!");
+    }
+    
+    public void wagTail() {
+        System.out.println(name + " is wagging tail");
+    }
+}
+
+// 子类2  
+class Cat extends Animal {
+    public Cat(String name, int age) {
+        super(name, age);
+    }
+    
+    @Override
+    public void makeSound() {
+        System.out.println(name + " says: Meow! Meow!");
+    }
+    
+    public void purr() {
+        System.out.println(name + " is purring");
+    }
+}
+```
+
+### 示例3：接口实现多态（Drawable 接口）
+
+```java
+// Example03.java
+// 定义 Drawable 接口
+interface Drawable {
+    void draw();
+    double calculateArea();
+}
+
+// 圆形实现
+class Circle implements Drawable {
+    private double radius;
+    
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a circle with radius " + radius);
+    }
+    
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+// 矩形实现
+class Rectangle implements Drawable {
+    private double width;
+    private double height;
+    
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a rectangle " + width + "x" + height);
+    }
+    
+    @Override
+    public double calculateArea() {
+        return width * height;
+    }
+}
+
+// 三角形实现
+class Triangle implements Drawable {
+    private double base;
+    private double height;
+    
+    public Triangle(double base, double height) {
+        this.base = base;
+        this.height = height;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a triangle with base " + base + " and height " + height);
+    }
+    
+    @Override
+    public double calculateArea() {
+        return 0.5 * base * height;
+    }
+}
+```
+
+## 深入理解：抽象类 vs 接口
+
+很多初学者会困惑：什么时候用抽象类，什么时候用接口？让我帮你理清思路：
+
+### 抽象类（Abstract Class）
+- **用途**：表示"is-a"关系，提供部分实现
+- **特点**：
+  - 可以包含抽象方法和具体方法
+  - 可以包含字段（状态）
+  - 单继承限制
+  - 构造方法可以有参数
+- **适用场景**：当多个相关类共享相同的行为和状态时
+
+### 接口（Interface）
+- **用途**：表示"can-do"能力，定义契约
+- **特点**：
+  - Java 8+ 可以包含默认方法和静态方法
+  - 不能包含实例字段（只有常量）
+  - 支持多实现
+  - 无构造方法
+- **适用场景**：当需要定义跨类别的通用能力时
+
+**经验法则**：
+- 如果要表示**类别层次**，用抽象类
+- 如果要表示**功能契约**，用接口
+- 记住：**一个类可以同时继承抽象类和实现多个接口**
+
+## 实际应用：构建员工管理系统
+
+让我们用学到的知识构建一个简单的员工管理系统：
+
+```java
+// 员工基类（抽象类）
+abstract class Employee {
+    protected String name;
+    protected String employeeId;
+    protected double baseSalary;
+    
+    public Employee(String name, String employeeId, double baseSalary) {
+        this.name = name;
+        this.employeeId = employeeId;
+        this.baseSalary = baseSalary;
+    }
+    
+    // 抽象方法：每个员工类型计算薪资方式不同
+    public abstract double calculateSalary();
+    
+    public void work() {
+        System.out.println(name + " is working hard!");
+    }
+}
+
+// 全职员工
+class FullTimeEmployee extends Employee implements BenefitsEligible {
+    private double bonus;
+    
+    public FullTimeEmployee(String name, String employeeId, double baseSalary, double bonus) {
+        super(name, employeeId, baseSalary);
+        this.bonus = bonus;
+    }
+    
+    @Override
+    public double calculateSalary() {
+        return baseSalary + bonus;
+    }
+    
+    @Override
+    public void provideBenefits() {
+        System.out.println(name + " receives health insurance and retirement plan");
+    }
+}
+
+// 兼职员工  
+class PartTimeEmployee extends Employee {
+    private int hoursWorked;
+    private double hourlyRate;
+    
+    public PartTimeEmployee(String name, String employeeId, int hoursWorked, double hourlyRate) {
+        super(name, employeeId, 0);
+        this.hoursWorked = hoursWorked;
+        this.hourlyRate = hourlyRate;
+    }
+    
+    @Override
+    public double calculateSalary() {
+        return hoursWorked * hourlyRate;
+    }
+}
+
+// 福利接口
+interface BenefitsEligible {
+    void provideBenefits();
+}
+```
+
+使用示例：
+```java
+Employee[] employees = {
+    new FullTimeEmployee("Alice", "FT001", 5000, 1000),
+    new PartTimeEmployee("Bob", "PT001", 20, 25)
+};
+
+for (Employee emp : employees) {
+    System.out.println(emp.name + " salary: $" + emp.calculateSalary());
+    emp.work();
+    
+    // 检查是否享有福利
+    if (emp instanceof BenefitsEligible) {
+        ((BenefitsEligible) emp).provideBenefits();
+    }
+}
+```
+
+## 常见误区与最佳实践
+
+### 误区1：过度使用继承
+**问题**：为了代码复用而滥用继承，导致类层次过于复杂
+**解决方案**：优先考虑**组合优于继承**。如果两个类之间没有真正的"is-a"关系，不要强行使用继承。
+
+```java
+// 错误示例：汽车"继承"引擎？
+class Car extends Engine { /* 不合理 */ }
+
+// 正确示例：汽车"包含"引擎
+class Car {
+    private Engine engine; // 组合
+}
+```
+
+### 误区2：接口当作类使用
+**问题**：试图在接口中存储状态或提供过多的具体实现
+**解决方案**：记住接口是**契约**，不是**实现**。保持接口简洁，专注于定义能力。
+
+### 误区3：忽视访问修饰符
+**问题**：所有字段都设为 public，破坏封装性
+**解决方案**：遵循**最小权限原则**——只暴露必要的公共接口，内部实现细节保持私有。
+
+### 误区4：忘记 @Override 注解
+**问题**：重写方法时拼写错误导致创建了新方法而非重写
+**解决方案**：始终使用 `@Override` 注解，编译器会帮你检查。
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+### 练习1：完善银行账户系统
+- 添加交易历史记录功能
+- 实现转账方法
+- 添加账户类型（储蓄账户、支票账户）
+
+### 练习2：扩展现有的动物体系
+- 添加更多动物类型（鸟、鱼等）
+- 实现 Flyable 和 Swimmable 接口
+- 创建动物园管理系统
+
+### 练习3：图形绘制系统增强
+- 添加更多图形类型（椭圆、多边形等）
+- 实现可比较接口（Comparable）按面积排序
+- 创建画布类管理多个图形
+
+记住：**最好的学习方式就是动手实践**！不要害怕犯错，每个 bug 都是你进步的阶梯。
+
+## 小结与思考
+
+今天我们深入探索了 Java 面向对象编程的核心概念：
+
+1. **类与对象**：类是蓝图，对象是实例
+2. **继承**：实现代码复用和层次化设计
+3. **接口**：定义契约，实现多态和多继承效果
+4. **封装**：隐藏内部细节，提供安全的公共接口
+5. **多态**：同一接口，多种实现
+
+**思考题**：
+- 在你的日常生活中，哪些事物可以用类和对象来建模？
+- 如果让你设计一个学校管理系统，你会如何设计类层次结构？
+- 接口和抽象类的选择标准是什么？
+
+记住，面向对象不仅仅是语法特性，更是一种**思维方式**。学会用对象的眼光看待世界，你会发现编程变得更加直观和有趣！
+
+继续练习，继续探索。下节课我们将深入探讨更高级的 OOP 概念。加油！

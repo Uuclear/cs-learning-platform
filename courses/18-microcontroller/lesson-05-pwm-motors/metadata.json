@@ -1,0 +1,21 @@
+{
+  "id": "18-05",
+  "title": "PWM与电机控制：让东西动起来",
+  "slug": "lesson-05-pwm-motors",
+  "module": "18-microcontroller",
+  "module_name": "单片机",
+  "module_order": 18,
+  "lesson_order": 5,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["18-03"],
+  "tags": ["pwm", "motor-control", "servo", "dc-motor", "speed-control"],
+  "description": "学习 PWM（脉宽调制）技术原理，掌握使用 PWM 控制直流电机速度、舵机角度和 LED 亮度的方法。",
+  "learning_objectives": [
+    "理解 PWM 的工作原理和占空比概念",
+    "掌握使用 Arduino 的 analogWrite 生成 PWM 信号",
+    "了解 H 桥电路控制直流电机正反转",
+    "能够控制舵机角度和直流电机转速"
+  ]
+}

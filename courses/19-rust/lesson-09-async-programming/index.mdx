@@ -1,0 +1,281 @@
+---
+title: 异步编程：Tokio与async/await
+description: 学习 Rust 的异步编程模型，掌握 async/await 语法、Future trait 和 Tokio 运行时，能够编写高效的异步 I/O 程序。
+---
+
+# 异步编程：Tokio与async/await
+
+## 开场白：餐厅服务员的比喻
+
+想象一下你是一家繁忙餐厅的服务员。传统同步编程就像这样：你接到一个点单后，必须站在厨房门口等待这道菜做完，期间不能做任何其他事情。如果同时有10桌客人点单，你就需要10个服务员，每人专门等待一道菜。
+
+而异步编程则完全不同！你接到点单后，把它交给厨房，然后立即去服务下一桌客人。当厨房喊"菜好了！"时，你再去取菜并端给客人。这样，一个服务员就能高效地服务多桌客人，大大提高了效率。
+
+Rust 的异步编程就是这个原理——它允许我们在等待 I/O 操作（如网络请求、文件读写）完成时，去做其他有用的工作，而不是傻傻地等待。今天，我们就来深入探索 Rust 的异步世界！
+
+## 核心概念：Future、async/await、Tokio
+
+### Future Trait：异步操作的基石
+
+在 Rust 中，`Future` 是异步编程的核心 trait。它代表一个可能还没有完成的计算。你可以把它想象成一个"承诺"——我承诺稍后会给你一个值。
+
+```rust
+pub trait Future {
+    type Output;
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
+}
+```
+
+`Future` 只有一个方法 `poll`，它会检查异步操作是否完成：
+- 如果完成了，返回 `Poll::Ready(value)`
+- 如果还没完成，返回 `Poll::Pending`
+
+### async/await 语法：让异步代码像同步一样简单
+
+Rust 提供了 `async` 和 `await` 关键字，让我们能用类似同步代码的方式编写异步逻辑。
+
+```rust
+// async 函数返回一个 Future
+async fn fetch_data() -> String {
+    // 模拟网络请求
+    "Hello, async world!".to_string()
+}
+
+// await 用于等待 Future 完成
+async fn main() {
+    let data = fetch_data().await;
+    println!("{}", data);
+}
+```
+
+`async fn` 实际上返回一个实现了 `Future` trait 的匿名类型。当我们调用 `.await` 时，编译器会自动处理 `poll` 调用和状态管理。
+
+### Tokio：Rust 的异步运行时
+
+`Future` 本身只是描述了异步操作，但要实际执行它，我们需要一个**异步运行时**。Tokio 是 Rust 生态中最流行的异步运行时，它提供了：
+
+- **任务调度器**：管理多个异步任务的执行
+- **I/O 驱动**：处理网络和文件 I/O
+- **定时器**：处理时间相关的操作
+- **线程池**：在多核 CPU 上并行执行任务
+
+## 代码演示：异步编程示例
+
+让我们通过几个实际例子来看看 Rust 异步编程的魅力。
+
+### 基础异步函数
+
+```rust
+use tokio;
+
+#[tokio::main]
+async fn main() {
+    println!("开始执行");
+    let result = do_something_async().await;
+    println!("结果: {}", result);
+}
+
+async fn do_something_async() -> i32 {
+    // 模拟异步操作
+    tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+    42
+}
+```
+
+### 并发执行多个任务
+
+```rust
+use tokio;
+
+#[tokio::main]
+async fn main() {
+    let task1 = tokio::spawn(async {
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+        "任务1完成"
+    });
+    
+    let task2 = tokio::spawn(async {
+        tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+        "任务2完成"
+    });
+    
+    let (result1, result2) = tokio::join!(task1, task2);
+    println!("{}, {}", result1.unwrap(), result2.unwrap());
+}
+```
+
+注意这里的关键：两个任务是**并发**执行的，总耗时约200毫秒，而不是300毫秒！
+
+## 深入理解：异步运行时原理
+
+### 单线程 vs 多线程运行时
+
+Tokio 提供了两种主要的运行时：
+
+1. **单线程运行时**（current_thread）：所有任务在一个线程上执行，通过事件循环切换任务
+2. **多线程运行时**（默认）：使用线程池，在多个线程上并行执行任务
+
+```rust
+// 单线程运行时
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    // 所有任务在当前线程执行
+}
+
+// 多线程运行时（默认）
+#[tokio::main]
+async fn main() {
+    // 任务在工作线程池中执行
+}
+```
+
+### 为什么 async 不等于多线程？
+
+这是一个常见的误解！异步编程和多线程是两个不同的概念：
+
+- **多线程**：真正的并行执行，每个线程独立运行
+- **异步**：单线程内的协作式多任务，通过任务切换实现并发
+
+异步的优势在于避免了线程切换的开销和锁的竞争，特别适合 I/O 密集型应用。
+
+### Pin 和 Unpin：内存安全的保障
+
+Rust 的异步系统还引入了 `Pin` 类型，确保 Future 在内存中的位置不会改变。这是因为某些 Future 可能包含自引用（指向自己内部字段的指针），如果 Future 被移动，这些指针就会失效。
+
+大多数情况下，我们不需要直接处理 `Pin`，编译器和 Tokio 会帮我们处理这些细节。
+
+## 实际应用：HTTP 客户端与并发网络请求
+
+让我们构建一个实用的异步 HTTP 客户端，同时请求多个 URL。
+
+### 使用 reqwest 库
+
+首先在 `Cargo.toml` 中添加依赖：
+
+```toml
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+serde_json = "1.0"
+```
+
+### 并发获取多个网页
+
+```rust
+use reqwest;
+use tokio;
+
+async fn fetch_url(url: &str) -> Result<String, reqwest::Error> {
+    let response = reqwest::get(url).await?;
+    let body = response.text().await?;
+    Ok(body)
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let urls = vec![
+        "https://httpbin.org/delay/1",
+        "https://httpbin.org/delay/2",
+        "https://httpbin.org/json",
+    ];
+    
+    // 并发执行所有请求
+    let handles: Vec<_> = urls
+        .iter()
+        .map(|url| tokio::spawn(fetch_url(url)))
+        .collect();
+    
+    // 等待所有任务完成
+    for handle in handles {
+        match handle.await {
+            Ok(Ok(content)) => println!("获取到 {} 字符", content.len()),
+            Ok(Err(e)) => eprintln!("请求失败: {}", e),
+            Err(e) => eprintln!("任务错误: {}", e),
+        }
+    }
+    
+    Ok(())
+}
+```
+
+这种方法可以同时处理数百甚至数千个并发请求，而只需要很少的系统资源！
+
+## 常见误区与最佳实践
+
+### 误区1：async 函数会自动在后台执行
+
+```rust
+// ❌ 错误：这只是创建了一个 Future，但没有执行它！
+async fn do_work() {
+    println!("工作进行中...");
+}
+
+#[tokio::main]
+async fn main() {
+    do_work(); // 这行代码什么都不会做！
+}
+```
+
+正确的做法是使用 `.await` 或 `tokio::spawn`：
+
+```rust
+// ✅ 正确：使用 await
+async fn main() {
+    do_work().await;
+}
+
+// ✅ 正确：使用 spawn 创建后台任务
+async fn main() {
+    tokio::spawn(do_work());
+}
+```
+
+### 误区2：在 async 函数中使用阻塞操作
+
+```rust
+// ❌ 错误：std::thread::sleep 会阻塞整个线程！
+async fn bad_example() {
+    std::thread::sleep(std::time::Duration::from_secs(1));
+}
+```
+
+应该使用异步友好的替代方案：
+
+```rust
+// ✅ 正确：使用 tokio::time::sleep
+async fn good_example() {
+    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+}
+```
+
+### 误区3：滥用 async/await
+
+不是所有函数都需要标记为 `async`。只有当你需要等待异步操作时才使用它。过度使用 async 会增加不必要的复杂性和性能开销。
+
+## 动手实践
+
+现在轮到你了！尝试完成以下练习：
+
+1. **基础练习**：创建一个异步函数，模拟从不同 API 获取用户数据，并使用 `tokio::join!` 并发执行
+2. **进阶练习**：实现一个简单的异步文件读写程序，同时读取多个文件并合并结果
+3. **挑战练习**：构建一个并发的 Web 爬虫，能够同时抓取多个页面并提取链接
+
+记住：异步编程的关键是理解什么时候需要 `.await`，以及如何有效地组织并发任务。
+
+## 小结与思考
+
+今天我们深入探讨了 Rust 的异步编程模型：
+
+- **Future** 是异步操作的基础抽象
+- **async/await** 让异步代码变得简洁易读
+- **Tokio** 提供了强大的异步运行时支持
+- **并发 ≠ 并行**，异步更适合 I/O 密集型场景
+
+异步编程虽然概念上有些复杂，但一旦掌握，你就能写出高性能、高并发的 Rust 应用程序。记住，异步不是银弹——对于 CPU 密集型任务，传统的多线程可能更合适。
+
+思考题：
+1. 为什么 Rust 的异步系统需要 `Pin` 类型？
+2. 在什么场景下应该选择单线程运行时 vs 多线程运行时？
+3. 如何避免在异步代码中出现死锁？
+
+继续练习，你会越来越熟练的！异步编程的世界充满乐趣，祝你在 Rust 的异步之旅中收获满满！

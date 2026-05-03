@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "JVM中哪个内存区域是线程私有的？",
+      "options": [
+        "堆（Heap）",
+        "方法区（Method Area）",
+        "栈（Stack）",
+        "元空间（Metaspace）"
+      ],
+      "answer": 2,
+      "explanation": "栈是线程私有的，每个线程都有自己的栈空间，用于存储局部变量和方法调用信息。"
+    },
+    {
+      "question": "以下哪种GC算法不会产生内存碎片？",
+      "options": [
+        "标记-清除（Mark-Sweep）",
+        "复制（Copying）",
+        "标记-整理（Mark-Compact）",
+        "B和C都是"
+      ],
+      "answer": 3,
+      "explanation": "复制算法和标记-整理算法都不会产生内存碎片，前者通过复制存活对象到新空间，后者通过移动对象整理内存。"
+    },
+    {
+      "question": "在Java中，如何判断一个对象是否可以被垃圾回收？",
+      "options": [
+        "对象的引用计数为0",
+        "对象没有被任何变量引用",
+        "对象到GC Roots不可达",
+        "对象的finalize()方法已被调用"
+      ],
+      "answer": 2,
+      "explanation": "JVM使用可达性分析算法，从GC Roots开始搜索，如果对象到GC Roots不可达，则认为该对象可以被回收。"
+    },
+    {
+      "question": "以下哪个参数用于设置JVM的最大堆内存？",
+      "options": [
+        "-Xms",
+        "-Xmx",
+        "-Xmn",
+        "-XX:MaxHeapSize"
+      ],
+      "answer": 1,
+      "explanation": "-Xmx参数用于设置JVM的最大堆内存大小。"
+    },
+    {
+      "question": "G1 GC的主要优势是什么？",
+      "options": [
+        "最高的吞吐量",
+        "最低的内存占用",
+        "可预测的停顿时间",
+        "最快的启动速度"
+      ],
+      "answer": 2,
+      "explanation": "G1 GC的主要优势是可以预测和控制GC停顿时间，适合对响应时间有要求的应用。"
+    },
+    {
+      "question": "以下哪种情况会导致内存泄漏？",
+      "options": [
+        "使用局部变量",
+        "静态集合持有对象引用",
+        "及时调用System.gc()",
+        "使用基本数据类型"
+      ],
+      "answer": 1,
+      "explanation": "静态集合持有对象引用会导致这些对象无法被GC回收，从而造成内存泄漏。"
+    },
+    {
+      "question": "新生代通常分为哪几个区域？",
+      "options": [
+        "Eden、Survivor0、Survivor1",
+        "Young、Old、Permanent",
+        "Heap、Stack、Method Area",
+        "Eden、Tenured、Permanent"
+      ],
+      "answer": 0,
+      "explanation": "新生代通常分为Eden区、Survivor0区和Survivor1区三个部分。"
+    },
+    {
+      "question": "关于System.gc()的说法正确的是？",
+      "options": [
+        "会立即触发垃圾回收",
+        "保证回收所有无用对象",
+        "只是建议JVM进行GC，不保证立即执行",
+        "在所有JVM实现中都被禁用"
+      ],
+      "answer": 2,
+      "explanation": "System.gc()只是向JVM发出进行垃圾回收的建议，JVM可以选择忽略这个建议，也不保证立即执行。"
+    }
+  ]
+}

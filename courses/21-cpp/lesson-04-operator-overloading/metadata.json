@@ -1,0 +1,21 @@
+{
+  "id": "21-04",
+  "title": "运算符重载",
+  "slug": "lesson-04-operator-overloading",
+  "module": "21-cpp",
+  "module_name": "C++编程",
+  "module_order": 21,
+  "lesson_order": 4,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["21-02"],
+  "tags": ["operator-overloading", "friend-functions", "custom-types", "stream-operators"],
+  "description": "学习 C++ 的运算符重载，掌握成员函数重载、友元函数重载和流运算符重载，理解运算符重载的设计原则。",
+  "learning_objectives": [
+    "理解运算符重载的概念和适用场景",
+    "掌握成员函数和友元函数方式的运算符重载",
+    "掌握流运算符（<< 和 >>）的重载",
+    "了解运算符重载的设计原则和陷阱"
+  ]
+}

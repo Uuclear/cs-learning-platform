@@ -1,0 +1,21 @@
+{
+  "id": "17-06",
+  "title": "二极管与整流电路：交流变直流",
+  "slug": "lesson-06-diodes-rectifiers",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 6,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["17-02"],
+  "tags": ["diode", "rectifier", "ac-dc", "bridge-rectifier", "voltage-regulation"],
+  "description": "学习二极管的单向导电特性，掌握半波、全波和桥式整流电路的工作原理，了解直流电源设计基础。",
+  "learning_objectives": [
+    "理解二极管的伏安特性和单向导电原理",
+    "掌握半波整流、全波整流和桥式整流的工作原理",
+    "了解滤波电容在整流电路中的作用",
+    "能够设计简单的直流电源电路"
+  ]
+}

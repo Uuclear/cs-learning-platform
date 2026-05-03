@@ -1,0 +1,376 @@
+---
+title: DOM操作：与网页交互
+description: 学习Document Object Model (DOM)的概念和API，掌握如何使用JavaScript获取和修改网页元素。
+---
+
+# DOM操作：与网页交互
+
+## 开场白：网页背后的秘密结构
+
+想象一下，你正在看一本精美的立体书。表面上看，它只是一张平面的纸，但当你轻轻翻开，里面却隐藏着层层叠叠的立体结构——房子、树木、人物，它们都有自己的位置和关系。我们的网页也是如此！
+
+当你在浏览器中打开一个网页时，看似简单的页面背后其实隐藏着一个复杂的树状结构，这就是**文档对象模型**（Document Object Model，简称DOM）。DOM就像是网页的骨架，它把HTML文档转换成一个由节点和对象组成的树形结构，让我们可以用JavaScript来"触摸"和"操控"每一个元素。
+
+今天，我们就来揭开DOM的神秘面纱，学习如何用JavaScript与网页进行深度交互。无论你是想动态改变页面内容、响应用户操作，还是创建复杂的Web应用，掌握DOM操作都是必不可少的基础技能。
+
+## 核心概念：理解DOM树的家族关系
+
+### 什么是DOM？
+
+DOM是W3C（万维网联盟）的标准编程接口，它将HTML或XML文档表示为一个树形结构。在这个树中：
+
+- **根节点**：`document` 对象，代表整个HTML文档
+- **元素节点**：每个HTML标签都是一个元素节点（如 `<div>`、`<p>`、`<span>`）
+- **文本节点**：标签内的文字内容
+- **属性节点**：元素的属性（如 `id`、`class`、`href`）
+
+### DOM树的家族比喻
+
+可以把DOM树想象成一个大家族的家谱：
+
+- **祖先**（Ancestor）：父节点、祖父节点等上级节点
+- **后代**（Descendant）：子节点、孙节点等下级节点  
+- **父节点**（Parent）：直接的上级节点
+- **子节点**（Child）：直接的下级节点
+- **兄弟节点**（Sibling）：拥有相同父节点的节点
+
+比如这样的HTML结构：
+```html
+<div id="grandparent">
+  <div id="parent">
+    <span id="child1">第一个孩子</span>
+    <span id="child2">第二个孩子</span>
+  </div>
+</div>
+```
+
+在这里，`grandparent` 是 `parent` 的父节点，也是 `child1` 和 `child2` 的祖父节点。而 `child1` 和 `child2` 是兄弟节点。
+
+### 节点类型和属性
+
+每个DOM节点都有以下重要属性：
+- `nodeType`：节点类型（1=元素节点，3=文本节点，8=注释节点等）
+- `nodeName`：节点名称（对于元素节点就是标签名）
+- `nodeValue`：节点值（对于文本节点就是文本内容）
+
+## 代码演示：DOM选择器实战
+
+### 基础选择器方法
+
+最常用的DOM选择方法有以下几种：
+
+#### 1. getElementById()
+通过元素的 `id` 属性快速获取单个元素：
+```javascript
+// 获取 id="myButton" 的元素
+const button = document.getElementById('myButton');
+```
+
+#### 2. getElementsByClassName()
+通过 `class` 属性获取元素集合：
+```javascript
+// 获取所有 class="highlight" 的元素
+const highlights = document.getElementsByClassName('highlight');
+```
+
+#### 3. getElementsByTagName()
+通过标签名获取元素集合：
+```javascript
+// 获取所有 <p> 标签
+const paragraphs = document.getElementsByTagName('p');
+```
+
+### 现代选择器：querySelector系列
+
+更强大的是CSS选择器语法的支持：
+
+#### querySelector()
+返回匹配指定CSS选择器的第一个元素：
+```javascript
+// 获取第一个 class="btn-primary" 的按钮
+const primaryBtn = document.querySelector('.btn-primary');
+
+// 获取 id="header" 的元素
+const header = document.querySelector('#header');
+
+// 获取第一个 <li> 元素
+const firstLi = document.querySelector('li');
+
+// 复杂选择器：获取 .container 内的第一个 .item
+const firstItem = document.querySelector('.container .item');
+```
+
+#### querySelectorAll()
+返回匹配指定CSS选择器的所有元素（返回NodeList）：
+```javascript
+// 获取所有 class="item" 的元素
+const allItems = document.querySelectorAll('.item');
+
+// 获取所有的偶数位置的 <li> 元素
+const evenLis = document.querySelectorAll('li:nth-child(even)');
+```
+
+### NodeList vs HTMLCollection
+
+需要注意的是：
+- `querySelectorAll()` 返回 **NodeList**（静态集合）
+- `getElementsByClassName()` 和 `getElementsByTagName()` 返回 **HTMLCollection**（动态集合）
+
+动态集合会实时反映DOM的变化，而静态集合则不会。
+
+## 深入理解：操作DOM元素的内容和属性
+
+### 修改元素内容
+
+有三种主要方式修改元素内容：
+
+#### 1. textContent
+设置或获取元素的纯文本内容（不解析HTML）：
+```javascript
+const element = document.querySelector('#demo');
+element.textContent = '这是纯文本内容';
+```
+
+#### 2. innerHTML
+设置或获取元素的HTML内容（会解析HTML）：
+```javascript
+// 注意：innerHTML存在XSS风险，仅用于可信内容
+// 对于用户输入，请使用textContent或HTML转义
+element.innerHTML = '<strong>这是粗体文本</strong>！';
+```
+
+#### 3. innerText
+设置或获取元素的可见文本内容（考虑样式）：
+```javascript
+element.innerText = '这会考虑CSS样式的影响';
+```
+
+### 修改元素样式
+
+可以通过 `style` 属性直接修改内联样式：
+```javascript
+const box = document.querySelector('.box');
+box.style.backgroundColor = 'red';
+box.style.width = '200px';
+box.style.borderRadius = '10px';
+
+// 注意：CSS属性名要转换为驼峰命名法
+// background-color → backgroundColor
+// font-size → fontSize
+// z-index → zIndex
+```
+
+也可以通过修改 `className` 或 `classList` 来应用CSS类：
+```javascript
+// 替换整个class属性
+box.className = 'new-class another-class';
+
+// 使用classList API（推荐）
+box.classList.add('active');        // 添加class
+box.classList.remove('inactive');   // 移除class  
+box.classList.toggle('highlight');  // 切换class
+box.classList.contains('active');   // 检查是否包含class
+```
+
+### 修改元素属性
+
+使用 `getAttribute()`、`setAttribute()` 和 `removeAttribute()`：
+```javascript
+const link = document.querySelector('a');
+console.log(link.getAttribute('href'));     // 获取href属性
+link.setAttribute('target', '_blank');      // 设置target属性
+link.removeAttribute('title');              // 移除title属性
+
+// 对于标准属性，也可以直接访问
+console.log(link.href);     // 获取完整URL
+console.log(link.id);       // 获取id属性
+link.id = 'newId';          // 设置id属性
+```
+
+## 实际应用：动态创建和管理DOM节点
+
+### 创建新元素
+
+使用 `document.createElement()` 创建新元素：
+```javascript
+// 创建一个新的div元素
+const newDiv = document.createElement('div');
+newDiv.textContent = '这是一个新创建的元素';
+newDiv.className = 'dynamic-element';
+
+// 创建文本节点
+const textNode = document.createTextNode('纯文本内容');
+```
+
+### 插入元素
+
+有多种方式将新元素插入到DOM中：
+
+#### appendChild()
+在父元素末尾添加子元素：
+```javascript
+const container = document.querySelector('#container');
+container.appendChild(newDiv);
+```
+
+#### insertBefore()
+在指定元素前插入新元素：
+```javascript
+const referenceElement = document.querySelector('#reference');
+container.insertBefore(newDiv, referenceElement);
+```
+
+#### 现代插入方法（ES6+）
+```javascript
+// 在元素内部末尾插入
+parent.append(elementOrText);
+
+// 在元素内部开头插入  
+parent.prepend(elementOrText);
+
+// 在元素后面插入
+element.after(elementOrText);
+
+// 在元素前面插入
+element.before(elementOrText);
+```
+
+### 删除元素
+
+删除元素的方法：
+```javascript
+// 传统方法：通过父元素删除子元素
+const elementToRemove = document.querySelector('#toRemove');
+elementToRemove.parentNode.removeChild(elementToRemove);
+
+// 现代方法（ES6+）
+elementToRemove.remove();
+```
+
+### 替换元素
+
+替换现有元素：
+```javascript
+// 传统方法
+const oldElement = document.querySelector('#old');
+const newElement = document.createElement('div');
+newElement.textContent = '替换后的内容';
+oldElement.parentNode.replaceChild(newElement, oldElement);
+
+// 现代方法
+oldElement.replaceWith(newElement);
+```
+
+## 常见误区：避免DOM操作的陷阱
+
+### 1. 性能问题：频繁的DOM操作
+
+每次DOM操作都会触发浏览器的重排（reflow）和重绘（repaint），这很消耗性能。避免在循环中频繁操作DOM：
+
+**错误做法**：
+```javascript
+// 不要这样做！
+for (let i = 0; i < 1000; i++) {
+  const item = document.createElement('li');
+  item.textContent = `项目 ${i}`;
+  list.appendChild(item); // 每次都触发重排
+}
+```
+
+**正确做法**：
+```javascript
+// 使用文档片段（DocumentFragment）
+const fragment = document.createDocumentFragment();
+for (let i = 0; i < 1000; i++) {
+  const item = document.createElement('li');
+  item.textContent = `项目 ${i}`;
+  fragment.appendChild(item);
+}
+list.appendChild(fragment); // 只触发一次重排
+```
+
+### 2. 内存泄漏：事件监听器
+
+删除元素时记得移除事件监听器：
+```javascript
+const button = document.querySelector('#btn');
+const handleClick = () => console.log('点击了！');
+
+button.addEventListener('click', handleClick);
+
+// 删除前移除监听器
+button.removeEventListener('click', handleClick);
+button.remove();
+```
+
+### 3. 安全问题：innerHTML的风险
+
+使用 `innerHTML` 时要注意XSS攻击。**最佳实践是避免对不可信内容使用innerHTML**：
+```javascript
+// 危险！用户输入可能包含恶意脚本
+// element.innerHTML = userInput;
+
+// 安全做法：使用textContent处理用户输入
+element.textContent = userInput;
+
+// 如果确实需要HTML支持，应先对内容进行转义或使用专门的HTML净化库
+```
+
+### 4. 时机问题：DOM加载完成前操作
+
+确保在DOM完全加载后再进行操作：
+```javascript
+// 方法1：将脚本放在body底部
+// 方法2：使用DOMContentLoaded事件
+document.addEventListener('DOMContentLoaded', () => {
+  // DOM已准备就绪，可以安全操作
+  const element = document.querySelector('#myElement');
+});
+
+// 方法3：使用window.onload（等待所有资源加载完成）
+window.addEventListener('load', () => {
+  // 所有资源（包括图片）都已加载完成
+});
+```
+
+## 动手实践：综合练习
+
+现在让我们通过几个实际例子来巩固所学知识：
+
+### 练习1：动态待办事项列表
+
+创建一个简单的待办事项应用，支持添加、删除和标记完成任务。
+
+### 练习2：图片画廊切换器
+
+实现一个图片画廊，点击缩略图可以切换主显示图片。
+
+### 练习3：表单验证反馈
+
+为表单添加实时验证，在用户输入时提供即时反馈。
+
+这些练习将帮助你掌握DOM操作的核心技能，并为后续的Web开发打下坚实基础。
+
+## 小结与思考
+
+今天我们深入学习了DOM操作的核心概念和实用技巧：
+
+1. **DOM树结构**：理解了网页的树形结构和节点关系
+2. **元素选择**：掌握了从基础到现代的各种选择器方法
+3. **内容操作**：学会了修改文本、HTML和样式的方法
+4. **动态管理**：能够创建、插入、删除和替换DOM节点
+5. **最佳实践**：了解了性能优化、安全性和时机控制的重要性
+
+DOM操作是前端开发的基础，但随着现代框架（如React、Vue）的普及，直接操作DOM的机会越来越少。然而，理解DOM的工作原理仍然至关重要，因为：
+
+- 框架底层仍然是基于DOM操作的
+- 调试和性能优化需要DOM知识
+- 某些场景下直接DOM操作更高效
+- 面试和基础知识考察的重点
+
+**思考题**：
+1. 为什么现代框架要抽象DOM操作？这样做的利弊是什么？
+2. 在什么情况下，直接DOM操作比使用框架更合适？
+3. 如何在保证性能的同时，实现复杂的动态UI更新？
+
+掌握DOM操作不仅让你能够直接控制网页，更能帮助你理解现代Web开发的底层原理。继续练习，你将成为真正的Web交互大师！

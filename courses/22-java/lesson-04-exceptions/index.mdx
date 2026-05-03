@@ -1,0 +1,291 @@
+---
+title: 异常处理机制
+---
+
+import Example from '../../components/Example'
+import Challenge from '../../components/Challenge'
+import Quiz from '../../components/Quiz'
+
+# 异常处理机制
+
+## 开场白：程序世界的保险箱
+
+想象一下，你正在银行工作，负责管理一个巨大的保险箱。这个保险箱里装满了客户的贵重物品，每天都有人来存取。突然有一天，有人试图用错误的密码打开保险箱，或者保险箱的机械装置出现了故障。这时，你会怎么做？
+
+你会让整个银行系统崩溃停摆吗？当然不会！你会启动应急预案：记录下这次异常事件，通知相关人员，并确保其他客户的业务不受影响。这正是Java异常处理机制的核心思想——**优雅地处理意外情况，而不是让程序直接崩溃**。
+
+在编程世界中，异常（Exception）就像是程序运行过程中遇到的"意外事件"。这些事件可能会中断程序的正常执行流程，但通过合理的异常处理，我们可以让程序变得更加健壮和可靠。
+
+## 核心概念：异常处理的基石
+
+### 异常的层次结构
+
+Java中的异常体系就像一棵大树，根节点是`Throwable`类，它有两个主要分支：
+
+- **Error**：表示严重的系统级错误，通常是不可恢复的（如内存溢出`OutOfMemoryError`）
+- **Exception**：表示程序可以处理的异常情况
+
+```java
+// Throwable (根类)
+// ├── Error (系统错误，通常不处理)
+// │   ├── OutOfMemoryError
+// │   ├── StackOverflowError
+// │   └── ...
+// └── Exception (可处理的异常)
+//     ├── RuntimeException (非受检异常)
+//     │   ├── NullPointerException
+//     │   ├── ArrayIndexOutOfBoundsException
+//     │   └── ...
+//     └── 其他Exception (受检异常)
+//         ├── IOException
+//         ├── SQLException
+//         └── ...
+```
+
+### try-catch-finally：异常处理的三剑客
+
+这是Java异常处理最基本的语法结构：
+
+```java
+try {
+    // 可能抛出异常的代码
+    riskyOperation();
+} catch (SpecificException e) {
+    // 处理特定类型的异常
+    handleSpecificException(e);
+} catch (AnotherException e) {
+    // 处理另一种异常
+    handleAnotherException(e);
+} finally {
+    // 无论是否发生异常都会执行的代码
+    // 通常用于资源清理
+    cleanupResources();
+}
+```
+
+**关键点**：
+- `try`块包含可能抛出异常的代码
+- `catch`块按顺序匹配异常类型，从具体到一般
+- `finally`块总是执行，即使有`return`语句
+
+### throw 和 throws：异常的抛出与声明
+
+- **throw**：在方法内部主动抛出异常
+- **throws**：在方法签名中声明该方法可能抛出的异常
+
+```java
+// throws 声明方法可能抛出的异常
+public void readFile(String filename) throws IOException {
+    if (filename == null) {
+        // throw 主动抛出异常
+        throw new IllegalArgumentException("文件名不能为null");
+    }
+    // 可能抛出IOException的代码
+    FileReader reader = new FileReader(filename);
+}
+```
+
+## 代码演示：Java异常处理实战
+
+让我们通过几个实际例子来看看异常处理是如何工作的。
+
+<Example file="code/examples/Example01.java" />
+
+在这个例子中，我们看到了基本的try-catch-finally结构。注意`finally`块中的代码无论如何都会执行，这对于资源清理非常重要。
+
+<Example file="code/examples/Example02.java" />
+
+这里展示了如何创建自定义异常类，以及如何使用`throw`和`throws`关键字。
+
+<Example file="code/examples/Example03.java" />
+
+这个例子对比了受检异常和非受检异常的不同处理方式。
+
+## 深入理解：受检异常 vs 非受检异常
+
+### 受检异常（Checked Exceptions）
+
+- 继承自`Exception`但不是`RuntimeException`的子类
+- **编译时检查**：必须处理或声明
+- 表示**可预期的、合理的异常情况**
+- 例子：`IOException`, `SQLException`, `ClassNotFoundException`
+
+```java
+// 必须处理或声明
+public void readFile() throws IOException {
+    FileReader file = new FileReader("test.txt"); // 可能抛出IOException
+}
+```
+
+### 非受检异常（Unchecked Exceptions）
+
+- 继承自`RuntimeException`
+- **运行时检查**：不需要强制处理
+- 表示**编程错误或不可预期的情况**
+- 例子：`NullPointerException`, `ArrayIndexOutOfBoundsException`, `IllegalArgumentException`
+
+```java
+// 不需要强制处理
+public void processArray(int[] arr) {
+    System.out.println(arr[10]); // 可能抛出ArrayIndexOutOfBoundsException
+}
+```
+
+### 设计哲学
+
+Java的异常设计体现了这样的哲学：
+- **受检异常**：表示调用者应该预料到并处理的情况
+- **非受检异常**：表示程序bug，应该在开发阶段修复
+
+这种区分有助于开发者明确哪些异常是正常的业务逻辑的一部分，哪些是需要修复的错误。
+
+## 实际应用：真实场景中的异常处理
+
+### 文件读取异常处理
+
+```java
+public String readConfigFile(String filename) {
+    StringBuilder content = new StringBuilder();
+    BufferedReader reader = null;
+    
+    try {
+        reader = new BufferedReader(new FileReader(filename));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            content.append(line).append("\n");
+        }
+    } catch (FileNotFoundException e) {
+        // 文件不存在，返回默认配置
+        return getDefaultConfig();
+    } catch (IOException e) {
+        // IO错误，记录日志并抛出运行时异常
+        logger.error("读取配置文件失败", e);
+        throw new RuntimeException("配置文件读取失败", e);
+    } finally {
+        // 确保资源被正确关闭
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                logger.warn("关闭文件读取器失败", e);
+            }
+        }
+    }
+    
+    return content.toString();
+}
+```
+
+### 网络请求重试机制
+
+```java
+public String fetchDataWithRetry(String url, int maxRetries) {
+    for (int attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            return makeHttpRequest(url);
+        } catch (ConnectException e) {
+            if (attempt == maxRetries) {
+                throw new RuntimeException("网络连接失败，已重试" + maxRetries + "次", e);
+            }
+            // 等待后重试
+            try {
+                Thread.sleep(1000 * attempt); // 指数退避
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("重试被中断", ie);
+            }
+        }
+    }
+    return null; // 不会执行到这里
+}
+```
+
+## 常见误区：避免异常处理陷阱
+
+### 误区1：空的catch块
+
+```java
+// ❌ 错误做法 - 吞掉异常
+try {
+    riskyOperation();
+} catch (Exception e) {
+    // 什么也不做！
+}
+
+// ✅ 正确做法 - 至少记录异常
+try {
+    riskyOperation();
+} catch (Exception e) {
+    logger.error("操作失败", e);
+    // 或者重新抛出
+    throw new RuntimeException("操作失败", e);
+}
+```
+
+### 误区2：使用异常控制正常流程
+
+```java
+// ❌ 错误做法 - 用异常做控制流
+public boolean isValidUser(String username) {
+    try {
+        User user = findUser(username);
+        return true;
+    } catch (UserNotFoundException e) {
+        return false;
+    }
+}
+
+// ✅ 正确做法 - 使用返回值
+public boolean isValidUser(String username) {
+    return findUserIfExists(username) != null;
+}
+```
+
+### 误区3：过于宽泛的异常捕获
+
+```java
+// ❌ 错误做法 - 捕获所有异常
+try {
+    processUserData();
+} catch (Exception e) {
+    // 无法区分不同类型的错误
+}
+
+// ✅ 正确做法 - 精确捕获
+try {
+    processUserData();
+} catch (ValidationException e) {
+    // 处理验证错误
+    showValidationError(e.getMessage());
+} catch (DatabaseException e) {
+    // 处理数据库错误
+    showDatabaseError();
+}
+```
+
+## 动手实践
+
+现在轮到你来练习了！完成以下挑战：
+
+<Challenge file="exercises/challenges/challenge-01.md" />
+
+<Challenge file="exercises/challenges/challenge-02.md" />
+
+## 小结与思考
+
+异常处理是编写健壮Java程序的关键技能。记住以下要点：
+
+1. **异常是程序的一部分**：不要害怕异常，要学会与它们共处
+2. **选择合适的异常类型**：受检异常用于可预期的情况，非受检异常用于程序错误
+3. **资源清理很重要**：始终使用finally块或try-with-resources来确保资源被正确释放
+4. **不要吞掉异常**：至少要记录异常信息，最好提供有意义的错误消息
+5. **异常不是控制流**：不要用异常来实现正常的程序逻辑
+
+**思考题**：
+- 为什么Java要区分受检异常和非受检异常？
+- 在什么情况下你应该创建自定义异常类？
+- 如何在多线程环境中正确处理异常？
+
+掌握异常处理机制，你的Java程序将变得更加可靠和专业。记住，好的程序员不仅写能工作的代码，更写能优雅处理错误的代码！
+
+<Quiz file="exercises/quiz.json" />

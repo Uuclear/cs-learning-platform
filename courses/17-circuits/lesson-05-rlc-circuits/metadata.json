@@ -1,0 +1,21 @@
+{
+  "id": "17-05",
+  "title": "RC/RL/RLC电路：时间常数与谐振",
+  "slug": "lesson-05-rlc-circuits",
+  "module": "17-circuits",
+  "module_name": "电路基础",
+  "module_order": 17,
+  "lesson_order": 5,
+  "difficulty": 3,
+  "difficulty_label": "中等",
+  "duration_minutes": 30,
+  "prerequisites": ["17-04"],
+  "tags": ["rlc-circuit", "time-constant", "resonance", "transient-analysis", "frequency-response"],
+  "description": "学习RC、RL、RLC电路的暂态和稳态分析，理解时间常数、阻尼和谐振现象。",
+  "learning_objectives": [
+    "掌握一阶电路（RC、RL）的暂态分析方法",
+    "理解二阶RLC电路的三种阻尼状态（过阻尼、欠阻尼、临界阻尼）",
+    "掌握谐振频率的计算和品质因数的物理意义",
+    "了解RLC电路在滤波器和选频网络中的应用"
+  ]
+}

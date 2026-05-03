@@ -1,0 +1,268 @@
+---
+title: JavaScript基础：动态网页的语言
+description: 了解 JavaScript 的历史和在 Web 开发中的地位，掌握基本语法和浏览器控制台的使用，编写第一个 JS 脚本。
+---
+
+# JavaScript基础：动态网页的语言
+
+## 开场白：网页的灵魂
+
+想象一下，你正在参观一个精美的博物馆。HTML是展品的框架和标签，CSS是灯光和装饰，让一切看起来赏心悦目。但如果没有讲解员、互动装置和动态展示，这个博物馆就会显得死气沉沉。
+
+JavaScript就是这个博物馆的"灵魂"！它让静态的网页活了起来，变成了会说话、会思考、会响应的智能空间。当你点击按钮时弹出菜单，当你滚动页面时出现动画效果，当你填写表单时实时验证输入——这些都是JavaScript在幕后默默工作的结果。
+
+在1995年，网景公司的Brendan Eich只用了10天时间就创造了JavaScript（最初叫LiveScript）。虽然创造时间很短，但这个语言却彻底改变了互联网的面貌。如今，JavaScript已经从简单的网页脚本语言发展成为全栈开发的核心技术，甚至可以在服务器端（Node.js）、移动应用（React Native）和桌面应用（Electron）中运行。
+
+## 核心概念：Web三剑客与JavaScript基础
+
+### Web三剑客：HTML、CSS、JavaScript
+
+现代Web开发有三个核心组成部分，被称为"Web三剑客"：
+
+- **HTML**（超文本标记语言）：负责网页的结构和内容，就像房子的钢筋骨架
+- **CSS**（层叠样式表）：负责网页的外观和样式，就像房子的装修和装饰
+- **JavaScript**：负责网页的行为和交互，就像房子的智能家居系统
+
+这三者相辅相成，缺一不可。HTML提供内容，CSS美化内容，JavaScript则让内容变得智能和互动。
+
+### 变量：数据的容器
+
+在JavaScript中，变量就像是贴了标签的盒子，用来存储各种类型的数据。我们可以把数字、文字、布尔值等各种数据放进这些盒子里，然后通过标签来访问和操作它们。
+
+```javascript
+// 声明一个变量来存储年龄
+let age = 25;
+
+// 声明一个常量来存储圆周率
+const PI = 3.14159;
+```
+
+### 基本数据类型
+
+JavaScript有几种基本的数据类型：
+
+- **Number**：数字，包括整数和小数（如 `42`, `3.14`）
+- **String**：字符串，用引号包围的文字（如 `"Hello"`, `'World'`）
+- **Boolean**：布尔值，只有 `true` 或 `false`
+- **Undefined**：未定义的值
+- **Null**：空值
+- **Symbol**：ES6新增的唯一标识符
+- **BigInt**：ES2020新增的大整数类型
+
+## 代码演示：从Hello World开始
+
+### console.log()：你的第一个调试工具
+
+打开浏览器的开发者工具（按F12或右键选择"检查"），切换到Console（控制台）标签，然后输入以下代码：
+
+```javascript
+console.log("Hello, JavaScript!");
+```
+
+按下回车，你会看到控制台输出了"Hello, JavaScript!"。这就是你的第一个JavaScript程序！
+
+`console.log()` 是JavaScript中最常用的调试函数，它可以输出任何类型的数据到控制台：
+
+```javascript
+console.log(42);           // 输出数字
+console.log(true);         // 输出布尔值
+console.log("你好世界");    // 输出中文字符串
+console.log([1, 2, 3]);    // 输出数组
+```
+
+### 变量操作示例
+
+让我们看一些变量操作的实际例子：
+
+```javascript
+// 声明变量并赋值
+let name = "小明";
+let score = 95;
+let isPassed = true;
+
+// 修改变量的值
+name = "小红";
+score = score + 5; // score 现在是 100
+
+// 输出变量的值
+console.log("学生姓名:", name);
+console.log("考试分数:", score);
+console.log("是否通过:", isPassed);
+```
+
+## 深入理解：let vs const vs var
+
+JavaScript提供了三种声明变量的关键字，它们各有特点：
+
+### let：块级作用域的变量
+
+`let` 声明的变量具有块级作用域（在 `{}` 内有效），可以重新赋值，但不能重复声明：
+
+```javascript
+let message = "Hello";
+message = "Hi"; // ✅ 可以重新赋值
+
+if (true) {
+  let temp = "inside block";
+  console.log(temp); // ✅ 可以访问
+}
+// console.log(temp); // ❌ 报错：temp 未定义
+```
+
+### const：块级作用域的常量
+
+`const` 声明的变量也是块级作用域，但**不能重新赋值**。注意，对于对象和数组，虽然不能重新赋值，但可以修改其内部属性：
+
+```javascript
+const PI = 3.14159;
+// PI = 3.14; // ❌ 报错：不能重新赋值
+
+const person = { name: "张三", age: 25 };
+person.age = 26; // ✅ 可以修改对象属性
+// person = { name: "李四" }; // ❌ 报错：不能重新赋值整个对象
+```
+
+### var：函数作用域的老式变量
+
+`var` 是ES5及之前版本的变量声明方式，具有函数作用域（不是块级作用域），存在变量提升的问题：
+
+```javascript
+console.log(x); // undefined（不是报错！）
+var x = 5;
+
+if (true) {
+  var y = 10;
+}
+console.log(y); // 10（var没有块级作用域）
+```
+
+**最佳实践**：现代JavaScript开发中，优先使用 `const`，只有在确实需要重新赋值时才使用 `let`，尽量避免使用 `var`。
+
+## 实际应用：网页交互基础
+
+### 网页中的JavaScript
+
+JavaScript可以通过多种方式嵌入到网页中：
+
+1. **内联脚本**：直接在HTML中使用 `<script>` 标签
+2. **外部脚本**：通过 `<script src="file.js">` 引入外部文件
+3. **事件处理器**：直接在HTML元素上使用 `onclick` 等属性
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript示例</title>
+</head>
+<body>
+    <button onclick="alert('你好！')">点击我</button>
+    
+    <script>
+        // 内联脚本
+        console.log("页面加载完成");
+    </script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+```
+
+### 表单验证基础
+
+JavaScript最常用的应用之一就是表单验证。以下是一个简单的邮箱验证示例：
+
+```javascript
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// 使用示例
+const userEmail = "user@example.com";
+if (validateEmail(userEmail)) {
+  console.log("邮箱格式正确");
+} else {
+  console.log("邮箱格式错误");
+}
+```
+
+## 常见误区：澄清JavaScript的误解
+
+### 误区1：JavaScript就是Java
+
+这是最常见的误解！尽管名字相似，但JavaScript和Java是完全不同的语言：
+
+- **JavaScript**：动态类型、解释执行、主要用于Web前端
+- **Java**：静态类型、编译执行、主要用于后端和企业应用
+
+它们的关系就像"汽车"和"地毯"（Carpet）一样——名字里都有"car"，但实际上毫无关系！
+
+### 误区2：var的陷阱
+
+很多初学者习惯使用 `var`，但这会导致一些意想不到的问题：
+
+```javascript
+// 使用var的问题示例
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// 输出：3, 3, 3（不是期望的0, 1, 2）
+
+// 使用let的正确方式
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// 输出：0, 1, 2（符合期望）
+```
+
+这是因为 `var` 没有块级作用域，而 `let` 有。
+
+### 误区3：JavaScript只是玩具语言
+
+早期的JavaScript确实功能有限，但现代JavaScript（ES6+）已经是一个功能完备的编程语言，支持：
+
+- 类（Classes）
+- 模块（Modules）
+- 异步编程（Async/Await）
+- 函数式编程特性
+- 强大的标准库
+
+## 动手实践
+
+现在轮到你动手了！尝试完成以下练习：
+
+### 练习1：基本变量操作
+
+1. 打开浏览器开发者工具的Console
+2. 声明一个变量 `firstName` 并赋值为你的名字
+3. 声明一个变量 `birthYear` 并赋值为你的出生年份
+4. 计算你的年龄并存储在 `age` 变量中
+5. 使用 `console.log()` 输出一条包含你姓名和年龄的消息
+
+### 练习2：数据类型探索
+
+1. 创建不同类型的变量：数字、字符串、布尔值
+2. 使用 `typeof` 操作符检查每个变量的类型
+3. 尝试将字符串转换为数字，观察结果
+
+### 练习3：常量的使用
+
+1. 声明一个常量 `GRAVITY` 表示重力加速度（9.8）
+2. 尝试重新赋值，观察错误信息
+3. 创建一个包含个人信息的对象常量，修改其中的属性
+
+## 小结与思考
+
+在本节课中，我们了解了JavaScript作为Web开发"灵魂"的重要地位，学习了基本的变量声明、数据类型和浏览器控制台的使用。记住以下要点：
+
+- JavaScript让静态网页变得动态和互动
+- 使用 `const` 和 `let` 而不是 `var` 来声明变量
+- `console.log()` 是调试和学习的好帮手
+- JavaScript ≠ Java，它们是完全不同的语言
+
+**思考题**：
+1. 为什么现代JavaScript开发推荐使用 `const` 而不是 `let`？
+2. 如果在一个函数内部同时使用 `var` 和 `let` 声明同名变量，会发生什么？
+3. 如何在不使用开发者工具的情况下调试JavaScript代码？
+
+下一节课，我们将深入学习JavaScript的运算符、条件语句和循环结构，让你的代码具备真正的"思考"能力！

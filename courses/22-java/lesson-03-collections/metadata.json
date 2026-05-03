@@ -1,0 +1,21 @@
+{
+  "id": "22-03",
+  "title": "集合框架：List、Set、Map",
+  "slug": "lesson-03-collections",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 3,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["22-02"],
+  "tags": ["collections", "list", "set", "map", "arraylist", "hashmap", "generics"],
+  "description": "学习 Java 集合框架，掌握 List、Set、Map 三大接口及其常用实现类，理解迭代器和泛型在集合中的应用。",
+  "learning_objectives": [
+    "理解 Collection 和 Map 两大接口的层次关系",
+    "掌握 ArrayList、LinkedList、HashSet、HashMap 的使用",
+    "理解迭代器遍历和增强 for 循环",
+    "能够根据场景选择合适的集合类型"
+  ]
+}

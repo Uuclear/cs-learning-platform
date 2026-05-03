@@ -1,0 +1,432 @@
+---
+title: 类与对象：面向对象编程
+description: 学习 C++ 的类和对象，掌握封装、构造函数、析构函数、this 指针和成员函数，理解面向对象编程的基本概念。
+---
+
+# 类与对象：面向对象编程
+
+## 开场白：模具与产品的奇妙关系
+
+想象一下，你是一个巧克力工厂的老板。你想要生产一批心形巧克力，你会怎么做？首先，你需要制作一个心形的模具（mold），然后用这个模具来批量生产出一模一样的心形巧克力产品。
+
+在C++的世界里，**类（Class）** 就是这个模具，而**对象（Object）** 就是用这个模具生产出来的具体产品！
+
+- **类**：定义了数据的结构和行为的蓝图或模板
+- **对象**：根据类的定义创建的具体实例
+
+就像你可以用同一个心形模具制作无数个心形巧克力一样，你也可以用同一个类创建无数个对象。每个对象都有自己的数据（比如每个巧克力可能有不同的填充物），但它们都遵循相同的结构和行为模式。
+
+这就是面向对象编程（OOP）的核心思想之一：**抽象化**——我们先定义通用的模板（类），然后根据需要创建具体的实例（对象）。
+
+## 核心概念：类的定义、构造函数与封装
+
+### 类的基本定义
+
+在C++中，类的定义使用 `class` 关键字。让我们看一个简单的例子：
+
+```cpp
+class Person {
+private:
+    std::string name;
+    int age;
+    
+public:
+    // 构造函数
+    Person(std::string n, int a) : name(n), age(a) {}
+    
+    // 成员函数
+    void introduce() {
+        std::cout << "大家好！我是 " << name << "，今年 " << age << " 岁。" << std::endl;
+    }
+    
+    // Getter函数
+    std::string getName() const { return name; }
+    int getAge() const { return age; }
+    
+    // Setter函数
+    void setAge(int newAge) { 
+        if (newAge >= 0) age = newAge; 
+    }
+};
+```
+
+### 访问控制：public、private、protected
+
+C++提供了三种访问控制修饰符：
+
+- **private**：只能在类内部访问，外部无法直接访问（默认）
+- **public**：任何地方都可以访问
+- **protected**：类内部和派生类可以访问
+
+**封装（Encapsulation）** 就是将数据（成员变量）隐藏起来，只通过公共接口（成员函数）来访问和修改。这样做的好处是：
+1. 防止外部代码随意修改内部数据
+2. 可以在setter函数中添加验证逻辑
+3. 如果内部实现发生变化，只要接口不变，外部代码就不需要修改
+
+### 构造函数和析构函数
+
+**构造函数**是在创建对象时自动调用的特殊成员函数，用于初始化对象的状态。
+
+```cpp
+// 默认构造函数
+Person() : name("未知"), age(0) {}
+
+// 带参数的构造函数
+Person(std::string n, int a) : name(n), age(a) {}
+
+// 拷贝构造函数
+Person(const Person& other) : name(other.name), age(other.age) {}
+```
+
+**析构函数**是在对象销毁时自动调用的特殊成员函数，用于清理资源。
+
+```cpp
+~Person() {
+    std::cout << name << " 对象即将被销毁！" << std::endl;
+}
+```
+
+## 代码演示：C++类的实际示例
+
+让我们通过几个实际的例子来深入理解类和对象的概念。
+
+### 示例1：银行账户类
+
+```cpp
+#include <iostream>
+#include <string>
+
+class BankAccount {
+private:
+    std::string accountNumber;
+    double balance;
+    std::string ownerName;
+    
+public:
+    // 构造函数
+    BankAccount(std::string accNum, std::string owner, double initialBalance = 0.0) 
+        : accountNumber(accNum), ownerName(owner), balance(initialBalance) {
+        if (balance < 0) {
+            balance = 0;
+            std::cout << "警告：初始余额不能为负数，已设为0" << std::endl;
+        }
+    }
+    
+    // 存款
+    void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            std::cout << "存款成功！当前余额：" << balance << std::endl;
+        } else {
+            std::cout << "存款金额必须大于0" << std::endl;
+        }
+    }
+    
+    // 取款
+    bool withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            std::cout << "取款成功！当前余额：" << balance << std::endl;
+            return true;
+        } else {
+            std::cout << "取款失败：余额不足或金额无效" << std::endl;
+            return false;
+        }
+    }
+    
+    // 查询余额
+    double getBalance() const {
+        return balance;
+    }
+    
+    // 获取账户信息
+    void displayInfo() const {
+        std::cout << "账户持有人：" << ownerName 
+                  << "，账号：" << accountNumber 
+                  << "，余额：" << balance << std::endl;
+    }
+};
+```
+
+### 使用银行账户类
+
+```cpp
+int main() {
+    // 创建银行账户对象
+    BankAccount myAccount("123456789", "张三", 1000.0);
+    
+    // 使用对象的方法
+    myAccount.displayInfo();
+    myAccount.deposit(500.0);
+    myAccount.withdraw(200.0);
+    myAccount.withdraw(2000.0); // 这会失败
+    
+    return 0;
+}
+```
+
+## 深入理解：this指针与const成员函数
+
+### this指针
+
+每个非静态成员函数都有一个隐含的参数 `this`，它是指向调用该函数的对象的指针。
+
+```cpp
+class Rectangle {
+private:
+    double width, height;
+    
+public:
+    Rectangle(double w, double h) : width(w), height(h) {}
+    
+    // 使用this指针的示例
+    void setWidth(double w) {
+        this->width = w; // this->width 明确表示是成员变量
+    }
+    
+    // 链式调用示例
+    Rectangle& setDimensions(double w, double h) {
+        this->width = w;
+        this->height = h;
+        return *this; // 返回当前对象的引用
+    }
+    
+    double getArea() const {
+        return width * height;
+    }
+};
+```
+
+### const成员函数
+
+在成员函数声明后加上 `const` 关键字，表示这个函数不会修改对象的状态。
+
+```cpp
+// const成员函数 - 承诺不修改对象
+double getWidth() const { return width; }
+double getHeight() const { return height; }
+
+// 非const成员函数 - 可能修改对象
+void setWidth(double w) { width = w; }
+```
+
+const成员函数的重要特性：
+1. 只能调用其他const成员函数
+2. 不能修改任何非mutable成员变量
+3. 可以被const对象调用
+
+## 实际应用：从理论到实践
+
+### 应用场景1：几何图形计算
+
+我们可以创建一个几何图形类层次结构：
+
+```cpp
+class Shape {
+protected:
+    std::string color;
+    
+public:
+    Shape(std::string c = "白色") : color(c) {}
+    virtual ~Shape() = default;
+    
+    virtual double getArea() const = 0; // 纯虚函数
+    virtual double getPerimeter() const = 0;
+    
+    std::string getColor() const { return color; }
+};
+
+class Circle : public Shape {
+private:
+    double radius;
+    
+public:
+    Circle(double r, std::string c = "红色") : Shape(c), radius(r) {}
+    
+    double getArea() const override {
+        return 3.14159 * radius * radius;
+    }
+    
+    double getPerimeter() const override {
+        return 2 * 3.14159 * radius;
+    }
+    
+    double getRadius() const { return radius; }
+};
+```
+
+### 应用场景2：学生管理系统
+
+```cpp
+class Student {
+private:
+    std::string studentId;
+    std::string name;
+    std::vector<double> grades;
+    
+public:
+    Student(std::string id, std::string n) : studentId(id), name(n) {}
+    
+    void addGrade(double grade) {
+        if (grade >= 0 && grade <= 100) {
+            grades.push_back(grade);
+        }
+    }
+    
+    double getAverageGrade() const {
+        if (grades.empty()) return 0.0;
+        double sum = 0;
+        for (double grade : grades) {
+            sum += grade;
+        }
+        return sum / grades.size();
+    }
+    
+    std::string getInfo() const {
+        return "学号：" + studentId + "，姓名：" + name + 
+               "，平均分：" + std::to_string(getAverageGrade());
+    }
+};
+```
+
+## 常见误区：新手容易犯的错误
+
+### 误区1：忘记定义构造函数
+
+```cpp
+// 错误示例：没有合适的构造函数
+class BadExample {
+private:
+    int value;
+    
+public:
+    // 没有构造函数，value的值是未定义的！
+    void setValue(int v) { value = v; }
+    int getValue() const { return value; }
+};
+
+// 正确做法：提供默认构造函数
+class GoodExample {
+private:
+    int value;
+    
+public:
+    GoodExample() : value(0) {} // 初始化为0
+    GoodExample(int v) : value(v) {}
+    
+    void setValue(int v) { value = v; }
+    int getValue() const { return value; }
+};
+```
+
+### 误区2：将所有成员都设为public
+
+```cpp
+// 错误示例：破坏了封装性
+class BadBankAccount {
+public:
+    double balance; // 直接暴露给外部，任何人都可以随意修改！
+    std::string owner;
+};
+
+// 正确做法：使用private成员和public接口
+class GoodBankAccount {
+private:
+    double balance;
+    std::string owner;
+    
+public:
+    void deposit(double amount) {
+        if (amount > 0) balance += amount;
+    }
+    
+    bool withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+};
+```
+
+### 误区3：忽略const正确性
+
+```cpp
+// 错误示例：应该声明为const的函数没有声明
+class BadRectangle {
+private:
+    double width, height;
+    
+public:
+    double getArea() { // 这个函数不应该修改对象，但没有const
+        return width * height;
+    }
+};
+
+// 正确做法：查询函数应该声明为const
+class GoodRectangle {
+private:
+    double width, height;
+    
+public:
+    double getArea() const { // 正确的const声明
+        return width * height;
+    }
+};
+```
+
+## 动手实践：编写你自己的类
+
+现在轮到你了！尝试完成以下练习：
+
+### 练习1：创建一个图书类
+
+创建一个 `Book` 类，包含以下功能：
+- 私有成员：书名、作者、ISBN、价格
+- 公共接口：构造函数、获取/设置价格（价格不能为负）、显示图书信息
+- 要求：使用适当的访问控制和const成员函数
+
+### 练习2：创建一个点类
+
+创建一个 `Point` 类，表示二维平面上的点：
+- 私有成员：x坐标、y坐标
+- 公共接口：构造函数、移动点的位置、计算到原点的距离、计算两点间距离
+- 要求：实现链式调用（如 `point.moveX(5).moveY(3)`）
+
+### 练习3：改进银行账户类
+
+在之前的银行账户类基础上添加以下功能：
+- 交易历史记录
+- 转账功能（从一个账户转到另一个账户）
+- 账户类型（储蓄账户、支票账户等）
+
+记住要遵循封装原则，确保数据的安全性和一致性！
+
+## 小结与思考
+
+在本课程中，我们学习了C++面向对象编程的核心概念：
+
+1. **类与对象的关系**：类是模板，对象是实例
+2. **封装的重要性**：通过访问控制保护数据完整性
+3. **构造函数和析构函数**：对象生命周期的关键管理工具
+4. **this指针**：在成员函数中引用当前对象
+5. **const成员函数**：保证函数不修改对象状态
+
+### 思考题
+
+1. 为什么我们应该尽量将成员变量设为private？
+2. 在什么情况下我们需要自定义拷贝构造函数？
+3. const成员函数和普通成员函数有什么区别？为什么这个区别很重要？
+4. 如何设计一个好的类接口？应该暴露哪些功能，隐藏哪些实现细节？
+
+### 下一步学习
+
+掌握了类和对象的基础后，下一步我们将学习：
+- 继承（Inheritance）：如何创建类的层次结构
+- 多态（Polymorphism）：同一接口的不同实现
+- 运算符重载：让自定义类型支持标准运算符
+
+记住，面向对象编程不仅仅是语法，更是一种思维方式。好的OOP设计能够让代码更加模块化、可维护和可扩展。继续练习，你会发现OOP的强大之处！
+
+> **小贴士**：在实际开发中，始终问自己："这个数据应该公开吗？这个函数会修改对象状态吗？" 这样可以帮助你写出更好的面向对象代码。

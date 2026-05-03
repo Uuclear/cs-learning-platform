@@ -1,0 +1,21 @@
+{
+  "id": "20-05",
+  "title": "函数与作用域",
+  "slug": "lesson-05-functions-scope",
+  "module": "20-c-language",
+  "module_name": "C语言",
+  "module_order": 20,
+  "lesson_order": 5,
+  "difficulty": 2,
+  "difficulty_label": "简单",
+  "duration_minutes": 25,
+  "prerequisites": ["20-01"],
+  "tags": ["functions", "scope", "static", "recursion", "function-prototype"],
+  "description": "学习 C 语言的函数定义、声明与实现分离、作用域规则（局部变量、全局变量、static 关键字）和递归基础。",
+  "learning_objectives": [
+    "掌握函数声明、定义和调用的正确方式",
+    "理解局部变量、全局变量和 static 变量的区别",
+    "了解 C 语言的作用域规则（块级、文件级）",
+    "能够编写递归函数理解栈帧概念"
+  ]
+}

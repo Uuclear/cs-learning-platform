@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Java中处理文本数据应该使用哪种流？",
+      "options": [
+        "InputStream/OutputStream",
+        "Reader/Writer",
+        "FileChannel",
+        "ByteBuffer"
+      ],
+      "answer": 1,
+      "explanation": "Reader/Writer是字符流，专门用于处理文本数据，会自动处理字符编码转换。"
+    },
+    {
+      "question": "以下哪个API是Java 7引入的现代文件操作API？",
+      "options": [
+        "java.io.File",
+        "java.io.FileReader",
+        "java.nio.file.Path",
+        "java.io.FileInputStream"
+      ],
+      "answer": 2,
+      "explanation": "java.nio.file.Path是Java 7 NIO.2引入的现代路径表示API。"
+    },
+    {
+      "question": "try-with-resources语句的主要作用是什么？",
+      "options": [
+        "提高代码执行速度",
+        "自动关闭实现了AutoCloseable接口的资源",
+        "减少内存使用",
+        "简化异常处理"
+      ],
+      "answer": 2,
+      "explanation": "try-with-resources会自动调用资源的close()方法，避免资源泄漏。"
+    },
+    {
+      "question": "NIO中的Buffer在读取数据前需要调用哪个方法？",
+      "options": [
+        "clear()",
+        "flip()",
+        "rewind()",
+        "compact()"
+      ],
+      "answer": 1,
+      "explanation": "写入数据后调用flip()方法切换到读模式，设置limit为当前位置，position重置为0。"
+    },
+    {
+      "question": "Files.readString()方法是在哪个Java版本中引入的？",
+      "options": [
+        "Java 8",
+        "Java 9",
+        "Java 11",
+        "Java 14"
+      ],
+      "answer": 2,
+      "explanation": "Files.readString()和writeString()是在Java 11中引入的便捷方法。"
+    },
+    {
+      "question": "处理大文件时，以下哪种做法最可能导致内存溢出？",
+      "options": [
+        "使用BufferedReader逐行读取",
+        "使用Files.readAllLines()一次性读取所有行",
+        "使用FileChannel分块读取",
+        "使用Stream API处理文件行"
+      ],
+      "answer": 1,
+      "explanation": "Files.readAllLines()会将整个文件加载到内存中，对于大文件容易导致OOM。"
+    },
+    {
+      "question": "NIO相比传统I/O的主要优势不包括以下哪项？",
+      "options": [
+        "支持非阻塞模式",
+        "提供零拷贝能力",
+        "语法更简单易用",
+        "更高的性能"
+      ],
+      "answer": 2,
+      "explanation": "NIO的语法实际上比传统I/O更复杂，需要理解Buffer、Channel等概念。"
+    },
+    {
+      "question": "在跨平台应用中处理文件路径时，最佳实践是什么？",
+      "options": [
+        "直接使用字符串拼接路径",
+        "硬编码使用'/'作为路径分隔符",
+        "使用Paths.get()和Path.resolve()方法",
+        "总是使用File.separator"
+      ],
+      "answer": 2,
+      "explanation": "使用Paths.get()和Path.resolve()等NIO API可以自动处理不同操作系统的路径差异。"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "22-06",
+  "title": "多线程与并发",
+  "slug": "lesson-06-multithreading",
+  "module": "22-java",
+  "module_name": "Java编程",
+  "module_order": 22,
+  "lesson_order": 6,
+  "difficulty": 4,
+  "difficulty_label": "较难",
+  "duration_minutes": 40,
+  "prerequisites": ["22-04"],
+  "tags": ["multithreading", "concurrency", "synchronized", "thread-pool", "volatile", "lock"],
+  "description": "学习 Java 的多线程编程，掌握线程创建、synchronized 同步、volatile、线程池和并发工具类。",
+  "learning_objectives": [
+    "掌握 Thread 和 Runnable 创建线程",
+    "理解 synchronized 和 volatile 的作用",
+    "掌握线程池（ExecutorService）的使用",
+    "了解并发集合和原子操作类"
+  ]
+}
