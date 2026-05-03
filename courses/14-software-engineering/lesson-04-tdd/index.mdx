@@ -1,0 +1,388 @@
+# TDD：测试驱动开发实践
+
+## 开场白
+
+在软件开发中，我们经常面临这样的困境：代码写完后才发现有bug，修复一个bug又引入了新的bug，或者面对复杂的业务逻辑时不知从何下手。测试驱动开发（Test-Driven Development, TDD）正是解决这些问题的有效方法。
+
+TDD不仅仅是一种测试技术，更是一种设计哲学和开发流程。它通过"先写测试，再写实现"的方式，帮助我们写出更高质量、更可维护的代码。本课程将带你深入理解TDD的核心理念，并通过实际代码演示如何在项目中应用TDD。
+
+## 核心概念
+
+### 什么是TDD？
+
+测试驱动开发（TDD）是一种软件开发方法，其核心是**红-绿-重构**（Red-Green-Refactor）循环：
+
+1. **红（Red）**：编写一个会失败的测试用例，描述你想要实现的功能
+2. **绿（Green）**：编写最简单的代码让测试通过
+3. **重构（Refactor）**：在保持测试通过的前提下，优化代码结构和设计
+
+这个循环看似简单，但却蕴含着深刻的工程智慧。通过先写测试，我们实际上是在定义代码的接口和行为，这有助于我们思考设计问题，而不是盲目地开始编码。
+
+### TDD的主要优势
+
+- **更好的设计**：TDD迫使我们在编码前思考API设计，通常会产生更清晰、更模块化的代码
+- **更少的bug**：每个功能都有对应的测试覆盖，大大减少了回归错误
+- **活文档**：测试用例本身就是最好的文档，展示了代码应该如何使用
+- **更快的反馈**：任何破坏现有功能的修改都会立即被测试发现
+- **更高的信心**：有了完整的测试覆盖，我们可以大胆地进行重构和优化
+
+### 测试替身（Test Doubles）
+
+在TDD中，我们经常需要处理依赖关系。为了隔离被测试的代码，我们会使用各种测试替身：
+
+- **Mocks（模拟对象）**：验证交互行为，检查是否调用了正确的参数
+- **Stubs（桩对象）**：提供预定义的响应，用于控制测试环境
+- **Fakes（假对象）**：具有真实实现但简化的版本，比如内存数据库
+- **Spies（间谍对象）**：记录调用信息但不改变行为
+
+## 代码演示
+
+让我们通过几个具体的例子来演示TDD的实际应用。
+
+### 示例1：红-绿-重构循环
+
+假设我们要实现一个简单的字符串计算器，能够计算以逗号分隔的数字字符串的总和。
+
+```python filename="code/examples/example-01-red-green-refactor.py"
+import unittest
+
+# 第一步：红 - 编写失败的测试
+class TestStringCalculator(unittest.TestCase):
+    def test_empty_string_returns_zero(self):
+        """空字符串应该返回0"""
+        # 这时候StringCalculator类还不存在，测试会失败（红）
+        calc = StringCalculator()
+        self.assertEqual(calc.add(""), 0)
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+运行这个测试会失败，因为我们还没有实现`StringCalculator`类。接下来我们进入绿阶段：
+
+```python filename="code/examples/example-01-red-green-refactor.py" continued
+# 第二步：绿 - 实现最简单的代码让测试通过
+class StringCalculator:
+    def add(self, numbers):
+        """计算数字字符串的总和"""
+        if numbers == "":
+            return 0
+        return 0  # 最简单的实现
+
+# 现在测试会通过（绿）
+```
+
+然后我们添加更多测试用例：
+
+```python filename="code/examples/example-01-red-green-refactor.py" continued
+    def test_single_number_returns_itself(self):
+        """单个数字应该返回自身"""
+        calc = StringCalculator()
+        self.assertEqual(calc.add("1"), 1)
+```
+
+这会让测试再次变红，我们需要更新实现：
+
+```python filename="code/examples/example-01-red-green-refactor.py" continued
+    def add(self, numbers):
+        """计算数字字符串的总和"""
+        if numbers == "":
+            return 0
+        return int(numbers)  # 处理单个数字
+```
+
+继续这个过程，直到处理多个数字：
+
+```python filename="code/examples/example-01-red-green-refactor.py" continued
+    def test_two_numbers_return_sum(self):
+        """两个数字应该返回它们的和"""
+        calc = StringCalculator()
+        self.assertEqual(calc.add("1,2"), 3)
+```
+
+最终实现：
+
+```python filename="code/examples/example-01-red-green-refactor.py" continued
+    def add(self, numbers):
+        """计算数字字符串的总和"""
+        if numbers == "":
+            return 0
+        return sum(int(num) for num in numbers.split(","))
+```
+
+### 示例2：测试替身的使用
+
+```python filename="code/examples/example-02-mocking-demo.py"
+import unittest
+from unittest.mock import Mock, patch
+
+# 被测试的类
+class UserService:
+    def __init__(self, email_service):
+        self.email_service = email_service
+    
+    def register_user(self, username, email):
+        """注册用户并发送欢迎邮件"""
+        # 保存用户逻辑...
+        user_id = self._save_user(username, email)
+        # 发送邮件
+        self.email_service.send_welcome_email(email)
+        return user_id
+    
+    def _save_user(self, username, email):
+        # 模拟保存用户到数据库
+        return 123
+
+# 测试类
+class TestUserService(unittest.TestCase):
+    def test_register_user_calls_email_service(self):
+        """测试注册用户时会调用邮件服务"""
+        # 创建Mock对象作为邮件服务
+        mock_email_service = Mock()
+        user_service = UserService(mock_email_service)
+        
+        # 执行注册
+        user_id = user_service.register_user("alice", "alice@example.com")
+        
+        # 验证邮件服务被正确调用
+        mock_email_service.send_welcome_email.assert_called_once_with("alice@example.com")
+        self.assertEqual(user_id, 123)
+
+# Stub示例：提供预定义响应
+class StubEmailService:
+    def send_welcome_email(self, email):
+        # 不实际发送邮件，只是记录
+        self.last_email = email
+        return True
+
+class TestUserServiceWithStub(unittest.TestCase):
+    def test_register_user_with_stub(self):
+        """使用Stub测试用户注册"""
+        stub_email_service = StubEmailService()
+        user_service = UserService(stub_email_service)
+        
+        user_id = user_service.register_user("bob", "bob@example.com")
+        
+        self.assertEqual(stub_email_service.last_email, "bob@example.com")
+        self.assertEqual(user_id, 123)
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+### 示例3：完整的TDD工作流
+
+```python filename="code/examples/example-03-tdd-workflow.py"
+import unittest
+
+class Calculator:
+    """简单的计算器类"""
+    def add(self, a, b):
+        """加法运算"""
+        return a + b
+    
+    def subtract(self, a, b):
+        """减法运算"""
+        return a - b
+    
+    def multiply(self, a, b):
+        """乘法运算"""
+        return a * b
+    
+    def divide(self, a, b):
+        """除法运算"""
+        if b == 0:
+            raise ValueError("除数不能为零")
+        return a / b
+
+class TestCalculator(unittest.TestCase):
+    """计算器测试类"""
+    
+    def setUp(self):
+        """测试前的准备工作"""
+        self.calc = Calculator()
+    
+    def test_add_positive_numbers(self):
+        """测试正数相加"""
+        result = self.calc.add(2, 3)
+        self.assertEqual(result, 5)
+    
+    def test_add_negative_numbers(self):
+        """测试负数相加"""
+        result = self.calc.add(-1, -1)
+        self.assertEqual(result, -2)
+    
+    def test_subtract(self):
+        """测试减法"""
+        result = self.calc.subtract(5, 3)
+        self.assertEqual(result, 2)
+    
+    def test_multiply(self):
+        """测试乘法"""
+        result = self.calc.multiply(4, 3)
+        self.assertEqual(result, 12)
+    
+    def test_divide(self):
+        """测试除法"""
+        result = self.calc.divide(10, 2)
+        self.assertEqual(result, 5.0)
+    
+    def test_divide_by_zero(self):
+        """测试除零异常"""
+        with self.assertRaises(ValueError):
+            self.calc.divide(10, 0)
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+## 深入理解
+
+### TDD的哲学基础
+
+TDD的核心思想来自于极限编程（XP）中的"测试优先"原则。它不仅仅是关于测试，更是关于**设计思考**。当我们先写测试时，我们实际上是在：
+
+1. **定义契约**：明确函数或类应该做什么
+2. **考虑边界情况**：思考各种输入情况和异常处理
+3. **验证可测试性**：确保代码设计是可测试的
+4. **驱动简单设计**：避免过度工程，只实现必要的功能
+
+### TDD与BDD的区别
+
+虽然TDD和行为驱动开发（BDD）都强调测试先行，但它们的关注点不同：
+
+- **TDD**：关注**实现细节**，测试的是代码的内部行为
+- **BDD**：关注**业务价值**，测试的是系统的行为和业务规则
+
+BDD通常使用更接近自然语言的语法（如Given-When-Then），而TDD更偏向技术实现层面。
+
+### TDD的适用场景
+
+TDD并不是万能的，它在以下场景中特别有价值：
+
+- **算法实现**：有明确输入输出的纯函数
+- **业务逻辑**：复杂的业务规则和验证逻辑  
+- **API设计**：需要清晰接口的组件
+- **重构**：有测试保护的情况下可以安全重构
+
+但在某些场景下，TDD可能不是最佳选择：
+
+- **探索性编程**：还不清楚要实现什么功能
+- **UI开发**：界面逻辑难以通过单元测试覆盖
+- **集成测试**：涉及多个系统的复杂集成
+
+## 实际应用
+
+### 在项目中引入TDD
+
+要在现有项目中引入TDD，建议采用渐进式的方法：
+
+1. **从新功能开始**：对新开发的功能采用TDD
+2. **关键模块优先**：对核心业务逻辑和容易出错的模块优先添加测试
+3. **重构时补测试**：在重构代码前先添加测试保护
+4. **团队培训**：确保团队成员都理解TDD的价值和实践方法
+
+### TDD的最佳实践
+
+- **保持测试简单**：测试代码应该比生产代码更简单易懂
+- **快速反馈**：测试应该运行快速，提供即时反馈
+- **独立性**：每个测试应该是独立的，不依赖其他测试的状态
+- **命名清晰**：测试方法名应该清晰表达测试意图
+- **覆盖率平衡**：追求合理的测试覆盖率，而不是盲目追求100%
+
+### 工具支持
+
+Python生态中有丰富的TDD工具：
+
+- **unittest**：Python标准库，功能完整
+- **pytest**：更简洁的语法，丰富的插件生态
+- **mock**：Python 3.3+内置的模拟库
+- **coverage**：测试覆盖率分析工具
+
+## 常见误区
+
+### 误区1：TDD就是写很多测试
+
+TDD的重点不是测试的数量，而是**测试的质量和时机**。好的TDD测试应该是：
+
+- 聚焦于行为而非实现细节
+- 覆盖重要的业务场景
+- 易于理解和维护
+
+### 误区2：TDD会拖慢开发速度
+
+短期内，TDD确实需要更多的时间来编写测试。但从长期来看，TDD带来的好处包括：
+
+- 减少调试时间
+- 降低回归风险  
+- 提高代码质量
+- 加快重构速度
+
+总体而言，TDD实际上会**提高开发效率**。
+
+### 误区3：所有代码都需要TDD
+
+并非所有代码都适合TDD。一些代码天然就难以测试，比如：
+
+- UI渲染代码
+- 数据库迁移脚本
+- 配置文件
+- 简单的getter/setter方法
+
+关键是识别哪些代码值得投入TDD，哪些可以采用其他测试策略。
+
+### 误区4：TDD可以替代所有测试
+
+TDD主要关注**单元测试**，但它不能替代：
+
+- **集成测试**：验证组件间的协作
+- **端到端测试**：验证完整的用户流程
+- **性能测试**：验证系统性能指标
+- **安全测试**：验证安全漏洞
+
+一个健康的测试策略应该包含多个层次的测试。
+
+## 动手实践
+
+现在让我们通过一些练习来巩固TDD的概念。
+
+### 练习1：实现FizzBuzz
+
+使用TDD实现FizzBuzz游戏：
+- 如果数字能被3整除，返回"Fizz"
+- 如果数字能被5整除，返回"Buzz"  
+- 如果数字能被3和5同时整除，返回"FizzBuzz"
+- 否则返回数字本身
+
+按照红-绿-重构循环，逐步实现这个功能。
+
+### 练习2：用户验证器
+
+实现一个用户验证器，要求：
+- 用户名长度必须在3-20个字符之间
+- 密码必须包含至少8个字符，包含大小写字母和数字
+- 邮箱格式必须有效
+
+使用TDD的方式，先写测试再实现验证逻辑。
+
+### 挑战任务
+
+完成课程提供的挑战任务，进一步深入TDD实践。
+
+## 小结与思考
+
+TDD是一种强大的软件开发方法，它通过测试先行的方式帮助我们写出更高质量的代码。通过本课程的学习，你应该已经掌握了：
+
+- TDD的红-绿-重构循环
+- 测试替身的使用方法
+- TDD在实际项目中的应用策略
+- TDD的常见误区和最佳实践
+
+记住，TDD不仅仅是一种技术，更是一种思维方式。它要求我们在编码前先思考"这段代码应该做什么"，而不是"这段代码怎么写"。这种思维方式的转变，往往能带来意想不到的设计改进。
+
+最后，请思考以下问题：
+1. 在你的当前项目中，哪些部分最适合应用TDD？
+2. 如何说服团队成员接受TDD的开发方式？
+3. TDD如何与其他敏捷实践（如持续集成、代码评审）结合？
+
+通过不断实践和反思，你会逐渐掌握TDD的精髓，并将其转化为提升软件质量的有力武器。
