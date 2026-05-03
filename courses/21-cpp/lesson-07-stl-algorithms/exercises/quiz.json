@@ -1,50 +1,92 @@
-[
-  {
-    "question": "std::sort 的平均时间复杂度是？",
-    "options": ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
-    "answer": 1,
-    "explanation": "std::sort 使用 Introsort（混合快速排序、堆排序和插入排序），平均时间复杂度为 O(n log n)。"
-  },
-  {
-    "question": "以下哪个算法会在未排序的容器上产生未定义结果？",
-    "options": ["std::find", "std::binary_search", "std::count_if", "std::for_each"],
-    "answer": 1,
-    "explanation": "std::binary_search 要求容器已排序，否则结果是未定义的。其他算法不要求排序。"
-  },
-  {
-    "question": "Lambda 表达式 [&, x] 的捕获含义是？",
-    "options": ["按值捕获所有变量和 x", "按引用捕获所有变量，按值捕获 x", "按引用捕获 x，按值捕获所有其他变量", "不捕获任何变量"],
-    "answer": 1,
-    "explanation": "[&, x] 表示默认按引用捕获所有外部变量，但 x 按值捕获。"
-  },
-  {
-    "question": "std::transform 的作用是？",
-    "options": ["对容器排序", "对容器每个元素应用函数并存储结果", "查找满足条件的元素", "删除不满足条件的元素"],
-    "answer": 1,
-    "explanation": "std::transform 对输入范围的每个元素应用一元或二元函数，将结果写入输出迭代器。"
-  },
-  {
-    "question": "std::stable_sort 与 std::sort 的区别是？",
-    "options": ["stable_sort 更快", "stable_sort 保持相等元素的相对顺序", "stable_sort 只能用于 vector", "stable_sort 不需要比较函数"],
-    "answer": 1,
-    "explanation": "stable_sort 保证相等元素的相对顺序不变（稳定性），而 sort 不保证。"
-  },
-  {
-    "question": "以下哪个捕获方式会导致悬垂引用问题？",
-    "options": ["[=]", "[&]", "[x]", "[]"],
-    "answer": 1,
-    "explanation": "[&] 按引用捕获所有外部变量，如果 Lambda 在变量生命周期结束后被调用，会导致悬垂引用。"
-  },
-  {
-    "question": "std::accumulate 定义在哪个头文件中？",
-    "options": ["<algorithm>", "<numeric>", "<vector>", "<functional>"],
-    "answer": 1,
-    "explanation": "std::accumulate 定义在 <numeric> 头文件中，用于对范围进行累积操作（如求和）。"
-  },
-  {
-    "question": "erase-remove idiom 的作用是？",
-    "options": ["排序容器", "高效删除满足条件的元素", "查找元素", "替换元素"],
-    "answer": 1,
-    "explanation": "erase-remove idiom 结合 std::remove_if 和容器的 erase 方法，高效删除满足条件的元素。"
-  }
-]
+{
+  "questions": [
+    {
+      "question": "std::sort 的平均时间复杂度是？",
+      "options": [
+        "O(n)",
+        "O(n log n)",
+        "O(n²)",
+        "O(log n)"
+      ],
+      "answer": 1,
+      "explanation": "std::sort 使用 Introsort（混合快速排序、堆排序和插入排序），平均时间复杂度为 O(n log n)。"
+    },
+    {
+      "question": "以下哪个算法会在未排序的容器上产生未定义结果？",
+      "options": [
+        "std::find",
+        "std::binary_search",
+        "std::count_if",
+        "std::for_each"
+      ],
+      "answer": 1,
+      "explanation": "std::binary_search 要求容器已排序，否则结果是未定义的。其他算法不要求排序。"
+    },
+    {
+      "question": "Lambda 表达式 [&, x] 的捕获含义是？",
+      "options": [
+        "按值捕获所有变量和 x",
+        "按引用捕获所有变量，按值捕获 x",
+        "按引用捕获 x，按值捕获所有其他变量",
+        "不捕获任何变量"
+      ],
+      "answer": 1,
+      "explanation": "[&, x] 表示默认按引用捕获所有外部变量，但 x 按值捕获。"
+    },
+    {
+      "question": "std::transform 的作用是？",
+      "options": [
+        "对容器排序",
+        "对容器每个元素应用函数并存储结果",
+        "查找满足条件的元素",
+        "删除不满足条件的元素"
+      ],
+      "answer": 1,
+      "explanation": "std::transform 对输入范围的每个元素应用一元或二元函数，将结果写入输出迭代器。"
+    },
+    {
+      "question": "std::stable_sort 与 std::sort 的区别是？",
+      "options": [
+        "stable_sort 更快",
+        "stable_sort 保持相等元素的相对顺序",
+        "stable_sort 只能用于 vector",
+        "stable_sort 不需要比较函数"
+      ],
+      "answer": 1,
+      "explanation": "stable_sort 保证相等元素的相对顺序不变（稳定性），而 sort 不保证。"
+    },
+    {
+      "question": "以下哪个捕获方式会导致悬垂引用问题？",
+      "options": [
+        "[=]",
+        "[&]",
+        "[x]",
+        "[]"
+      ],
+      "answer": 1,
+      "explanation": "[&] 按引用捕获所有外部变量，如果 Lambda 在变量生命周期结束后被调用，会导致悬垂引用。"
+    },
+    {
+      "question": "std::accumulate 定义在哪个头文件中？",
+      "options": [
+        "<algorithm>",
+        "<numeric>",
+        "<vector>",
+        "<functional>"
+      ],
+      "answer": 1,
+      "explanation": "std::accumulate 定义在 <numeric> 头文件中，用于对范围进行累积操作（如求和）。"
+    },
+    {
+      "question": "erase-remove idiom 的作用是？",
+      "options": [
+        "排序容器",
+        "高效删除满足条件的元素",
+        "查找元素",
+        "替换元素"
+      ],
+      "answer": 1,
+      "explanation": "erase-remove idiom 结合 std::remove_if 和容器的 erase 方法，高效删除满足条件的元素。"
+    }
+  ]
+}

@@ -19,8 +19,14 @@ function normalizeMetadata(filePath: string, metadata: Record<string, unknown>):
   const id = String(metadata.id ?? "");
   const title = String(metadata.title ?? "");
   const lessonDirName = path.basename(path.dirname(filePath));
-  const slugParts = lessonDirName.split("-");
-  const slug = slugParts.length > 2 ? slugParts.slice(2).join("-") : id.toLowerCase();
+  const slugFromMetadata = metadata.slug;
+  let slug: string;
+  if (slugFromMetadata) {
+    slug = String(slugFromMetadata);
+  } else {
+    const slugParts = lessonDirName.split("-");
+    slug = slugParts.length > 2 ? slugParts.slice(2).join("-") : id.toLowerCase();
+  }
 
   const module = String(metadata.module ?? "");
   const moduleName = String(metadata.module_name ?? "");
