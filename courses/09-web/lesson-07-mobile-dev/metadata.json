@@ -1,0 +1,18 @@
+{
+  "id": "09-07",
+  "title": "移动端开发：响应式与PWA",
+  "module": "09-web",
+  "slug": "lesson-07-mobile-dev",
+  "status": "completed",
+  "module_name": "Web开发",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": ["09-01"],
+  "tags": ["mobile-web", "responsive", "pwa", "service-worker", "viewport", "media-queries"],
+  "learning_objectives": ["理解移动端开发的核心概念", "掌握响应式设计和PWA技术", "能够开发移动端友好的Web应用"],
+  "files": ["index.mdx", "metadata.json", "code/examples/example-01-responsive-test.py", "code/examples/example-02-pwa-manifest.py", "code/examples/example-03-mobile-detection.py", "code/solutions/solution-01.py", "code/solutions/solution-02.py", "code/solutions/solution-03.py", "exercises/quiz.json", "exercises/challenges/challenge-01.md", "exercises/challenges/challenge-02.md"],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

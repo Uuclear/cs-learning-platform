@@ -1,0 +1,90 @@
+[
+  {
+    "question": "WebAssembly 的主要设计目标是什么？",
+    "options": [
+      "替代 JavaScript 成为唯一的 Web 语言",
+      "提供接近原生代码的执行性能",
+      "简化 Web 开发流程",
+      "增加浏览器的安全性限制"
+    ],
+    "answer": 1,
+    "explanation": "WebAssembly 的主要目标是提供接近原生代码的执行性能，而不是完全替代 JavaScript。它与 JavaScript 互补，用于计算密集型任务。"
+  },
+  {
+    "question": "WebAssembly 使用什么类型的虚拟机架构？",
+    "options": [
+      "基于寄存器的架构",
+      "基于堆栈的架构",
+      "基于对象的架构",
+      "基于事件的架构"
+    ],
+    "answer": 1,
+    "explanation": "WebAssembly 使用基于堆栈的虚拟机架构，指令从堆栈中弹出操作数，执行操作后将结果压回堆栈。"
+  },
+  {
+    "question": "以下哪个工具链主要用于将 C/C++ 代码编译为 WebAssembly？",
+    "options": [
+      "wasm-pack",
+      "Emscripten",
+      "WASI",
+      "webpack"
+    ],
+    "answer": 1,
+    "explanation": "Emscripten 是主要用于将 C/C++ 代码编译为 WebAssembly 的工具链，它基于 LLVM 并提供了完整的 POSIX 兼容层。"
+  },
+  {
+    "question": "WebAssembly 模块可以直接访问 DOM 吗？",
+    "options": [
+      "可以，通过内置的 DOM API",
+      "不可以，必须通过 JavaScript 胶水代码",
+      "只能读取 DOM，不能修改",
+      "取决于浏览器实现"
+    ],
+    "answer": 1,
+    "explanation": "WebAssembly 模块不能直接访问 DOM，必须通过 JavaScript 胶水代码作为中介来与 DOM 交互。这是 WebAssembly 的一个重要限制。"
+  },
+  {
+    "question": "WASI (WebAssembly System Interface) 的主要作用是什么？",
+    "options": [
+      "提供 Web 浏览器中的系统接口",
+      "为非 Web 环境提供标准系统接口",
+      "优化 WebAssembly 在浏览器中的性能",
+      "提供 WebAssembly 调试工具"
+    ],
+    "answer": 1,
+    "explanation": "WASI 为非 Web 环境（如服务器、命令行工具）提供标准的系统接口，使 WebAssembly 模块可以在各种环境中运行。"
+  },
+  {
+    "question": "在性能关键的应用中，WebAssembly 相比 JavaScript 的主要优势不包括：",
+    "options": [
+      "静态类型和编译时优化",
+      "更少的垃圾回收开销",
+      "可以直接操作 DOM 元素",
+      "接近原生代码的执行速度"
+    ],
+    "answer": 2,
+    "explanation": "WebAssembly 不能直接操作 DOM 元素，这实际上是它的限制而不是优势。其他选项都是 WebAssembly 的真实性能优势。"
+  },
+  {
+    "question": "以下哪个应用场景最适合使用 WebAssembly？",
+    "options": [
+      "简单的表单验证",
+      "图像和视频处理",
+      "页面导航和路由",
+      "CSS 动画控制"
+    ],
+    "answer": 1,
+    "explanation": "图像和视频处理是计算密集型任务，非常适合使用 WebAssembly 来获得更好的性能。其他选项更适合用 JavaScript 处理。"
+  },
+  {
+    "question": "WebAssembly 的未来发展方向不包括：",
+    "options": [
+      "组件模型（Component Model）",
+      "垃圾回收集成",
+      "直接 DOM 访问",
+      "多线程支持"
+    ],
+    "answer": 2,
+    "explanation": "WebAssembly 不会提供直接的 DOM 访问，这是有意的设计选择以保持安全性和与现有 Web 平台的兼容性。其他选项都是 WebAssembly 正在开发的特性。"
+  }
+]

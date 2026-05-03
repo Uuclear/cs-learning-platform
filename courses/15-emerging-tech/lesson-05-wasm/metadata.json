@@ -1,0 +1,18 @@
+{
+  "id": "15-05",
+  "title": "WebAssembly：浏览器中的高性能代码",
+  "module": "15-emerging-tech",
+  "slug": "lesson-05-wasm",
+  "status": "completed",
+  "module_name": "新兴技术前沿",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": [],
+  "tags": ["webassembly", "wasm", "performance", "emscripten", "rust", "compilation"],
+  "learning_objectives": ["理解WebAssembly的基本原理", "掌握Wasm的开发和部署流程", "能够评估Wasm在项目中应用的可行性"],
+  "files": ["index.mdx", "metadata.json", "code/examples/example-01-wasm-concept.py", "code/examples/example-02-perf-comparison.py", "code/examples/example-03-wasm-module-loader.py", "code/solutions/solution-01.py", "code/solutions/solution-02.py", "code/solutions/solution-03.py", "exercises/quiz.json", "exercises/challenges/challenge-01.md", "exercises/challenges/challenge-02.md"],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

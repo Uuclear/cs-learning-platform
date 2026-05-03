@@ -1,0 +1,1055 @@
+# 11-08 可观测性：日志、指标与链路追踪
+
+## 开场白
+
+大家好！欢迎来到可观测性的世界！🔍
+
+想象一下：你的微服务应用突然出现性能问题，用户抱怨页面加载缓慢；生产环境出现了偶发性错误，但你无法复现；新上线的功能导致系统资源消耗激增，却找不到根本原因。在现代分布式系统中，这些问题每天都在发生。
+
+**可观测性**（Observability）就是解决这些问题的关键。它不仅仅是传统的监控，而是一种能够让你深入理解系统内部状态的能力。通过日志、指标和链路追踪这三大支柱，我们可以在不预设问题的情况下，快速诊断和解决未知的系统行为。
+
+在这个课程中，我们将从理论到实践，全面掌握可观测性的核心概念和实现方法。你将学会如何构建一个完整的可观测性方案，让你的应用在复杂的云原生环境中依然保持"透明"。
+
+## 核心概念
+
+### 可观测性的三大支柱
+
+可观测性建立在三个核心数据源之上：
+
+#### 📝 日志（Logs）
+- **定义**：离散的、带时间戳的事件记录
+- **用途**：记录应用程序的详细执行过程、错误信息、业务事件
+- **特点**：高基数、高维度、非结构化或半结构化
+- **最佳实践**：使用结构化日志（JSON格式），包含上下文信息
+
+#### 📊 指标（Metrics）
+- **定义**：随时间变化的数值度量
+- **用途**：监控系统性能、资源使用、业务指标
+- **特点**：低基数、可聚合、高效存储
+- **类型**：
+  - **计数器**（Counter）：只增不减的累计值（如HTTP请求总数）
+  - **仪表盘**（Gauge）：可上下波动的瞬时值（如内存使用量）
+  - **直方图**（Histogram）：观测值分布（如请求延迟分布）
+  - **摘要**（Summary）：分位数统计（如P95、P99延迟）
+
+#### 🔗 链路追踪（Traces）
+- **定义**：请求在分布式系统中的完整调用路径
+- **用途**：分析跨服务的性能瓶颈、理解系统依赖关系
+- **核心概念**：
+  - **Trace**：完整的请求调用链
+  - **Span**：单个操作的执行记录
+  - **Context Propagation**：在服务间传递追踪上下文
+
+### 可观测性 vs 监控
+
+| 特性 | 传统监控 | 可观测性 |
+|------|----------|----------|
+| **方法** | 基于已知问题预设告警 | 能够探索未知问题 |
+| **数据** | 预定义的指标和告警 | 完整的日志、指标、链路数据 |
+| **目标** | 检测已知故障 | 理解系统内部状态 |
+| **适用场景** | 单体应用、简单架构 | 微服务、复杂分布式系统 |
+
+## 代码演示
+
+让我们通过三个实际例子来理解可观测性的实现：
+
+```python filename="code/examples/example-01-structured-logger.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1：结构化日志记录器实现
+实现一个支持JSON格式输出、多级别日志和上下文字段的结构化日志记录器
+"""
+
+import json
+import sys
+from datetime import datetime
+from typing import Dict, Any, Optional
+
+
+class StructuredLogger:
+    """结构化日志记录器，支持JSON格式输出和上下文信息"""
+
+    # 日志级别定义
+    LEVELS = {
+        'DEBUG': 10,
+        'INFO': 20,
+        'WARNING': 30,
+        'ERROR': 40,
+        'CRITICAL': 50
+    }
+
+    def __init__(self, name: str, level: str = 'INFO'):
+        """
+        初始化日志记录器
+
+        Args:
+            name: 日志记录器名称
+            level: 最低日志级别，默认为INFO
+        """
+        self.name = name
+        self.level = self.LEVELS.get(level.upper(), 20)
+        self.context_fields: Dict[str, Any] = {}
+
+    def add_context(self, **kwargs) -> None:
+        """
+        添加上下文字段到所有后续日志中
+
+        Args:
+            **kwargs: 要添加的上下文键值对
+        """
+        self.context_fields.update(kwargs)
+
+    def _should_log(self, level_name: str) -> bool:
+        """
+        判断是否应该记录当前级别的日志
+
+        Args:
+            level_name: 日志级别名称
+
+        Returns:
+            bool: 是否应该记录
+        """
+        level_value = self.LEVELS.get(level_name, 0)
+        return level_value >= self.level
+
+    def _format_log(self, level: str, message: str, **kwargs) -> str:
+        """
+        格式化日志为JSON字符串
+
+        Args:
+            level: 日志级别
+            message: 日志消息
+            **kwargs: 额外的日志字段
+
+        Returns:
+            str: JSON格式的日志字符串
+        """
+        log_record = {
+            'timestamp': datetime.utcnow().isoformat() + 'Z',
+            'level': level,
+            'logger': self.name,
+            'message': message,
+            **self.context_fields,
+            **kwargs
+        }
+        return json.dumps(log_record, ensure_ascii=False)
+
+    def debug(self, message: str, **kwargs) -> None:
+        """记录DEBUG级别日志"""
+        if self._should_log('DEBUG'):
+            print(self._format_log('DEBUG', message, **kwargs), file=sys.stdout)
+
+    def info(self, message: str, **kwargs) -> None:
+        """记录INFO级别日志"""
+        if self._should_log('INFO'):
+            print(self._format_log('INFO', message, **kwargs), file=sys.stdout)
+
+    def warning(self, message: str, **kwargs) -> None:
+        """记录WARNING级别日志"""
+        if self._should_log('WARNING'):
+            print(self._format_log('WARNING', message, **kwargs), file=sys.stderr)
+
+    def error(self, message: str, **kwargs) -> None:
+        """记录ERROR级别日志"""
+        if self._should_log('ERROR'):
+            print(self._format_log('ERROR', message, **kwargs), file=sys.stderr)
+
+    def critical(self, message: str, **kwargs) -> None:
+        """记录CRITICAL级别日志"""
+        if self._should_log('CRITICAL'):
+            print(self._format_log('CRITICAL', message, **kwargs), file=sys.stderr)
+
+
+def main():
+    """主函数，演示结构化日志记录器的使用"""
+    # 创建日志记录器
+    logger = StructuredLogger('web_app', level='DEBUG')
+
+    # 添加应用级上下文
+    logger.add_context(
+        service='user-service',
+        version='1.2.0',
+        environment='production'
+    )
+
+    # 记录不同级别的日志
+    logger.info('应用启动成功', startup_time='2026-05-03T10:00:00Z')
+
+    # 模拟用户请求处理
+    request_id = 'req-12345'
+    user_id = 'user-67890'
+    logger.info('处理用户请求',
+                request_id=request_id,
+                user_id=user_id,
+                endpoint='/api/users/profile')
+
+    # 模拟数据库查询
+    logger.debug('执行数据库查询',
+                 query='SELECT * FROM users WHERE id = ?',
+                 params=[user_id],
+                 duration_ms=45)
+
+    # 模拟警告情况
+    logger.warning('缓存未命中',
+                   cache_key=f'user_profile:{user_id}',
+                   fallback_to_db=True)
+
+    # 模拟错误情况
+    try:
+        # 模拟外部API调用失败
+        raise ConnectionError('第三方服务不可用')
+    except ConnectionError as e:
+        logger.error('外部服务调用失败',
+                     error=str(e),
+                     service='payment-api',
+                     retry_count=3)
+
+    # 记录关键业务事件
+    logger.info('用户登录成功',
+                user_id=user_id,
+                ip_address='192.168.1.100',
+                user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)')
+
+    print("\n=== 结构化日志演示完成 ===")
+
+
+if __name__ == '__main__':
+    main()
+```
+
+```python filename="code/examples/example-02-metrics-collector.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2：指标收集器实现
+实现计数器、仪表盘和直方图三种基本指标类型，并支持导出功能
+"""
+
+import time
+import threading
+from typing import Dict, List, Optional, Union
+from collections import defaultdict
+
+
+class MetricCollector:
+    """指标收集器，支持多种指标类型"""
+
+    def __init__(self):
+        """初始化指标收集器"""
+        self._metrics: Dict[str, 'Metric'] = {}
+        self._lock = threading.Lock()
+
+    def counter(self, name: str, description: str = '') -> 'Counter':
+        """
+        创建或获取计数器指标
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+
+        Returns:
+            Counter: 计数器实例
+        """
+        with self._lock:
+            if name not in self._metrics:
+                self._metrics[name] = Counter(name, description)
+            return self._metrics[name]
+
+    def gauge(self, name: str, description: str = '') -> 'Gauge':
+        """
+        创建或获取仪表盘指标
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+
+        Returns:
+            Gauge: 仪表盘实例
+        """
+        with self._lock:
+            if name not in self._metrics:
+                self._metrics[name] = Gauge(name, description)
+            return self._metrics[name]
+
+    def histogram(self, name: str, description: str = '',
+                  buckets: Optional[List[float]] = None) -> 'Histogram':
+        """
+        创建或获取直方图指标
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+            buckets: 直方图桶边界，默认为[0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
+
+        Returns:
+            Histogram: 直方图实例
+        """
+        with self._lock:
+            if name not in self._metrics:
+                if buckets is None:
+                    buckets = [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
+                self._metrics[name] = Histogram(name, description, buckets)
+            return self._metrics[name]
+
+    def collect(self) -> List[Dict[str, Union[str, float, Dict]]]:
+        """
+        收集所有指标数据
+
+        Returns:
+            List[Dict]: 指标数据列表
+        """
+        with self._lock:
+            result = []
+            for metric in self._metrics.values():
+                result.extend(metric.collect())
+            return result
+
+    def export_prometheus(self) -> str:
+        """
+        导出Prometheus格式的指标数据
+
+        Returns:
+            str: Prometheus格式的指标字符串
+        """
+        lines = []
+        with self._lock:
+            for metric in self._metrics.values():
+                lines.extend(metric.export_prometheus())
+        return '\n'.join(lines)
+
+
+class Metric:
+    """指标基类"""
+
+    def __init__(self, name: str, description: str = ''):
+        """
+        初始化指标
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+        """
+        self.name = name
+        self.description = description
+
+    def collect(self) -> List[Dict[str, Union[str, float, Dict]]]:
+        """
+        收集指标数据
+
+        Returns:
+            List[Dict]: 指标数据列表
+        """
+        raise NotImplementedError
+
+    def export_prometheus(self) -> List[str]:
+        """
+        导出Prometheus格式
+
+        Returns:
+            List[str]: Prometheus格式行列表
+        """
+        raise NotImplementedError
+
+
+class Counter(Metric):
+    """计数器指标 - 只能递增的累计值"""
+
+    def __init__(self, name: str, description: str = ''):
+        """
+        初始化计数器
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+        """
+        super().__init__(name, description)
+        self._value = 0.0
+        self._lock = threading.Lock()
+
+    def inc(self, amount: float = 1.0) -> None:
+        """
+        增加计数器值
+
+        Args:
+            amount: 增加的数量，默认为1.0
+        """
+        if amount < 0:
+            raise ValueError("计数器只能增加正数")
+        with self._lock:
+            self._value += amount
+
+    def get(self) -> float:
+        """
+        获取当前计数器值
+
+        Returns:
+            float: 当前值
+        """
+        with self._lock:
+            return self._value
+
+    def collect(self) -> List[Dict[str, Union[str, float, Dict]]]:
+        """收集计数器数据"""
+        return [{
+            'name': self.name,
+            'type': 'counter',
+            'value': self.get(),
+            'description': self.description
+        }]
+
+    def export_prometheus(self) -> List[str]:
+        """导出Prometheus格式"""
+        lines = []
+        if self.description:
+            lines.append(f'# HELP {self.name} {self.description}')
+        lines.append(f'# TYPE {self.name} counter')
+        lines.append(f'{self.name} {self.get()}')
+        return lines
+
+
+class Gauge(Metric):
+    """仪表盘指标 - 可以上下波动的瞬时值"""
+
+    def __init__(self, name: str, description: str = ''):
+        """
+        初始化仪表盘
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+        """
+        super().__init__(name, description)
+        self._value = 0.0
+        self._lock = threading.Lock()
+
+    def set(self, value: float) -> None:
+        """
+        设置仪表盘值
+
+        Args:
+            value: 新的值
+        """
+        with self._lock:
+            self._value = value
+
+    def inc(self, amount: float = 1.0) -> None:
+        """
+        增加仪表盘值
+
+        Args:
+            amount: 增加的数量
+        """
+        with self._lock:
+            self._value += amount
+
+    def dec(self, amount: float = 1.0) -> None:
+        """
+        减少仪表盘值
+
+        Args:
+            amount: 减少的数量
+        """
+        with self._lock:
+            self._value -= amount
+
+    def get(self) -> float:
+        """
+        获取当前仪表盘值
+
+        Returns:
+            float: 当前值
+        """
+        with self._lock:
+            return self._value
+
+    def collect(self) -> List[Dict[str, Union[str, float, Dict]]]:
+        """收集仪表盘数据"""
+        return [{
+            'name': self.name,
+            'type': 'gauge',
+            'value': self.get(),
+            'description': self.description
+        }]
+
+    def export_prometheus(self) -> List[str]:
+        """导出Prometheus格式"""
+        lines = []
+        if self.description:
+            lines.append(f'# HELP {self.name} {self.description}')
+        lines.append(f'# TYPE {self.name} gauge')
+        lines.append(f'{self.name} {self.get()}')
+        return lines
+
+
+class Histogram(Metric):
+    """直方图指标 - 记录观测值的分布情况"""
+
+    def __init__(self, name: str, description: str = '', buckets: List[float] = None):
+        """
+        初始化直方图
+
+        Args:
+            name: 指标名称
+            description: 指标描述
+            buckets: 桶边界列表
+        """
+        super().__init__(name, description)
+        if buckets is None:
+            buckets = [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
+
+        # 确保桶是升序的并以+Inf结尾
+        self.buckets = sorted(buckets) + [float('inf')]
+        self._bucket_counts = [0] * len(self.buckets)
+        self._sum = 0.0
+        self._count = 0
+        self._lock = threading.Lock()
+
+    def observe(self, value: float) -> None:
+        """
+        记录一个观测值
+
+        Args:
+            value: 观测值
+        """
+        with self._lock:
+            self._sum += value
+            self._count += 1
+
+            # 找到对应的桶并增加计数
+            for i, bucket_upper in enumerate(self.buckets):
+                if value <= bucket_upper:
+                    self._bucket_counts[i] += 1
+                    break
+
+    def collect(self) -> List[Dict[str, Union[str, float, Dict]]]:
+        """收集直方图数据"""
+        with self._lock:
+            result = []
+
+            # 添加总和指标
+            result.append({
+                'name': f'{self.name}_sum',
+                'type': 'counter',
+                'value': self._sum,
+                'description': f'{self.description} sum'
+            })
+
+            # 添加计数指标
+            result.append({
+                'name': f'{self.name}_count',
+                'type': 'counter',
+                'value': self._count,
+                'description': f'{self.description} count'
+            })
+
+            # 添加各个桶的指标
+            cumulative_count = 0
+            for i, bucket_upper in enumerate(self.buckets[:-1]):  # 排除+Inf
+                cumulative_count += self._bucket_counts[i]
+                bucket_label = f'le="{bucket_upper}"'
+                result.append({
+                    'name': f'{self.name}_bucket',
+                    'type': 'counter',
+                    'value': cumulative_count,
+                    'description': f'{self.description} bucket le {bucket_upper}',
+                    'labels': {'le': str(bucket_upper)}
+                })
+
+            # 添加+Inf桶
+            result.append({
+                'name': f'{self.name}_bucket',
+                'type': 'counter',
+                'value': self._count,
+                'description': f'{self.description} bucket le +Inf',
+                'labels': {'le': '+Inf'}
+            })
+
+            return result
+
+    def export_prometheus(self) -> List[str]:
+        """导出Prometheus格式"""
+        lines = []
+        if self.description:
+            lines.append(f'# HELP {self.name} {self.description}')
+        lines.append(f'# TYPE {self.name} histogram')
+
+        with self._lock:
+            # 总和
+            lines.append(f'{self.name}_sum {self._sum}')
+            # 计数
+            lines.append(f'{self.name}_count {self._count}')
+            # 各个桶
+            cumulative_count = 0
+            for i, bucket_upper in enumerate(self.buckets[:-1]):
+                cumulative_count += self._bucket_counts[i]
+                lines.append(f'{self.name}_bucket{{le="{bucket_upper}"}} {cumulative_count}')
+            # +Inf桶
+            lines.append(f'{self.name}_bucket{{le="+Inf"}} {self._count}')
+
+        return lines
+
+
+def main():
+    """主函数，演示指标收集器的使用"""
+    collector = MetricCollector()
+
+    # 创建各种指标
+    http_requests_total = collector.counter(
+        'http_requests_total',
+        'HTTP请求总数'
+    )
+
+    active_users = collector.gauge(
+        'active_users',
+        '当前活跃用户数'
+    )
+
+    request_duration_seconds = collector.histogram(
+        'request_duration_seconds',
+        'HTTP请求持续时间（秒）',
+        buckets=[0.1, 0.5, 1.0, 2.0, 5.0]
+    )
+
+    # 模拟应用行为
+    print("=== 指标收集器演示 ===")
+
+    # 记录一些HTTP请求
+    for i in range(5):
+        http_requests_total.inc()
+        duration = 0.1 + i * 0.2  # 模拟不同的请求时间
+        request_duration_seconds.observe(duration)
+        time.sleep(0.01)
+
+    # 设置活跃用户数
+    active_users.set(1250)
+
+    # 显示收集的数据
+    print("\n收集的指标数据:")
+    metrics_data = collector.collect()
+    for metric in metrics_data[:3]:  # 只显示前几个
+        print(f"  {metric['name']}: {metric['value']} ({metric['type']})")
+
+    # 显示Prometheus格式
+    print("\nPrometheus格式输出:")
+    prometheus_output = collector.export_prometheus()
+    print(prometheus_output)
+
+    print("\n=== 指标收集器演示完成 ===")
+
+
+if __name__ == '__main__':
+    main()
+```
+
+```python filename="code/examples/example-03-trace-context.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3：分布式追踪上下文实现
+模拟分布式追踪系统中的跨度创建、父子关系和上下文传播
+"""
+
+import uuid
+import time
+import threading
+from typing import Dict, Optional, Any, List
+from contextlib import contextmanager
+
+
+class Span:
+    """追踪跨度，代表一个操作的执行"""
+
+    def __init__(self, name: str, trace_id: str, parent_span_id: Optional[str] = None):
+        """
+        初始化跨度
+
+        Args:
+            name: 跨度名称
+            trace_id: 追踪ID
+            parent_span_id: 父跨度ID（可选）
+        """
+        self.span_id = str(uuid.uuid4())
+        self.trace_id = trace_id
+        self.parent_span_id = parent_span_id
+        self.name = name
+        self.start_time = time.time()
+        self.end_time: Optional[float] = None
+        self.tags: Dict[str, Any] = {}
+        self.logs: List[Dict[str, Any]] = []
+
+    def set_tag(self, key: str, value: Any) -> 'Span':
+        """
+        设置跨度标签
+
+        Args:
+            key: 标签键
+            value: 标签值
+
+        Returns:
+            Span: 当前跨度实例（支持链式调用）
+        """
+        self.tags[key] = value
+        return self
+
+    def log(self, message: str, **kwargs) -> 'Span':
+        """
+        记录跨度日志
+
+        Args:
+            message: 日志消息
+            **kwargs: 额外的日志字段
+
+        Returns:
+            Span: 当前跨度实例（支持链式调用）
+        """
+        self.logs.append({
+            'timestamp': time.time(),
+            'message': message,
+            **kwargs
+        })
+        return self
+
+    def finish(self) -> None:
+        """结束跨度"""
+        self.end_time = time.time()
+
+    def duration(self) -> float:
+        """
+        获取跨度持续时间（秒）
+
+        Returns:
+            float: 持续时间
+        """
+        if self.end_time is None:
+            return time.time() - self.start_time
+        return self.end_time - self.start_time
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        转换为字典格式
+
+        Returns:
+            Dict: 跨度数据字典
+        """
+        return {
+            'span_id': self.span_id,
+            'trace_id': self.trace_id,
+            'parent_span_id': self.parent_span_id,
+            'name': self.name,
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'duration': self.duration(),
+            'tags': self.tags,
+            'logs': self.logs
+        }
+
+
+class Tracer:
+    """追踪器，用于创建和管理跨度"""
+
+    def __init__(self, service_name: str):
+        """
+        初始化追踪器
+
+        Args:
+            service_name: 服务名称
+        """
+        self.service_name = service_name
+        self._local = threading.local()
+
+    def _get_active_span(self) -> Optional[Span]:
+        """获取当前活跃的跨度"""
+        return getattr(self._local, 'current_span', None)
+
+    def _set_active_span(self, span: Optional[Span]) -> None:
+        """设置当前活跃的跨度"""
+        self._local.current_span = span
+
+    def start_span(self, name: str, parent_span: Optional[Span] = None) -> Span:
+        """
+        开始一个新的跨度
+
+        Args:
+            name: 跨度名称
+            parent_span: 父跨度（可选）
+
+        Returns:
+            Span: 新创建的跨度
+        """
+        # 如果没有指定父跨度，使用当前活跃的跨度
+        if parent_span is None:
+            parent_span = self._get_active_span()
+
+        # 如果有父跨度，使用相同的trace_id
+        if parent_span is not None:
+            trace_id = parent_span.trace_id
+            parent_span_id = parent_span.span_id
+        else:
+            # 创建新的trace_id
+            trace_id = str(uuid.uuid4())
+            parent_span_id = None
+
+        span = Span(name, trace_id, parent_span_id)
+        span.set_tag('service.name', self.service_name)
+
+        # 设置为当前活跃跨度
+        self._set_active_span(span)
+        return span
+
+    @contextmanager
+    def span(self, name: str):
+        """
+        跨度上下文管理器
+
+        Args:
+            name: 跨度名称
+        """
+        span = self.start_span(name)
+        try:
+            yield span
+        finally:
+            span.finish()
+            # 恢复父跨度为当前活跃跨度
+            parent_span_id = span.parent_span_id
+            if parent_span_id:
+                # 在真实场景中，我们会从存储中查找父跨度
+                # 这里简化处理，直接清除当前跨度
+                pass
+            self._set_active_span(None)
+
+    def inject_context(self, span: Span) -> Dict[str, str]:
+        """
+        注入追踪上下文到载体中（用于跨服务传播）
+
+        Args:
+            span: 要注入上下文的跨度
+
+        Returns:
+            Dict[str, str]: 包含追踪上下文的字典
+        """
+        return {
+            'trace-id': span.trace_id,
+            'span-id': span.span_id,
+            'parent-span-id': span.parent_span_id or '',
+            'sampled': '1'
+        }
+
+    def extract_context(self, carrier: Dict[str, str]) -> Optional[Dict[str, str]]:
+        """
+        从载体中提取追踪上下文
+
+        Args:
+            carrier: 包含追踪上下文的载体
+
+        Returns:
+            Optional[Dict]: 提取的上下文信息
+        """
+        trace_id = carrier.get('trace-id')
+        span_id = carrier.get('span-id')
+        parent_span_id = carrier.get('parent-span-id') or None
+
+        if not trace_id or not span_id:
+            return None
+
+        return {
+            'trace_id': trace_id,
+            'parent_span_id': parent_span_id if parent_span_id else None
+        }
+
+
+def simulate_http_request(tracer: Tracer, request_id: str) -> None:
+    """
+    模拟HTTP请求处理，包含多个子操作
+
+    Args:
+        tracer: 追踪器实例
+        request_id: 请求ID
+    """
+    with tracer.span('http.request') as root_span:
+        root_span.set_tag('http.method', 'GET')
+        root_span.set_tag('http.url', '/api/users/profile')
+        root_span.set_tag('request.id', request_id)
+
+        # 模拟认证
+        with tracer.span('auth.validate') as auth_span:
+            auth_span.log('验证用户令牌', token_type='JWT')
+            time.sleep(0.01)  # 模拟处理时间
+
+        # 模拟数据库查询
+        with tracer.span('db.query') as db_span:
+            db_span.set_tag('db.statement', 'SELECT * FROM users WHERE id = ?')
+            db_span.set_tag('db.system', 'postgresql')
+            db_span.log('执行查询', user_id='user-123')
+            time.sleep(0.02)
+
+        # 模拟外部API调用
+        with tracer.span('external.api.call') as api_span:
+            api_span.set_tag('http.url', 'https://payment-api.example.com/validate')
+            api_span.set_tag('peer.service', 'payment-service')
+
+            # 模拟上下文传播到外部服务
+            context = tracer.inject_context(api_span)
+            print(f"  传播到外部服务的上下文: {context}")
+
+            time.sleep(0.03)
+
+
+def main():
+    """主函数，演示分布式追踪的使用"""
+    print("=== 分布式追踪上下文演示 ===")
+
+    # 创建追踪器
+    tracer = Tracer('user-service')
+
+    # 模拟处理多个请求
+    for i in range(2):
+        request_id = f'req-{i+1:04d}'
+        print(f"\n处理请求: {request_id}")
+        simulate_http_request(tracer, request_id)
+
+    print("\n=== 分布式追踪演示完成 ===")
+
+
+if __name__ == '__main__':
+    main()
+```
+
+## 深入理解
+
+### 日志最佳实践
+
+#### 结构化日志的优势
+- **机器可读**：JSON格式便于解析和索引
+- **上下文丰富**：包含请求ID、用户ID、服务名等上下文信息
+- **查询高效**：支持复杂的过滤和聚合查询
+- **标准化**：统一的日志格式便于跨团队协作
+
+#### 日志级别策略
+- **DEBUG**：详细的调试信息，仅在开发和问题排查时启用
+- **INFO**：常规的操作记录，如服务启动、用户登录等
+- **WARNING**：潜在问题，但不影响正常功能
+- **ERROR**：错误情况，影响部分功能但服务仍可用
+- **CRITICAL**：严重错误，导致服务不可用
+
+### 指标设计原则
+
+#### 指标命名规范
+- 使用描述性的名称（如`http_requests_total`而不是`requests`）
+- 包含单位信息（如`_seconds`、`_bytes`）
+- 保持一致性（相同类型的指标使用相同后缀）
+
+#### 标签（Labels）使用
+- **好的标签**：服务名、HTTP方法、状态码等低基数标签
+- **避免的标签**：用户ID、请求ID等高基数标签（会导致指标爆炸）
+
+### 分布式追踪的关键挑战
+
+#### 上下文传播
+- **HTTP头**：通过`traceparent`、`tracestate`等标准头传播
+- **消息队列**：在消息属性中传递追踪上下文
+- **数据库**：在连接上下文中传递（较少见）
+
+#### 采样策略
+- **固定比率采样**：简单但可能错过重要请求
+- **动态采样**：基于错误率、延迟等指标调整采样率
+- **尾部采样**：在请求完成后决定是否采样（需要额外存储）
+
+## 实际应用
+
+### 完整的可观测性栈
+
+一个典型的可观测性解决方案包括：
+
+1. **数据收集层**
+   - 应用内集成：OpenTelemetry SDK
+   - 基础设施代理：Prometheus Node Exporter、Fluentd
+
+2. **数据存储层**
+   - 指标：Prometheus、VictoriaMetrics
+   - 日志：Elasticsearch、Loki
+   - 链路：Jaeger、Tempo
+
+3. **可视化层**
+   - 统一仪表板：Grafana
+   - 日志查询：Kibana、Grafana Loki Explorer
+   - 链路分析：Jaeger UI
+
+### Grafana Dashboard设计
+
+#### 有效的Dashboard原则
+- **单一目的**：每个Dashboard专注于一个特定场景
+- **层次化**：从概览到细节的钻取路径
+- **上下文丰富**：包含相关的日志和链路信息
+- **行动导向**：提供明确的问题诊断路径
+
+#### 关键指标面板
+- **黄金信号**：延迟、流量、错误率、饱和度
+- **业务指标**：转化率、收入、用户活跃度
+- **系统健康**：CPU、内存、磁盘、网络使用率
+
+### 告警策略
+
+#### 告警分级
+- **P0（紧急）**：核心功能不可用，需要立即响应
+- **P1（高）**：重要功能降级，需要尽快处理
+- **P2（中）**：一般问题，工作时间内处理
+- **P3（低）**：优化建议，可以延迟处理
+
+#### 告警疲劳预防
+- **合理阈值**：基于历史数据和业务需求设置
+- **告警收敛**：相似告警合并，避免重复通知
+- **静默期**：维护期间自动静默相关告警
+- **定期审查**：定期清理无效或噪音告警
+
+## 常见误区
+
+### ❌ 过度收集指标
+- **问题**：高基数标签导致存储成本激增
+- **解决方案**：仔细设计标签，避免用户ID等高基数字段
+
+### ❌ 忽视日志结构化
+- **问题**：文本日志难以自动化分析
+- **解决方案**：强制使用JSON格式，包含必要上下文
+
+### ❌ 链路追踪采样率过高
+- **问题**：存储和网络开销过大
+- **解决方案**：实施智能采样策略，平衡成本和覆盖
+
+### ❌ 告警阈值一刀切
+- **问题**：业务高峰期误报频繁
+- **解决方案**：使用动态阈值或基于百分位数的告警
+
+### ❌ 可观测性孤岛
+- **问题**：日志、指标、链路数据分离
+- **解决方案**：使用统一的追踪ID关联所有数据源
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：扩展结构化日志
+修改`example-01-structured-logger.py`，添加日志输出到文件的支持，并实现日志轮转功能。
+
+### 练习2：实现自定义指标
+在`example-02-metrics-collector.py`的基础上，实现一个Summary指标类型，支持计算分位数（P50、P90、P95、P99）。
+
+### 练习3：链路追踪上下文传播
+扩展`example-03-trace-context.py`，实现HTTP头的上下文注入和提取功能，模拟真实的跨服务调用。
+
+完成后，检查你的答案是否与`solutions/`目录中的参考实现一致。
+
+## 小结与思考
+
+今天我们深入探讨了可观测性的三大支柱：日志、指标和链路追踪。记住几个关键点：
+
+- **可观测性不是监控的替代品，而是其进化**：它提供了更深入的系统洞察能力
+- **数据质量胜过数量**：精心设计的日志、指标和链路比海量的原始数据更有价值
+- **端到端关联至关重要**：通过统一的追踪ID将所有数据源关联起来
+
+思考题：
+1. 在你的当前项目中，哪些组件最需要可观测性改进？
+2. 如何在保证可观测性的同时控制成本？
+3. 可观测性数据如何帮助你的团队更快地响应和解决问题？
+
+可观测性是现代软件工程的基石，掌握这些技能将让你在复杂的分布式系统中游刃有余！🚀

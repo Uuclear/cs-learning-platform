@@ -1,0 +1,727 @@
+# 15-05 WebAssembly：浏览器中的高性能代码
+
+## 开场白 - 从游戏引擎到图像处理，WebAssembly如何重塑Web性能
+
+大家好！欢迎来到 WebAssembly 的世界！🚀
+
+想象一下：在浏览器中运行 AutoCAD 这样的专业设计软件、实时处理 4K 视频、运行完整的游戏引擎、甚至在网页中执行机器学习推理——这些曾经被认为不可能的任务，如今都已成为现实。而这一切的背后，都有一个共同的功臣：**WebAssembly**（Wasm）。
+
+WebAssembly 是 Web 平台的一项革命性技术，它让开发者能够将用 C、C++、Rust 等高性能语言编写的代码编译成一种紧凑的二进制格式，在浏览器中以接近原生的速度运行。这不仅打破了 JavaScript 在性能上的限制，还为 Web 开发打开了全新的可能性。
+
+在这个课程中，我们将深入探索 WebAssembly 的核心原理、开发流程、实际应用场景以及未来发展方向。无论你是想优化现有应用的性能，还是想在 Web 上实现以前无法想象的功能，WebAssembly 都将成为你工具箱中的重要武器。
+
+## 核心概念 - WebAssembly 的基本原理与架构
+
+### 什么是 WebAssembly？
+
+WebAssembly（简称 Wasm）是一种**可移植的、体积小的、加载快的二进制指令格式**。它是 Web 平台的第四个官方语言（除了 HTML、CSS、JavaScript），由 W3C 标准化，并得到所有主流浏览器的支持。
+
+#### 关键特性：
+- **二进制格式**：不是文本格式，而是紧凑的二进制字节码，体积小、解析快
+- **近似原生性能**：通过 JIT 编译和优化，性能接近原生代码
+- **内存安全**：运行在沙箱环境中，具有严格的内存隔离
+- **语言无关**：可以用多种语言编写源代码，编译成统一的 Wasm 格式
+- **与 JavaScript 互操作**：可以与现有的 JavaScript 代码无缝集成
+
+### WebAssembly 的执行模型
+
+WebAssembly 使用**基于栈的虚拟机架构**：
+
+```python filename="code/examples/example-01-wasm-concept.py"
+# 示例1：Wasm 栈机模拟器展示了基于栈的执行模型
+class WasmStackMachine:
+    def __init__(self):
+        self.stack = []
+    
+    def push(self, value):
+        self.stack.append(value)
+    
+    def add(self):
+        b = self.pop()
+        a = self.pop()
+        self.push(a + b)
+```
+
+在这种模型中：
+- 所有操作都通过栈进行
+- 指令从栈中弹出操作数
+- 执行计算后将结果压回栈
+- 最终结果留在栈顶
+
+### WebAssembly 的模块系统
+
+WebAssembly 程序被组织成**模块**（Modules），每个模块包含：
+- **导入**（Imports）：模块依赖的外部函数或对象
+- **导出**（Exports）：模块提供给外部使用的函数或对象  
+- **函数**（Functions）：模块内部的可执行代码
+- **内存**（Memory）：线性内存空间，用于数据存储
+- **表**（Tables）：用于存储函数引用等不透明值
+
+## 代码演示
+
+让我们通过三个例子来理解 WebAssembly 的工作原理：
+
+```python filename="code/examples/example-01-wasm-concept.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1：WebAssembly 栈机模拟器
+
+这个示例模拟了 WebAssembly 的栈机执行模型。
+WebAssembly 使用基于栈的虚拟机，指令从栈中弹出操作数，
+执行操作后将结果压回栈中。
+
+支持的基本操作：
+- push: 将值压入栈
+- add: 弹出两个值，相加后压回结果
+- mul: 弹出两个值，相乘后压回结果
+- sub: 弹出两个值，相减后压回结果
+- div: 弹出两个值，相除后压回结果
+"""
+
+class WasmStackMachine:
+    """WebAssembly 栈机模拟器"""
+
+    def __init__(self):
+        """初始化空栈"""
+        self.stack = []
+
+    def push(self, value):
+        """将值压入栈"""
+        self.stack.append(value)
+        print(f"	push {value} -> 栈: {self.stack}")
+
+    def pop(self):
+        """从栈中弹出值"""
+        if not self.stack:
+            raise RuntimeError("栈为空，无法弹出")
+        value = self.stack.pop()
+        print(f"	pop -> {value}, 栈: {self.stack}")
+        return value
+
+    def add(self):
+        """执行加法操作：弹出两个值，相加后压回结果"""
+        b = self.pop()
+        a = self.pop()
+        result = a + b
+        self.push(result)
+        print(f"	add: {a} + {b} = {result}")
+
+    def sub(self):
+        """执行减法操作：弹出两个值，相减后压回结果"""
+        b = self.pop()
+        a = self.pop()
+        result = a - b
+        self.push(result)
+        print(f"	sub: {a} - {b} = {result}")
+
+    def mul(self):
+        """执行乘法操作：弹出两个值，相乘后压回结果"""
+        b = self.pop()
+        a = self.pop()
+        result = a * b
+        self.push(result)
+        print(f"	mul: {a} * {b} = {result}")
+
+    def div(self):
+        """执行除法操作：弹出两个值，相除后压回结果"""
+        b = self.pop()
+        a = self.pop()
+        if b == 0:
+            raise RuntimeError("除零错误")
+        result = a / b
+        self.push(result)
+        print(f"	div: {a} / {b} = {result}")
+
+    def get_result(self):
+        """获取最终结果（栈顶值）"""
+        if len(self.stack) != 1:
+            raise RuntimeError(f"期望栈中只有一个值，但实际有 {len(self.stack)} 个")
+        return self.stack[0]
+
+def main():
+    """演示 WebAssembly 栈机执行过程"""
+    print("=== WebAssembly 栈机模拟器演示 ===")
+    print("计算表达式: (10 + 5) * 2 - 4")
+    print("对应的 Wasm 指令序列: push 10, push 5, add, push 2, mul, push 4, sub")
+    print()
+
+    machine = WasmStackMachine()
+
+    # 执行指令序列: (10 + 5) * 2 - 4 = 26
+    machine.push(10)
+    machine.push(5)
+    machine.add()      # 10 + 5 = 15
+    machine.push(2)
+    machine.mul()      # 15 * 2 = 30
+    machine.push(4)
+    machine.sub()      # 30 - 4 = 26
+
+    result = machine.get_result()
+    print(f"\n最终结果: {result}")
+
+    # 演示另一个例子: (8 * 3) / 4 + 2 = 8
+    print("\n=== 第二个例子 ===")
+    print("计算表达式: (8 * 3) / 4 + 2")
+    print("对应的 Wasm 指令序列: push 8, push 3, mul, push 4, div, push 2, add")
+    print()
+
+    machine2 = WasmStackMachine()
+    machine2.push(8)
+    machine2.push(3)
+    machine2.mul()     # 8 * 3 = 24
+    machine2.push(4)
+    machine2.div()     # 24 / 4 = 6
+    machine2.push(2)
+    machine2.add()     # 6 + 2 = 8
+
+    result2 = machine2.get_result()
+    print(f"\n最终结果: {result2}")
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-02-perf-comparison.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2：性能对比模拟器
+
+这个示例模拟了 JavaScript 与 WebAssembly 的性能差异。
+我们使用纯 Python 函数来代表 "JavaScript" 实现，
+使用优化后的函数（带类型提示和更高效算法）来代表 "WebAssembly" 实现。
+
+注意：这只是一个概念演示，实际的 Wasm 性能优势来自于：
+1. 静态类型和编译时优化
+2. 近似原生代码的执行速度
+3. 更少的垃圾回收开销
+"""
+
+import time
+import math
+from typing import List
+
+def js_style_matrix_multiply(a: List[List[float]], b: List[List[float]]) -> List[List[float]]:
+    """
+    模拟 JavaScript 风格的矩阵乘法实现
+    - 动态类型检查
+    - 较多的运行时验证
+    - 使用通用数据结构
+    """
+    if not a or not b:
+        return []
+
+    rows_a, cols_a = len(a), len(a[0])
+    rows_b, cols_b = len(b), len(b[0])
+
+    if cols_a != rows_b:
+        raise ValueError("矩阵维度不匹配")
+
+    # 初始化结果矩阵
+    result = []
+    for i in range(rows_a):
+        row = []
+        for j in range(cols_b):
+            row.append(0.0)
+        result.append(row)
+
+    # 执行乘法
+    for i in range(rows_a):
+        for j in range(cols_b):
+            total = 0.0
+            for k in range(cols_a):
+                # 模拟 JavaScript 的动态类型操作
+                val_a = float(a[i][k]) if isinstance(a[i][k], (int, float)) else 0.0
+                val_b = float(b[k][j]) if isinstance(b[k][j], (int, float)) else 0.0
+                total += val_a * val_b
+            result[i][j] = total
+
+    return result
+
+def wasm_style_matrix_multiply(a: List[List[float]], b: List[List[float]]) -> List[List[float]]:
+    """
+    模拟 WebAssembly 风格的矩阵乘法实现
+    - 静态类型假设（输入已验证）
+    - 最小化运行时开销
+    - 优化的内存访问模式
+    - 使用局部变量减少属性访问
+    """
+    # 假设输入已经过验证，直接进行计算
+    rows_a = len(a)
+    cols_a = len(a[0])
+    cols_b = len(b[0])
+
+    # 预分配结果矩阵（避免动态扩展）
+    result = [[0.0 for _ in range(cols_b)] for _ in range(rows_a)]
+
+    # 优化的循环顺序（更好的缓存局部性）
+    for i in range(rows_a):
+        row_a = a[i]  # 缓存行引用
+        row_result = result[i]
+        for k in range(cols_a):
+            val_a = row_a[k]
+            if val_a == 0.0:  # 跳过零值（稀疏矩阵优化）
+                continue
+            col_b = [b[k][j] for j in range(cols_b)]  # 简化的列访问
+            for j in range(cols_b):
+                row_result[j] += val_a * col_b[j]
+
+    return result
+
+def generate_test_matrices(size: int) -> tuple:
+    """生成测试用的随机矩阵"""
+    import random
+    random.seed(42)  # 固定种子以确保可重现性
+
+    matrix_a = [[random.random() for _ in range(size)] for _ in range(size)]
+    matrix_b = [[random.random() for _ in range(size)] for _ in range(size)]
+
+    return matrix_a, matrix_b
+
+def benchmark_function(func, *args, iterations: int = 10) -> float:
+    """基准测试函数执行时间"""
+    # 预热运行
+    func(*args)
+
+    start_time = time.perf_counter()
+    for _ in range(iterations):
+        func(*args)
+    end_time = time.perf_counter()
+
+    return (end_time - start_time) / iterations
+
+def main():
+    """演示性能对比"""
+    print("=== WebAssembly vs JavaScript 性能对比模拟 ===")
+    print("注意：这是一个概念演示，实际性能差异会更大！")
+    print()
+
+    # 测试不同大小的矩阵
+    test_sizes = [50, 100, 150]
+
+    for size in test_sizes:
+        print(f"测试矩阵大小: {size}x{size}")
+
+        # 生成测试数据
+        matrix_a, matrix_b = generate_test_matrices(size)
+
+        # 测试 JavaScript 风格实现
+        js_time = benchmark_function(js_style_matrix_multiply, matrix_a, matrix_b)
+
+        # 测试 WebAssembly 风格实现
+        wasm_time = benchmark_function(wasm_style_matrix_multiply, matrix_a, matrix_b)
+
+        # 计算加速比
+        speedup = js_time / wasm_time if wasm_time > 0 else float('inf')
+
+        print(f"  JavaScript 风格: {js_time:.4f} 秒")
+        print(f"  WebAssembly 风格: {wasm_time:.4f} 秒")
+        print(f"  加速比: {speedup:.2f}x")
+        print()
+
+    # 验证结果正确性
+    print("=== 验证结果正确性 ===")
+    small_a, small_b = generate_test_matrices(10)
+    js_result = js_style_matrix_multiply(small_a, small_b)
+    wasm_result = wasm_style_matrix_multiply(small_a, small_b)
+
+    # 比较结果是否近似相等
+    tolerance = 1e-10
+    results_match = True
+    for i in range(len(js_result)):
+        for j in range(len(js_result[0])):
+            if abs(js_result[i][j] - wasm_result[i][j]) > tolerance:
+                results_match = False
+                break
+        if not results_match:
+            break
+
+    if results_match:
+        print("✓ 两种实现的结果一致！")
+    else:
+        print("✗ 结果不一致，请检查实现！")
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-03-wasm-module-loader.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3：WebAssembly 模块加载器模拟器
+
+这个示例模拟了 WebAssembly 模块的加载和实例化过程。
+包括以下步骤：
+1. 解析模块的导入需求
+2. 验证类型签名
+3. 链接外部函数
+4. 实例化模块
+5. 执行导出的函数
+"""
+
+from typing import Dict, List, Callable, Any
+import json
+
+class WasmModule:
+    """WebAssembly 模块表示"""
+
+    def __init__(self, module_data: Dict[str, Any]):
+        """
+        初始化 Wasm 模块
+
+        :param module_data: 包含模块信息的字典，包含 imports, exports, functions 等
+        """
+        self.imports = module_data.get("imports", [])
+        self.exports = module_data.get("exports", {})
+        self.functions = module_data.get("functions", {})
+        self.memory = module_data.get("memory", {"initial": 1, "maximum": 16})
+        self.tables = module_data.get("tables", [])
+
+    def validate_imports(self, import_objects: Dict[str, Any]) -> bool:
+        """
+        验证导入对象是否满足模块需求
+
+        :param import_objects: 提供的导入对象
+        :return: 验证是否通过
+        """
+        print("验证模块导入需求...")
+
+        for import_req in self.imports:
+            module_name = import_req["module"]
+            field_name = import_req["name"]
+            expected_type = import_req["type"]
+
+            # 检查导入对象是否存在
+            if module_name not in import_objects:
+                print(f"  ✗ 缺少导入模块: {module_name}")
+                return False
+
+            module_obj = import_objects[module_name]
+            if field_name not in module_obj:
+                print(f"  ✗ 导入模块 {module_name} 中缺少字段: {field_name}")
+                return False
+
+            actual_value = module_obj[field_name]
+            actual_type = type(actual_value).__name__
+
+            # 简单的类型检查（实际 Wasm 有更复杂的类型系统）
+            if expected_type == "func" and not callable(actual_value):
+                print(f"  ✗ 字段 {field_name} 应该是函数，但实际是 {actual_type}")
+                return False
+            elif expected_type == "memory" and not hasattr(actual_value, 'buffer'):
+                print(f"  ✗ 字段 {field_name} 应该是内存对象")
+                return False
+
+            print(f"  ✓ 导入 {module_name}.{field_name} 验证通过")
+
+        return True
+
+    def instantiate(self, import_objects: Dict[str, Any]) -> 'WasmInstance':
+        """
+        实例化模块
+
+        :param import_objects: 导入对象
+        :return: Wasm 实例
+        """
+        if not self.validate_imports(import_objects):
+            raise RuntimeError("模块导入验证失败")
+
+        print("创建 Wasm 实例...")
+        return WasmInstance(self, import_objects)
+
+class WasmInstance:
+    """WebAssembly 实例"""
+
+    def __init__(self, module: WasmModule, import_objects: Dict[str, Any]):
+        """
+        初始化 Wasm 实例
+
+        :param module: Wasm 模块
+        :param import_objects: 导入对象
+        """
+        self.module = module
+        self.imports = import_objects
+        self.exports = {}
+        self._setup_exports()
+
+    def _setup_exports(self):
+        """设置导出的函数和对象"""
+        print("设置导出项...")
+
+        for export_name, export_info in self.module.exports.items():
+            if export_info["type"] == "func":
+                func_name = export_info["name"]
+                if func_name in self.module.functions:
+                    # 创建包装函数
+                    wrapped_func = self._create_wrapped_function(func_name)
+                    self.exports[export_name] = wrapped_func
+                    print(f"  ✓ 导出函数: {export_name}")
+                else:
+                    print(f"  ✗ 函数 {func_name} 未在模块中定义")
+            elif export_info["type"] == "memory":
+                # 模拟内存导出
+                self.exports[export_name] = {"buffer": bytearray(65536)}  # 64KB 内存
+                print(f"  ✓ 导出内存: {export_name}")
+
+    def _create_wrapped_function(self, func_name: str) -> Callable:
+        """
+        创建包装函数，处理参数转换和调用
+
+        :param func_name: 函数名称
+        :return: 包装后的函数
+        """
+        def wrapped_function(*args):
+            print(f"调用 Wasm 函数: {func_name}({args})")
+
+            # 获取函数定义
+            func_def = self.module.functions[func_name]
+            expected_params = func_def.get("params", [])
+            expected_returns = func_def.get("returns", [])
+
+            # 参数验证（简化版）
+            if len(args) != len(expected_params):
+                raise ValueError(f"函数 {func_name} 期望 {len(expected_params)} 个参数，但提供了 {len(args)} 个")
+
+            # 模拟函数执行
+            result = self._execute_function(func_name, args)
+            print(f"函数 {func_name} 返回: {result}")
+            return result
+
+        return wrapped_function
+
+    def _execute_function(self, func_name: str, args: tuple) -> Any:
+        """
+        模拟函数执行（实际 Wasm 会执行字节码）
+
+        :param func_name: 函数名称
+        :param args: 参数
+        :return: 执行结果
+        """
+        # 这里根据函数名模拟不同的行为
+        if func_name == "add":
+            return args[0] + args[1]
+        elif func_name == "multiply":
+            return args[0] * args[1]
+        elif func_name == "fibonacci":
+            n = args[0]
+            if n <= 1:
+                return n
+            a, b = 0, 1
+            for _ in range(2, n + 1):
+                a, b = b, a + b
+            return b
+        elif func_name == "console_log":
+            print(f"Wasm console.log: {args[0]}")
+            return None
+        else:
+            # 默认返回参数之和作为示例
+            return sum(args) if args else 0
+
+def create_sample_module() -> Dict[str, Any]:
+    """创建示例 Wasm 模块数据"""
+    return {
+        "imports": [
+            {
+                "module": "env",
+                "name": "console_log",
+                "type": "func"
+            }
+        ],
+        "exports": {
+            "add": {"type": "func", "name": "add"},
+            "multiply": {"type": "func", "name": "multiply"},
+            "fibonacci": {"type": "func", "name": "fibonacci"},
+            "memory": {"type": "memory", "name": "memory"}
+        },
+        "functions": {
+            "add": {"params": ["i32", "i32"], "returns": ["i32"]},
+            "multiply": {"params": ["i32", "i32"], "returns": ["i32"]},
+            "fibonacci": {"params": ["i32"], "returns": ["i32"]},
+            "console_log": {"params": ["string"], "returns": []}
+        },
+        "memory": {"initial": 1, "maximum": 16}
+    }
+
+def main():
+    """演示 Wasm 模块加载过程"""
+    print("=== WebAssembly 模块加载器模拟器 ===")
+    print()
+
+    # 创建示例模块
+    module_data = create_sample_module()
+    wasm_module = WasmModule(module_data)
+
+    # 定义导入对象
+    import_objects = {
+        "env": {
+            "console_log": lambda msg: print(f"JavaScript console.log: {msg}")
+        }
+    }
+
+    try:
+        # 实例化模块
+        instance = wasm_module.instantiate(import_objects)
+        print("\n=== 测试导出的函数 ===")
+
+        # 调用导出的函数
+        result1 = instance.exports["add"](10, 20)
+        print(f"add(10, 20) = {result1}")
+
+        result2 = instance.exports["multiply"](5, 6)
+        print(f"multiply(5, 6) = {result2}")
+
+        result3 = instance.exports["fibonacci"](10)
+        print(f"fibonacci(10) = {result3}")
+
+        # 调用需要导入的函数
+        instance.exports["console_log"]("Hello from WebAssembly!")
+
+        # 访问导出的内存
+        memory = instance.exports["memory"]
+        print(f"导出的内存大小: {len(memory['buffer'])} 字节")
+
+        print("\n✓ Wasm 模块加载和执行成功！")
+
+    except Exception as e:
+        print(f"✗ 模块加载失败: {e}")
+
+if __name__ == "__main__":
+    main()
+```
+
+## 深入理解
+
+### WebAssembly 的编译流程
+
+WebAssembly 的典型开发流程如下：
+
+1. **源代码编写**：使用 C/C++、Rust、Go 等语言编写高性能代码
+2. **编译到 Wasm**：使用相应的工具链编译成 .wasm 文件
+   - **Emscripten**：用于 C/C++ → Wasm
+   - **wasm-pack**：用于 Rust → Wasm  
+   - **TinyGo**：用于 Go → Wasm
+3. **生成胶水代码**：工具链同时生成 JavaScript 胶水代码，用于加载和调用 Wasm 模块
+4. **浏览器加载**：在浏览器中加载 .wasm 文件和胶水代码
+5. **实例化和调用**：实例化 Wasm 模块并调用导出的函数
+
+### WebAssembly 生态系统
+
+#### 主要工具链：
+- **Emscripten**：最成熟的 C/C++ 到 Wasm 编译器，基于 LLVM，提供完整的 POSIX 兼容层
+- **wasm-pack**：Rust 的官方 Wasm 工具链，简化 Rust 到 Wasm 的编译和发布流程
+- **AssemblyScript**：TypeScript 的子集，可以直接编译成 Wasm，适合 JavaScript 开发者
+
+#### WASI（WebAssembly System Interface）：
+WASI 为非 Web 环境提供标准的系统接口，使 Wasm 模块可以在服务器、命令行工具等各种环境中运行，实现了真正的"一次编译，到处运行"。
+
+#### WebAssembly 组件模型：
+组件模型是 WebAssembly 的下一代标准，旨在解决模块组合和互操作性问题，允许不同语言编写的 Wasm 模块无缝协作。
+
+### 性能特性分析
+
+WebAssembly 的性能优势主要来自：
+
+1. **静态类型**：编译时确定类型，无需运行时类型检查
+2. **紧凑二进制格式**：体积小，网络传输快，解析速度快
+3. **线性内存**：连续的内存布局，缓存友好
+4. **SIMD 支持**：单指令多数据，适合向量化计算
+5. **较少的 GC 压力**：手动内存管理，减少垃圾回收开销
+
+然而，WebAssembly 也有性能瓶颈：
+- **JavaScript 互操作开销**：频繁的 JS-Wasm 调用会有性能损失
+- **内存复制开销**：在 JS 和 Wasm 之间传递大量数据需要复制
+
+## 实际应用
+
+### 成功案例
+
+#### Figma
+Figma 使用 WebAssembly 重写了其核心渲染引擎，性能提升了数倍，使得复杂的矢量图形操作在浏览器中变得流畅。
+
+#### Google Earth
+Google Earth 将其 C++ 渲染引擎编译成 WebAssembly，在 Web 上提供了接近原生应用的体验。
+
+#### Photoshop Express
+Adobe 将 Photoshop 的核心图像处理算法编译成 WebAssembly，实现了 Web 版本的高性能图像编辑。
+
+#### Blazor WebAssembly
+微软的 Blazor 框架允许使用 C# 开发 Web 应用，通过 WebAssembly 在浏览器中运行 .NET 代码。
+
+### 适用场景
+
+WebAssembly 特别适合以下场景：
+
+1. **计算密集型任务**：
+   - 图像/视频处理
+   - 音频处理
+   - 密码学操作
+   - 物理引擎
+   - 机器学习推理
+
+2. **移植现有代码库**：
+   - 将桌面应用移植到 Web
+   - 复用现有的 C/C++/Rust 库
+   - 游戏引擎移植
+
+3. **性能关键的 Web 应用**：
+   - 实时协作工具
+   - 数据可视化
+   - 科学计算
+
+### 开发最佳实践
+
+1. **合理划分边界**：将计算密集型部分用 Wasm 实现，UI 和交互逻辑用 JavaScript
+2. **最小化 JS-Wasm 调用**：批量处理数据，减少跨语言调用次数
+3. **优化内存管理**：重用内存缓冲区，避免频繁分配和释放
+4. **渐进式采用**：从关键性能瓶颈开始，逐步引入 Wasm
+
+## 常见误区
+
+### ❌ WebAssembly 会完全替代 JavaScript
+**事实**：WebAssembly 是 JavaScript 的补充，而不是替代品。Wasm 擅长计算密集型任务，而 JavaScript 擅长 DOM 操作和异步编程。两者应该协同工作。
+
+### ❌ WebAssembly 在所有场景下都更快
+**事实**：对于简单的逻辑或 I/O 密集型任务，JavaScript 可能更快。Wasm 的优势主要体现在数值计算和复杂算法上。
+
+### ❌ WebAssembly 可以直接访问 DOM
+**事实**：WebAssembly 不能直接访问 DOM，必须通过 JavaScript 胶水代码。这是有意的设计选择，以保持安全性和与现有 Web 平台的兼容性。
+
+### ❌ WebAssembly 文件很小
+**事实**：虽然 Wasm 格式本身很紧凑，但实际应用中往往需要包含运行时库（如 Emscripten 的 libc），导致文件体积较大。需要仔细优化和代码分割。
+
+### ❌ 调试 WebAssembly 很困难
+**事实**：现代浏览器开发者工具已经提供了良好的 Wasm 调试支持，包括源码映射、断点调试、性能分析等。
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：扩展栈机功能
+参考 `exercises/challenges/challenge-01.md`，扩展 `example-01-wasm-concept.py` 中的栈机，添加比较操作、逻辑操作和控制流支持。
+
+### 练习2：优化性能对比
+参考 `exercises/challenges/challenge-02.md`，改进 `example-02-perf-comparison.py`，选择更适合展示 Wasm 优势的算法，并实现更真实的性能对比。
+
+### 练习3：模块加载器增强
+修改 `example-03-wasm-module-loader.py`，添加对内存导入/导出、表导入/导出的支持，并实现更完整的类型验证。
+
+完成后，检查你的答案是否与 `code/solutions/` 目录中的参考实现一致。
+
+## 小结与思考
+
+今天我们深入探索了 WebAssembly 的世界，从基本的栈机模型到实际的性能优化应用。记住几个关键点：
+
+- **WebAssembly 的定位**：它是 JavaScript 的高性能补充，而不是替代品
+- **适用场景**：计算密集型任务、现有代码库移植、性能关键应用
+- **开发流程**：选择合适的工具链，合理设计 JS-Wasm 边界，优化内存使用
+- **未来展望**：组件模型、GC 集成、多线程支持将进一步扩展 Wasm 的能力
+
+思考题：
+1. 在什么情况下不应该使用 WebAssembly？
+2. 如何平衡 WebAssembly 的性能优势和文件体积成本？
+3. WebAssembly 的组件模型将如何改变前端开发的架构模式？
+4. WASI 对于服务端开发意味着什么？
+
+WebAssembly 正在重塑 Web 开发的边界，掌握这项技术将让你在构建高性能 Web 应用时拥有更多选择和更强的能力。继续探索，你会发现更多令人兴奋的可能性！✨

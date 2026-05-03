@@ -1,0 +1,665 @@
+# 14-06 敏捷开发：Scrum与看板
+
+## 开场白
+
+大家好！欢迎来到敏捷开发的世界！🚀
+
+在当今快速变化的软件行业中，传统的瀑布式开发方法已经难以满足市场对速度和灵活性的需求。想象一下：你的竞争对手每两周就能发布新功能，而你的团队还在为一个六个月前规划的功能苦苦挣扎——这正是许多传统开发团队面临的困境。
+
+敏捷开发应运而生，它不仅仅是一套方法论，更是一种思维方式的转变。从僵化的计划驱动到灵活的价值驱动，从文档导向到可工作的软件导向，敏捷让我们能够更快地响应变化、更好地满足用户需求。
+
+在这个课程中，我们将深入探索两种最流行的敏捷框架：Scrum和看板。你将学习如何组织高效的敏捷团队、如何进行冲刺规划、如何使用燃尽图跟踪进度，以及如何通过看板方法实现持续交付。无论你是开发者、项目经理还是产品负责人，这些知识都将帮助你在实际工作中更好地实践敏捷。
+
+## 核心概念
+
+### 敏捷宣言与原则
+
+2001年，17位软件开发专家在美国犹他州雪鸟滑雪胜地聚会，共同起草了《敏捷软件开发宣言》。这份宣言确立了四个核心价值观：
+
+1. **个体和互动** 高于 流程和工具
+2. **可工作的软件** 高于 详尽的文档  
+3. **客户合作** 高于 合同谈判
+4. **响应变化** 高于 遵循计划
+
+这些价值观背后是12条敏捷原则，强调早期和持续交付有价值的软件、欢迎需求变更、频繁交付可工作的软件等。
+
+### Scrum框架
+
+Scrum是最流行的敏捷框架之一，它通过固定的迭代周期（冲刺）来组织工作：
+
+**三个核心角色：**
+- **产品负责人**（Product Owner）：负责最大化产品价值，管理产品待办列表
+- **Scrum Master**：确保Scrum流程被正确执行，移除团队障碍
+- **开发团队**：跨职能的自组织团队，负责交付可工作的软件
+
+**四个关键仪式：**
+- **冲刺计划会议**（Sprint Planning）：选择本次冲刺要完成的工作
+- **每日站会**（Daily Scrum）：15分钟同步进展和计划
+- **冲刺评审会议**（Sprint Review）：展示完成的工作并获取反馈
+- **冲刺回顾会议**（Sprint Retrospective）：反思流程并制定改进计划
+
+**三个主要工件：**
+- **产品待办列表**（Product Backlog）：所有已知需求的优先级列表
+- **冲刺待办列表**（Sprint Backlog）：本次冲刺承诺完成的工作
+- **增量**（Increment）：冲刺结束时可用的软件版本
+
+### 用户故事与验收标准
+
+用户故事是敏捷中描述需求的标准格式：
+> **作为** [用户角色]，**我想要** [功能]，**以便** [商业价值]
+
+每个用户故事都应该有明确的验收标准，定义"完成"的标准。例如：
+- 功能必须通过所有自动化测试
+- 必须有相应的文档更新
+- 必须通过用户体验审核
+
+### 故事点与速度估算
+
+故事点是一种相对估算单位，用于评估用户故事的复杂度、工作量和风险。团队通过计划扑克等技术进行估算，避免精确的时间估算。
+
+**团队速度**（Velocity）是指团队在一个冲刺中能够完成的故事点数，用于预测未来的交付能力。
+
+### 看板方法
+
+看板起源于丰田生产系统，强调可视化工作流和限制在制品数量（WIP）：
+
+**核心实践：**
+- **可视化工作流**：使用看板板显示任务状态（如待办、进行中、已完成）
+- **限制WIP**：设置每个状态列的最大任务数量，减少上下文切换
+- **管理流动**：关注任务在整个系统中的流动效率
+- **明确流程规则**：定义何时可以移动任务到下一状态
+- **实施反馈循环**：定期回顾和改进流程
+
+**关键指标：**
+- **周期时间**（Cycle Time）：任务从开始到完成的时间
+- **吞吐量**（Throughput）：单位时间内完成的任务数量
+- **累积流图**（Cumulative Flow Diagram）：显示各状态任务数量随时间的变化
+
+### Scrum vs 看板
+
+| 特性 | Scrum | 看板 |
+|------|-------|------|
+| **迭代** | 固定长度（通常2-4周） | 持续流动，无固定迭代 |
+| **角色** | 明确定义的三个角色 | 无强制角色定义 |
+| **变更** | 冲刺期间不接受新需求 | 随时可以接受变更 |
+| **度量** | 速度（故事点/冲刺） | 周期时间和吞吐量 |
+| **适用场景** | 需求相对稳定，需要定期交付 | 需求频繁变化，支持和维护工作 |
+
+### 常见反模式
+
+- **僵尸Scrum**：只做Scrum的仪式但没有理解其本质
+- **过度估算**：花费过多时间在估算上而不是交付价值
+- **忽略技术债务**：只关注功能交付而忽视代码质量
+- **伪敏捷**：用敏捷的术语包装传统的瀑布式做法
+
+## 代码演示
+
+让我们通过三个实用的例子来理解敏捷的核心概念：
+
+```python filename="code/examples/example-01-sprint-planning.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1：冲刺计划模拟
+模拟冲刺规划过程：计算团队速度，根据优先级和容量选择用户故事
+"""
+
+from typing import List, Dict, Tuple
+
+
+def calculate_team_velocity(completed_story_points: List[int]) -> float:
+    """
+    计算团队速度（平均完成的故事点数）
+
+    :param completed_story_points: 过去几个冲刺中完成的故事点数列表
+    :return: 团队平均速度
+    """
+    if not completed_story_points:
+        return 0.0
+    return sum(completed_story_points) / len(completed_story_points)
+
+
+def select_user_stories_for_sprint(
+    backlog: List[Dict],
+    team_velocity: float,
+    buffer_ratio: float = 0.2
+) -> Tuple[List[Dict], float]:
+    """
+    根据团队速度和优先级选择冲刺中的用户故事
+
+    :param backlog: 用户故事待办列表，每个故事包含 'id', 'title', 'story_points', 'priority'
+    :param team_velocity: 团队速度（可完成的故事点数）
+    :param buffer_ratio: 缓冲比例，用于应对不确定性（默认20%）
+    :return: (选中的用户故事列表, 实际使用的故事点数)
+    """
+    # 计算实际可用容量（考虑缓冲）
+    available_capacity = team_velocity * (1 - buffer_ratio)
+
+    # 按优先级排序（优先级数字越小越重要）
+    sorted_backlog = sorted(backlog, key=lambda story: story['priority'])
+
+    selected_stories = []
+    total_points = 0.0
+
+    for story in sorted_backlog:
+        # 检查是否还有足够容量
+        if total_points + story['story_points'] <= available_capacity:
+            selected_stories.append(story)
+            total_points += story['story_points']
+        else:
+            # 如果当前故事太大，跳过（在实际中可能会拆分故事）
+            continue
+
+    return selected_stories, total_points
+
+
+def main():
+    """主函数：演示冲刺规划过程"""
+    # 模拟过去3个冲刺的完成情况
+    past_velocity = [25, 30, 28]  # 故事点数
+    current_velocity = calculate_team_velocity(past_velocity)
+
+    print(f"团队历史速度: {past_velocity}")
+    print(f"计算出的团队速度: {current_velocity:.1f} 故事点")
+
+    # 模拟产品待办列表
+    product_backlog = [
+        {'id': 'US-001', 'title': '用户登录功能', 'story_points': 8, 'priority': 1},
+        {'id': 'US-002', 'title': '密码重置功能', 'story_points': 5, 'priority': 2},
+        {'id': 'US-003', 'title': '用户个人资料页面', 'story_points': 13, 'priority': 3},
+        {'id': 'US-004', 'title': '搜索功能优化', 'story_points': 8, 'priority': 4},
+        {'id': 'US-005', 'title': '通知系统', 'story_points': 21, 'priority': 5},
+        {'id': 'US-006', 'title': '数据导出功能', 'story_points': 3, 'priority': 6},
+    ]
+
+    print("\n产品待办列表:")
+    for story in product_backlog:
+        print(f"  {story['id']}: {story['title']} ({story['story_points']}点, 优先级{story['priority']})")
+
+    # 选择冲刺故事
+    selected_stories, used_points = select_user_stories_for_sprint(
+        product_backlog, current_velocity
+    )
+
+    print(f"\n冲刺容量: {current_velocity * 0.8:.1f} 故事点 (考虑20%缓冲)")
+    print(f"选中的用户故事 ({used_points:.1f} 故事点):")
+    for story in selected_stories:
+        print(f"  ✓ {story['id']}: {story['title']} ({story['story_points']}点)")
+
+    remaining_capacity = current_velocity * 0.8 - used_points
+    print(f"\n剩余容量: {remaining_capacity:.1f} 故事点")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-02-burndown-chart.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2：燃尽图数据生成
+从冲刺进度生成ASCII燃尽图数据（每日剩余故事点数 vs 理想线）
+"""
+
+from typing import List, Tuple
+import math
+
+
+def calculate_burndown_data(
+    total_story_points: int,
+    daily_progress: List[int],
+    sprint_days: int = 10
+) -> Tuple[List[int], List[float]]:
+    """
+    计算燃尽图数据
+
+    :param total_story_points: 冲刺总故事点数
+    :param daily_progress: 每日完成的故事点数列表
+    :param sprint_days: 冲刺天数（默认10天）
+    :return: (实际剩余点数列表, 理想剩余点数列表)
+    """
+    # 确保daily_progress长度不超过sprint_days
+    if len(daily_progress) > sprint_days:
+        daily_progress = daily_progress[:sprint_days]
+
+    # 补齐到sprint_days长度（如果数据不足）
+    while len(daily_progress) < sprint_days:
+        daily_progress.append(0)
+
+    # 计算实际剩余故事点数
+    actual_remaining = [total_story_points]
+    cumulative_done = 0
+
+    for day_progress in daily_progress:
+        cumulative_done += day_progress
+        remaining = max(0, total_story_points - cumulative_done)
+        actual_remaining.append(remaining)
+
+    # 计算理想燃尽线（线性下降）
+    ideal_remaining = []
+    for day in range(sprint_days + 1):
+        ideal_points = total_story_points * (1 - day / sprint_days)
+        ideal_remaining.append(ideal_points)
+
+    return actual_remaining, ideal_remaining
+
+
+def generate_ascii_burndown_chart(
+    actual_remaining: List[int],
+    ideal_remaining: List[float],
+    chart_width: int = 50,
+    chart_height: int = 20
+) -> str:
+    """
+    生成ASCII燃尽图
+
+    :param actual_remaining: 实际剩余故事点数列表
+    :param ideal_remaining: 理想剩余故事点数列表
+    :param chart_width: 图表宽度
+    :param chart_height: 图表高度
+    :return: ASCII图表字符串
+    """
+    if not actual_remaining:
+        return "没有数据可显示"
+
+    max_points = max(max(actual_remaining), max(ideal_remaining))
+    if max_points == 0:
+        max_points = 1
+
+    # 创建图表网格
+    grid = [[' ' for _ in range(chart_width)] for _ in range(chart_height)]
+
+    # 绘制坐标轴
+    for i in range(chart_height):
+        grid[i][0] = '|'
+    for j in range(chart_width):
+        grid[chart_height-1][j] = '-'
+    grid[chart_height-1][0] = '+'
+
+    # 绘制理想线
+    for day, points in enumerate(ideal_remaining):
+        x = int(day * (chart_width - 2) / (len(ideal_remaining) - 1)) + 1
+        y = chart_height - 2 - int(points * (chart_height - 2) / max_points)
+        if 0 <= y < chart_height - 1 and 0 <= x < chart_width:
+            grid[y][x] = '.'
+
+    # 绘制实际线
+    for day, points in enumerate(actual_remaining):
+        x = int(day * (chart_width - 2) / (len(actual_remaining) - 1)) + 1
+        y = chart_height - 2 - int(points * (chart_height - 2) / max_points)
+        if 0 <= y < chart_height - 1 and 0 <= x < chart_width:
+            grid[y][x] = '*'
+
+    # 生成图表字符串
+    chart_lines = []
+    for row in grid:
+        chart_lines.append(''.join(row))
+
+    # 添加图例
+    chart_lines.append("")
+    chart_lines.append("图例: * = 实际进度, . = 理想进度")
+    chart_lines.append(f"Y轴: 剩余故事点数 (0-{int(max_points)})")
+    chart_lines.append(f"X轴: 冲刺天数 (0-{len(actual_remaining)-1})")
+
+    return '\n'.join(chart_lines)
+
+
+def main():
+    """主函数：演示燃尽图生成"""
+    # 示例数据
+    total_points = 40
+    daily_done = [5, 8, 6, 4, 7, 3, 2, 1, 0, 0]  # 前10天的完成情况
+
+    print("冲刺燃尽图演示")
+    print("=" * 50)
+    print(f"冲刺总故事点数: {total_points}")
+    print(f"每日完成点数: {daily_done}")
+
+    actual_remaining, ideal_remaining = calculate_burndown_data(
+        total_points, daily_done, sprint_days=10
+    )
+
+    print(f"\n实际剩余点数: {actual_remaining}")
+    print(f"理想剩余点数: {[round(x, 1) for x in ideal_remaining]}")
+
+    # 生成并显示ASCII图表
+    chart = generate_ascii_burndown_chart(actual_remaining, ideal_remaining)
+    print("\n燃尽图:")
+    print(chart)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-03-kanban-metrics.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3：看板指标计算
+从任务完成数据计算看板指标：周期时间、吞吐量、在制品数量（WIP）
+"""
+
+from typing import List, Dict, Tuple
+from datetime import datetime, timedelta
+
+
+def calculate_cycle_time(
+    tasks: List[Dict]
+) -> Tuple[float, List[int]]:
+    """
+    计算周期时间（任务从开始到完成的时间）
+
+    :param tasks: 任务列表，每个任务包含 'start_date', 'end_date'
+    :return: (平均周期时间, 所有任务的周期时间列表)
+    """
+    cycle_times = []
+
+    for task in tasks:
+        if task['start_date'] and task['end_date']:
+            start = datetime.fromisoformat(task['start_date'])
+            end = datetime.fromisoformat(task['end_date'])
+            cycle_time_days = (end - start).days
+            cycle_times.append(cycle_time_days)
+
+    avg_cycle_time = sum(cycle_times) / len(cycle_times) if cycle_times else 0
+    return avg_cycle_time, cycle_times
+
+
+def calculate_throughput(
+    tasks: List[Dict],
+    period_start: str,
+    period_end: str
+) -> float:
+    """
+    计算吞吐量（在指定时间段内完成的任务数量）
+
+    :param tasks: 任务列表
+    :param period_start: 统计周期开始日期 (ISO格式)
+    :param period_end: 统计周期结束日期 (ISO格式)
+    :return: 平均每日吞吐量
+    """
+    period_start_dt = datetime.fromisoformat(period_start)
+    period_end_dt = datetime.fromisoformat(period_end)
+    period_days = (period_end_dt - period_start_dt).days
+
+    if period_days <= 0:
+        return 0.0
+
+    completed_tasks = 0
+    for task in tasks:
+        if task['end_date']:
+            end_dt = datetime.fromisoformat(task['end_date'])
+            if period_start_dt <= end_dt <= period_end_dt:
+                completed_tasks += 1
+
+    return completed_tasks / period_days
+
+
+def calculate_wip(
+    tasks: List[Dict],
+    date_point: str
+) -> int:
+    """
+    计算指定日期的在制品数量（WIP - Work In Progress）
+
+    :param tasks: 任务列表，每个任务包含 'start_date', 'end_date'
+    :param date_point: 查询日期 (ISO格式)
+    :return: 在制品数量
+    """
+    query_date = datetime.fromisoformat(date_point)
+    wip_count = 0
+
+    for task in tasks:
+        start_dt = datetime.fromisoformat(task['start_date']) if task['start_date'] else None
+        end_dt = datetime.fromisoformat(task['end_date']) if task['end_date'] else None
+
+        # 任务在查询日期处于进行中状态
+        if start_dt and start_dt <= query_date and (not end_dt or end_dt > query_date):
+            wip_count += 1
+
+    return wip_count
+
+
+def calculate_cumulative_flow(
+    tasks: List[Dict],
+    start_date: str,
+    end_date: str
+) -> Dict[str, List[int]]:
+    """
+    计算累积流图数据
+
+    :param tasks: 任务列表
+    :param start_date: 开始日期
+    :param end_date: 结束日期
+    :return: 包含各状态任务数量的字典
+    """
+    start_dt = datetime.fromisoformat(start_date)
+    end_dt = datetime.fromisoformat(end_date)
+
+    # 生成日期范围
+    current = start_dt
+    dates = []
+    while current <= end_dt:
+        dates.append(current.isoformat()[:10])  # YYYY-MM-DD
+        current += timedelta(days=1)
+
+    # 初始化累积数据
+    cumulative_data = {
+        'todo': [],
+        'in_progress': [],
+        'done': []
+    }
+
+    for date_str in dates:
+        date_dt = datetime.fromisoformat(date_str)
+
+        todo_count = 0
+        in_progress_count = 0
+        done_count = 0
+
+        for task in tasks:
+            start_dt_task = datetime.fromisoformat(task['start_date']) if task['start_date'] else None
+            end_dt_task = datetime.fromisoformat(task['end_date']) if task['end_date'] else None
+
+            if end_dt_task and end_dt_task <= date_dt:
+                done_count += 1
+            elif start_dt_task and start_dt_task <= date_dt:
+                in_progress_count += 1
+            else:
+                todo_count += 1
+
+        cumulative_data['todo'].append(todo_count)
+        cumulative_data['in_progress'].append(in_progress_count)
+        cumulative_data['done'].append(done_count)
+
+    return cumulative_data
+
+
+def main():
+    """主函数：演示看板指标计算"""
+    # 模拟任务数据
+    tasks_data = [
+        {'id': 'TASK-001', 'start_date': '2026-04-01T09:00:00', 'end_date': '2026-04-03T16:00:00'},
+        {'id': 'TASK-002', 'start_date': '2026-04-02T10:00:00', 'end_date': '2026-04-05T14:00:00'},
+        {'id': 'TASK-003', 'start_date': '2026-04-03T08:00:00', 'end_date': '2026-04-04T17:00:00'},
+        {'id': 'TASK-004', 'start_date': '2026-04-04T09:00:00', 'end_date': '2026-04-07T11:00:00'},
+        {'id': 'TASK-005', 'start_date': '2026-04-05T11:00:00', 'end_date': '2026-04-06T15:00:00'},
+        {'id': 'TASK-006', 'start_date': '2026-04-06T10:00:00', 'end_date': None},  # 进行中
+        {'id': 'TASK-007', 'start_date': '2026-04-07T09:00:00', 'end_date': None},  # 进行中
+    ]
+
+    print("看板指标计算演示")
+    print("=" * 50)
+
+    # 计算周期时间
+    avg_cycle, all_cycles = calculate_cycle_time(tasks_data)
+    print(f"平均周期时间: {avg_cycle:.1f} 天")
+    print(f"各任务周期时间: {all_cycles} 天")
+
+    # 计算吞吐量（4月1日到4月7日）
+    throughput = calculate_throughput(tasks_data, '2026-04-01', '2026-04-07')
+    print(f"平均每日吞吐量: {throughput:.2f} 个任务/天")
+
+    # 计算WIP（4月6日）
+    wip_4_6 = calculate_wip(tasks_data, '2026-04-06')
+    print(f"4月6日在制品数量 (WIP): {wip_4_6}")
+
+    # 计算WIP（4月7日）
+    wip_4_7 = calculate_wip(tasks_data, '2026-04-07')
+    print(f"4月7日在制品数量 (WIP): {wip_4_7}")
+
+    # 计算累积流图数据
+    flow_data = calculate_cumulative_flow(tasks_data, '2026-04-01', '2026-04-07')
+    print("\n累积流图数据 (4月1日-4月7日):")
+    print("日期\t待办\t进行中\t已完成")
+    for i, date in enumerate(['4/1', '4/2', '4/3', '4/4', '4/5', '4/6', '4/7']):
+        print(f"{date}\t{flow_data['todo'][i]}\t{flow_data['in_progress'][i]}\t{flow_data['done'][i]}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## 深入理解
+
+### 估算的艺术
+
+故事点估算不是关于时间，而是关于相对复杂度。团队使用斐波那契数列（1, 2, 3, 5, 8, 13...）或T恤尺码（XS, S, M, L, XL）来进行估算，因为随着复杂度增加，估算的不确定性也呈指数增长。
+
+**计划扑克**（Planning Poker）是一种有效的估算技术：
+1. 每个团队成员独立选择一个估算值
+2. 同时展示选择
+3. 讨论差异最大的估算值
+4. 重复直到达成共识
+
+### 燃尽图的解读
+
+燃尽图不仅仅是进度跟踪工具，更是问题发现的雷达：
+- **实际线高于理想线**：进度落后，可能需要调整范围或寻求帮助
+- **实际线低于理想线**：进度超前，可能有额外容量处理技术债务
+- **平坦的线段**：可能存在阻塞问题或估算不准确
+- **突然下降**：可能有大的用户故事被完成，或者估算过于粗糙
+
+### 看板的流动效率
+
+看板的核心是优化流动效率（Flow Efficiency），即增值时间占总周期时间的比例。典型的软件开发团队流动效率只有5-15%，大部分时间花在等待、审批、上下文切换等非增值活动上。
+
+通过限制WIP和可视化瓶颈，团队可以显著提高流动效率：
+- 减少同时进行的任务数量
+- 识别并解决流程瓶颈
+- 建立明确的完成定义（Definition of Done）
+- 实施持续集成和自动化测试
+
+### 混合方法
+
+在实践中，很多团队采用ScrumBan（Scrum + Kanban）的混合方法：
+- 保留Scrum的固定迭代和角色结构
+- 使用看板的可视化和WIP限制来管理冲刺内的工作流
+- 根据团队成熟度和项目特点灵活调整
+
+这种方法结合了Scrum的结构化和看板的灵活性，特别适合维护和支持工作较多的团队。
+
+## 实际应用
+
+### 工具选择指南
+
+**Jira**：功能最全面的企业级工具，适合大型团队和复杂项目
+- 优势：强大的报告、集成、权限控制
+- 劣势：学习曲线陡峭，成本较高
+
+**Trello**：简单直观的看板工具，适合小型团队和个人项目
+- 优势：易用性好，免费版功能充足
+- 劣势：缺乏高级报告和复杂工作流
+
+**Azure DevOps**：微软生态系统的集成解决方案
+- 优势：与Visual Studio和GitHub深度集成
+- 劣势：主要面向微软技术栈
+
+**ClickUp**：全能型项目管理工具
+- 优势：功能丰富，价格合理
+- 劣势：界面复杂，可能功能过剩
+
+### 团队规模考虑
+
+- **小型团队**（3-7人）：Scrum效果最佳，沟通成本低
+- **中型团队**（8-15人）：考虑拆分为多个Scrum团队或使用看板
+- **大型团队**（15+人）：需要规模化敏捷框架（如SAFe、LeSS）
+
+### 远程团队最佳实践
+
+1. **异步沟通优先**：减少会议依赖，使用文档和工具同步信息
+2. **可视化工作流**：确保所有人都能清楚看到工作状态
+3. **定期同步**：保持团队连接感，但控制会议时间
+4. **明确的约定**：定义清晰的工作协议和响应时间期望
+
+### 度量与改进
+
+建立持续改进的循环：
+1. **收集数据**：速度、周期时间、缺陷率、客户满意度
+2. **分析趋势**：关注长期趋势而非单点数据
+3. **实验改进**：基于数据提出假设并实验验证
+4. **标准化成功**：将有效的改进措施制度化
+
+## 常见误区
+
+### ❌ 敏捷就是没有文档
+
+**事实**：敏捷强调"可工作的软件高于详尽的文档"，但并不意味着不需要文档。关键是创建**有价值的文档**，如架构决策记录、API文档、用户手册等，而不是为了文档而文档。
+
+### ❌ Scrum Master就是项目经理
+
+**事实**：Scrum Master是服务型领导，专注于移除障碍和促进流程，而不是分配任务或管理进度。真正的项目经理职责在Scrum中被分散到产品负责人（范围管理）和开发团队（进度管理）。
+
+### ❌ 故事点可以直接转换为小时
+
+**事实**：故事点是相对估算单位，不同团队的故事点含义不同。试图将故事点转换为小时会破坏估算的相对性和团队的自主性。
+
+### ❌ 每日站会就是状态汇报
+
+**事实**：每日站会是团队的同步和协调会议，重点是识别障碍和协调工作，而不是向经理汇报进度。理想情况下，经理不应该参加每日站会。
+
+### ❌ 敏捷适合所有项目
+
+**事实**：敏捷最适合需求不确定、变化频繁的项目。对于需求明确、技术成熟、法规严格的项目（如医疗设备、航空航天），传统的预测性方法可能更合适。
+
+### ❌ 可以只采用部分敏捷实践
+
+**事实**：敏捷是一个整体系统，单独采用某些实践（如每日站会但不进行迭代交付）往往会导致"伪敏捷"，无法获得真正的收益。
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：冲刺规划模拟
+运行 `example-01-sprint-planning.py`，修改产品待办列表，观察不同的优先级和故事点组合如何影响冲刺选择。尝试调整缓冲比例，看看对团队容量的影响。
+
+### 练习2：燃尽图分析
+使用 `example-02-burndown-chart.py`，输入不同的每日进度数据，观察燃尽图的变化。尝试创建一个"健康"的燃尽图和一个"有问题"的燃尽图，分析它们的区别。
+
+### 练习3：看板指标计算
+运行 `example-03-kanban-metrics.py`，添加更多的任务数据，计算不同时间段的指标。思考如何利用这些指标来改进团队的工作流程。
+
+### 挑战任务
+完成 `exercises/challenges/` 目录中的两个挑战：
+- **挑战1**：为你的团队设计敏捷角色和流程
+- **挑战2**：制定从瀑布模型到敏捷的转型策略
+
+完成后，检查你的答案是否与 `code/solutions/` 目录中的参考实现一致，并通过 `exercises/quiz.json` 中的测验检验你的理解。
+
+## 小结与思考
+
+今天我们深入探索了敏捷开发的核心概念和实践方法。记住几个关键点：
+
+- **敏捷是一种思维模式**，不仅仅是工具和流程的集合
+- **Scrum提供结构**，**看板提供灵活性**，选择适合你团队的方法
+- **度量是为了改进**，而不是为了考核，关注趋势而非绝对数值
+- **持续改进是核心**，通过实验和反馈不断优化流程
+
+思考题：
+1. 在你的当前工作环境中，哪些敏捷实践最容易实施？哪些最具挑战性？
+2. 如何平衡敏捷的灵活性和企业治理的合规性要求？
+3. 当团队成员对敏捷持怀疑态度时，你应该如何引导他们？
+
+敏捷之旅没有终点，只有持续的学习和改进。希望这个课程为你提供了坚实的起点！🎯

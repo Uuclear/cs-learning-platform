@@ -1,0 +1,90 @@
+[
+  {
+    "question": "Core Web Vitals中的LCP（Largest Contentful Paint）主要衡量什么？",
+    "options": [
+      "页面加载完成的总时间",
+      "页面主要内容渲染完成的时间",
+      "用户首次交互的响应时间",
+      "页面布局发生偏移的程度"
+    ],
+    "answer": 1,
+    "explanation": "LCP衡量的是页面主要内容（如大图片、视频或大块文本）渲染完成的时间，是用户体验的重要指标。"
+  },
+  {
+    "question": "以下哪种资源加载策略会阻塞HTML解析？",
+    "options": [
+      "<script src='app.js' async>",
+      "<script src='app.js' defer>",
+      "<script src='app.js'>",
+      "<link rel='preload' href='style.css' as='style'>"
+    ],
+    "answer": 2,
+    "explanation": "普通的<script>标签会阻塞HTML解析，直到脚本下载并执行完成。async和defer都不会阻塞解析。"
+  },
+  {
+    "question": "在HTTP缓存中，Cache-Control: max-age=3600表示什么？",
+    "options": [
+      "资源在3600秒后必须重新验证",
+      "资源在3600秒内被认为是新鲜的，可以直接使用",
+      "资源只能缓存3600次",
+      "资源大小不能超过3600字节"
+    ],
+    "answer": 1,
+    "explanation": "max-age=3600表示资源在3600秒（1小时）内被认为是新鲜的，浏览器可以直接从缓存使用而无需向服务器请求。"
+  },
+  {
+    "question": "以下哪种图片格式通常提供最佳的压缩率和质量？",
+    "options": [
+      "JPEG",
+      "PNG",
+      "WebP",
+      "GIF"
+    ],
+    "answer": 2,
+    "explanation": "WebP格式通常比JPEG和PNG提供更好的压缩率，在相同质量下文件更小，支持透明度和动画。"
+  },
+  {
+    "question": "代码分割（Code Splitting）的主要目的是什么？",
+    "options": [
+      "减少JavaScript文件的行数",
+      "提高代码的可读性",
+      "减少初始加载的bundle大小",
+      "增加模块的数量"
+    ],
+    "answer": 2,
+    "explanation": "代码分割的主要目的是将代码分成多个较小的chunks，只在需要时加载，从而减少初始加载的bundle大小，提高页面加载速度。"
+  },
+  {
+    "question": "Critical Rendering Path（关键渲染路径）包括以下哪些步骤？",
+    "options": [
+      "HTML解析 → CSSOM构建 → Render Tree → Layout → Paint",
+      "JavaScript执行 → HTML解析 → CSS解析 → Render Tree",
+      "网络请求 → 缓存检查 → HTML解析 → JavaScript执行",
+      "DNS查询 → TCP连接 → SSL握手 → HTTP请求"
+    ],
+    "answer": 0,
+    "explanation": "关键渲染路径的正确顺序是：HTML解析构建DOM → CSS解析构建CSSOM → 合并为Render Tree → Layout（布局）→ Paint（绘制）。"
+  },
+  {
+    "question": "使用rel='prefetch'的作用是什么？",
+    "options": [
+      "立即加载资源并执行",
+      "在后台预加载可能在将来使用的资源",
+      "阻止资源的加载",
+      "优先加载当前页面必需的资源"
+    ],
+    "answer": 1,
+    "explanation": "prefetch用于在后台预加载可能在将来（如下一个页面）使用的资源，优先级较低，不会影响当前页面的加载性能。"
+  },
+  {
+    "question": "在性能优化中，'stale-while-revalidate'缓存策略的优势是什么？",
+    "options": [
+      "完全禁用缓存确保内容最新",
+      "允许使用过期的缓存内容，同时在后台更新",
+      "只在离线时使用缓存",
+      "强制每次都要重新验证缓存"
+    ],
+    "answer": 1,
+    "explanation": "stale-while-revalidate策略允许在缓存过期后仍然使用过期内容（提供即时响应），同时在后台异步更新缓存，下次访问就能获得新鲜内容。"
+  }
+]

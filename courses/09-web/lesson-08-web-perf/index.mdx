@@ -1,0 +1,803 @@
+# 09-08 Web性能优化：速度就是体验
+
+## 开场白 - 为什么Web性能如此重要？
+
+大家好！欢迎来到Web性能优化的世界！⚡
+
+想象一下：你点击一个网站，3秒内页面完全加载并可以交互；图片清晰流畅，滚动丝般顺滑，没有任何布局跳动。这就是优秀的Web性能带来的体验。
+
+但现实往往相反：页面加载缓慢、按钮点击无响应、内容突然跳动...这些都会让用户流失。研究表明，**页面加载时间每增加1秒，转化率就下降7%**。在移动互联网时代，性能就是用户体验，速度就是竞争力。
+
+Google已经将Core Web Vitals作为搜索排名的重要因素，这意味着性能不仅影响用户体验，还直接影响业务指标。在这个课程中，我们将深入探讨Web性能优化的核心技术和最佳实践，让你能够构建快速、流畅的Web应用。
+
+## 核心概念 - Core Web Vitals与关键渲染路径
+
+### Core Web Vitals三大指标
+
+Google定义的Core Web Vitals是衡量用户体验的三个关键指标：
+
+#### 🎯 LCP (Largest Contentful Paint) - 最大内容绘制
+- **衡量什么**：页面主要内容渲染完成的时间
+- **良好阈值**：≤ 2.5秒
+- **优化重点**：减少服务器响应时间、优化关键资源加载、使用CDN
+
+#### 🖱️ INP (Interaction to Next Paint) - 下次绘制交互响应
+- **衡量什么**：用户交互（点击、输入等）到页面视觉反馈的时间
+- **良好阈值**：≤ 200毫秒  
+- **优化重点**：减少JavaScript执行时间、避免长任务、使用Web Workers
+
+#### 📏 CLS (Cumulative Layout Shift) - 累积布局偏移
+- **衡量什么**：页面加载过程中布局意外偏移的程度
+- **良好阈值**：≤ 0.1
+- **优化重点**：为图片和视频设置明确尺寸、避免动态插入内容、预留广告位
+
+### 关键渲染路径 (Critical Rendering Path)
+
+关键渲染路径是浏览器将HTML、CSS、JavaScript转换为像素显示在屏幕上的步骤：
+
+```
+HTML → DOM → CSSOM → Render Tree → Layout → Paint → Composite
+```
+
+**优化关键点**：
+- **最小化关键资源**：只加载首屏必需的CSS和JS
+- **优化CSSOM构建**：内联关键CSS，异步加载非关键CSS
+- **避免渲染阻塞**：使用`async`/`defer`加载JavaScript
+- **减少重排重绘**：批量DOM操作，使用transform和opacity
+
+## 代码演示
+
+让我们通过三个实用的例子来理解性能优化的核心概念：
+
+```python filename="code/examples/example-01-lighthouse-sim.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1：模拟Lighthouse性能评分系统
+
+这个脚本模拟Google Lighthouse的性能评分算法，
+基于Core Web Vitals指标（LCP、FID/INP、CLS）计算综合性能分数。
+"""
+
+import math
+import random
+
+
+def calculate_lcp_score(lcp_time_ms):
+    """
+    计算Largest Contentful Paint (LCP) 得分
+
+    LCP衡量页面主要内容加载完成的时间：
+    - 良好：<= 2.5秒 (得分100)
+    - 需要改进：2.5-4秒 (得分50-99)
+    - 差：> 4秒 (得分0-49)
+
+    :param lcp_time_ms: LCP时间（毫秒）
+    :return: LCP得分 (0-100)
+    """
+    if lcp_time_ms <= 2500:
+        return 100
+    elif lcp_time_ms <= 4000:
+        # 线性插值：2500ms=100分, 4000ms=50分
+        return 100 - ((lcp_time_ms - 2500) / 1500) * 50
+    else:
+        # 指数衰减：超过4秒后分数快速下降
+        return max(0, 50 * math.exp(-(lcp_time_ms - 4000) / 2000))
+
+
+def calculate_inp_score(inp_time_ms):
+    """
+    计算Interaction to Next Paint (INP) 得分
+
+    INP衡量用户交互响应速度（替代FID）：
+    - 良好：<= 200ms (得分100)
+    - 需要改进：200-500ms (得分50-99)
+    - 差：> 500ms (得分0-49)
+
+    :param inp_time_ms: INP时间（毫秒）
+    :return: INP得分 (0-100)
+    """
+    if inp_time_ms <= 200:
+        return 100
+    elif inp_time_ms <= 500:
+        # 线性插值：200ms=100分, 500ms=50分
+        return 100 - ((inp_time_ms - 200) / 300) * 50
+    else:
+        # 指数衰减
+        return max(0, 50 * math.exp(-(inp_time_ms - 500) / 1000))
+
+
+def calculate_cls_score(cls_value):
+    """
+    计算Cumulative Layout Shift (CLS) 得分
+
+    CLS衡量页面布局稳定性：
+    - 良好：<= 0.1 (得分100)
+    - 需要改进：0.1-0.25 (得分50-99)
+    - 差：> 0.25 (得分0-49)
+
+    :param cls_value: CLS值（无单位）
+    :return: CLS得分 (0-100)
+    """
+    if cls_value <= 0.1:
+        return 100
+    elif cls_value <= 0.25:
+        # 线性插值：0.1=100分, 0.25=50分
+        return 100 - ((cls_value - 0.1) / 0.15) * 50
+    else:
+        # 指数衰减
+        return max(0, 50 * math.exp(-(cls_value - 0.25) / 0.2))
+
+
+def calculate_performance_score(lcp_ms, inp_ms, cls_val):
+    """
+    计算综合性能得分
+
+    使用加权平均，其中LCP权重最高，因为它是最重要的指标
+
+    :param lcp_ms: LCP时间（毫秒）
+    :param inp_ms: INP时间（毫秒）
+    :param cls_val: CLS值
+    :return: 综合性能得分 (0-100)
+    """
+    lcp_score = calculate_lcp_score(lcp_ms)
+    inp_score = calculate_inp_score(inp_ms)
+    cls_score = calculate_cls_score(cls_val)
+
+    # 加权平均：LCP (40%), INP (30%), CLS (30%)
+    weighted_score = (lcp_score * 0.4 + inp_score * 0.3 + cls_score * 0.3)
+
+    return round(weighted_score, 1)
+
+
+def main():
+    """主函数：演示不同性能场景的评分"""
+    print("=== Lighthouse性能评分模拟器 ===\n")
+
+    # 场景1：优秀性能
+    print("场景1：优秀性能网站")
+    lcp1, inp1, cls1 = 1800, 150, 0.05
+    score1 = calculate_performance_score(lcp1, inp1, cls1)
+    print(f"LCP: {lcp1}ms, INP: {inp1}ms, CLS: {cls1}")
+    print(f"性能得分: {score1}/100\n")
+
+    # 场景2：中等性能
+    print("场景2：中等性能网站")
+    lcp2, inp2, cls2 = 3200, 350, 0.18
+    score2 = calculate_performance_score(lcp2, inp2, cls2)
+    print(f"LCP: {lcp2}ms, INP: {inp2}ms, CLS: {cls2}")
+    print(f"性能得分: {score2}/100\n")
+
+    # 场景3：较差性能
+    print("场景3：较差性能网站")
+    lcp3, inp3, cls3 = 6500, 800, 0.45
+    score3 = calculate_performance_score(lcp3, inp3, cls3)
+    print(f"LCP: {lcp3}ms, INP: {inp3}ms, CLS: {cls3}")
+    print(f"性能得分: {score3}/100\n")
+
+    # 交互式输入（可选）
+    print("=== 自定义测试 ===")
+    try:
+        custom_lcp = float(input("请输入LCP时间（毫秒）[默认1800]: ") or "1800")
+        custom_inp = float(input("请输入INP时间（毫秒）[默认150]: ") or "150")
+        custom_cls = float(input("请输入CLS值[默认0.05]: ") or "0.05")
+
+        custom_score = calculate_performance_score(custom_lcp, custom_inp, custom_cls)
+        print(f"\n自定义性能得分: {custom_score}/100")
+
+        # 给出优化建议
+        if custom_score >= 90:
+            print("✅ 性能优秀！继续保持！")
+        elif custom_score >= 50:
+            print("⚠️  性能需要改进，重点关注LCP和INP优化")
+        else:
+            print("❌ 性能很差，需要全面优化！")
+
+    except (ValueError, KeyboardInterrupt):
+        print("\n跳过自定义测试")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-02-cache-strategy.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2：缓存策略模拟器
+
+这个脚本比较不同的HTTP缓存策略对命中率的影响，
+包括no-cache、max-age、stale-while-revalidate等策略。
+"""
+
+import random
+from collections import defaultdict
+from datetime import datetime, timedelta
+
+
+class CacheSimulator:
+    """缓存模拟器类"""
+
+    def __init__(self, cache_capacity=100):
+        """
+        初始化缓存模拟器
+
+        :param cache_capacity: 缓存容量（条目数）
+        """
+        self.cache_capacity = cache_capacity
+        self.cache = {}  # {resource_id: {'content': content, 'timestamp': timestamp, 'ttl': ttl}}
+        self.stats = defaultdict(int)  # 统计信息
+
+    def simulate_no_cache(self, requests):
+        """
+        模拟no-cache策略：每次请求都去源服务器
+
+        :param requests: 请求列表 [(resource_id, timestamp), ...]
+        :return: 命中率
+        """
+        hits = 0
+        total = len(requests)
+
+        for resource_id, timestamp in requests:
+            # no-cache策略总是miss，需要重新验证
+            self.stats['no_cache_requests'] += 1
+            # 模拟条件请求（If-Modified-Since等）
+            self.stats['conditional_requests'] += 1
+
+        return 0.0  # 命中率总是0%
+
+    def simulate_max_age(self, requests, max_age_seconds):
+        """
+        模拟max-age缓存策略
+
+        :param requests: 请求列表 [(resource_id, timestamp), ...]
+        :param max_age_seconds: 最大年龄（秒）
+        :return: 命中率
+        """
+        hits = 0
+        total = len(requests)
+        cache = {}
+
+        for resource_id, timestamp in requests:
+            current_time = timestamp
+
+            if resource_id in cache:
+                cached_time, cached_content = cache[resource_id]
+                age = (current_time - cached_time).total_seconds()
+
+                if age <= max_age_seconds:
+                    # 缓存命中
+                    hits += 1
+                    self.stats['max_age_hits'] += 1
+                else:
+                    # 缓存过期，需要重新获取
+                    cache[resource_id] = (current_time, f"content_{resource_id}")
+                    self.stats['max_age_misses'] += 1
+            else:
+                # 缓存未命中
+                cache[resource_id] = (current_time, f"content_{resource_id}")
+                self.stats['max_age_misses'] += 1
+
+            # 维护缓存大小
+            if len(cache) > self.cache_capacity:
+                # 简单的LRU：移除最早的条目
+                oldest_key = min(cache.keys(), key=lambda k: cache[k][0])
+                del cache[oldest_key]
+
+        return hits / total if total > 0 else 0.0
+
+    def simulate_stale_while_revalidate(self, requests, max_age_seconds, stale_while_seconds):
+        """
+        模拟stale-while-revalidate缓存策略
+
+        :param requests: 请求列表 [(resource_id, timestamp), ...]
+        :param max_age_seconds: 最大年龄（秒）
+        :param stale_while_seconds: 允许使用过期内容的时间（秒）
+        :return: 命中率（包括新鲜和过期但可用的）
+        """
+        hits = 0
+        total = len(requests)
+        cache = {}
+
+        for resource_id, timestamp in requests:
+            current_time = timestamp
+
+            if resource_id in cache:
+                cached_time, cached_content = cache[resource_id]
+                age = (current_time - cached_time).total_seconds()
+                total_valid_time = max_age_seconds + stale_while_seconds
+
+                if age <= total_valid_time:
+                    # 可以使用缓存（新鲜或过期但在stale-while窗口内）
+                    hits += 1
+                    self.stats['swr_hits'] += 1
+
+                    # 如果在stale-while窗口内，后台重新验证
+                    if age > max_age_seconds:
+                        self.stats['swr_background_refresh'] += 1
+                else:
+                    # 完全过期，需要重新获取
+                    cache[resource_id] = (current_time, f"content_{resource_id}")
+                    self.stats['swr_misses'] += 1
+            else:
+                # 缓存未命中
+                cache[resource_id] = (current_time, f"content_{resource_id}")
+                self.stats['swr_misses'] += 1
+
+            # 维护缓存大小
+            if len(cache) > self.cache_capacity:
+                oldest_key = min(cache.keys(), key=lambda k: cache[k][0])
+                del cache[oldest_key]
+
+        return hits / total if total > 0 else 0.0
+
+    def generate_requests(self, num_requests=1000, time_span_hours=24, popular_ratio=0.3):
+        """
+        生成模拟请求数据
+
+        :param num_requests: 请求总数
+        :param time_span_hours: 时间跨度（小时）
+        :param popular_ratio: 热门资源比例
+        :return: 请求列表 [(resource_id, timestamp), ...]
+        """
+        requests = []
+        start_time = datetime.now()
+
+        # 创建热门和普通资源
+        num_popular = int(20 * popular_ratio)
+        num_regular = 80
+
+        for i in range(num_requests):
+            # 随机选择时间点
+            time_offset = random.uniform(0, time_span_hours * 3600)
+            request_time = start_time + timedelta(seconds=time_offset)
+
+            # 80%概率请求热门资源，20%请求普通资源
+            if random.random() < 0.8 and num_popular > 0:
+                resource_id = f"popular_{random.randint(1, num_popular)}"
+            else:
+                resource_id = f"regular_{random.randint(1, num_regular)}"
+
+            requests.append((resource_id, request_time))
+
+        # 按时间排序
+        requests.sort(key=lambda x: x[1])
+        return requests
+
+
+def main():
+    """主函数：运行缓存策略比较"""
+    print("=== HTTP缓存策略模拟器 ===\n")
+
+    # 创建模拟器
+    simulator = CacheSimulator(cache_capacity=50)
+
+    # 生成测试请求
+    print("正在生成测试请求...")
+    requests = simulator.generate_requests(num_requests=1000, time_span_hours=24)
+    print(f"生成了 {len(requests)} 个请求\n")
+
+    # 测试不同策略
+    strategies = [
+        ("no-cache", lambda: simulator.simulate_no_cache(requests)),
+        ("max-age=300 (5分钟)", lambda: simulator.simulate_max_age(requests, 300)),
+        ("max-age=3600 (1小时)", lambda: simulator.simulate_max_age(requests, 3600)),
+        ("stale-while-revalidate (max-age=300, swr=60)",
+         lambda: simulator.simulate_stale_while_revalidate(requests, 300, 60)),
+        ("stale-while-revalidate (max-age=3600, swr=300)",
+         lambda: simulator.simulate_stale_while_revalidate(requests, 3600, 300))
+    ]
+
+    results = []
+    for name, strategy_func in strategies:
+        hit_rate = strategy_func()
+        results.append((name, hit_rate))
+        print(f"{name:40} 命中率: {hit_rate:.2%}")
+
+    print("\n=== 缓存策略分析 ===")
+    print("1. no-cache: 每次都需要重新验证，但保证内容最新")
+    print("2. max-age: 简单有效，但过期后会有延迟")
+    print("3. stale-while-revalidate: 最佳用户体验，后台刷新保证内容新鲜")
+
+    print("\n=== 推荐策略 ===")
+    best_strategy = max(results, key=lambda x: x[1])
+    print(f"最佳策略: {best_strategy[0]} (命中率: {best_strategy[1]:.2%})")
+
+    if "stale-while-revalidate" in best_strategy[0]:
+        print("✅ 推荐使用stale-while-revalidate策略获得最佳性能和用户体验")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-03-bundle-analyzer.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3：Bundle分析器
+
+这个脚本解析简单的模块依赖树，计算总bundle大小，
+并识别重复的依赖项（可以帮助进行代码分割优化）。
+"""
+
+import json
+from collections import defaultdict, deque
+
+
+class BundleAnalyzer:
+    """Bundle分析器类"""
+
+    def __init__(self):
+        """初始化分析器"""
+        self.modules = {}  # {module_id: {'size': size, 'dependencies': [deps]}}
+        self.dependency_graph = defaultdict(list)
+        self.reverse_graph = defaultdict(list)
+
+    def add_module(self, module_id, size, dependencies=None):
+        """
+        添加模块到分析器
+
+        :param module_id: 模块ID
+        :param size: 模块大小（字节）
+        :param dependencies: 依赖列表
+        """
+        if dependencies is None:
+            dependencies = []
+
+        self.modules[module_id] = {
+            'size': size,
+            'dependencies': dependencies.copy()
+        }
+
+        # 构建依赖图
+        for dep in dependencies:
+            self.dependency_graph[module_id].append(dep)
+            self.reverse_graph[dep].append(module_id)
+
+    def calculate_total_size(self):
+        """
+        计算总bundle大小（包含重复依赖）
+
+        :return: 总大小（字节）
+        """
+        return sum(module['size'] for module in self.modules.values())
+
+    def find_duplicate_dependencies(self):
+        """
+        找出被多个模块依赖的重复依赖项
+
+        :return: 重复依赖字典 {dependency: [dependents]}
+        """
+        duplicates = {}
+        for dep, dependents in self.reverse_graph.items():
+            if len(dependents) > 1 and dep in self.modules:
+                duplicates[dep] = dependents.copy()
+        return duplicates
+
+    def calculate_unique_size(self):
+        """
+        计算去重后的实际bundle大小
+
+        :return: 唯一大小（字节）
+        """
+        return sum(module['size'] for module in self.modules.values())
+
+    def find_entry_points(self):
+        """
+        找出入口点（没有被其他模块依赖的模块）
+
+        :return: 入口点列表
+        """
+        all_modules = set(self.modules.keys())
+        dependent_modules = set(self.reverse_graph.keys())
+        entry_points = all_modules - dependent_modules
+        return list(entry_points)
+
+    def calculate_module_impact(self, module_id):
+        """
+        计算模块的影响范围（直接影响的模块数量）
+
+        :param module_id: 模块ID
+        :return: 影响的模块数量
+        """
+        if module_id not in self.modules:
+            return 0
+
+        visited = set()
+        queue = deque([module_id])
+
+        while queue:
+            current = queue.popleft()
+            if current in visited:
+                continue
+            visited.add(current)
+
+            # 添加所有依赖此模块的模块
+            for dependent in self.reverse_graph.get(current, []):
+                if dependent not in visited:
+                    queue.append(dependent)
+
+        return len(visited) - 1  # 减去自身
+
+    def suggest_code_splitting(self, min_impact=2, min_size=10000):
+        """
+        建议代码分割点
+
+        :param min_impact: 最小影响模块数
+        :param min_size: 最小模块大小（字节）
+        :return: 分割建议列表
+        """
+        suggestions = []
+        duplicates = self.find_duplicate_dependencies()
+
+        for module_id, module_info in self.modules.items():
+            impact = self.calculate_module_impact(module_id)
+            size = module_info['size']
+
+            # 大型且被多个模块使用的模块适合分割
+            if impact >= min_impact and size >= min_size:
+                suggestions.append({
+                    'module': module_id,
+                    'size': size,
+                    'impact': impact,
+                    'reason': f'大型模块({size}字节)，影响{impact}个模块'
+                })
+
+            # 被重复使用的依赖也适合提取到公共chunk
+            if module_id in duplicates and len(duplicates[module_id]) >= min_impact:
+                suggestions.append({
+                    'module': module_id,
+                    'size': size,
+                    'impact': len(duplicates[module_id]),
+                    'reason': f'被{len(duplicates[module_id])}个模块重复使用'
+                })
+
+        # 按影响和大小排序
+        suggestions.sort(key=lambda x: (x['impact'], x['size']), reverse=True)
+        return suggestions
+
+    def generate_report(self):
+        """
+        生成完整的bundle分析报告
+
+        :return: 报告字符串
+        """
+        total_size = self.calculate_total_size()
+        unique_size = self.calculate_unique_size()
+        duplicates = self.find_duplicate_dependencies()
+        entry_points = self.find_entry_points()
+        suggestions = self.suggest_code_splitting()
+
+        report = []
+        report.append("=== Bundle分析报告 ===\n")
+
+        report.append(f"总模块数: {len(self.modules)}")
+        report.append(f"总bundle大小: {total_size:,} 字节 ({total_size / 1024:.1f} KB)")
+        report.append(f"唯一内容大小: {unique_size:,} 字节 ({unique_size / 1024:.1f} KB)")
+        report.append(f"重复内容节省: {total_size - unique_size:,} 字节 ({(total_size - unique_size) / 1024:.1f} KB)\n")
+
+        report.append(f"入口点数量: {len(entry_points)}")
+        if entry_points:
+            report.append(f"入口点: {', '.join(entry_points[:5])}")
+            if len(entry_points) > 5:
+                report.append(f"... 还有 {len(entry_points) - 5} 个入口点\n")
+
+        report.append(f"\n重复依赖项: {len(duplicates)}")
+        for dep, dependents in list(duplicates.items())[:5]:
+            report.append(f"  {dep}: 被 {len(dependents)} 个模块使用 ({', '.join(dependents[:3])})")
+        if len(duplicates) > 5:
+            report.append(f"  ... 还有 {len(duplicates) - 5} 个重复依赖项\n")
+
+        report.append(f"\n代码分割建议: {len(suggestions)}")
+        for i, suggestion in enumerate(suggestions[:3], 1):
+            report.append(f"  {i}. {suggestion['module']}")
+            report.append(f"     大小: {suggestion['size']:,} 字节")
+            report.append(f"     影响: {suggestion['impact']} 个模块")
+            report.append(f"     原因: {suggestion['reason']}")
+        if len(suggestions) > 3:
+            report.append(f"  ... 还有 {len(suggestions) - 3} 个建议\n")
+
+        return "\n".join(report)
+
+
+def create_sample_bundle():
+    """创建示例bundle数据"""
+    analyzer = BundleAnalyzer()
+
+    # 添加模块（模拟真实应用的模块结构）
+    modules_data = {
+        'main.js': {'size': 50000, 'dependencies': ['react', 'lodash', 'utils', 'components']},
+        'admin.js': {'size': 35000, 'dependencies': ['react', 'lodash', 'utils', 'admin-components']},
+        'user-profile.js': {'size': 25000, 'dependencies': ['react', 'utils', 'profile-components']},
+        'react': {'size': 120000, 'dependencies': []},
+        'lodash': {'size': 80000, 'dependencies': []},
+        'utils': {'size': 15000, 'dependencies': []},
+        'components': {'size': 45000, 'dependencies': ['utils']},
+        'admin-components': {'size': 30000, 'dependencies': ['utils']},
+        'profile-components': {'size': 20000, 'dependencies': ['utils']},
+        'analytics.js': {'size': 10000, 'dependencies': ['utils']}
+    }
+
+    for module_id, data in modules_data.items():
+        analyzer.add_module(module_id, data['size'], data['dependencies'])
+
+    return analyzer
+
+
+def main():
+    """主函数：运行bundle分析"""
+    print("=== JavaScript Bundle分析器 ===\n")
+
+    # 创建示例bundle
+    analyzer = create_sample_bundle()
+
+    # 生成并显示报告
+    report = analyzer.generate_report()
+    print(report)
+
+    print("=== 优化建议 ===")
+    print("1. 将React和Lodash提取到vendor chunk")
+    print("2. 将Utils模块提取到common chunk")
+    print("3. 考虑按路由进行代码分割")
+    print("4. 使用动态导入减少初始bundle大小")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## 深入理解
+
+### 资源加载优先级
+
+现代浏览器为不同类型的资源分配不同的加载优先级：
+
+| 资源类型 | 优先级 | 说明 |
+|---------|--------|------|
+| 关键CSS | Highest | 阻塞渲染的关键样式 |
+| 同步Script | High | 阻塞HTML解析的脚本 |
+| 异步Script | Medium | `async`脚本 |
+| 图片 | Low/Medium | 取决于是否在视口内 |
+| Prefetch资源 | Lowest | 后台预加载的资源 |
+
+**优化策略**：
+- 使用`<link rel="preload">`提升关键资源优先级
+- 使用`<link rel="prefetch">`降低非关键资源优先级
+- 为图片添加`loading="lazy"`属性延迟加载
+
+### 缓存层级架构
+
+现代Web应用通常采用多层缓存架构：
+
+```
+Service Worker Cache ←→ HTTP Cache ←→ CDN Cache ←→ Origin Server
+```
+
+**各层特点**：
+- **Service Worker**：最灵活，可编程，离线支持
+- **HTTP Cache**：标准化，浏览器内置，自动管理
+- **CDN Cache**：分布式，减少延迟，减轻源站压力
+- **Origin Server**：最终数据源，通常有数据库缓存
+
+### 代码分割策略
+
+有效的代码分割需要考虑多个维度：
+
+1. **路由级别分割**：每个路由对应独立的chunk
+2. **组件级别分割**：大型组件按需加载
+3. **功能级别分割**：将不常用功能分离
+4. **供应商分割**：第三方库单独打包
+
+**Tree Shaking**：通过静态分析移除未使用的代码，需要：
+- 使用ES6模块语法（import/export）
+- 启用构建工具的tree shaking功能
+- 避免副作用代码（side effects）
+
+## 实际应用 - 性能监控与持续优化
+
+### 性能监控体系
+
+建立完整的性能监控体系：
+
+1. **实验室测试**（Lab Data）
+   - Lighthouse：自动化性能审计
+   - WebPageTest：详细性能分析
+   - Chrome DevTools：实时调试
+
+2. **真实用户监控**（Field Data）
+   - Web Vitals JS库：收集真实用户数据
+   - Google Analytics：集成性能指标
+   - 自定义监控：业务特定指标
+
+### 持续优化流程
+
+建立性能优化的持续改进循环：
+
+```
+测量 → 分析 → 优化 → 验证 → 监控
+```
+
+**关键实践**：
+- **性能预算**：为bundle大小、加载时间设定上限
+- **自动化测试**：CI/CD中集成Lighthouse检查
+- **A/B测试**：验证优化效果对业务指标的影响
+- **回归防护**：防止性能退化
+
+### 工具链整合
+
+现代前端开发中的性能工具链：
+
+- **构建时**：Webpack Bundle Analyzer, ESBuild, Vite
+- **测试时**：Lighthouse CI, WebPageTest API
+- **运行时**：Web Vitals, Performance Observer API
+- **监控时**：Google Analytics, Sentry, Custom RUM
+
+## 常见误区
+
+### ❌ "优化就是减少文件大小"
+
+虽然文件大小很重要，但**网络往返次数**和**关键资源优先级**往往更重要。一个10KB的阻塞CSS比一个100KB的异步JS对性能影响更大。
+
+### ❌ "所有图片都要用WebP"
+
+WebP虽然压缩率高，但需要考虑**浏览器兼容性**。应该使用`<picture>`元素提供降级方案：
+
+```html
+<picture>
+  <source srcset="image.webp" type="image/webp">
+  <img src="image.jpg" alt="描述">
+</picture>
+```
+
+### ❌ "缓存时间越长越好"
+
+过长的缓存时间会导致**更新问题**。应该：
+- 对静态资源使用内容哈希（`app.a1b2c3.js`）
+- 对HTML使用短缓存或`no-cache`
+- 使用Cache-Busting策略处理版本更新
+
+### ❌ "代码分割越多越好"
+
+过度分割会导致**过多的网络请求**，增加HTTP开销。应该：
+- 平衡chunk大小（通常20-50KB压缩后）
+- 考虑HTTP/2的多路复用优势
+- 避免微小的chunks（<5KB）
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：性能评分模拟
+运行`example-01-lighthouse-sim.py`，测试不同性能场景，并尝试修改评分算法使其更符合实际Lighthouse行为。
+
+### 练习2：缓存策略实验
+使用`example-02-cache-strategy.py`模拟不同的缓存策略，分析在不同访问模式下的命中率差异。
+
+### 练习3：Bundle分析
+运行`example-03-bundle-analyzer.py`，分析示例bundle，并尝试为你自己的项目创建类似的分析器。
+
+### 挑战任务
+完成`exercises/challenges/`目录中的两个挑战：
+- **挑战1**：为电商网站设计完整的性能优化方案
+- **挑战2**：为新闻网站设计最优的缓存策略
+
+完成后，检查你的答案是否与`solutions/`目录中的参考实现一致。
+
+## 小结与思考
+
+今天我们深入探讨了Web性能优化的核心概念和技术。记住几个关键点：
+
+- **Core Web Vitals是用户体验的量化指标**，应该作为性能优化的主要目标
+- **关键渲染路径优化**是提升首屏性能的基础
+- **合理的缓存策略**可以显著减少网络请求和加载时间
+- **代码分割和Tree Shaking**是控制bundle大小的有效手段
+- **持续监控和优化**是保持良好性能的必要条件
+
+思考题：
+1. 在移动端和桌面端，性能优化的重点有何不同？
+2. 如何在保证功能完整性的同时实现最佳性能？
+3. 当业务需求与性能目标冲突时，应该如何权衡？
+
+性能优化是一个持续的过程，需要在用户体验、开发效率和业务目标之间找到平衡。继续实践和探索，你会发现更多优化的可能性！🚀

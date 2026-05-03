@@ -1,0 +1,819 @@
+# 15-06 AR/VR：沉浸式技术的未来
+
+## 开场白 - 走进虚拟与现实交融的新世界
+
+大家好！欢迎来到AR/VR的世界！🕶️
+
+想象一下：你可以在客厅里与远在千里之外的朋友一起打乒乓球，医生可以在手术前通过全息投影预演复杂的手术过程，学生可以亲手"触摸"古罗马建筑的每一个细节——这些不再是科幻电影中的场景，而是AR/VR技术正在实现的现实。
+
+增强现实（AR）和虚拟现实（VR）作为空间计算的核心技术，正在重新定义我们与数字世界的交互方式。从简单的手机滤镜到完全沉浸式的虚拟环境，AR/VR技术已经渗透到游戏、教育、医疗、零售等各个领域。在这个课程中，我们将深入探索这些令人兴奋的技术背后的原理、挑战和发展趋势。
+
+## 核心概念 - AR/VR/MR的区别与技术基础
+
+### 🕶️ AR vs VR vs MR：三种不同的沉浸体验
+
+**虚拟现实**（VR）：完全沉浸式的体验，用户被置于一个完全由计算机生成的虚拟环境中，与现实世界完全隔离。典型设备包括Oculus Rift、HTC Vive等头戴式显示器。
+
+**增强现实**（AR）：将虚拟信息叠加到现实世界上，用户仍然能看到真实环境，但增加了数字内容。典型应用包括Pokémon GO、Snapchat滤镜，以及Apple Vision Pro的部分模式。
+
+**混合现实**（MR）：AR的高级形式，不仅叠加虚拟内容，还允许虚拟物体与现实世界进行真实的物理交互。虚拟物体能够理解并响应现实环境的几何结构和光照条件。
+
+### 🎮 VR渲染管线的关键要素
+
+VR系统对性能要求极为苛刻，主要体现在：
+
+- **高帧率要求**：通常需要90fps或更高，以减少运动延迟，防止晕动症
+- **立体渲染**：为左右眼分别渲染略有差异的图像，产生深度感
+- **头部追踪**：实时跟踪用户头部位置和方向，确保视觉反馈与动作同步
+- **低延迟**：从头部运动到屏幕显示的整个延迟应控制在20ms以内
+
+### 🧭 空间计算：让机器理解3D世界
+
+空间计算是AR/VR的核心，包含以下关键技术：
+
+- **SLAM**（Simultaneous Localization and Mapping）：同时定位与建图，让设备在未知环境中确定自身位置并构建环境地图
+- **3D跟踪**：精确跟踪用户身体部位（头部、手部、眼睛）的位置和姿态
+- **手势识别**：通过计算机视觉或传感器数据识别用户的手势意图
+- **环境理解**：检测平面、边缘、物体等环境特征
+
+## 代码演示
+
+让我们通过三个Python示例来理解AR/VR的核心技术原理：
+
+```python filename="code/examples/example-01-3d-math.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1：3D变换数学基础
+演示向量、矩阵和旋转的基本操作，仅使用标准库math模块
+"""
+
+import math
+
+
+class Vector3D:
+    """三维向量类"""
+
+    def __init__(self, x=0.0, y=0.0, z=0.0):
+        """初始化三维向量"""
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def __add__(self, other):
+        """向量加法"""
+        return Vector3D(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        """向量减法"""
+        return Vector3D(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __mul__(self, scalar):
+        """向量与标量相乘"""
+        return Vector3D(self.x * scalar, self.y * scalar, self.z * scalar)
+
+    def dot(self, other):
+        """点积（标量积）"""
+        return self.x * other.x + self.y * other.y + self.z * other.z
+
+    def cross(self, other):
+        """叉积（向量积）"""
+        return Vector3D(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x
+        )
+
+    def magnitude(self):
+        """向量的模（长度）"""
+        return math.sqrt(self.x**2 + self.y**2 + self.z**2)
+
+    def normalize(self):
+        """归一化向量（单位向量）"""
+        mag = self.magnitude()
+        if mag == 0:
+            return Vector3D(0, 0, 0)
+        return Vector3D(self.x / mag, self.y / mag, self.z / mag)
+
+    def __str__(self):
+        """字符串表示"""
+        return f"Vector3D({self.x:.3f}, {self.y:.3f}, {self.z:.3f})"
+
+
+class Matrix4x4:
+    """4x4矩阵类，用于3D变换"""
+
+    def __init__(self):
+        """初始化为单位矩阵"""
+        self.data = [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        ]
+
+    @staticmethod
+    def identity():
+        """创建单位矩阵"""
+        return Matrix4x4()
+
+    @staticmethod
+    def translation(tx, ty, tz):
+        """创建平移矩阵"""
+        m = Matrix4x4()
+        m.data[0][3] = tx
+        m.data[1][3] = ty
+        m.data[2][3] = tz
+        return m
+
+    @staticmethod
+    def rotation_x(angle_rad):
+        """创建绕X轴旋转矩阵"""
+        m = Matrix4x4()
+        cos_a = math.cos(angle_rad)
+        sin_a = math.sin(angle_rad)
+        m.data[1][1] = cos_a
+        m.data[1][2] = -sin_a
+        m.data[2][1] = sin_a
+        m.data[2][2] = cos_a
+        return m
+
+    @staticmethod
+    def rotation_y(angle_rad):
+        """创建绕Y轴旋转矩阵"""
+        m = Matrix4x4()
+        cos_a = math.cos(angle_rad)
+        sin_a = math.sin(angle_rad)
+        m.data[0][0] = cos_a
+        m.data[0][2] = sin_a
+        m.data[2][0] = -sin_a
+        m.data[2][2] = cos_a
+        return m
+
+    @staticmethod
+    def rotation_z(angle_rad):
+        """创建绕Z轴旋转矩阵"""
+        m = Matrix4x4()
+        cos_a = math.cos(angle_rad)
+        sin_a = math.sin(angle_rad)
+        m.data[0][0] = cos_a
+        m.data[0][1] = -sin_a
+        m.data[1][0] = sin_a
+        m.data[1][1] = cos_a
+        return m
+
+    def multiply_vector(self, vec):
+        """矩阵与向量相乘"""
+        x = (self.data[0][0] * vec.x + self.data[0][1] * vec.y +
+             self.data[0][2] * vec.z + self.data[0][3])
+        y = (self.data[1][0] * vec.x + self.data[1][1] * vec.y +
+             self.data[1][2] * vec.z + self.data[1][3])
+        z = (self.data[2][0] * vec.x + self.data[2][1] * vec.y +
+             self.data[2][2] * vec.z + self.data[2][3])
+        w = (self.data[3][0] * vec.x + self.data[3][1] * vec.y +
+             self.data[3][2] * vec.z + self.data[3][3])
+
+        if w != 0:
+            x, y, z = x/w, y/w, z/w
+
+        return Vector3D(x, y, z)
+
+    def multiply_matrix(self, other):
+        """矩阵相乘"""
+        result = Matrix4x4()
+        for i in range(4):
+            for j in range(4):
+                result.data[i][j] = sum(
+                    self.data[i][k] * other.data[k][j] for k in range(4)
+                )
+        return result
+
+    def __str__(self):
+        """字符串表示"""
+        lines = []
+        for row in self.data:
+            lines.append("[" + ", ".join(f"{val:8.3f}" for val in row) + "]")
+        return "\n".join(lines)
+
+
+def main():
+    """主函数：演示3D数学操作"""
+    print("=== 3D变换数学演示 ===\n")
+
+    # 创建向量
+    v1 = Vector3D(1, 2, 3)
+    v2 = Vector3D(4, 5, 6)
+
+    print(f"向量 v1 = {v1}")
+    print(f"向量 v2 = {v2}")
+    print(f"v1 + v2 = {v1 + v2}")
+    print(f"v1 - v2 = {v1 - v2}")
+    print(f"v1 · v2 = {v1.dot(v2):.3f} (点积)")
+    print(f"v1 × v2 = {v1.cross(v2)} (叉积)")
+    print(f"|v1| = {v1.magnitude():.3f} (模长)")
+    print(f"单位向量 v1 = {v1.normalize()}\n")
+
+    # 创建变换矩阵
+    print("=== 矩阵变换演示 ===")
+
+    # 平移变换
+    translation = Matrix4x4.translation(10, 20, 30)
+    point = Vector3D(1, 1, 1)
+    translated = translation.multiply_vector(point)
+    print(f"原始点: {point}")
+    print(f"平移后: {translated}")
+
+    # 旋转变换
+    rotation_y = Matrix4x4.rotation_y(math.pi / 4)  # 45度绕Y轴旋转
+    rotated = rotation_y.multiply_vector(Vector3D(1, 0, 0))
+    print(f"X轴单位向量绕Y轴旋转45度: {rotated}")
+
+    # 组合变换：先旋转后平移
+    combined = translation.multiply_matrix(rotation_y)
+    transformed = combined.multiply_vector(Vector3D(1, 0, 0))
+    print(f"组合变换(旋转+平移): {transformed}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-02-spatial-tracking.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2：空间跟踪模拟
+模拟头部/眼睛位置跟踪，包括坐标变换和延迟计算
+"""
+
+import math
+import time
+from typing import Tuple
+
+
+class HeadTracker:
+    """头部跟踪器模拟类"""
+
+    def __init__(self):
+        """初始化跟踪器"""
+        self.position = (0.0, 0.0, 0.0)  # (x, y, z) 位置
+        self.rotation = (0.0, 0.0, 0.0)  # (pitch, yaw, roll) 旋转角度（弧度）
+        self.last_update_time = time.time()
+        self.latency = 0.016  # 模拟16ms延迟（约60fps）
+
+    def update_position(self, x: float, y: float, z: float):
+        """更新位置"""
+        self.position = (x, y, z)
+        self.last_update_time = time.time()
+
+    def update_rotation(self, pitch: float, yaw: float, roll: float):
+        """更新旋转"""
+        self.rotation = (pitch, yaw, roll)
+        self.last_update_time = time.time()
+
+    def get_current_state(self) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
+        """获取当前状态（考虑延迟）"""
+        current_time = time.time()
+        elapsed = current_time - self.last_update_time
+
+        # 模拟由于延迟导致的状态滞后
+        if elapsed < self.latency:
+            # 返回预测状态（简单线性预测）
+            return self._predict_state(elapsed)
+        else:
+            # 返回最新状态
+            return self.position, self.rotation
+
+    def _predict_state(self, elapsed: float) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
+        """预测状态（简化版）"""
+        # 在实际系统中，这会使用更复杂的预测算法
+        # 这里我们简单返回当前状态
+        return self.position, self.rotation
+
+
+class CoordinateSystem:
+    """坐标系统类"""
+
+    @staticmethod
+    def world_to_head(world_pos: Tuple[float, float, float],
+                     head_pos: Tuple[float, float, float],
+                     head_rot: Tuple[float, float, float]) -> Tuple[float, float, float]:
+        """
+        将世界坐标转换为头部坐标系
+        :param world_pos: 世界坐标 (x, y, z)
+        :param head_pos: 头部位置 (x, y, z)
+        :param head_rot: 头部旋转 (pitch, yaw, roll)
+        :return: 头部坐标系中的位置
+        """
+        # 先平移（相对于头部位置）
+        x = world_pos[0] - head_pos[0]
+        y = world_pos[1] - head_pos[1]
+        z = world_pos[2] - head_pos[2]
+
+        # 应用旋转（简化：只考虑yaw和pitch）
+        pitch, yaw, roll = head_rot
+
+        # 绕Y轴旋转（yaw）
+        cos_yaw = math.cos(yaw)
+        sin_yaw = math.sin(yaw)
+        x_rot_y = x * cos_yaw + z * sin_yaw
+        z_rot_y = -x * sin_yaw + z * cos_yaw
+
+        # 绕X轴旋转（pitch）
+        cos_pitch = math.cos(pitch)
+        sin_pitch = math.sin(pitch)
+        y_rot_x = y * cos_pitch - z_rot_y * sin_pitch
+        z_rot_x = y * sin_pitch + z_rot_y * cos_pitch
+
+        return (x_rot_y, y_rot_x, z_rot_x)
+
+    @staticmethod
+    def calculate_view_direction(head_rot: Tuple[float, float, float]) -> Tuple[float, float, float]:
+        """
+        计算视线方向向量
+        :param head_rot: 头部旋转 (pitch, yaw, roll)
+        :return: 归一化的视线方向向量
+        """
+        pitch, yaw, roll = head_rot
+
+        # 假设初始视线方向是Z轴正方向
+        x = math.sin(yaw) * math.cos(pitch)
+        y = math.sin(pitch)
+        z = math.cos(yaw) * math.cos(pitch)
+
+        # 归一化
+        length = math.sqrt(x*x + y*y + z*z)
+        if length > 0:
+            x, y, z = x/length, y/length, z/length
+
+        return (x, y, z)
+
+
+def simulate_tracking():
+    """模拟跟踪过程"""
+    print("=== 空间跟踪模拟 ===\n")
+
+    # 创建跟踪器
+    tracker = HeadTracker()
+
+    # 设置初始状态
+    tracker.update_position(0.0, 1.7, 0.0)  # 站立位置，身高1.7米
+    tracker.update_rotation(0.0, 0.0, 0.0)  # 直视前方
+
+    # 获取当前状态
+    pos, rot = tracker.get_current_state()
+    print(f"头部位置: ({pos[0]:.2f}, {pos[1]:.2f}, {pos[2]:.2f})")
+    print(f"头部旋转: (俯仰={math.degrees(rot[0]):.1f}°, 偏航={math.degrees(rot[1]):.1f}°, 翻滚={math.degrees(rot[2]):.1f}°)")
+
+    # 计算视线方向
+    view_dir = CoordinateSystem.calculate_view_direction(rot)
+    print(f"视线方向: ({view_dir[0]:.3f}, {view_dir[1]:.3f}, {view_dir[2]:.3f})")
+
+    # 转换世界坐标到头部坐标
+    world_object = (2.0, 1.7, 3.0)  # 世界中的物体位置
+    head_coords = CoordinateSystem.world_to_head(world_object, pos, rot)
+    print(f"世界物体 {world_object} 在头部坐标系中: ({head_coords[0]:.3f}, {head_coords[1]:.3f}, {head_coords[2]:.3f})")
+
+    print(f"\n模拟延迟: {tracker.latency*1000:.1f}ms")
+    print(f"目标帧率: {1.0/tracker.latency:.0f}fps")
+
+
+def calculate_latency_impact():
+    """计算延迟对用户体验的影响"""
+    print("\n=== 延迟影响分析 ===")
+
+    # 不同延迟值对应的帧率
+    latencies = [0.008, 0.011, 0.016, 0.022, 0.033]  # 125Hz, 90Hz, 60Hz, 45Hz, 30Hz
+
+    print("延迟 vs 帧率 vs 用户体验:")
+    for latency in latencies:
+        fps = 1.0 / latency
+        if latency <= 0.011:  # <=11ms (~90fps)
+            experience = "优秀 - 几乎无延迟感"
+        elif latency <= 0.016:  # <=16ms (60fps)
+            experience = "良好 - 可接受的延迟"
+        elif latency <= 0.022:  # <=22ms (45fps)
+            experience = "一般 - 明显延迟感"
+        else:  # >22ms (<45fps)
+            experience = "较差 - 可能引起晕动症"
+
+        print(f"  {latency*1000:4.1f}ms → {fps:5.1f}fps → {experience}")
+
+
+def main():
+    """主函数"""
+    simulate_tracking()
+    calculate_latency_impact()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-03-ar-scene.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3：AR场景模拟
+模拟简单的AR场景：检测平面、放置虚拟物体、计算遮挡
+"""
+
+import math
+from typing import List, Tuple, Optional
+
+
+class Plane:
+    """平面类，用于表示检测到的水平或垂直平面"""
+
+    def __init__(self, center: Tuple[float, float, float], normal: Tuple[float, float, float],
+                 size: Tuple[float, float], plane_type: str = "horizontal"):
+        """
+        初始化平面
+        :param center: 平面中心点 (x, y, z)
+        :param normal: 平面法向量 (nx, ny, nz)
+        :param size: 平面尺寸 (width, height)
+        :param plane_type: 平面类型 ("horizontal" 或 "vertical")
+        """
+        self.center = center
+        self.normal = normal
+        self.size = size
+        self.plane_type = plane_type
+
+    def contains_point(self, point: Tuple[float, float, float], tolerance: float = 0.1) -> bool:
+        """
+        检查点是否在平面范围内（考虑容差）
+        :param point: 要检查的点 (x, y, z)
+        :param tolerance: 容差距离
+        :return: 是否包含该点
+        """
+        # 计算点到平面的距离
+        distance = abs(
+            self.normal[0] * (point[0] - self.center[0]) +
+            self.normal[1] * (point[1] - self.center[1]) +
+            self.normal[2] * (point[2] - self.center[2])
+        )
+
+        if distance > tolerance:
+            return False
+
+        # 检查点是否在平面边界内（简化：假设平面与坐标轴对齐）
+        if self.plane_type == "horizontal":
+            # 水平平面（如地面、桌面）
+            half_width, half_height = self.size[0]/2, self.size[1]/2
+            dx = abs(point[0] - self.center[0])
+            dz = abs(point[2] - self.center[2])
+            return dx <= half_width and dz <= half_height
+        else:
+            # 垂直平面（如墙面）
+            half_width, half_height = self.size[0]/2, self.size[1]/2
+            dx = abs(point[0] - self.center[0])
+            dy = abs(point[1] - self.center[1])
+            return dx <= half_width and dy <= half_height
+
+    def project_point(self, point: Tuple[float, float, float]) -> Tuple[float, float, float]:
+        """
+        将点投影到平面上
+        :param point: 原始点
+        :return: 投影后的点
+        """
+        # 计算点到平面的向量
+        to_point = (
+            point[0] - self.center[0],
+            point[1] - self.center[1],
+            point[2] - self.center[2]
+        )
+
+        # 计算沿法向量的距离
+        distance = (
+            to_point[0] * self.normal[0] +
+            to_point[1] * self.normal[1] +
+            to_point[2] * self.normal[2]
+        )
+
+        # 投影点 = 原始点 - 距离 * 法向量
+        projected = (
+            point[0] - distance * self.normal[0],
+            point[1] - distance * self.normal[1],
+            point[2] - distance * self.normal[2]
+        )
+
+        return projected
+
+
+class VirtualObject:
+    """虚拟物体类"""
+
+    def __init__(self, position: Tuple[float, float, float], size: Tuple[float, float, float],
+                 object_type: str = "cube"):
+        """
+        初始化虚拟物体
+        :param position: 物体位置 (x, y, z)
+        :param size: 物体尺寸 (width, height, depth)
+        :param object_type: 物体类型
+        """
+        self.position = position
+        self.size = size
+        self.object_type = object_type
+
+    def get_bounding_box(self) -> Tuple[Tuple[float, float, float], Tuple[float, float, float]]:
+        """
+        获取包围盒（最小和最大坐标）
+        :return: ((min_x, min_y, min_z), (max_x, max_y, max_z))
+        """
+        half_w, half_h, half_d = self.size[0]/2, self.size[1]/2, self.size[2]/2
+        min_coords = (
+            self.position[0] - half_w,
+            self.position[1] - half_h,
+            self.position[2] - half_d
+        )
+        max_coords = (
+            self.position[0] + half_w,
+            self.position[1] + half_h,
+            self.position[2] + half_d
+        )
+        return min_coords, max_coords
+
+    def is_visible_from(self, camera_pos: Tuple[float, float, float]) -> bool:
+        """
+        检查物体从相机位置是否可见（简化版）
+        :param camera_pos: 相机位置
+        :return: 是否可见
+        """
+        # 简化：假设没有遮挡物，总是可见
+        # 在实际AR系统中，这会涉及复杂的光线追踪和遮挡检测
+        return True
+
+
+class ARScene:
+    """AR场景管理器"""
+
+    def __init__(self):
+        """初始化AR场景"""
+        self.detected_planes: List[Plane] = []
+        self.virtual_objects: List[VirtualObject] = []
+
+    def detect_planes(self, scan_data: List[Tuple[float, float, float]]) -> List[Plane]:
+        """
+        模拟平面检测（基于扫描数据）
+        :param scan_data: 扫描点云数据
+        :return: 检测到的平面列表
+        """
+        # 简化实现：假设我们知道主要平面
+        planes = []
+
+        # 检测水平平面（地面）
+        ground_plane = Plane(
+            center=(0.0, 0.0, 0.0),
+            normal=(0.0, 1.0, 0.0),
+            size=(5.0, 5.0),
+            plane_type="horizontal"
+        )
+        planes.append(ground_plane)
+
+        # 检测垂直平面（墙面）
+        wall_plane = Plane(
+            center=(2.5, 1.5, 0.0),
+            normal=(1.0, 0.0, 0.0),
+            size=(3.0, 3.0),
+            plane_type="vertical"
+        )
+        planes.append(wall_plane)
+
+        self.detected_planes = planes
+        return planes
+
+    def place_object_on_plane(self, plane_index: int, offset: Tuple[float, float, float]) -> Optional[VirtualObject]:
+        """
+        在指定平面上放置虚拟物体
+        :param plane_index: 平面索引
+        :param offset: 相对于平面中心的偏移
+        :return: 创建的虚拟物体，如果失败则返回None
+        """
+        if plane_index >= len(self.detected_planes):
+            print("错误：平面索引超出范围")
+            return None
+
+        plane = self.detected_planes[plane_index]
+        target_pos = (
+            plane.center[0] + offset[0],
+            plane.center[1] + offset[1],
+            plane.center[2] + offset[2]
+        )
+
+        # 将目标位置投影到平面上以确保精确对齐
+        final_pos = plane.project_point(target_pos)
+
+        # 创建虚拟物体
+        virtual_obj = VirtualObject(
+            position=final_pos,
+            size=(0.5, 0.5, 0.5),
+            object_type="cube"
+        )
+
+        self.virtual_objects.append(virtual_obj)
+        return virtual_obj
+
+    def calculate_occlusion(self, camera_pos: Tuple[float, float, float]) -> List[bool]:
+        """
+        计算遮挡情况（简化版）
+        :param camera_pos: 相机位置
+        :return: 每个物体的可见性列表
+        """
+        visibility = []
+        for obj in self.virtual_objects:
+            visible = obj.is_visible_from(camera_pos)
+            visibility.append(visible)
+        return visibility
+
+
+def simulate_ar_scene():
+    """模拟AR场景"""
+    print("=== AR场景模拟 ===\n")
+
+    # 创建AR场景
+    scene = ARScene()
+
+    # 模拟扫描数据（实际中来自深度相机或SLAM系统）
+    scan_points = [(x, 0, z) for x in range(-2, 3) for z in range(-2, 3)]  # 地面点
+    scan_points += [(2.5, y, z) for y in range(0, 3) for z in range(-1, 2)]  # 墙面点
+
+    # 检测平面
+    detected_planes = scene.detect_planes(scan_points)
+    print(f"检测到 {len(detected_planes)} 个平面:")
+    for i, plane in enumerate(detected_planes):
+        plane_type = "水平" if plane.plane_type == "horizontal" else "垂直"
+        print(f"  平面 {i}: {plane_type}, 中心={plane.center}, 尺寸={plane.size}")
+
+    # 在地面上放置虚拟物体
+    ground_object = scene.place_object_on_plane(0, (1.0, 0.25, 1.0))  # 在地面平面上
+    if ground_object:
+        print(f"\n在地面放置虚拟物体: 位置={ground_object.position}")
+
+    # 在墙面上放置虚拟物体
+    wall_object = scene.place_object_on_plane(1, (0.0, 0.5, 0.0))  # 在墙面平面上
+    if wall_object:
+        print(f"在墙面放置虚拟物体: 位置={wall_object.position}")
+
+    # 检查遮挡情况
+    camera_position = (0.0, 1.6, 0.0)  # 用户眼睛位置
+    occlusion_results = scene.calculate_occlusion(camera_position)
+    print(f"\n从相机位置 {camera_position} 观察:")
+    for i, visible in enumerate(occlusion_results):
+        status = "可见" if visible else "被遮挡"
+        print(f"  虚拟物体 {i}: {status}")
+
+
+def demonstrate_anchor_concept():
+    """演示锚点概念"""
+    print("\n=== 锚点概念演示 ===")
+
+    # 创建一个平面作为锚点基础
+    table_plane = Plane(
+        center=(1.0, 0.75, 2.0),  # 桌子位置
+        normal=(0.0, 1.0, 0.0),   # 水平向上
+        size=(1.2, 0.8),          # 桌子尺寸
+        plane_type="horizontal"
+    )
+
+    # 创建锚点（固定在平面上的参考点）
+    anchor_position = table_plane.project_point((1.1, 1.0, 2.1))
+    print(f"锚点位置: {anchor_position}")
+
+    # 即使用户移动，锚点保持在世界坐标中的固定位置
+    # 虚拟物体相对于锚点的位置保持不变
+    virtual_object_offset = (0.2, 0.1, -0.1)  # 相对于锚点的偏移
+    virtual_object_world_pos = (
+        anchor_position[0] + virtual_object_offset[0],
+        anchor_position[1] + virtual_object_offset[1],
+        anchor_position[2] + virtual_object_offset[2]
+    )
+
+    print(f"虚拟物体世界位置: {virtual_object_world_pos}")
+    print("锚点确保虚拟物体在真实世界中保持稳定位置！")
+
+
+def main():
+    """主函数"""
+    simulate_ar_scene()
+    demonstrate_anchor_concept()
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## 深入理解
+
+### 📱 移动AR开发：ARKit与ARCore
+
+移动AR平台（如Apple的ARKit和Google的ARCore）提供了强大的底层功能：
+
+**核心能力**：
+- **运动跟踪**：使用设备的摄像头和IMU传感器进行6自由度跟踪
+- **环境理解**：检测水平和垂直平面，估计环境光照
+- **场景理解**：识别特征点、检测图像和物体
+- **锚点系统**：将虚拟内容固定在现实世界中的特定位置
+
+**平面检测原理**：
+平面检测基于特征点分析和几何约束。系统首先提取图像中的特征点，然后通过RANSAC等算法拟合平面模型，最终确定平面的位置、方向和边界。
+
+### 🌐 WebXR：浏览器中的沉浸式体验
+
+WebXR API让开发者能够在浏览器中创建AR/VR体验，无需安装专门的应用：
+
+**主要优势**：
+- **零安装门槛**：用户只需点击链接即可体验
+- **跨平台兼容**：一次开发，多平台运行
+- **快速迭代**：无需应用商店审核，即时更新
+
+**技术架构**：
+WebXR提供设备发现、会话管理、参考空间、输入处理等核心功能。开发者可以通过Three.js、Babylon.js等3D引擎简化开发过程。
+
+### ⚠️ 技术挑战与解决方案
+
+**晕动症**（Motion Sickness）：
+- **原因**：视觉系统感知的运动与前庭系统感知的运动不一致
+- **解决方案**：提高帧率（90fps+）、降低延迟（<20ms）、优化运动设计
+
+**硬件限制**：
+- **计算能力**：移动设备GPU性能有限
+- **电池续航**：AR/VR应用耗电量大
+- **解决方案**：优化渲染管线、使用LOD（Level of Detail）、智能资源管理
+
+**内容创作**：
+- **工具链复杂**：需要3D建模、动画、编程等多技能
+- **标准化不足**：不同平台API差异大
+- **解决方案**：使用Unity/Unreal等引擎、采用glTF等开放格式
+
+## 实际应用
+
+AR/VR技术已经在多个领域展现出巨大价值：
+
+### 🎮 游戏娱乐
+- **VR游戏**：提供完全沉浸式的游戏体验，如《Half-Life: Alyx》
+- **AR游戏**：将游戏融入现实世界，如《Pokémon GO》
+- **社交VR**：让用户在虚拟空间中社交互动，如《VRChat》
+
+### 📚 教育培训
+- **医学教育**：医学生可以在虚拟人体上进行解剖练习
+- **技能培训**：飞行员、工程师等可以在安全环境中练习复杂操作
+- **远程协作**：专家可以远程指导现场人员进行维修或操作
+
+### 🏥 医疗健康
+- **手术规划**：医生可以在3D模型上预演复杂手术
+- **康复治疗**：通过游戏化的VR体验帮助患者进行康复训练
+- **心理治疗**：用于治疗恐惧症、PTSD等心理疾病
+
+### 🛍️ 零售电商
+- **虚拟试穿**：用户可以在线试穿衣服、眼镜等商品
+- **家具预览**：在家中预览家具摆放效果
+- **产品展示**：3D展示产品细节和功能
+
+## 常见误区
+
+### ❌ AR/VR只是游戏技术
+虽然游戏是早期的主要应用场景，但AR/VR在企业级应用、教育培训、医疗健康等领域的价值正在快速增长。根据市场研究，企业级AR/VR市场的增长率已经超过消费级市场。
+
+### ❌ 高分辨率就能解决所有问题
+分辨率只是影响体验的一个因素。延迟、帧率、跟踪精度、光学质量等因素同样重要，甚至更重要。一个高分辨率但高延迟的系统会导致严重的晕动症。
+
+### ❌ WebXR性能不如原生应用
+现代WebXR实现已经非常接近原生性能，特别是在移动设备上。WebXR的优势在于分发便利性和跨平台兼容性，在许多场景下是更好的选择。
+
+### ❌ AR和VR会很快融合成单一技术
+虽然MR（混合现实）是发展方向，但AR和VR在可预见的未来仍会保持各自的特点和应用场景。AR更适合需要保持对现实世界感知的任务，VR更适合需要完全沉浸的体验。
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：3D数学基础
+运行`example-01-3d-math.py`，理解向量和矩阵运算。尝试修改代码，添加绕任意轴旋转的功能，并测试不同的变换组合。
+
+### 练习2：延迟影响分析
+运行`example-02-spatial-tracking.py`，观察不同延迟值对用户体验的影响。尝试添加更复杂的预测算法，比如基于速度的预测。
+
+### 练习3：AR场景扩展
+运行`example-03-ar-scene.py`，理解平面检测和锚点概念。尝试添加更多的平面类型（如倾斜平面）和虚拟物体类型。
+
+完成后，检查你的答案是否与`code/solutions/`目录中的参考实现一致。
+
+### 挑战任务
+如果你想要更大的挑战，尝试完成`exercises/challenges/`目录中的两个挑战：
+- **挑战1**：实现手势识别模拟器
+- **挑战2**：构建AR内容放置系统
+
+## 小结与思考
+
+今天我们深入探索了AR/VR技术的世界，从基本概念到实际应用。记住几个关键点：
+
+- **AR/VR/MR各有特点**：VR提供完全沉浸，AR叠加虚拟内容到现实，MR实现虚实交互
+- **性能要求苛刻**：高帧率、低延迟、精确跟踪是良好体验的基础
+- **应用场景广泛**：从游戏娱乐到企业应用，AR/VR正在改变多个行业
+
+思考题：
+1. 为什么90fps被认为是VR的"甜点"帧率？更高的帧率（如120fps）会带来什么额外好处？
+2. 在移动AR应用中，如何平衡功能丰富性和电池续航？
+3. WebXR和原生AR/VR应用各有什么优势和劣势？在什么场景下应该选择哪种方案？
+
+AR/VR技术仍在快速发展中，今天的限制可能就是明天的突破。继续关注这个领域，你会发现更多令人兴奋的可能性！🚀

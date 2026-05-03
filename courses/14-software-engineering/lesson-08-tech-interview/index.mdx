@@ -1,0 +1,528 @@
+# 14-08 技术面试：算法、系统与行为
+
+## 开场白 - 技术面试的艺术与科学
+
+大家好！欢迎来到技术面试准备课程！🎯
+
+想象一下：你正在面对一位资深工程师的面试，需要在45分钟内展示你的编码能力、系统设计思维和解决问题的方法。这不仅是对你技术知识的考验，更是对你沟通能力、思维清晰度和压力管理的综合评估。
+
+技术面试已经成为软件工程职业发展的关键环节。从硅谷巨头到初创公司，从远程工作到现场面试，掌握面试技巧能让你在竞争中脱颖而出。在这个课程中，我们将系统性地学习技术面试的各个方面：编码模式、系统设计框架、Big-O分析、行为问题应对策略，以及如何避免常见陷阱。
+
+无论你是准备第一份工作面试的新手，还是寻求职业突破的资深工程师，这些技能都将帮助你在技术面试中展现最佳状态。
+
+## 核心概念 - 技术面试的四大支柱
+
+### 面试类型概览
+
+技术面试通常包含以下几种类型：
+
+#### 💻 编码面试（Coding Interview）
+- **目标**：评估算法思维、数据结构理解和代码质量
+- **形式**：在线编程平台或白板编程
+- **时长**：30-60分钟
+- **重点**：解决问题的思路、代码可读性、边界条件处理
+
+#### 🏗️ 系统设计面试（System Design Interview）
+- **目标**：评估架构设计能力和规模化思维
+- **形式**：开放式讨论和白板设计
+- **时长**：45-60分钟  
+- **重点**：需求分析、API设计、数据模型、扩展性考虑
+
+#### 💬 行为面试（Behavioral Interview）
+- **目标**：评估软技能、团队合作和文化匹配
+- **形式**：结构化问答
+- **时长**：30-45分钟
+- **重点**：STAR方法、冲突解决、项目经验分享
+
+#### 📦 带回家作业（Take-home Assignment）
+- **目标**：评估实际项目能力和代码质量
+- **形式**：限时完成的小型项目
+- **时长**：几小时到几天
+- **重点**：代码结构、测试覆盖、文档质量
+
+### Big-O分析基础
+
+时间复杂度和空间复杂度是衡量算法效率的核心指标：
+
+- **O(1)**：常数时间 - 最理想的情况
+- **O(log n)**：对数时间 - 高效的分治算法
+- **O(n)**：线性时间 - 单次遍历
+- **O(n log n)**：线性对数时间 - 高效排序算法
+- **O(n²)**：平方时间 - 嵌套循环，需要优化
+- **O(2ⁿ)**：指数时间 - 通常不可接受
+
+## 代码演示
+
+让我们通过三个实用的例子来掌握面试核心技能：
+
+```python filename="code/examples/example-01-coding-patterns.py"
+# 示例1：常见面试编码模式实现
+from typing import List, Optional
+
+def two_sum_sorted(arr: List[int], target: int) -> Optional[tuple]:
+    """
+    两数之和（已排序数组）- 双指针模式
+    时间复杂度: O(n)
+    空间复杂度: O(1)
+    
+    :param arr: 已排序的整数数组
+    :param target: 目标和
+    :return: 找到的两个数的索引元组，未找到返回None
+    """
+    left, right = 0, len(arr) - 1
+    
+    while left < right:
+        current_sum = arr[left] + arr[right]
+        if current_sum == target:
+            return (left, right)
+        elif current_sum < target:
+            left += 1  # 和太小，移动左指针
+        else:
+            right -= 1  # 和太大，移动右指针
+    
+    return None
+
+def max_subarray_sum(arr: List[int]) -> int:
+    """
+    最大子数组和 - 滑动窗口模式
+    时间复杂度: O(n)
+    空间复杂度: O(1)
+    
+    :param arr: 整数数组
+    :return: 最大子数组和
+    """
+    if not arr:
+        return 0
+    
+    max_sum = current_sum = arr[0]
+    
+    for i in range(1, len(arr)):
+        # 要么扩展当前子数组，要么重新开始
+        current_sum = max(arr[i], current_sum + arr[i])
+        max_sum = max(max_sum, current_sum)
+    
+    return max_sum
+
+def has_cycle(head) -> bool:
+    """
+    检测链表环 - 快慢指针模式
+    时间复杂度: O(n)
+    空间复杂度: O(1)
+    
+    :param head: 链表头节点
+    :return: 是否存在环
+    """
+    if not head or not head.next:
+        return False
+    
+    slow = fast = head
+    
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        
+        if slow == fast:
+            return True  # 快慢指针相遇，存在环
+    
+    return False
+
+# 测试示例
+if __name__ == "__main__":
+    # 测试双指针
+    sorted_arr = [2, 7, 11, 15]
+    result = two_sum_sorted(sorted_arr, 9)
+    print(f"双指针示例 - 数组 {sorted_arr}, 目标 9: {result}")
+    
+    # 测试滑动窗口
+    arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+    max_sum = max_subarray_sum(arr)
+    print(f"滑动窗口示例 - 数组 {arr}: 最大子数组和 = {max_sum}")
+    
+    # 快慢指针需要链表实现，这里仅展示概念
+    print("快慢指针示例: 用于检测链表中的环")
+```
+
+```python filename="code/examples/example-02-big-o-comparison.py"
+# 示例2：不同算法复杂度的比较与可视化
+import time
+import random
+from typing import List, Callable
+import matplotlib.pyplot as plt
+
+def linear_search(arr: List[int], target: int) -> int:
+    """线性搜索 - O(n)"""
+    for i, val in enumerate(arr):
+        if val == target:
+            return i
+    return -1
+
+def bubble_sort(arr: List[int]) -> List[int]:
+    """冒泡排序 - O(n²)"""
+    arr = arr.copy()
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+
+def merge_sort(arr: List[int]) -> List[int]:
+    """归并排序 - O(n log n)"""
+    if len(arr) <= 1:
+        return arr
+    
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    return merge(left, right)
+
+def merge(left: List[int], right: List[int]) -> List[int]:
+    """归并两个已排序数组"""
+    result = []
+    i = j = 0
+    
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+def time_algorithm(algorithm: Callable, data: List[int], *args) -> float:
+    """测量算法执行时间"""
+    start_time = time.time()
+    algorithm(data, *args) if args else algorithm(data)
+    end_time = time.time()
+    return end_time - start_time
+
+def compare_complexities():
+    """比较不同算法的时间复杂度"""
+    sizes = [100, 500, 1000, 2000]
+    linear_times = []
+    quadratic_times = []
+    nlogn_times = []
+    
+    for size in sizes:
+        # 生成随机数据
+        data = [random.randint(1, 1000) for _ in range(size)]
+        target = random.choice(data)
+        
+        # 测试线性搜索
+        linear_time = time_algorithm(linear_search, data, target)
+        linear_times.append(linear_time)
+        
+        # 测试冒泡排序（仅小数据集）
+        if size <= 1000:
+            quadratic_time = time_algorithm(bubble_sort, data)
+            quadratic_times.append(quadratic_time)
+        else:
+            quadratic_times.append(0)  # 跳过大数组的冒泡排序
+        
+        # 测试归并排序
+        nlogn_time = time_algorithm(merge_sort, data)
+        nlogn_times.append(nlogn_time)
+    
+    print("算法复杂度比较结果:")
+    print("数据规模\t线性搜索(O(n))\t冒泡排序(O(n²))\t归并排序(O(n log n))")
+    for i, size in enumerate(sizes):
+        quad_time = f"{quadratic_times[i]:.4f}" if quadratic_times[i] > 0 else "跳过"
+        print(f"{size}\t\t{linear_times[i]:.4f}\t\t{quad_time}\t\t{nlogn_times[i]:.4f}")
+
+if __name__ == "__main__":
+    compare_complexities()
+    print("\n注意: 实际面试中应优先选择高效算法!")
+```
+
+```python filename="code/examples/example-03-system-design-template.py"
+# 示例3：系统设计面试模板框架
+from typing import Dict, List, Any
+
+class SystemDesignTemplate:
+    """
+    系统设计面试结构化模板
+    帮助面试者系统性地思考和表达设计方案
+    """
+    
+    def __init__(self, system_name: str):
+        self.system_name = system_name
+        self.requirements = {}
+        self.api_design = {}
+        self.data_model = {}
+        self.scaling_considerations = {}
+    
+    def step1_define_requirements(self, functional_reqs: List[str], 
+                                 non_functional_reqs: List[str],
+                                 scale_estimates: Dict[str, Any]):
+        """
+        步骤1: 需求分析
+        
+        :param functional_reqs: 功能需求列表
+        :param non_functional_reqs: 非功能需求列表  
+        :param scale_estimates: 规模估算（QPS、存储、用户数等）
+        """
+        self.requirements = {
+            'functional': functional_reqs,
+            'non_functional': non_functional_reqs,
+            'scale': scale_estimates
+        }
+        print(f"✅ 步骤1完成: {self.system_name} 需求定义")
+    
+    def step2_design_apis(self, endpoints: Dict[str, Dict[str, Any]]):
+        """
+        步骤2: API设计
+        
+        :param endpoints: API端点定义
+        """
+        self.api_design = endpoints
+        print(f"✅ 步骤2完成: {self.system_name} API设计")
+    
+    def step3_define_data_model(self, entities: Dict[str, Dict[str, Any]]):
+        """
+        步骤3: 数据模型设计
+        
+        :param entities: 实体及其属性
+        """
+        self.data_model = entities
+        print(f"✅ 步骤3完成: {self.system_name} 数据模型")
+    
+    def step4_consider_scaling(self, strategies: List[str], 
+                              bottlenecks: List[str]):
+        """
+        步骤4: 扩展性考虑
+        
+        :param strategies: 扩展策略
+        :param bottlenecks: 潜在瓶颈
+        """
+        self.scaling_considerations = {
+            'strategies': strategies,
+            'bottlenecks': bottlenecks
+        }
+        print(f"✅ 步骤4完成: {self.system_name} 扩展性分析")
+    
+    def generate_interview_script(self) -> str:
+        """
+        生成面试脚本模板
+        """
+        script = f"""
+系统设计面试模板: {self.system_name}
+
+1. 需求澄清阶段:
+   - 请问这个系统的具体功能是什么？
+   - 预期的用户规模和请求量是多少？
+   - 对延迟、可用性和一致性有什么要求？
+
+2. API设计阶段:
+   - 我建议设计以下核心API端点...
+   - 每个端点的请求/响应格式如下...
+
+3. 数据模型阶段:
+   - 主要的数据实体包括...
+   - 表之间的关系是...
+   - 考虑使用SQL还是NoSQL？
+
+4. 扩展性设计阶段:
+   - 初始架构可以是单体应用
+   - 当遇到性能瓶颈时，可以考虑...
+   - 缓存策略: Redis用于热点数据
+   - 负载均衡: 使用Nginx或云服务
+
+5. 潜在改进:
+   - 监控和告警
+   - 自动化部署
+   - 容灾备份方案
+"""
+        return script
+
+# 使用示例：设计一个URL短链系统
+def design_url_shortener():
+    """URL短链系统设计示例"""
+    url_shortener = SystemDesignTemplate("URL Shortener")
+    
+    # 步骤1: 需求分析
+    url_shortener.step1_define_requirements(
+        functional_reqs=[
+            "将长URL转换为短URL",
+            "通过短URL重定向到原始URL", 
+            "支持自定义短码",
+            "统计点击次数"
+        ],
+        non_functional_reqs=[
+            "高可用性（99.9% uptime）",
+            "低延迟（<100ms）",
+            "可扩展性（支持10亿URL）"
+        ],
+        scale_estimates={
+            'qps': 10000,
+            'storage': '10TB',
+            'users': '100M'
+        }
+    )
+    
+    # 步骤2: API设计
+    url_shortener.step2_design_apis({
+        'create_short_url': {
+            'method': 'POST',
+            'endpoint': '/api/shorten',
+            'request': {'long_url': 'string', 'custom_alias': 'string?'},
+            'response': {'short_url': 'string', 'alias': 'string'}
+        },
+        'redirect': {
+            'method': 'GET', 
+            'endpoint': '/{alias}',
+            'response': '302 redirect'
+        }
+    })
+    
+    # 步骤3: 数据模型
+    url_shortener.step3_define_data_model({
+        'urls': {
+            'alias': 'string (primary key)',
+            'long_url': 'string', 
+            'created_at': 'timestamp',
+            'click_count': 'integer'
+        }
+    })
+    
+    # 步骤4: 扩展性考虑
+    url_shortener.step4_consider_scaling(
+        strategies=[
+            "分布式ID生成器（如Snowflake）",
+            "Redis缓存热门短URL映射",
+            "数据库分片存储URL数据",
+            "CDN加速全球访问"
+        ],
+        bottlenecks=[
+            "ID生成器成为单点",
+            "数据库写入瓶颈", 
+            "缓存击穿问题"
+        ]
+    )
+    
+    return url_shortener.generate_interview_script()
+
+if __name__ == "__main__":
+    script = design_url_shortener()
+    print(script)
+```
+
+## 深入理解
+
+### 编码面试策略
+
+#### 解题流程
+1. **理解问题**：重复问题，确认边界条件和输入输出
+2. **举例说明**：用具体例子验证理解
+3. **暴力解法**：先提出简单但正确的解决方案
+4. **优化思路**：讨论时间和空间复杂度的改进空间
+5. **实现代码**：编写清晰、有注释的代码
+6. **测试验证**：用边界情况测试代码
+
+#### 常见编码模式
+- **双指针**：适用于排序数组、字符串操作
+- **滑动窗口**：适用于子数组/子字符串问题
+- **BFS/DFS**：适用于图和树的遍历
+- **动态规划**：适用于最优子结构问题
+- **哈希表**：适用于快速查找和去重
+
+### 系统设计框架
+
+#### CAP定理的理解
+- **一致性**（Consistency）：所有节点看到相同数据
+- **可用性**（Availability）：每个请求都能得到响应
+- **分区容忍性**（Partition tolerance）：网络分区时系统继续运行
+
+在分布式系统中，只能同时满足其中两个特性。
+
+#### 数据库选型原则
+- **关系型数据库**（MySQL, PostgreSQL）：强一致性、复杂查询、事务支持
+- **NoSQL数据库**（MongoDB, Cassandra）：高扩展性、灵活模式、最终一致性
+- **键值存储**（Redis, DynamoDB）：简单查询、高性能、缓存场景
+
+### 行为面试STAR方法
+
+**S**ituation（情境）：描述具体的背景和情况
+**T**ask（任务）：说明你面临的任务或挑战  
+**A**ction（行动）：详细描述你采取的具体行动
+**R**esult（结果）：量化结果和学到的经验
+
+例如："在我上一份工作中（S），我们需要在两周内修复一个导致用户流失的关键bug（T）。我组织了紧急会议，分配了调试任务，并实施了自动化测试（A）。最终我们在3天内解决了问题，用户流失率下降了80%（R）。"
+
+## 实际应用 - 面试全流程模拟
+
+### 面试前准备
+- **研究公司**：了解技术栈、产品和文化
+- **练习题目**：针对性练习常见题型
+- **准备问题**：准备向面试官提问的问题
+- **环境测试**：确保网络、IDE、摄像头正常工作
+
+### 面试中表现
+- **沟通清晰**：大声思考，解释你的思路
+- **时间管理**：合理分配分析、编码和测试时间
+- **代码质量**：使用有意义的变量名，添加必要注释
+- **积极互动**：主动询问澄清问题，寻求反馈
+
+### 面试后跟进
+- **发送感谢邮件**：24小时内发送个性化感谢信
+- **反思总结**：记录遇到的问题和改进点
+- **持续学习**：针对薄弱环节加强练习
+
+## 常见误区
+
+### ❌ 编码面试误区
+- **直接开始编码**：没有充分理解问题就动手
+- **忽视边界条件**：只测试正常情况，忽略空值、极端值
+- **过度优化**：在没有正确解法前就追求最优解
+- **沉默编码**：不与面试官沟通思考过程
+
+### ❌ 系统设计误区  
+- **过早优化**：一开始就设计复杂的分布式系统
+- **忽视非功能需求**：只关注功能，忽略性能、安全、监控
+- **技术堆砌**：盲目使用新技术而不考虑适用性
+- **缺乏权衡分析**：不讨论不同方案的优缺点
+
+### ❌ 行为面试误区
+- **泛泛而谈**：回答过于笼统，缺乏具体细节
+- **推卸责任**：将失败归咎于他人或外部因素
+- **负面情绪**：抱怨前雇主或同事
+- **准备不足**：对常见问题没有准备答案
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：编码模式应用
+修改`example-01-coding-patterns.py`，添加BFS和DFS的树遍历实现，并测试不同场景下的性能差异。
+
+### 练习2：系统设计实践  
+使用`example-03-system-design-template.py`模板，设计一个社交媒体Feed系统，考虑以下需求：
+- 用户可以发布内容
+- 关注其他用户
+- 查看关注用户的最新动态
+- 支持点赞和评论
+
+### 练习3：Big-O分析
+分析`example-02-big-o-comparison.py`中的算法，为每个算法写出详细的复杂度分析，并提出可能的优化方案。
+
+完成后，检查你的答案是否与`solutions/`目录中的参考实现一致。
+
+## 小结与思考
+
+今天我们系统性地学习了技术面试的各个方面。记住几个关键点：
+
+- **结构化思维**是成功的关键：无论是编码还是系统设计，都要有清晰的思考框架
+- **沟通能力**与技术能力同等重要：面试是双向交流，不是单向考试  
+- **持续练习**是提高的唯一途径：理论知识需要通过实践来巩固
+- **真实展现**比完美表现更重要：诚实地承认不知道，但展示学习能力
+
+思考题：
+1. 在编码面试中，什么时候应该选择递归而不是迭代？
+2. 系统设计中如何平衡一致性、可用性和分区容忍性？
+3. 如何在行为面试中展示成长心态而不是固定心态？
+
+技术面试不仅是求职的门槛，更是自我提升的机会。通过系统性的准备和练习，你一定能在面试中展现出最好的自己！💪

@@ -1,0 +1,627 @@
+# 14-07 技术债务：识别与管理
+
+## 开场白
+
+大家好！欢迎来到技术债务的世界！💼
+
+想象一下：你的团队正在开发一个新功能，但每次修改代码都会引发意想不到的bug；系统越来越难以维护，新人需要数周才能理解现有架构；部署变得越来越频繁地失败，修复问题的时间超过了开发新功能的时间。这些都不是偶然现象，而是**技术债务**在作祟。
+
+技术债务就像金融债务一样——有时候它是必要的投资，但如果不加以管理，利息会不断累积，最终让你的项目陷入瘫痪。在这个课程中，我们将深入探讨技术债务的本质，学习如何识别、度量、优先处理和预防技术债务，让你的代码库保持健康和可持续发展。
+
+## 核心概念
+
+### 什么是技术债务
+
+技术债务是由Ward Cunningham提出的比喻，指的是为了快速交付而做出的技术妥协，这些妥协在未来需要付出额外成本来修复。
+
+**技术债务的主要类型：**
+- **代码债务**：糟糕的代码结构、重复代码、魔法数字、长函数等
+- **架构债务**：不合理的系统设计、紧耦合组件、缺乏模块化
+- **测试债务**：测试覆盖率不足、脆弱的测试、缺少集成测试
+- **文档债务**：过时的文档、缺失的API文档、不清楚的设计决策记录
+
+### 技术债务的成因
+
+- **时间压力**：为了满足截止日期而牺牲代码质量
+- **知识缺乏**：团队对最佳实践或新技术了解不足
+- **需求变更**：频繁的需求变化导致代码结构混乱
+- **遗留系统**：继承的旧代码难以理解和维护
+
+### 技术债务四象限
+
+Martin Fowler提出了技术债务的四象限模型：
+
+1. **谨慎的故意债务**（Prudent & Deliberate）：明知故犯，但有明确的偿还计划
+2. **鲁莽的故意债务**（Reckless & Deliberate）：明知故犯，但没有偿还计划
+3. **谨慎的无意债务**（Prudent & Inadvertent）：事后才发现的问题，但会及时修复
+4. **鲁莽的无意债务**（Reckless & Inadvertent）：由于无知而产生的问题，且不打算修复
+
+## 代码演示
+
+让我们通过三个实用的例子来理解技术债务的识别和管理：
+
+```python filename="code/examples/example-01-code-smell-detector.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例1：代码异味检测器
+检测Python代码中的常见代码异味（code smells）
+包括：过长函数、参数过多、嵌套过深等问题
+"""
+
+import ast
+import sys
+from typing import List, Dict, Any
+
+
+class CodeSmellDetector(ast.NodeVisitor):
+    """代码异味检测器类"""
+    
+    def __init__(self):
+        self.issues = []
+        self.current_function = None
+        
+    def visit_FunctionDef(self, node):
+        """访问函数定义节点"""
+        self.current_function = node.name
+        
+        # 检测过长函数（超过50行）
+        function_lines = node.end_lineno - node.lineno + 1
+        if function_lines > 50:
+            self.issues.append({
+                'type': 'long_function',
+                'message': f'函数 {node.name} 过长 ({function_lines} 行)，建议拆分',
+                'line': node.lineno
+            })
+            
+        # 检测参数过多（超过5个）
+        arg_count = len(node.args.args)
+        if arg_count > 5:
+            self.issues.append({
+                'type': 'too_many_parameters',
+                'message': f'函数 {node.name} 参数过多 ({arg_count} 个)，建议重构',
+                'line': node.lineno
+            })
+            
+        # 继续遍历函数体
+        self.generic_visit(node)
+        self.current_function = None
+        
+    def visit_If(self, node):
+        """访问if语句节点，检测嵌套过深"""
+        self._check_nesting_depth(node, 'if')
+        self.generic_visit(node)
+        
+    def visit_For(self, node):
+        """访问for循环节点，检测嵌套过深"""
+        self._check_nesting_depth(node, 'for')
+        self.generic_visit(node)
+        
+    def visit_While(self, node):
+        """访问while循环节点，检测嵌套过深"""
+        self._check_nesting_depth(node, 'while')
+        self.generic_visit(node)
+        
+    def _check_nesting_depth(self, node, statement_type):
+        """检查嵌套深度"""
+        depth = self._calculate_nesting_depth(node)
+        if depth > 4:  # 超过4层嵌套
+            self.issues.append({
+                'type': 'deep_nesting',
+                'message': f'{statement_type} 语句嵌套过深 ({depth} 层)，建议提取方法',
+                'line': node.lineno
+            })
+            
+    def _calculate_nesting_depth(self, node):
+        """计算当前节点的嵌套深度"""
+        depth = 0
+        current = node
+        while current.parent:
+            if isinstance(current.parent, (ast.If, ast.For, ast.While)):
+                depth += 1
+            current = current.parent
+        return depth
+
+
+def add_parent_pointers(node):
+    """为AST节点添加父指针，便于计算嵌套深度"""
+    for child in ast.iter_child_nodes(node):
+        child.parent = node
+        add_parent_pointers(child)
+
+
+def analyze_file(file_path: str) -> List[Dict[str, Any]]:
+    """分析指定文件的代码异味"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            source_code = f.read()
+            
+        tree = ast.parse(source_code, filename=file_path)
+        add_parent_pointers(tree)
+        
+        detector = CodeSmellDetector()
+        detector.visit(tree)
+        
+        return detector.issues
+        
+    except Exception as e:
+        print(f"分析文件 {file_path} 时出错: {e}")
+        return []
+
+
+def main():
+    """主函数"""
+    if len(sys.argv) != 2:
+        print("用法: python example-01-code-smell-detector.py <python_file>")
+        sys.exit(1)
+        
+    file_path = sys.argv[1]
+    issues = analyze_file(file_path)
+    
+    if issues:
+        print(f"在文件 {file_path} 中发现 {len(issues)} 个代码异味:")
+        for issue in issues:
+            print(f"  行 {issue['line']}: {issue['message']}")
+    else:
+        print(f"文件 {file_path} 中未发现明显的代码异味")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-02-tech-debt-tracker.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例2：技术债务追踪器
+使用风险vs影响评分模型来跟踪和优先处理技术债务项
+"""
+
+import json
+from typing import List, Dict, Any
+from datetime import datetime
+
+
+class TechDebtItem:
+    """技术债务项类"""
+    
+    def __init__(self, description: str, risk_score: int, impact_score: int, 
+                 location: str = "", created_date: str = None):
+        """
+        初始化技术债务项
+        :param description: 债务描述
+        :param risk_score: 风险评分 (1-10)
+        :param impact_score: 影响评分 (1-10)  
+        :param location: 代码位置
+        :param created_date: 创建日期
+        """
+        self.description = description
+        self.risk_score = min(10, max(1, risk_score))  # 限制在1-10范围内
+        self.impact_score = min(10, max(1, impact_score))
+        self.location = location
+        self.created_date = created_date or datetime.now().strftime("%Y-%m-%d")
+        self.priority_score = self._calculate_priority()
+        
+    def _calculate_priority(self) -> float:
+        """计算优先级分数 = 风险分数 × 影响分数"""
+        return self.risk_score * self.impact_score
+        
+    def to_dict(self) -> Dict[str, Any]:
+        """转换为字典格式"""
+        return {
+            'description': self.description,
+            'risk_score': self.risk_score,
+            'impact_score': self.impact_score,
+            'location': self.location,
+            'created_date': self.created_date,
+            'priority_score': self.priority_score
+        }
+        
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'TechDebtItem':
+        """从字典创建实例"""
+        return cls(
+            description=data['description'],
+            risk_score=data['risk_score'],
+            impact_score=data['impact_score'],
+            location=data.get('location', ''),
+            created_date=data.get('created_date')
+        )
+
+
+class TechDebtTracker:
+    """技术债务追踪器"""
+    
+    def __init__(self):
+        self.debt_items: List[TechDebtItem] = []
+        
+    def add_debt_item(self, item: TechDebtItem):
+        """添加技术债务项"""
+        self.debt_items.append(item)
+        
+    def get_high_priority_items(self, threshold: float = 50.0) -> List[TechDebtItem]:
+        """获取高优先级的技术债务项"""
+        return [item for item in self.debt_items 
+                if item.priority_score >= threshold]
+                
+    def get_sorted_by_priority(self) -> List[TechDebtItem]:
+        """按优先级排序（降序）"""
+        return sorted(self.debt_items, key=lambda x: x.priority_score, reverse=True)
+        
+    def save_to_file(self, filename: str):
+        """保存到JSON文件"""
+        data = [item.to_dict() for item in self.debt_items]
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            
+    def load_from_file(self, filename: str):
+        """从JSON文件加载"""
+        try:
+            with open(filename, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            self.debt_items = [TechDebtItem.from_dict(item) for item in data]
+        except FileNotFoundError:
+            print(f"文件 {filename} 不存在，创建新的债务追踪器")
+            self.debt_items = []
+
+
+def main():
+    """主函数 - 演示技术债务追踪器的使用"""
+    tracker = TechDebtTracker()
+    
+    # 添加一些示例技术债务项
+    debt_items = [
+        TechDebtItem(
+            description="认证模块使用硬编码密码，存在安全风险",
+            risk_score=9,
+            impact_score=8,
+            location="auth/auth_service.py"
+        ),
+        TechDebtItem(
+            description="数据库查询没有索引优化，性能缓慢",
+            risk_score=6,
+            impact_score=7,
+            location="models/user_model.py"
+        ),
+        TechDebtItem(
+            description="缺少单元测试覆盖核心业务逻辑",
+            risk_score=5,
+            impact_score=8,
+            location="services/order_service.py"
+        ),
+        TechDebtItem(
+            description="API文档过时，与实际实现不符",
+            risk_score=3,
+            impact_score=6,
+            location="api/v1/endpoints.py"
+        )
+    ]
+    
+    for item in debt_items:
+        tracker.add_debt_item(item)
+    
+    # 显示高优先级项
+    high_priority = tracker.get_high_priority_items(threshold=50.0)
+    print("高优先级技术债务项 (优先级 >= 50):")
+    for item in high_priority:
+        print(f"  [{item.priority_score:.1f}] {item.description}")
+        print(f"      风险: {item.risk_score}, 影响: {item.impact_score}")
+        print(f"      位置: {item.location}")
+        print()
+    
+    # 保存到文件
+    tracker.save_to_file("tech_debt_example.json")
+    print("技术债务数据已保存到 tech_debt_example.json")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```python filename="code/examples/example-03-refactoring-priority.py"
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+示例3：重构优先级计算器
+基于代码复杂度、使用频率和变更历史计算重构优先级
+"""
+
+import ast
+import os
+from typing import Dict, List, Tuple, Optional
+from collections import defaultdict
+
+
+class CodeComplexityAnalyzer(ast.NodeVisitor):
+    """代码复杂度分析器"""
+    
+    def __init__(self):
+        self.complexity = 0
+        self.nested_level = 0
+        
+    def visit_If(self, node):
+        """处理if语句 - 增加复杂度"""
+        self.complexity += 1
+        self.generic_visit(node)
+        
+    def visit_For(self, node):
+        """处理for循环 - 增加复杂度"""
+        self.complexity += 1
+        self.generic_visit(node)
+        
+    def visit_While(self, node):
+        """处理while循环 - 增加复杂度"""
+        self.complexity += 1
+        self.generic_visit(node)
+        
+    def visit_Try(self, node):
+        """处理try语句 - 增加复杂度"""
+        self.complexity += 1
+        self.generic_visit(node)
+        
+    def visit_FunctionDef(self, node):
+        """处理函数定义"""
+        # 重置复杂度计数器用于单个函数分析
+        old_complexity = self.complexity
+        self.complexity = 0
+        self.generic_visit(node)
+        function_complexity = self.complexity
+        self.complexity = old_complexity + function_complexity
+
+
+def calculate_cyclomatic_complexity(file_path: str) -> float:
+    """计算文件的圈复杂度"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            source = f.read()
+        tree = ast.parse(source)
+        analyzer = CodeComplexityAnalyzer()
+        analyzer.visit(tree)
+        return float(analyzer.complexity)
+    except Exception:
+        return 0.0
+
+
+def estimate_usage_frequency(file_path: str) -> float:
+    """估算文件的使用频率（基于文件大小和修改时间的简单启发式）"""
+    try:
+        stat = os.stat(file_path)
+        size_score = min(1.0, stat.st_size / 10000)  # 文件越大，使用可能越频繁
+        # 简化的启发式：最近修改的文件可能更活跃
+        import time
+        days_since_modified = (time.time() - stat.st_mtime) / (24 * 3600)
+        recency_score = max(0.1, 1.0 - (days_since_modified / 365))  # 一年内为1.0，逐年递减
+        return (size_score + recency_score) / 2
+    except Exception:
+        return 0.5
+
+
+def get_change_history_score(file_path: str) -> float:
+    """获取变更历史分数（模拟值，实际项目中可集成git历史）"""
+    # 在实际项目中，这里会分析git提交历史
+    # 现在使用简单的启发式：假设频繁修改的文件需要更多关注
+    filename = os.path.basename(file_path).lower()
+    if 'service' in filename or 'model' in filename:
+        return 0.8  # 核心业务文件
+    elif 'util' in filename or 'helper' in filename:
+        return 0.6  # 工具文件
+    else:
+        return 0.4  # 其他文件
+
+
+def calculate_refactoring_priority(
+    file_path: str, 
+    complexity_weight: float = 0.4,
+    usage_weight: float = 0.3, 
+    change_weight: float = 0.3
+) -> float:
+    """
+    计算重构优先级分数
+    :param file_path: 文件路径
+    :param complexity_weight: 复杂度权重
+    :param usage_weight: 使用频率权重  
+    :param change_weight: 变更历史权重
+    :return: 优先级分数 (0-10)
+    """
+    if not os.path.exists(file_path):
+        return 0.0
+        
+    complexity = min(10.0, calculate_cyclomatic_complexity(file_path) / 5.0)
+    usage = estimate_usage_frequency(file_path) * 10.0
+    change_score = get_change_history_score(file_path) * 10.0
+    
+    priority = (
+        complexity * complexity_weight +
+        usage * usage_weight +
+        change_score * change_weight
+    )
+    
+    return min(10.0, priority)
+
+
+def analyze_directory(directory: str) -> List[Tuple[str, float]]:
+    """分析目录中所有Python文件的重构优先级"""
+    results = []
+    
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.py'):
+                file_path = os.path.join(root, file)
+                priority = calculate_refactoring_priority(file_path)
+                if priority > 0:
+                    results.append((file_path, priority))
+                    
+    # 按优先级降序排序
+    results.sort(key=lambda x: x[1], reverse=True)
+    return results
+
+
+def main():
+    """主函数"""
+    import sys
+    
+    if len(sys.argv) != 2:
+        print("用法: python example-03-refactoring-priority.py <directory_or_file>")
+        sys.exit(1)
+        
+    path = sys.argv[1]
+    
+    if os.path.isfile(path):
+        # 分析单个文件
+        priority = calculate_refactoring_priority(path)
+        print(f"文件 {path} 的重构优先级: {priority:.2f}/10.0")
+    elif os.path.isdir(path):
+        # 分析整个目录
+        results = analyze_directory(path)
+        print(f"目录 {path} 中的重构优先级排名:")
+        print("-" * 60)
+        for i, (file_path, priority) in enumerate(results[:10], 1):  # 显示前10个
+            print(f"{i:2d}. {os.path.basename(file_path):20s} - {priority:.2f}/10.0")
+    else:
+        print(f"路径 {path} 不存在")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+## 深入理解
+
+### 技术债务的度量指标
+
+有效的技术债务管理需要量化指标：
+
+**代码复杂度指标：**
+- **圈复杂度**（Cyclomatic Complexity）：衡量代码路径数量
+- **代码重复率**：重复代码块的比例
+- **函数长度**：平均函数行数
+- **类耦合度**：类之间的依赖关系数量
+
+**测试相关指标：**
+- **测试覆盖率**：代码被测试覆盖的百分比
+- **测试执行时间**：反映测试质量的重要指标
+- **脆弱测试比例**：容易失败的测试占比
+
+**维护性指标：**
+- **代码异味数量**：如长方法、大类、重复代码等
+- **技术债务比率**：技术债务成本/开发成本
+- **变更频率**：文件被修改的频率
+
+### 偿还技术债务的策略
+
+**重构 vs 重写的选择：**
+
+选择**重构**当：
+- 系统架构基本合理
+- 业务逻辑相对清晰
+- 团队熟悉现有代码
+- 风险可控，可以逐步改进
+
+选择**重写**当：
+- 架构存在根本性问题
+- 技术栈严重过时
+- 维护成本远超重写成本
+- 有明确的业务窗口期
+
+**渐进式偿还策略：**
+1. **Boy Scout Rule**：每次接触代码时都让它比之前更好
+2. **重构预算**：为每个迭代分配固定时间处理技术债务
+3. **债务冲刺**：专门的迭代专注于技术债务清理
+4. **结对编程**：通过知识共享减少无意债务
+
+## 实际应用
+
+### 技术债务管理流程
+
+建立有效的技术债务管理流程：
+
+1. **识别和记录**：使用工具自动检测 + 人工审查
+2. **评估和分类**：使用风险/影响矩阵进行优先级排序
+3. **制定偿还计划**：明确时间表、负责人和验收标准
+4. **执行和验证**：实施改进并验证效果
+5. **预防机制**：建立防止新债务产生的流程
+
+### 与利益相关者的沟通
+
+向非技术人员解释技术债务：
+
+**使用业务语言：**
+- 不说"圈复杂度太高"，而说"这个模块修改风险很高，每次改动都可能引入bug"
+- 不说"需要重构"，而说"我们需要投入时间让系统更稳定，减少未来的故障时间"
+
+**量化业务影响：**
+- "当前的技术债务导致我们每月损失X小时的开发时间"
+- "修复这个问题可以将部署成功率从80%提升到95%"
+- "投资Y天解决技术债务，可以在未来Z个月内节省更多的维护成本"
+
+**建立共同目标：**
+- 将技术债务管理纳入产品路线图
+- 设置可衡量的质量目标
+- 定期回顾技术债务状态
+
+## 常见误区
+
+### ❌ 技术债务总是坏事
+
+实际上，**谨慎的故意技术债务**是敏捷开发的一部分。关键是：
+- 明确知道你在承担债务
+- 有偿还计划
+- 控制债务规模
+
+### ❌ 一次性解决所有技术债务
+
+试图一次性解决所有技术债务往往会导致：
+- 项目延期
+- 引入新的bug
+- 团队士气低落
+- 业务价值延迟交付
+
+正确的做法是**持续管理和渐进式偿还**。
+
+### ❌ 只关注代码层面的债务
+
+技术债务不仅存在于代码中，还包括：
+- **架构债务**：系统设计问题
+- **流程债务**：低效的开发流程
+- **知识债务**：文档缺失、知识孤岛
+- **工具债务**：过时的开发工具链
+
+### ❌ 忽视预防措施
+
+最好的技术债务管理是**预防新债务的产生**：
+- 建立代码审查流程
+- 实施自动化测试
+- 制定编码规范
+- 提供持续学习机会
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：代码异味检测
+使用`example-01-code-smell-detector.py`分析你项目中的一个Python文件，识别其中的代码异味，并提出改进建议。
+
+### 练习2：技术债务评估
+创建一个技术债务清单，使用`example-02-tech-debt-tracker.py`的评分模型，为你当前项目中的3-5个技术债务项进行风险和影响评估。
+
+### 练习3：重构优先级排序
+使用`example-03-refactoring-priority.py`分析一个小项目的代码库，找出最需要重构的文件，并制定一个简单的偿还计划。
+
+完成后，检查你的答案是否与`solutions/`目录中的参考实现一致。
+
+## 小结与思考
+
+今天我们深入探讨了技术债务的识别、度量、管理和预防。记住几个关键点：
+
+- **技术债务是不可避免的**，但必须主动管理
+- **量化和优先级排序**是有效管理的基础
+- **渐进式偿还**比一次性清理更可持续
+- **预防胜于治疗**，建立良好的工程实践至关重要
+
+思考题：
+1. 在你的项目中，哪些技术债务是最紧急需要处理的？为什么？
+2. 如何说服产品经理为技术债务偿还分配开发资源？
+3. 什么样的技术债务是可以接受的，什么样的必须立即处理？
+
+记住，优秀的工程师不仅要写出能工作的代码，更要写出易于维护和演进的代码。技术债务管理是你职业发展的重要技能！🚀

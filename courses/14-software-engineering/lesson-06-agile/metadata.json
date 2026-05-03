@@ -1,0 +1,18 @@
+{
+  "id": "14-06",
+  "title": "敏捷开发：Scrum与看板",
+  "module": "14-software-engineering",
+  "slug": "lesson-06-agile",
+  "status": "completed",
+  "module_name": "软件工程实践",
+  "difficulty": 2,
+  "duration": 25,
+  "prerequisites": [],
+  "tags": ["agile", "scrum", "kanban", "sprint", "user-stories", "velocity"],
+  "learning_objectives": ["理解敏捷开发的核心价值观和原则", "掌握Scrum和看板的实践方法", "能够组织敏捷开发流程"],
+  "files": ["index.mdx", "metadata.json", "code/examples/example-01-sprint-planning.py", "code/examples/example-02-burndown-chart.py", "code/examples/example-03-kanban-metrics.py", "code/solutions/solution-01.py", "code/solutions/solution-02.py", "code/solutions/solution-03.py", "exercises/quiz.json", "exercises/challenges/challenge-01.md", "exercises/challenges/challenge-02.md"],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

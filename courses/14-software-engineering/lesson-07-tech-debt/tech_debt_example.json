@@ -1,0 +1,34 @@
+[
+  {
+    "description": "认证模块使用硬编码密码，存在安全风险",
+    "risk_score": 9,
+    "impact_score": 8,
+    "location": "auth/auth_service.py",
+    "created_date": "2026-05-03",
+    "priority_score": 72
+  },
+  {
+    "description": "数据库查询没有索引优化，性能缓慢",
+    "risk_score": 6,
+    "impact_score": 7,
+    "location": "models/user_model.py",
+    "created_date": "2026-05-03",
+    "priority_score": 42
+  },
+  {
+    "description": "缺少单元测试覆盖核心业务逻辑",
+    "risk_score": 5,
+    "impact_score": 8,
+    "location": "services/order_service.py",
+    "created_date": "2026-05-03",
+    "priority_score": 40
+  },
+  {
+    "description": "API文档过时，与实际实现不符",
+    "risk_score": 3,
+    "impact_score": 6,
+    "location": "api/v1/endpoints.py",
+    "created_date": "2026-05-03",
+    "priority_score": 18
+  }
+]
