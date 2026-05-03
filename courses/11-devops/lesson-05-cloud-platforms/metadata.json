@@ -1,0 +1,35 @@
+{
+  "id": "11-05",
+  "title": "云平台对比：AWS/GCP/Azure",
+  "module": "11-devops",
+  "slug": "lesson-05-cloud-platforms",
+  "status": "completed",
+  "module_name": "DevOps与云原生",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": [],
+  "tags": [
+    "aws",
+    "gcp",
+    "azure",
+    "cloud"
+  ],
+  "learning_objectives": [],
+  "files": [
+    "index.mdx",
+    "metadata.json",
+    "code/examples/example-01-cloud-services-mapping.py",
+    "code/examples/example-02-cost-estimation.py",
+    "code/examples/example-03-multi-cloud-deploy.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}
