@@ -1,0 +1,90 @@
+[
+  {
+    "question": "Git 对象模型中，以下哪种对象用于存储文件内容？",
+    "options": [
+      "Tree 对象",
+      "Commit 对象",
+      "Blob 对象",
+      "Tag 对象"
+    ],
+    "answer": 2,
+    "explanation": "Blob 对象（Binary Large Object）用于存储文件的实际内容。Tree 对象存储目录结构，Commit 对象存储提交信息，Tag 对象用于存储标签信息。"
+  },
+  {
+    "question": "在 Git Flow 工作流中，哪个分支用于日常开发工作？",
+    "options": [
+      "main 分支",
+      "develop 分支",
+      "feature 分支",
+      "release 分支"
+    ],
+    "answer": 1,
+    "explanation": "在 Git Flow 中，develop 分支是主要的开发分支，所有特性开发完成后都会合并到 develop 分支。main 分支用于生产环境，feature 分支用于单个功能开发，release 分支用于准备发布。"
+  },
+  {
+    "question": "GitHub Flow 工作流的主要特点是什么？",
+    "options": [
+      "使用复杂的分支模型包含 develop、release 等分支",
+      "所有开发都在 main 分支上进行，不使用特性分支",
+      "简化的工作流，主要使用 main 分支和特性分支",
+      "强制要求每次提交都必须 rebase 到最新 main 分支"
+    ],
+    "answer": 2,
+    "explanation": "GitHub Flow 是一个简化的工作流，主要包含 main 分支（始终可部署）和临时的特性分支。开发者从 main 创建特性分支，完成开发后通过 Pull Request 合并回 main。"
+  },
+  {
+    "question": "关于 git rebase 和 git merge 的区别，以下说法正确的是？",
+    "options": [
+      "rebase 会丢失提交历史，merge 会保留完整历史",
+      "rebase 创建线性历史，merge 保留分支合并点",
+      "rebase 只能在本地分支使用，merge 可以在远程分支使用",
+      "rebase 比 merge 更安全，不会产生冲突"
+    ],
+    "answer": 1,
+    "explanation": "rebase 通过将提交'重放'到目标分支的最新提交之后来创建线性历史，而 merge 会保留分支合并点，显示完整的开发历史。rebase 不会真正丢失历史（可以通过 reflog 找到），但会改变提交的 SHA-1 值。"
+  },
+  {
+    "question": "Git 钩子（hooks）中的 pre-commit 钩子在什么时候执行？",
+    "options": [
+      "在 git commit 命令执行之前",
+      "在 git commit 命令执行之后，但在提交真正创建之前",
+      "在 git push 命令执行之前",
+      "在每次文件更改时自动执行"
+    ],
+    "answer": 1,
+    "explanation": "pre-commit 钩子在 git commit 命令执行之前运行，可以用来验证代码格式、运行测试或检查提交信息。如果钩子脚本返回非零退出码，提交会被阻止。"
+  },
+  {
+    "question": "Conventional Commits 规范中，以下哪个提交信息格式是正确的？",
+    "options": [
+      "添加用户登录功能",
+      "feat: 添加用户登录功能",
+      "feat(auth): 添加用户登录功能.",
+      "FEAT(auth): 添加用户登录功能"
+    ],
+    "answer": 1,
+    "explanation": "正确的 Conventional Commits 格式是 'type(scope): description'，其中 type 必须是小写，description 不应以句号结尾，且不应以大写字母开头。选项 B 符合这些要求。"
+  },
+  {
+    "question": "当两个开发者同时修改同一个文件的同一行代码并尝试推送时，会发生什么？",
+    "options": [
+      "Git 会自动合并更改，不会产生任何问题",
+      "第二个推送的开发者会收到拒绝推送的错误，需要先拉取并解决冲突",
+      "第一个推送的更改会被覆盖",
+      "Git 会暂停推送并要求手动选择保留哪个版本"
+    ],
+    "answer": 1,
+    "explanation": "Git 的分布式特性确保了数据安全。当第二个开发者尝试推送时，Git 会检测到远程分支已经更新，拒绝推送并提示开发者先拉取最新更改，然后解决可能的冲突后再推送。"
+  },
+  {
+    "question": "Trunk-Based Development（主干开发）工作流的核心思想是什么？",
+    "options": [
+      "每个功能都在独立的长期分支上开发，直到完成才合并",
+      "所有开发者直接在主干上开发，配合特性开关管理功能可见性",
+      "使用复杂的发布分支策略确保版本稳定性",
+      "完全避免使用分支，所有更改都通过 cherry-pick 应用"
+    ],
+    "answer": 1,
+    "explanation": "Trunk-Based Development 的核心是所有开发者都在主干（trunk）上进行开发，通过特性开关（Feature Flags）来控制新功能的可见性和启用状态。这需要完善的自动化测试和持续集成基础设施支持。"
+  }
+]

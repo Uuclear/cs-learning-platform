@@ -1,0 +1,27 @@
+{
+  "id": "08-06",
+  "title": "强化学习：从AlphaGo到自动驾驶",
+  "module": "08-ai-ml",
+  "slug": "lesson-06-reinforcement-learning",
+  "status": "draft",
+  "module_name": "AI/ML基础",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": [
+    "08-01"
+  ],
+  "tags": [
+    "reinforcement-learning",
+    "q-learning",
+    "policy-gradient"
+  ],
+  "learning_objectives": [],
+  "files": [
+    "index.mdx",
+    "metadata.json"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

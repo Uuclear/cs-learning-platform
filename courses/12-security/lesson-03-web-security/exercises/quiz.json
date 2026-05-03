@@ -1,0 +1,90 @@
+[
+  {
+    "question": "OWASP Top 10中，哪种漏洞允许攻击者在受害者的浏览器中执行恶意脚本？",
+    "options": [
+      "SQL注入",
+      "跨站脚本（XSS）",
+      "跨站请求伪造（CSRF）",
+      "敏感数据暴露"
+    ],
+    "answer": 1,
+    "explanation": "跨站脚本（XSS）攻击允许攻击者在受害者的浏览器中执行恶意脚本，从而窃取会话令牌、重定向用户或执行其他恶意操作。"
+  },
+  {
+    "question": "防止SQL注入攻击的最佳实践是什么？",
+    "options": [
+      "使用黑名单过滤特殊字符",
+      "对所有输入进行HTML编码",
+      "使用参数化查询或预编译语句",
+      "仅在前端进行输入验证"
+    ],
+    "answer": 2,
+    "explanation": "参数化查询或预编译语句是防止SQL注入的最佳实践，因为它们将用户输入作为数据而非代码处理，从根本上消除了注入的可能性。"
+  },
+  {
+    "question": "以下哪种XSS类型最危险，因为它可以影响多个用户？",
+    "options": [
+      "反射型XSS",
+      "DOM型XSS",
+      "存储型XSS",
+      "基于时间的XSS"
+    ],
+    "answer": 2,
+    "explanation": "存储型XSS最危险，因为恶意脚本被永久存储在服务器上（如数据库），每次用户访问受影响的页面时都会执行，可以影响多个用户。"
+  },
+  {
+    "question": "CSRF攻击的主要防御措施是什么？",
+    "options": [
+      "使用HTTPS",
+      "实施CSRF令牌验证",
+      "设置HttpOnly Cookie",
+      "使用内容安全策略（CSP）"
+    ],
+    "answer": 1,
+    "explanation": "CSRF令牌验证是防御CSRF攻击的主要措施。每个敏感操作都需要包含一个唯一的、不可预测的令牌，服务器会验证该令牌的有效性。"
+  },
+  {
+    "question": "SameSite Cookie属性设置为'Lax'时，会在什么情况下发送Cookie？",
+    "options": [
+      "仅在同站请求中发送",
+      "在同站请求和安全的跨站GET请求中发送",
+      "在所有请求中都发送",
+      "从不发送"
+    ],
+    "answer": 1,
+    "explanation": "SameSite=Lax允许Cookie在同站请求和安全的跨站GET请求（如点击链接）中发送，但阻止跨站POST请求中的Cookie发送，有效防止CSRF攻击。"
+  },
+  {
+    "question": "Content-Security-Policy (CSP) 头主要用于防御哪种攻击？",
+    "options": [
+      "SQL注入",
+      "跨站脚本（XSS）",
+      "拒绝服务攻击",
+      "中间人攻击"
+    ],
+    "answer": 1,
+    "explanation": "Content-Security-Policy (CSP) 主要用于防御XSS攻击，通过限制页面可以加载和执行的资源类型，即使存在XSS漏洞也能减轻其影响。"
+  },
+  {
+    "question": "以下哪个HTTP头可以防止点击劫持（Clickjacking）攻击？",
+    "options": [
+      "X-Content-Type-Options",
+      "Strict-Transport-Security",
+      "X-Frame-Options",
+      "Referrer-Policy"
+    ],
+    "answer": 2,
+    "explanation": "X-Frame-Options头可以防止点击劫持攻击，通过设置为DENY或SAMEORIGIN来控制页面是否可以被嵌入到iframe中。"
+  },
+  {
+    "question": "在密码存储中，为什么应该使用bcrypt而不是简单的MD5哈希？",
+    "options": [
+      "bcrypt更快",
+      "bcrypt提供加盐和自适应的工作因子",
+      "MD5更容易实现",
+      "bcrypt不需要密钥"
+    ],
+    "answer": 1,
+    "explanation": "bcrypt提供内置的加盐功能和自适应的工作因子，使其能够抵抗彩虹表攻击和暴力破解攻击，而MD5是快速且不加盐的哈希算法，不适合密码存储。"
+  }
+]

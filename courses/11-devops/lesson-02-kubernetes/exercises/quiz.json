@@ -1,0 +1,90 @@
+[
+  {
+    "question": "Kubernetes架构中，哪个组件负责维护集群的期望状态并确保实际状态与期望状态一致？",
+    "options": [
+      "kubelet",
+      "etcd",
+      "Controller Manager",
+      "Scheduler"
+    ],
+    "answer": 2,
+    "explanation": "Controller Manager包含多个控制器（如Replication Controller、Deployment Controller等），它们负责维护集群的期望状态。当实际状态与期望状态不一致时，控制器会采取行动使其一致。"
+  },
+  {
+    "question": "在Pod生命周期中，以下哪个阶段表示容器已经启动但尚未通过readiness探针检查？",
+    "options": [
+      "Pending",
+      "Running但NotReady",
+      "Succeeded",
+      "Failed"
+    ],
+    "answer": 1,
+    "explanation": "当Pod处于Running状态但尚未通过readiness探针检查时，它不会接收来自Service的流量。这是为了确保只有准备好的Pod才处理请求。"
+  },
+  {
+    "question": "滚动更新（Rolling Update）部署策略的主要优势是什么？",
+    "options": [
+      "部署速度最快",
+      "资源使用最少",
+      "零停机时间部署",
+      "回滚最简单"
+    ],
+    "answer": 2,
+    "explanation": "滚动更新通过逐步替换旧版本Pod来实现零停机时间部署，确保在更新过程中始终有可用的Pod处理请求。"
+  },
+  {
+    "question": "Kubernetes Service的哪种类型会在每个节点上打开一个端口，并将流量转发到后端Pod？",
+    "options": [
+      "ClusterIP",
+      "NodePort",
+      "LoadBalancer",
+      "ExternalName"
+    ],
+    "answer": 1,
+    "explanation": "NodePort类型的Service会在每个集群节点的指定端口（默认30000-32767范围）上打开端口，并将流量转发到后端Pod。这使得外部可以通过任何节点的IP和该端口访问服务。"
+  },
+  {
+    "question": "关于Kubernetes资源管理，以下哪项说法是正确的？",
+    "options": [
+      "如果不设置resources.requests，Pod将无法调度",
+      "resources.limits必须大于resources.requests",
+      "CPU资源以核（cores）为单位，内存以字节为单位",
+      "所有选项都正确"
+    ],
+    "answer": 3,
+    "explanation": "CPU资源确实以核为单位（可以是小数，如0.5表示半核），内存以字节为单位（通常使用Mi、Gi等后缀）。requests用于调度，limits用于限制最大使用量，limits应该大于等于requests。"
+  },
+  {
+    "question": "Horizontal Pod Autoscaler (HPA) 主要基于什么指标进行自动伸缩？",
+    "options": [
+      "节点CPU和内存使用率",
+      "Pod的CPU使用率和其他自定义指标",
+      "网络带宽使用率",
+      "磁盘I/O性能"
+    ],
+    "answer": 1,
+    "explanation": "HPA主要基于Pod的CPU使用率进行自动伸缩，但也支持内存使用率和其他自定义指标（通过Custom Metrics API）。它不直接基于节点级别的指标。"
+  },
+  {
+    "question": "ConfigMap和Secret的主要区别是什么？",
+    "options": [
+      "ConfigMap存储在etcd中，Secret存储在文件系统中",
+      "Secret数据在传输和存储时会被加密，ConfigMap不会",
+      "ConfigMap只能存储字符串，Secret可以存储二进制数据",
+      "Secret只能被Pod使用，ConfigMap可以被任何资源使用"
+    ],
+    "answer": 1,
+    "explanation": "Secret设计用于存储敏感数据，在传输和存储时会被base64编码（注意：这不是强加密，生产环境应配合其他安全措施）。ConfigMap用于存储非敏感配置数据。"
+  },
+  {
+    "question": "Ingress资源的主要作用是什么？",
+    "options": [
+      "提供Pod级别的网络隔离",
+      "管理集群内部服务发现",
+      "提供HTTP/HTTPS路由规则到集群内服务",
+      "配置节点网络接口"
+    ],
+    "answer": 2,
+    "explanation": "Ingress提供了一种管理外部HTTP/HTTPS访问集群内服务的方式，支持基于主机名或路径的路由、SSL终止等功能。它需要配合Ingress Controller使用。"
+  }
+]
