@@ -1,0 +1,509 @@
+# 15-03 边缘计算：靠近数据的地方
+
+## 开场白
+
+大家好！欢迎来到边缘计算的世界！🌐
+
+想象一下：自动驾驶汽车在毫秒级时间内做出避障决策、智能工厂的机器人实时响应生产线异常、智慧城市的交通灯根据实时车流自动调节——这些场景的背后，都有一个共同的技术基石：**边缘计算**（Edge Computing）。
+
+在云计算时代，我们将所有数据发送到遥远的数据中心处理。但随着物联网设备爆发式增长和对实时性要求的提高，这种"云端集中式"架构开始显现瓶颈。边缘计算应运而生，它将计算能力推向网络边缘，让数据在产生地就近处理，从而解决了延迟、带宽和隐私等关键问题。
+
+在这个课程中，我们将深入探索边缘计算的核心概念、技术架构、实际应用以及面临的挑战，帮助你理解这一改变未来计算范式的重要技术。
+
+## 核心概念
+
+### 什么是边缘计算？
+
+边缘计算是一种分布式计算范式，它将应用程序、数据和服务从集中式数据中心推向网络边缘，更靠近数据源和终端用户。其核心思想是："**在哪里产生数据，就在哪里处理数据**"。
+
+### 边缘计算 vs 云计算 vs 雾计算
+
+#### 🌥️ 云计算（Cloud Computing）
+- **位置**：集中式数据中心（通常距离用户数百公里）
+- **优势**：强大的计算能力、无限的存储空间、完善的生态系统
+- **劣势**：高延迟（通常50-200ms）、带宽消耗大、隐私风险
+
+#### 🌫️ 雾计算（Fog Computing）
+- **位置**：网络边缘和云之间的中间层（如企业网关、路由器）
+- **优势**：比云更低的延迟、支持多跳通信
+- **劣势**：架构复杂、标准化程度低
+
+#### 📱 边缘计算（Edge Computing）
+- **位置**：最接近数据源的位置（基站、家庭网关、设备本身）
+- **优势**：超低延迟（<10ms）、节省带宽、增强隐私保护
+- **劣势**：计算资源有限、管理复杂
+
+### 边缘计算的驱动因素
+
+1. **延迟敏感应用**：自动驾驶、工业控制、AR/VR等需要毫秒级响应
+2. **带宽限制**：海量IoT设备产生的数据无法全部上传到云端
+3. **隐私和合规**：敏感数据（如医疗、金融）需要本地处理
+4. **可靠性**：在网络中断时仍能提供基本服务
+
+## 代码演示
+
+让我们通过三个例子来理解边缘计算的核心概念：
+
+```python filename="code/examples/example-01-edge-vs-cloud.py"
+# 示例1：边缘计算与云计算的延迟和带宽对比模拟
+import time
+import random
+import math
+
+def simulate_cloud_processing(data_size_mb, distance_km):
+    """
+    模拟云计算处理：包括传输延迟和处理延迟
+    
+    :param data_size_mb: 数据大小（MB）
+    :param distance_km: 到数据中心的距离（公里）
+    :return: 总延迟（毫秒）
+    """
+    # 光速传输延迟（光在光纤中的速度约为200,000 km/s）
+    transmission_delay_ms = (distance_km * 2) / 200  # 往返延迟
+    
+    # 网络传输时间（假设带宽为100 Mbps）
+    bandwidth_mbps = 100
+    transfer_time_ms = (data_size_mb * 8) / bandwidth_mbps * 1000  # 转换为毫秒
+    
+    # 云端处理时间（假设处理能力强大，固定为50ms）
+    processing_time_ms = 50
+    
+    total_delay = transmission_delay_ms + transfer_time_ms + processing_time_ms
+    return total_delay
+
+def simulate_edge_processing(data_size_mb, local_processing_power):
+    """
+    模拟边缘计算处理：本地处理，无传输延迟
+    
+    :param data_size_mb: 数据大小（MB）
+    :param local_processing_power: 本地处理能力（1.0表示标准能力）
+    :return: 总延迟（毫秒）
+    """
+    # 无网络传输延迟
+    
+    # 本地处理时间（受处理能力影响）
+    base_processing_time = 100  # 基础处理时间（毫秒）
+    processing_time_ms = base_processing_time / local_processing_power
+    
+    # 小量数据可能需要额外的启动开销
+    if data_size_mb < 1:
+        processing_time_ms += 10
+    
+    return processing_time_ms
+
+def compare_edge_vs_cloud():
+    """比较边缘计算和云计算在不同场景下的性能"""
+    scenarios = [
+        {"name": "智能摄像头", "data_size": 5, "distance": 1000, "edge_power": 0.5},
+        {"name": "工业传感器", "data_size": 0.1, "distance": 500, "edge_power": 0.8},
+        {"name": "自动驾驶", "data_size": 50, "distance": 2000, "edge_power": 2.0},
+    ]
+    
+    print("边缘计算 vs 云计算性能对比")
+    print("=" * 60)
+    print(f"{'场景':<15} {'边缘延迟(ms)':<15} {'云延迟(ms)':<15} {'优势':<10}")
+    print("-" * 60)
+    
+    for scenario in scenarios:
+        edge_delay = simulate_edge_processing(scenario["data_size"], scenario["edge_power"])
+        cloud_delay = simulate_cloud_processing(scenario["data_size"], scenario["distance"])
+        
+        advantage = "边缘" if edge_delay < cloud_delay else "云端"
+        
+        print(f"{scenario['name']:<15} {edge_delay:<15.1f} {cloud_delay:<15.1f} {advantage:<10}")
+
+if __name__ == "__main__":
+    compare_edge_vs_cloud()
+```
+
+```python filename="code/examples/example-02-edge-ai.py"
+# 示例2：边缘AI - 在边缘设备上运行轻量级机器学习模型
+import random
+import math
+
+class EdgeAIDevice:
+    """模拟边缘AI设备"""
+    
+    def __init__(self, device_id, compute_capacity, memory_capacity):
+        """
+        初始化边缘AI设备
+        
+        :param device_id: 设备ID
+        :param compute_capacity: 计算能力（相对值，1.0为基准）
+        :param memory_capacity: 内存容量（MB）
+        """
+        self.device_id = device_id
+        self.compute_capacity = compute_capacity
+        self.memory_capacity = memory_capacity
+        self.current_load = 0.0
+        self.available_memory = memory_capacity
+    
+    def can_run_model(self, model_size_mb, required_compute):
+        """
+        检查设备是否能够运行指定模型
+        
+        :param model_size_mb: 模型大小（MB）
+        :param required_compute: 所需计算能力
+        :return: 是否可以运行
+        """
+        if model_size_mb > self.available_memory:
+            return False
+        if required_compute > self.compute_capacity:
+            return False
+        return True
+    
+    def run_inference(self, model_name, input_data_size):
+        """
+        运行推理任务
+        
+        :param model_name: 模型名称
+        :param input_data_size: 输入数据大小
+        :return: 推理结果和延迟
+        """
+        # 模拟不同模型的资源需求
+        model_specs = {
+            "tiny_cnn": {"size_mb": 2, "compute_factor": 0.3},
+            "mobile_net": {"size_mb": 15, "compute_factor": 0.8},
+            "efficient_net": {"size_mb": 30, "compute_factor": 1.5}
+        }
+        
+        if model_name not in model_specs:
+            return None, float('inf')
+        
+        spec = model_specs[model_name]
+        
+        # 检查资源是否足够
+        if not self.can_run_model(spec["size_mb"], spec["compute_factor"]):
+            return None, float('inf')
+        
+        # 消耗内存
+        self.available_memory -= spec["size_mb"]
+        
+        # 计算推理延迟（受计算能力和输入数据大小影响）
+        base_latency = 50  # 基础延迟（毫秒）
+        compute_latency = base_latency * (spec["compute_factor"] / self.compute_capacity)
+        data_latency = input_data_size * 0.1  # 数据处理延迟
+        
+        total_latency = compute_latency + data_latency
+        
+        # 模拟推理结果（随机分类结果）
+        result = {
+            "model": model_name,
+            "prediction": random.choice(["normal", "anomaly"]),
+            "confidence": random.uniform(0.7, 0.95),
+            "latency_ms": total_latency
+        }
+        
+        return result, total_latency
+
+def simulate_edge_ai_scenario():
+    """模拟边缘AI应用场景"""
+    # 创建不同类型的边缘设备
+    devices = [
+        EdgeAIDevice("smart_camera_01", 0.5, 100),   # 智能摄像头
+        EdgeAIDevice("industrial_sensor_01", 0.8, 200),  # 工业传感器
+        EdgeAIDevice("autonomous_vehicle_01", 3.0, 1000)  # 自动驾驶车辆
+    ]
+    
+    models_to_test = ["tiny_cnn", "mobile_net", "efficient_net"]
+    input_sizes = [1, 5, 20]  # 不同输入数据大小（MB）
+    
+    print("边缘AI模型部署模拟")
+    print("=" * 80)
+    print(f"{'设备':<20} {'模型':<15} {'输入(MB)':<10} {'延迟(ms)':<12} {'状态':<10}")
+    print("-" * 80)
+    
+    for device in devices:
+        for model in models_to_test:
+            for input_size in input_sizes:
+                # 重置设备内存状态
+                device.available_memory = device.memory_capacity
+                
+                result, latency = device.run_inference(model, input_size)
+                
+                if result is not None:
+                    status = "成功"
+                else:
+                    status = "资源不足"
+                    latency = "N/A"
+                
+                print(f"{device.device_id:<20} {model:<15} {input_size:<10} {latency:<12} {status:<10}")
+
+if __name__ == "__main__":
+    simulate_edge_ai_scenario()
+```
+
+```python filename="code/examples/example-03-edge-orchestration.py"
+# 示例3：边缘节点编排和负载均衡模拟
+import random
+import heapq
+from collections import defaultdict
+
+class EdgeNode:
+    """边缘节点类"""
+    
+    def __init__(self, node_id, location, capacity):
+        """
+        初始化边缘节点
+        
+        :param node_id: 节点ID
+        :param location: 位置坐标 (x, y)
+        :param capacity: 计算容量
+        """
+        self.node_id = node_id
+        self.location = location
+        self.capacity = capacity
+        self.current_load = 0
+        self.tasks = []
+    
+    def get_utilization(self):
+        """获取当前利用率"""
+        return self.current_load / self.capacity if self.capacity > 0 else 1.0
+    
+    def can_accept_task(self, task_demand):
+        """检查是否能接受新任务"""
+        return self.current_load + task_demand <= self.capacity
+    
+    def assign_task(self, task_id, task_demand, user_location):
+        """分配任务给节点"""
+        if self.can_accept_task(task_demand):
+            self.current_load += task_demand
+            self.tasks.append({
+                'task_id': task_id,
+                'demand': task_demand,
+                'user_location': user_location,
+                'distance': self.calculate_distance(user_location)
+            })
+            return True
+        return False
+    
+    def calculate_distance(self, other_location):
+        """计算到用户位置的距离"""
+        return math.sqrt((self.location[0] - other_location[0])**2 + 
+                        (self.location[1] - other_location[1])**2)
+
+class EdgeOrchestrator:
+    """边缘编排器"""
+    
+    def __init__(self):
+        self.nodes = []
+    
+    def add_node(self, node):
+        """添加边缘节点"""
+        self.nodes.append(node)
+    
+    def find_best_node(self, task_demand, user_location, strategy="load_balancing"):
+        """
+        根据策略找到最佳节点
+        
+        :param task_demand: 任务需求
+        :param user_location: 用户位置
+        :param strategy: 策略 ("load_balancing", "proximity", "hybrid")
+        :return: 最佳节点
+        """
+        available_nodes = [node for node in self.nodes if node.can_accept_task(task_demand)]
+        
+        if not available_nodes:
+            return None
+        
+        if strategy == "load_balancing":
+            # 选择负载最低的节点
+            return min(available_nodes, key=lambda x: x.get_utilization())
+        
+        elif strategy == "proximity":
+            # 选择距离最近的节点
+            return min(available_nodes, key=lambda x: x.calculate_distance(user_location))
+        
+        elif strategy == "hybrid":
+            # 综合考虑负载和距离
+            scores = []
+            for node in available_nodes:
+                load_score = node.get_utilization()
+                distance_score = node.calculate_distance(user_location) / 100  # 归一化距离
+                hybrid_score = 0.6 * load_score + 0.4 * distance_score
+                scores.append((hybrid_score, node))
+            
+            return min(scores, key=lambda x: x[0])[1]
+    
+    def distribute_tasks(self, tasks, strategy="hybrid"):
+        """
+        分发任务到边缘节点
+        
+        :param tasks: 任务列表 [(task_id, demand, user_location), ...]
+        :param strategy: 分发策略
+        :return: 分发结果
+        """
+        results = []
+        failed_tasks = []
+        
+        for task_id, demand, location in tasks:
+            best_node = self.find_best_node(demand, location, strategy)
+            
+            if best_node and best_node.assign_task(task_id, demand, location):
+                results.append({
+                    'task_id': task_id,
+                    'assigned_to': best_node.node_id,
+                    'latency_estimate': best_node.calculate_distance(location) * 0.1
+                })
+            else:
+                failed_tasks.append(task_id)
+        
+        return results, failed_tasks
+
+def simulate_edge_orchestration():
+    """模拟边缘编排场景"""
+    # 创建边缘节点（模拟城市中的边缘服务器）
+    orchestrator = EdgeOrchestrator()
+    node_locations = [(0, 0), (50, 0), (0, 50), (50, 50), (25, 25)]
+    
+    for i, loc in enumerate(node_locations):
+        node = EdgeNode(f"edge_node_{i+1}", loc, capacity=100)
+        orchestrator.add_node(node)
+    
+    # 生成随机任务（模拟用户请求）
+    random.seed(42)
+    tasks = []
+    for i in range(20):
+        task_id = f"task_{i+1}"
+        demand = random.randint(5, 25)
+        location = (random.randint(0, 60), random.randint(0, 60))
+        tasks.append((task_id, demand, location))
+    
+    # 使用不同策略分发任务
+    strategies = ["load_balancing", "proximity", "hybrid"]
+    
+    print("边缘节点编排和负载均衡模拟")
+    print("=" * 80)
+    
+    for strategy in strategies:
+        # 重置节点状态
+        for node in orchestrator.nodes:
+            node.current_load = 0
+            node.tasks = []
+        
+        results, failed = orchestrator.distribute_tasks(tasks, strategy)
+        
+        # 计算统计信息
+        success_rate = len(results) / len(tasks) * 100
+        avg_latency = sum(r['latency_estimate'] for r in results) / len(results) if results else 0
+        utilization = [node.get_utilization() for node in orchestrator.nodes]
+        avg_utilization = sum(utilization) / len(utilization)
+        
+        print(f"\n策略: {strategy}")
+        print(f"  成功率: {success_rate:.1f}%")
+        print(f"  平均延迟估计: {avg_latency:.2f} ms")
+        print(f"  平均节点利用率: {avg_utilization:.2f}")
+        print(f"  失败任务数: {len(failed)}")
+
+if __name__ == "__main__":
+    simulate_edge_orchestration()
+```
+
+## 深入理解
+
+### 边缘AI的关键技术
+
+#### 模型压缩与优化
+- **量化**（Quantization）：将32位浮点数转换为8位整数，减少模型大小和计算需求
+- **剪枝**（Pruning）：移除不重要的神经元连接，减少参数数量
+- **知识蒸馏**（Knowledge Distillation）：用大型教师模型训练小型学生模型
+
+#### 边缘推理框架
+- **TensorFlow Lite**：专为移动和嵌入式设备优化
+- **PyTorch Mobile**：PyTorch的移动端版本
+- **ONNX Runtime**：跨平台推理引擎
+
+### 边缘基础设施
+
+#### 多接入边缘计算（MEC）
+MEC将云计算能力部署到移动网络边缘（如4G/5G基站），提供：
+- 超低延迟（1-10ms）
+- 高带宽连接
+- 与移动网络的深度集成
+
+#### 5G与边缘计算的协同
+- **网络切片**：为不同应用提供定制化的网络服务
+- **URLLC**（超可靠低延迟通信）：支持关键任务应用
+- **MEC平台**：在5G基站附近部署边缘服务器
+
+### 安全与隐私挑战
+
+#### 边缘安全威胁
+- **物理攻击**：边缘设备可能被物理接触
+- **侧信道攻击**：通过功耗、电磁辐射等泄露信息
+- **软件漏洞**：资源受限设备难以运行完整安全栈
+
+#### 隐私保护机制
+- **联邦学习**：在本地训练模型，只共享模型参数
+- **差分隐私**：在数据中添加噪声保护个体隐私
+- **同态加密**：在加密数据上直接进行计算
+
+## 实际应用
+
+### 自动驾驶
+- **实时感知**：在车辆本地处理摄像头、雷达数据
+- **决策制定**：毫秒级响应避免事故
+- **V2X通信**：车辆与基础设施间的边缘协作
+
+### 智慧城市
+- **智能交通**：实时分析交通流量，优化信号灯控制
+- **公共安全**：视频监控中的异常行为检测
+- **环境监测**：空气质量、噪音等传感器数据分析
+
+### 工业自动化
+- **预测性维护**：分析设备振动、温度数据预测故障
+- **质量控制**：实时视觉检测产品缺陷
+- **机器人协作**：多机器人间的实时协调
+
+### 医疗健康
+- **远程监护**：可穿戴设备实时分析生命体征
+- **手术辅助**：AR/VR技术在手术中的应用
+- **医学影像**：便携设备上的快速诊断
+
+## 常见误区
+
+### ❌ 边缘计算会取代云计算
+- **事实**：边缘计算和云计算是互补关系，不是替代关系
+- **正确理解**：边缘处理实时、敏感数据；云计算处理大数据分析、长期存储
+
+### ❌ 所有应用都适合边缘化
+- **事实**：只有对延迟、带宽或隐私有严格要求的应用才需要边缘计算
+- **正确理解**：简单应用或非实时应用仍适合云端处理
+
+### ❌ 边缘设备不需要安全管理
+- **事实**：边缘设备分布广泛，更容易受到物理和网络攻击
+- **正确理解**：边缘安全需要端到端的安全架构，包括设备认证、数据加密、安全更新
+
+### ❌ 边缘计算成本更低
+- **事实**：边缘计算可能增加总体拥有成本（TCO）
+- **正确理解**：需要权衡延迟收益与部署、运维成本
+
+## 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：优化边缘AI模型
+修改`example-02-edge-ai.py`，实现模型量化功能，将模型大小减少50%，同时保持推理准确性在85%以上。
+
+### 练习2：设计边缘编排策略
+基于`example-03-edge-orchestration.py`，实现一种新的编排策略，考虑能源效率因素，在保证性能的同时最小化能耗。
+
+### 练习3：边缘-云协同架构
+设计一个混合架构，其中简单任务在边缘处理，复杂任务卸载到云端，并实现任务分流逻辑。
+
+完成后，检查你的答案是否与`solutions/`目录中的参考实现一致。
+
+## 小结与思考
+
+今天我们深入探讨了边缘计算的世界，从基本概念到实际应用。记住几个关键点：
+
+- **边缘计算的核心价值**在于解决延迟、带宽和隐私三大挑战
+- **边缘AI**通过模型压缩和优化技术，使ML模型能在资源受限设备上运行
+- **编排和管理**是边缘计算规模化部署的关键挑战
+
+思考题：
+1. 在什么场景下，边缘计算的延迟优势最为明显？
+2. 如何平衡边缘计算的隐私保护优势与数据孤岛问题？
+3. 5G网络如何加速边缘计算的商业化落地？
+
+边缘计算正在重塑我们的数字基础设施，掌握这项技术将为你在未来的技术浪潮中占据有利位置！🚀
