@@ -1,0 +1,24 @@
+{
+  "id": "16-05",
+  "title": "高级字符串匹配",
+  "slug": "lesson-05-advanced-string-matching",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["03-09"],
+  "tags": ["algorithm", "string-matching", "kmp", "rabin-karp", "boyer-moore", "suffix-arrays"],
+  "learning_objectives": [
+    "掌握KMP算法的失败函数（前缀表）构建方法",
+    "理解Rabin-Karp算法的滚动哈希机制",
+    "掌握Boyer-Moore算法的坏字符和好后缀规则",
+    "了解后缀数组的基本概念和构建方法",
+    "能够根据应用场景选择合适的字符串匹配算法",
+    "理解各种算法的时间复杂度和适用场景",
+    "能够实现高效的模式匹配应用"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

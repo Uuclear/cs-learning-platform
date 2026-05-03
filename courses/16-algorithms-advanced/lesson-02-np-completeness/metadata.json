@@ -1,0 +1,26 @@
+{
+  "id": "16-02",
+  "title": "P vs NP与NP完全性：算法的边界",
+  "slug": "lesson-02-np-completeness",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": [
+    "03-10"
+  ],
+  "tags": [
+    "np-completeness",
+    "p-vs-np",
+    "reduction",
+    "sat",
+    "vertex-cover"
+  ],
+  "learning_objectives": [
+    "P/NP/NP-hard/NP-complete定义、多项式时间归约、SAT与3-SAT、Cook-Levin定理直觉、顶点覆盖、TSP判定"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

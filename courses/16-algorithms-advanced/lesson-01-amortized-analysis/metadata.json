@@ -1,0 +1,26 @@
+{
+  "id": "16-01",
+  "title": "渐近分析与摊销分析：算法效率的'放大镜'",
+  "slug": "lesson-01-amortized-analysis",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 3,
+  "duration": 35,
+  "prerequisites": [
+    "03-10"
+  ],
+  "tags": [
+    "amortized-analysis",
+    "big-o",
+    "dynamic-array",
+    "potential-method",
+    "accounting-method"
+  ],
+  "learning_objectives": [
+    "渐近符号(Big-O/Theta/Omega)、摊销分析三法(聚合/记账/势能)、动态数组扩容、二进制计数器"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

@@ -1,0 +1,454 @@
+---
+title: "16-03 随机算法"
+description: "探索随机算法的威力，理解Las Vegas与Monte Carlo算法的区别，掌握随机快速排序、Miller-Rabin素性测试和Karger最小割算法"
+---
+
+# 16-03 随机算法
+
+## 1. 开场白
+
+想象你正在玩一个猜数字的游戏。你的朋友心里想了一个1到100之间的数字，你要猜出它。如果你总是从1开始依次猜测，最坏情况下需要100次。但如果你每次都随机猜测一个数字，虽然不能保证一定更快，但在很多情况下会表现得更好。
+
+这就是**随机算法**的魅力！通过引入随机性，我们可以在期望情况下获得更好的性能，或者解决一些确定性算法难以处理的问题。随机算法分为两大类：**Las Vegas算法**（总是给出正确答案，但运行时间是随机的）和**Monte Carlo算法**（运行时间固定，但可能给出错误答案）。
+
+在这一课中，我们将深入探索随机算法的世界，从经典的随机快速排序到现代密码学中的Miller-Rabin素性测试，再到图论中的Karger最小割算法。
+
+## 2. 核心概念
+
+### 2.1 Las Vegas vs Monte Carlo算法
+
+#### Las Vegas算法
+- **特点**：总是返回正确答案，但运行时间是随机变量
+- **例子**：随机快速排序、随机选择算法
+- **分析重点**：期望运行时间
+
+#### Monte Carlo算法  
+- **特点**：运行时间固定，但有一定概率返回错误答案
+- **例子**：Miller-Rabin素性测试、Monte Carlo积分
+- **分析重点**：错误概率
+
+### 2.2 随机化的价值
+
+随机化为我们带来了几个重要的优势：
+
+1. **打破最坏情况**：通过随机选择，避免对手构造的最坏输入
+2. **简化算法设计**：有时随机算法比确定性算法更简单
+3. **解决不可能问题**：某些问题在确定性模型下无法高效解决，但随机算法可以
+
+### 2.3 概率分析工具
+
+在分析随机算法时，我们需要以下概率工具：
+
+- **期望值**：E[X] = Σ x·P(X=x)
+- **指示器随机变量**：将复杂事件分解为简单事件
+- **Chernoff界**：分析随机变量偏离期望的概率
+- **马尔可夫不等式**：P(X ≥ a) ≤ E[X]/a
+
+## 3. 代码演示
+
+让我们通过具体的Python代码来演示随机算法的实现和分析。
+
+### 3.1 随机快速排序
+
+```python
+import random
+import time
+
+def randomized_quicksort(arr, low=0, high=None):
+    """
+    随机快速排序实现
+    
+    Args:
+        arr (list): 要排序的数组
+        low (int): 排序范围的起始索引
+        high (int): 排序范围的结束索引
+        
+    Returns:
+        int: 总比较次数
+    """
+    if high is None:
+        high = len(arr) - 1
+    
+    comparisons = 0
+    
+    def partition(arr, low, high):
+        """分区函数，使用随机主元"""
+        nonlocal comparisons
+        
+        # 随机选择主元并交换到末尾
+        random_index = random.randint(low, high)
+        arr[random_index], arr[high] = arr[high], arr[random_index]
+        
+        pivot = arr[high]
+        i = low - 1
+        
+        for j in range(low, high):
+            comparisons += 1
+            if arr[j] <= pivot:
+                i += 1
+                arr[i], arr[j] = arr[j], arr[i]
+        
+        arr[i + 1], arr[high] = arr[high], arr[i + 1]
+        return i + 1
+    
+    def quicksort_helper(arr, low, high):
+        """快速排序递归辅助函数"""
+        nonlocal comparisons
+        
+        if low < high:
+            pi = partition(arr, low, high)
+            quicksort_helper(arr, low, pi - 1)
+            quicksort_helper(arr, pi + 1, high)
+    
+    quicksort_helper(arr, low, high)
+    return comparisons
+
+# 演示随机快速排序
+def demonstrate_randomized_quicksort():
+    """演示随机快速排序的性能"""
+    print("=== 随机快速排序演示 ===")
+    
+    # 测试不同规模的数组
+    test_sizes = [100, 500, 1000]
+    
+    for size in test_sizes:
+        print(f"\n测试规模: {size}")
+        
+        # 测试已排序数组（确定性快速排序的最坏情况）
+        sorted_arr = list(range(size))
+        arr_copy = sorted_arr.copy()
+        
+        start_time = time.time()
+        comparisons = randomized_quicksort(arr_copy)
+        end_time = time.time()
+        
+        print(f"  已排序数组: 比较次数={comparisons}, 时间={end_time-start_time:.4f}s")
+        print(f"  验证排序正确: {arr_copy == sorted(sorted_arr)}")
+        
+        # 测试随机数组
+        random_arr = [random.randint(1, 1000) for _ in range(size)]
+        arr_copy = random_arr.copy()
+        
+        start_time = time.time()
+        comparisons = randomized_quicksort(arr_copy)
+        end_time = time.time()
+        
+        print(f"  随机数组: 比较次数={comparisons}, 时间={end_time-start_time:.4f}s")
+        print(f"  验证排序正确: {arr_copy == sorted(random_arr)}")
+
+```
+
+### 3.2 Miller-Rabin素性测试
+
+```python
+def miller_rabin_test(n, k=5):
+    """
+    Miller-Rabin素性测试（Monte Carlo算法）
+    
+    Args:
+        n (int): 要测试的数
+        k (int): 测试轮数，影响错误概率
+        
+    Returns:
+        bool: 如果n可能是素数返回True，否则返回False
+    """
+    if n < 2:
+        return False
+    if n == 2 or n == 3:
+        return True
+    if n % 2 == 0:
+        return False
+    
+    # 将n-1写成d * 2^r的形式
+    r = 0
+    d = n - 1
+    while d % 2 == 0:
+        r += 1
+        d //= 2
+    
+    print(f"Miller-Rabin测试: n={n}, 分解为 {d} * 2^{r}")
+    
+    # 进行k轮测试
+    for i in range(k):
+        a = random.randint(2, n - 2)
+        x = pow(a, d, n)  # 计算 a^d mod n
+        
+        print(f"  第{i+1}轮: a={a}, a^d mod n={x}")
+        
+        if x == 1 or x == n - 1:
+            continue
+        
+        for _ in range(r - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            # 所有轮次都失败
+            print(f"  {n} 是合数")
+            return False
+    
+    print(f"  {n} 可能是素数（错误概率 ≤ {1/(4**k):.6f}）")
+    return True
+
+# 演示Miller-Rabin测试
+def demonstrate_miller_rabin():
+    """演示Miller-Rabin素性测试"""
+    print("\n=== Miller-Rabin素性测试演示 ===")
+    
+    test_numbers = [17, 561, 1009, 2047, 982451653]
+    
+    for num in test_numbers:
+        print(f"\n测试数字: {num}")
+        result = miller_rabin_test(num, k=5)
+        actual_is_prime = is_prime_naive(num) if num < 10000 else "未知"
+        print(f"结果: {'可能是素数' if result else '是合数'}, 实际: {actual_is_prime}")
+
+def is_prime_naive(n):
+    """朴素素性测试（仅用于小数字验证）"""
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+```
+
+### 3.3 Karger最小割算法
+
+```python
+class Graph:
+    """图类，用于Karger算法"""
+    
+    def __init__(self, vertices):
+        self.vertices = vertices
+        self.edges = []
+        self.adj = {v: set() for v in vertices}
+    
+    def add_edge(self, u, v):
+        """添加边"""
+        if u != v:  # 不允许自环
+            self.edges.append((u, v))
+            self.adj[u].add(v)
+            self.adj[v].add(u)
+    
+    def contract(self, u, v):
+        """收缩边(u,v)，将v合并到u"""
+        # 更新邻接关系
+        for neighbor in self.adj[v]:
+            if neighbor != u:
+                self.adj[u].add(neighbor)
+                self.adj[neighbor].add(u)
+                self.adj[neighbor].discard(v)
+                self.edges.append((u, neighbor))
+        
+        # 删除v
+        del self.adj[v]
+        self.vertices.remove(v)
+        
+        # 清理自环和重复边
+        self._cleanup()
+    
+    def _cleanup(self):
+        """清理自环和重复边"""
+        new_edges = []
+        for u, v in self.edges:
+            if u in self.adj and v in self.adj and u != v:
+                if v in self.adj[u]:
+                    new_edges.append((u, v))
+                    self.adj[u].discard(v)
+                    self.adj[v].discard(u)
+        
+        # 重新添加边
+        self.edges = []
+        for u, v in new_edges:
+            self.add_edge(u, v)
+    
+    def get_cut_size(self):
+        """获取当前割的大小（剩余边数）"""
+        return len(self.edges)
+
+def karger_min_cut(original_graph, iterations=None):
+    """
+    Karger随机收缩算法求最小割
+    
+    Args:
+        original_graph (Graph): 原始图
+        iterations (int): 迭代次数，如果为None则使用推荐值
+        
+    Returns:
+        int: 找到的最小割大小
+    """
+    if iterations is None:
+        n = len(original_graph.vertices)
+        iterations = int(n * n * 0.5 * 2)  # 约 n² ln n
+    
+    min_cut = float('inf')
+    
+    print(f"Karger算法: {len(original_graph.vertices)} 个顶点, {iterations} 次迭代")
+    
+    for i in range(iterations):
+        # 复制图
+        graph = Graph(original_graph.vertices.copy())
+        for u, v in original_graph.edges:
+            graph.add_edge(u, v)
+        
+        # 随机收缩直到剩下2个顶点
+        while len(graph.vertices) > 2:
+            edge = random.choice(graph.edges)
+            u, v = edge
+            graph.contract(u, v)
+        
+        cut_size = graph.get_cut_size()
+        min_cut = min(min_cut, cut_size)
+        
+        if (i + 1) % (iterations // 5) == 0 or i == iterations - 1:
+            print(f"  迭代 {i+1}/{iterations}: 当前最小割 = {min_cut}")
+    
+    success_probability = 1 - (1 - 2/(len(original_graph.vertices)*(len(original_graph.vertices)-1)))**iterations
+    print(f"成功概率估计: {success_probability:.4f}")
+    
+    return min_cut
+
+# 演示Karger算法
+def demonstrate_karger():
+    """演示Karger最小割算法"""
+    print("\n=== Karger最小割算法演示 ===")
+    
+    # 创建示例图（正方形加对角线）
+    vertices = [1, 2, 3, 4]
+    graph = Graph(vertices)
+    edges = [(1,2), (2,3), (3,4), (4,1), (1,3)]  # 正方形 + 一条对角线
+    
+    for u, v in edges:
+        graph.add_edge(u, v)
+    
+    print("图结构:")
+    for v in vertices:
+        neighbors = sorted(graph.adj[v])
+        print(f"  顶点 {v}: {neighbors}")
+    
+    min_cut = karger_min_cut(graph, iterations=20)
+    print(f"找到的最小割大小: {min_cut}")
+    print("实际最小割: 2（删除两条相邻边即可断开图）")
+
+# 运行所有演示
+if __name__ == "__main__":
+    demonstrate_randomized_quicksort()
+    demonstrate_miller_rabin()
+    demonstrate_karger()
+```
+
+## 4. 深入理解
+
+### 4.1 随机快速排序的期望分析
+
+随机快速排序的关键洞察是：**主元的选择是随机的，因此任何两个元素比较的概率是2/(j-i+1)**。
+
+详细分析：
+- 设Xᵢⱼ为指示器变量，表示元素i和j是否被比较
+- E[Xᵢⱼ] = P(元素i和j被比较) = 2/(j-i+1)
+- 总比较次数 X = Σᵢ<ⱼ Xᵢⱼ
+- E[X] = Σᵢ<ⱼ E[Xᵢⱼ] = Σᵢ<ⱼ 2/(j-i+1) = O(n log n)
+
+这证明了随机快速排序的**期望时间复杂度是O(n log n)**，即使对于最坏输入也是如此。
+
+### 4.2 Miller-Rabin的错误概率
+
+Miller-Rabin测试的错误概率分析：
+
+- 对于合数n，至少有3/4的底数a能检测出n是合数
+- 进行k轮独立测试后，错误概率 ≤ (1/4)ᵏ
+- 实际上，对于大多数合数，错误概率远小于理论上限
+
+这就是为什么Miller-Rabin在实践中非常可靠，即使只进行几轮测试。
+
+### 4.3 Karger算法的成功概率
+
+Karger算法的成功概率分析：
+
+- 单次运行成功找到最小割的概率 ≥ 2/(n(n-1))
+- 进行k次独立运行后，失败概率 ≤ (1 - 2/(n(n-1)))ᵏ
+- 当k = n² ln n时，失败概率 ≤ 1/n
+
+因此，通过多次运行，我们可以以高概率找到正确的最小割。
+
+## 5. 实际应用
+
+### 5.1 密码学中的应用
+
+- **RSA密钥生成**：需要大素数，Miller-Rabin是标准的素性测试方法
+- **随机数生成**：密码学安全的伪随机数生成器
+- **零知识证明**：许多零知识证明协议依赖随机性
+
+### 5.2 机器学习中的应用
+
+- **随机森林**：通过随机选择特征和样本构建决策树集合
+- **随机梯度下降**：随机选择样本更新参数，加速收敛
+- **蒙特卡洛方法**：用于贝叶斯推断和强化学习
+
+### 5.3 系统设计中的应用
+
+- **负载均衡**：随机分配请求到服务器
+- **缓存策略**：随机替换缓存项（如Redis的volatile-random）
+- **分布式系统**：随机选择节点进行数据复制或查询
+
+## 6. 常见误区
+
+### 6.1 随机性 vs 不确定性
+
+**误区**：随机算法的结果不可预测，所以不可靠
+**正解**：随机算法的**概率性质是可分析的**，我们可以精确计算错误概率或期望性能
+
+### 6.2 伪随机数的质量
+
+**误区**：任何随机数生成器都可以用于随机算法
+**正解**：算法的理论保证依赖于**真正的随机性**，伪随机数生成器的质量会影响实际性能
+
+### 6.3 期望 vs 最坏情况
+
+**误区**：期望O(n log n)意味着总是很快
+**正解**：随机快速排序仍有O(n²)的最坏情况，只是概率极低
+
+## 7. 动手实践
+
+### 练习 1：实现随机选择算法
+
+实现随机选择（quickselect）算法，找到数组中第k小的元素，并分析其期望时间复杂度。
+
+**提示**：
+- 使用随机主元的分区策略
+- 递归只处理包含目标元素的一侧
+- 期望时间复杂度为O(n)
+
+### 练习 2：Monte Carlo方法估算π
+
+使用Monte Carlo方法估算圆周率π，通过随机投点计算单位圆内的点的比例。
+
+**提示**：
+- 在单位正方形内随机生成点
+- 统计落在单位圆内的比例
+- π ≈ 4 × (圆内点数 / 总点数)
+
+### 练习 3：改进Karger算法
+
+实现Karger-Stein算法（改进版），通过递归收缩提高成功概率。
+
+**提示**：
+- 当顶点数减少到n/√2时，递归调用两次
+- 合并两个子问题的结果
+- 成功概率提高到Ω(1/log n)
+
+## 8. 小结与思考
+
+随机算法展示了**概率思维**在算法设计中的强大力量。通过本课的学习，你应该：
+
+1. **理解两类随机算法**：Las Vegas（总是正确）vs Monte Carlo（可能错误）
+2. **掌握经典算法**：随机快速排序、Miller-Rabin、Karger最小割
+3. **学会概率分析**：期望值、错误概率、成功概率的计算
+
+**思考题**：
+- 在什么情况下应该选择Las Vegas算法而不是Monte Carlo算法？
+- 如何将随机算法的思想应用到你熟悉的其他问题中？
+- 随机算法的理论保证在实际应用中如何体现？
+
+记住，随机算法不是"碰运气"，而是**用概率理论武装的智能策略**。它们让我们能够优雅地处理那些确定性算法难以驯服的问题。

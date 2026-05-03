@@ -1,0 +1,22 @@
+{
+  "id": "16-08",
+  "title": "动态规划进阶",
+  "slug": "lesson-08-advanced-dp",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["03-04"],
+  "tags": ["algorithm", "dynamic-programming"],
+  "learning_objectives": [
+    "掌握矩阵链乘法的最优括号化问题及其动态规划解法",
+    "理解最优二叉搜索树的构建方法和动态规划实现",
+    "学会区间动态规划的基本思想和应用场景",
+    "掌握状态压缩动态规划的技术和优化方法",
+    "了解动态规划优化技巧，包括单调队列和斜率优化"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

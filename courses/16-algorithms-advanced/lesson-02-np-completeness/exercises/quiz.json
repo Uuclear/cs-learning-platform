@@ -1,0 +1,90 @@
+[
+  {
+    "question": "以下关于P类和NP类的描述，哪一个是正确的？",
+    "options": [
+      "P类问题比NP类问题更难",
+      "NP代表'Non-Polynomial'（非多项式）",
+      "P类问题可以在多项式时间内被确定性图灵机解决",
+      "所有NP类问题都比P类问题难"
+    ],
+    "answer": 2,
+    "explanation": "P类问题的定义是可以在多项式时间内被确定性图灵机解决的问题。NP代表'Nondeterministic Polynomial'（非确定性多项式），而不是'Non-Polynomial'。目前还不知道P是否等于NP，所以不能说NP问题一定比P问题难。"
+  },
+  {
+    "question": "NP-complete问题的定义是什么？",
+    "options": [
+      "所有NP问题中最容易的问题",
+      "既是NP-hard又是NP的问题",
+      "不在NP中的最难问题",
+      "只能用指数时间算法解决的问题"
+    ],
+    "answer": 1,
+    "explanation": "NP-complete问题的定义是：既是NP-hard（至少和NP中任何问题一样难）又是NP（解可以在多项式时间内验证）的问题。它们是NP中最难的问题。"
+  },
+  {
+    "question": "Cook-Levin定理证明了什么？",
+    "options": [
+      "P = NP",
+      "P ≠ NP",
+      "布尔可满足性问题（SAT）是NP-complete的",
+      "顶点覆盖问题是NP-complete的"
+    ],
+    "answer": 2,
+    "explanation": "Cook-Levin定理证明了布尔可满足性问题（SAT）是NP-complete的。这是第一个被证明为NP-complete的问题，为后续的NP-completeness证明奠定了基础。"
+  },
+  {
+    "question": "如果问题A可以多项式时间归约到问题B（A ≤ₚ B），这意味着什么？",
+    "options": [
+      "B比A更容易",
+      "如果B有多项式时间算法，则A也有多项式时间算法",
+      "A和B的难度完全相同",
+      "B不能有多项式时间算法"
+    ],
+    "answer": 1,
+    "explanation": "如果A ≤ₚ B，意味着如果B有多项式时间算法，那么A也可以通过先归约再调用B的算法来在多项式时间内解决。这表明B至少和A一样难。"
+  },
+  {
+    "question": "以下哪个问题不是NP-complete的？",
+    "options": [
+      "布尔可满足性问题（SAT）",
+      "顶点覆盖问题",
+      "最短路径问题",
+      "旅行商问题（决策版本）"
+    ],
+    "answer": 2,
+    "explanation": "最短路径问题属于P类，有Dijkstra等多项式时间算法。而SAT、顶点覆盖、旅行商问题（决策版本）都是经典的NP-complete问题。"
+  },
+  {
+    "question": "NP-hard问题和NP-complete问题的主要区别是什么？",
+    "options": [
+      "NP-hard问题更容易解决",
+      "NP-hard问题不一定在NP中，而NP-complete问题必须在NP中",
+      "NP-hard问题有更高效的近似算法",
+      "NP-hard问题是优化问题，NP-complete问题是决策问题"
+    ],
+    "answer": 1,
+    "explanation": "NP-hard问题不一定在NP中（例如停机问题是NP-hard但不在NP中），而NP-complete问题必须同时满足在NP中和是NP-hard的。"
+  },
+  {
+    "question": "如果某天证明了P = NP，会对密码学产生什么影响？",
+    "options": [
+      "密码学会变得更安全",
+      "大多数现代密码系统将不再安全",
+      "对密码学没有影响",
+      "只会对对称加密有影响，不影响公钥加密"
+    ],
+    "answer": 1,
+    "explanation": "大多数现代密码系统（如RSA、椭圆曲线密码）的安全性基于某些计算问题的困难性假设，这些问题通常在NP中。如果P=NP，意味着这些困难问题都有多项式时间算法，密码系统将被破解。"
+  },
+  {
+    "question": "以下关于3-SAT的说法，哪一个是正确的？",
+    "options": [
+      "3-SAT比一般SAT更容易解决",
+      "3-SAT是P类问题",
+      "3-SAT可以通过归约证明是NP-complete的",
+      "3-SAT只有在变量数小于10时才是NP-complete的"
+    ],
+    "answer": 2,
+    "explanation": "3-SAT（每个子句恰好包含3个文字的SAT问题）可以通过从一般SAT的归约证明是NP-complete的。实际上，限制更多的3-SAT仍然保持NP-completeness，这显示了NP-complete问题的鲁棒性。"
+  }
+]

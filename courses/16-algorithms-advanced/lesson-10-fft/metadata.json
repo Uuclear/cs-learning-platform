@@ -1,0 +1,22 @@
+{
+  "id": "16-10",
+  "title": "快速傅里叶变换FFT",
+  "slug": "lesson-10-fft",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["03-07"],
+  "tags": ["algorithm", "fft", "signal-processing"],
+  "learning_objectives": [
+    "理解多项式表示方法和乘法的复杂度问题",
+    "掌握离散傅里叶变换(DFT)的数学定义和性质",
+    "理解单位根的概念和蝴蝶操作的几何意义",
+    "学会Cooley-Tukey FFT算法的分治思想和实现",
+    "掌握使用FFT进行多项式乘法的方法和复杂度分析"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

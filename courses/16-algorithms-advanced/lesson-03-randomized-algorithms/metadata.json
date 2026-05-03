@@ -1,0 +1,26 @@
+{
+  "id": "16-03",
+  "title": "随机算法：概率的力量",
+  "slug": "lesson-03-randomized-algorithms",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 3,
+  "duration": 35,
+  "prerequisites": [
+    "03-01"
+  ],
+  "tags": [
+    "randomized-algorithms",
+    "monte-carlo",
+    "las-vegas",
+    "quicksort",
+    "primality-testing"
+  ],
+  "learning_objectives": [
+    "Las Vegas与Monte Carlo算法、随机快速排序、随机选择、Miller-Rabin素性测试、随机最小割"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

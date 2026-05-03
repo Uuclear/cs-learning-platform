@@ -1,0 +1,22 @@
+{
+  "id": "16-09",
+  "title": "计算几何",
+  "slug": "lesson-09-computational-geometry",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["03-08"],
+  "tags": ["algorithm", "computational-geometry"],
+  "learning_objectives": [
+    "掌握向量叉积的计算和几何意义，理解点的相对位置关系",
+    "学会点在多边形内的判断算法，包括射线法和绕数法",
+    "理解并实现Graham扫描法和Jarvis步进法求凸包",
+    "掌握最近点对问题的分治算法思想和实现",
+    "学会线段相交的判断方法和扫线算法的基本原理"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

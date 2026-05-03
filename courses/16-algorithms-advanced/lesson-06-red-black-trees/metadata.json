@@ -1,0 +1,22 @@
+{
+  "id": "16-06",
+  "title": "红黑树：自平衡二叉搜索树的优雅实现",
+  "slug": "lesson-06-red-black-trees",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["02-05"],
+  "tags": ["algorithm", "data-structure", "red-black-tree", "balanced-tree", "binary-search-tree"],
+  "learning_objectives": [
+    "理解红黑树的五个基本性质及其重要性",
+    "掌握红黑树插入操作的四种旋转情况（LL/LR/RL/RR）",
+    "理解红黑树与2-3-4树的对应关系",
+    "能够实现基本的红黑树插入和删除操作",
+    "比较红黑树与AVL树的性能特点和适用场景"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

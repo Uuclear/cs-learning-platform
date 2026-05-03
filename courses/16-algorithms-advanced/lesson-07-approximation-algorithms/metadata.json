@@ -1,0 +1,22 @@
+{
+  "id": "16-07",
+  "title": "近似算法：处理NP难问题的实用策略",
+  "slug": "lesson-07-approximation-algorithms",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["16-02"],
+  "tags": ["algorithm", "approximation-algorithm", "np-hard", "optimization", "computational-complexity"],
+  "learning_objectives": [
+    "理解近似比的定义和计算方法",
+    "掌握顶点覆盖问题的2-近似算法",
+    "理解集合覆盖问题的贪心算法及其H(n)近似比",
+    "掌握度量TSP的MST 2-近似和Christofides 1.5-近似算法",
+    "了解背包问题的FPTAS（完全多项式时间近似方案）"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}

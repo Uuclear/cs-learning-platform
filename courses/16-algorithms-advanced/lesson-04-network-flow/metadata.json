@@ -1,0 +1,24 @@
+{
+  "id": "16-04",
+  "title": "网络流算法",
+  "slug": "lesson-04-network-flow",
+  "module": "16-algorithms-advanced",
+  "module_name": "算法导论",
+  "difficulty": 4,
+  "duration": 40,
+  "prerequisites": ["03-08"],
+  "tags": ["algorithm", "network-flow", "graph-theory", "ford-fulkerson", "edmonds-karp"],
+  "learning_objectives": [
+    "理解流网络的基本概念和容量约束",
+    "掌握Ford-Fulkerson方法的核心思想",
+    "实现Edmonds-Karp算法（基于BFS的Ford-Fulkerson）",
+    "理解残量图的概念及其在算法中的作用",
+    "掌握最大流最小割定理及其证明思路",
+    "应用网络流解决二分图匹配问题",
+    "识别和构建增广路径"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "status": "completed"
+}
