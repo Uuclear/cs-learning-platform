@@ -1,0 +1,90 @@
+[
+  {
+    "question": "在React中，以下哪种情况会导致组件不必要的重新渲染？",
+    "options": [
+      "使用React.memo包装组件但props没有变化",
+      "父组件重新渲染但子组件的props没有变化且未使用React.memo",
+      "使用useCallback缓存函数引用",
+      "使用useMemo缓存计算结果"
+    ],
+    "answer": 1,
+    "explanation": "当父组件重新渲染时，即使子组件的props没有变化，子组件也会重新渲染，除非使用React.memo进行优化。其他选项都是优化手段，不会导致不必要的渲染。"
+  },
+  {
+    "question": "关于React的虚拟DOM diffing算法，以下哪项描述是正确的？",
+    "options": [
+      "React会比较整个DOM树的所有节点",
+      "React使用深度优先遍历，并假设不同类型的元素产生不同的树",
+      "React的diffing算法时间复杂度是O(n³)",
+      "React会重新创建整个DOM而不是更新现有DOM"
+    ],
+    "answer": 1,
+    "explanation": "React的diffing算法使用深度优先遍历，并基于两个假设：1) 不同类型的元素产生不同的树；2) 开发者可以使用key属性暗示哪些子元素在不同渲染中保持稳定。这使得算法复杂度降低到O(n)。"
+  },
+  {
+    "question": "useMemo和useCallback的主要区别是什么？",
+    "options": [
+      "useMemo用于缓存函数，useCallback用于缓存值",
+      "useMemo用于缓存值，useCallback用于缓存函数",
+      "useMemo只能用于数字，useCallback只能用于字符串",
+      "useMemo在每次渲染都执行，useCallback只在依赖变化时执行"
+    ],
+    "answer": 1,
+    "explanation": "useMemo用于缓存计算结果（值），而useCallback用于缓存函数引用。useCallback本质上是useMemo的语法糖：useCallback(fn, deps)等价于useMemo(() => fn, deps)。正确使用这些钩子可以避免不必要的重新渲染。"
+  },
+  {
+    "question": "在什么情况下应该使用Context API而不是props传递？",
+    "options": [
+      "任何父子组件通信都应该使用Context API",
+      "当需要跨多层组件传递数据，避免props drilling时",
+      "当组件状态非常简单时",
+      "当性能是首要考虑因素时"
+    ],
+    "answer": 1,
+    "explanation": "Context API主要用于解决props drilling问题，即当数据需要跨越多层组件传递时。对于简单的父子组件通信，直接使用props更合适。Context API可能会导致更多的重新渲染，所以在性能敏感的场景需要谨慎使用。"
+  },
+  {
+    "question": "关于React的状态管理，以下哪个说法是错误的？",
+    "options": [
+      "useState适用于组件本地状态",
+      "useReducer适用于复杂的状态逻辑",
+      "所有应用状态都应该放在全局状态管理库中",
+      "Context API适合中等规模的状态共享"
+    ],
+    "answer": 2,
+    "explanation": "并不是所有状态都需要放在全局状态管理库中。过度使用全局状态会导致应用难以维护和调试。应该根据状态的使用范围选择合适的管理方式：本地状态用useState/useReducer，跨组件共享用Context，大型应用复杂状态用Redux/Zustand等。"
+  },
+  {
+    "question": "React.memo的作用是什么？",
+    "options": [
+      "强制组件重新渲染",
+      "缓存组件的计算结果",
+      "防止组件在props未变化时重新渲染",
+      "优化组件的初始渲染性能"
+    ],
+    "answer": 2,
+    "explanation": "React.memo是一个高阶组件，它会对组件的props进行浅比较，如果props没有变化，则跳过重新渲染，从而提升性能。它主要用于优化子组件的渲染性能。"
+  },
+  {
+    "question": "在React中，key属性的主要作用是什么？",
+    "options": [
+      "提高组件渲染速度",
+      "帮助React识别哪些元素发生了变化、添加或删除",
+      "为组件提供唯一标识符用于样式",
+      "启用组件的特殊功能"
+    ],
+    "answer": 1,
+    "explanation": "key属性帮助React的diffing算法识别列表中元素的身份，从而在列表发生变化时能够准确地知道哪些元素是新增的、哪些是删除的、哪些是移动的。这对于维持组件状态和优化性能非常重要。"
+  },
+  {
+    "question": "以下哪种做法最可能导致React性能问题？",
+    "options": [
+      "在render方法中创建新的函数或对象",
+      "使用React.memo优化纯组件",
+      "合理使用useMemo缓存昂贵计算",
+      "使用key属性优化列表渲染"
+    ],
+    "answer": 0,
+    "explanation": "在render方法（或函数组件体）中创建新的函数或对象会导致每次渲染都产生新的引用，这会破坏React.memo、useMemo、useCallback等优化的效果，导致子组件不必要的重新渲染，从而引发性能问题。"
+  }
+]

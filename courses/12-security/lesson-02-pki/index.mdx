@@ -1,0 +1,289 @@
+# 12-02 公钥基础设施：PKI与证书
+
+## 开场白 - 当信任被破坏：DigiNotar 攻击事件
+
+🔐 **信任的脆弱性**
+
+2011年，荷兰证书颁发机构 DigiNotar 遭受了严重的安全攻击。攻击者成功入侵了 DigiNotar 的系统，并签发了数百个欺诈性 SSL 证书，包括针对 Google、Facebook、Twitter 等知名网站的证书。
+
+> 这些恶意证书被用于对伊朗用户进行大规模的中间人攻击，监控他们的网络活动长达数月之久。
+
+这次事件暴露了 PKI（公钥基础设施）系统的根本弱点：**整个互联网安全都建立在对少数 CA 机构的绝对信任之上**。一旦这些"信任锚点"被攻破，整个安全体系就会崩塌。
+
+DigiNotar 最终破产倒闭，但这次事件给整个行业敲响了警钟：PKI 不仅关乎技术实现，更关乎信任管理和安全运营。
+
+在本课程中，我们将深入探索：
+- 📋 PKI 如何构建数字世界的信任体系
+- 🔗 证书链如何确保身份的真实性和完整性  
+- ⚠️ 证书撤销机制如何应对私钥泄露等紧急情况
+- 🛡️ 现代应用如何通过证书固定等技术增强安全性
+
+让我们一起揭开 PKI 的神秘面纱，理解这个支撑现代网络安全的基石！
+
+## 核心概念
+
+### 公钥基础设施 (PKI) 组件
+
+PKI 是一个完整的信任体系，包含以下核心组件：
+
+- **证书颁发机构 (CA)**：受信任的第三方，负责验证身份并签发数字证书
+- **注册机构 (RA)**：负责验证证书申请者的身份（有时与 CA 合并）
+- **证书存储库**：存储和分发已签发的证书
+- **证书撤销列表 (CRL)**：列出已撤销的证书
+- **在线证书状态协议 (OCSP)**：实时查询证书状态的服务
+
+### X.509 证书格式
+
+X.509 是最广泛使用的数字证书标准，包含以下关键字段：
+
+```text
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 04:01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=Root CA, O=Organization
+        Validity:
+            Not Before: Jan  1 00:00:00 2023 GMT
+            Not After : Dec 31 23:59:59 2024 GMT
+        Subject: CN=example.com, O=Example Organization
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public-Key: (2048 bit)
+        X509v3 extensions:
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication
+            X509v3 Subject Alternative Name: 
+                DNS:example.com, DNS:www.example.com
+```
+
+### 信任链 (Chain of Trust)
+
+信任链是 PKI 的核心概念：
+
+1. **根 CA**：自签名证书，预装在操作系统/浏览器中
+2. **中间 CA**：由根 CA 签名，用于日常证书签发
+3. **终端实体证书**：由中间 CA 签名，用于实际服务
+
+验证过程从终端证书开始，逐级向上验证到受信任的根 CA。
+
+### 证书生命周期
+
+- **申请**：生成密钥对，创建 CSR（证书签名请求）
+- **验证**：CA 验证申请者身份和 CSR 签名
+- **签发**：CA 使用私钥对证书进行签名
+- **部署**：将证书安装到服务器或应用程序中
+- **监控**：定期检查证书状态和到期时间
+- **更新/撤销**：证书到期前更新，或在私钥泄露时撤销
+
+## 代码演示
+
+让我们通过三个实际例子来理解 PKI 和证书的工作原理：
+
+### 示例1: X.509 证书分析
+```python
+# 查看 code/examples/example-01-x509-cert-analysis.py
+# 演示如何使用 Python 标准库解析和显示真实网站的证书信息
+# 包括主题、颁发者、有效期、扩展等详细字段
+```
+
+### 示例2: 证书链验证
+```python
+# 查看 code/examples/example-02-certificate-chain.py
+# 演示如何获取完整的证书链并验证链的完整性和正确性
+# 包括证书链接验证、基本约束检查、有效期验证等
+```
+
+### 示例3: CA 签名流程
+```python
+# 查看 code/examples/example-03-ca-signing.py
+# 演示 CA 签名的概念和流程，展示真实证书的结构
+# 解释信任链的建立和验证过程
+```
+
+运行这些示例，观察输出结果，理解 PKI 系统的实际工作方式！
+
+## 深入理解
+
+### 证书链验证的详细过程
+
+完整的证书链验证包含多个步骤：
+
+1. **签名验证**：使用上级证书的公钥验证当前证书的签名
+2. **有效期检查**：确认所有证书都在有效期内
+3. **基本约束验证**：
+   - CA 证书必须有 `CA:TRUE` 标记
+   - 路径长度约束限制中间 CA 的层级深度
+4. **密钥用途检查**：
+   - `Key Usage` 扩展定义证书的基本用途
+   - `Extended Key Usage` 定义特定应用场景（如服务器认证、客户端认证）
+5. **名称约束**：限制下级证书可以使用的域名范围
+6. **信任锚确认**：最终的根证书必须在受信任的根存储中
+
+### 根 CA vs 中间 CA
+
+| 特性 | 根 CA | 中间 CA |
+|------|-------|---------|
+| **签名方式** | 自签名 | 由上级 CA 签名 |
+| **私钥保护** | 离线存储，极少使用 | 在线存储，频繁使用 |
+| **有效期** | 10-25 年 | 1-5 年 |
+| **路径长度** | 通常无限制 | 限制下级 CA 层数 |
+| **安全影响** | 泄露导致整个 PKI 崩溃 | 泄露影响有限范围 |
+
+中间 CA 的设计提供了重要的安全隔离：即使中间 CA 私钥泄露，也可以通过撤销该中间 CA 证书来限制损害，而不需要撤销根 CA。
+
+### 证书撤销机制
+
+#### 证书撤销列表 (CRL)
+- **工作方式**：定期发布的已撤销证书序列号列表
+- **优点**：简单、离线可用
+- **缺点**：更新延迟、文件可能很大
+
+#### 在线证书状态协议 (OCSP)
+- **工作方式**：实时查询特定证书的撤销状态
+- **优点**：实时性好、响应小
+- **缺点**：依赖在线服务、隐私问题
+
+#### OCSP Stapling
+现代最佳实践：服务器在 TLS 握手时主动提供 OCSP 响应，避免客户端直接查询 OCSP 服务器。
+
+## 实际应用
+
+### 设置 TLS/HTTPS 服务器
+
+配置 Web 服务器时的关键考虑：
+
+```nginx
+# Nginx 配置示例
+server {
+    listen 443 ssl http2;
+    server_name example.com;
+    
+    # 证书文件（包含完整证书链）
+    ssl_certificate /path/to/fullchain.pem;
+    ssl_certificate_key /path/to/privkey.pem;
+    
+    # 启用 OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 8.8.8.8;
+    
+    # 现代加密套件
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20:!aNULL:!MD5:!DSS;
+}
+```
+
+**重要**：`ssl_certificate` 文件必须包含完整的证书链（终端证书 + 所有中间 CA 证书），否则某些客户端可能无法验证证书链。
+
+### 证书固定 (Certificate Pinning)
+
+证书固定通过将特定公钥或证书哈希值硬编码到应用程序中，提供额外的安全层：
+
+```python
+# Python requests 库的证书固定示例
+import requests
+import hashlib
+
+def verify_pinned_cert(response, **kwargs):
+    # 计算服务器证书的 SPKI 哈希
+    cert = response.raw.connection.sock.getpeercert(binary_form=True)
+    pub_key = cert.public_key()
+    spki_hash = hashlib.sha256(pub_key.public_bytes(
+        encoding=serialization.Encoding.DER,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )).hexdigest()
+    
+    # 验证是否匹配预期的哈希值
+    expected_hashes = ["expected_spki_hash_here"]
+    if spki_hash not in expected_hashes:
+        raise Exception("Certificate pinning failed!")
+
+# 使用
+session = requests.Session()
+session.mount('https://', CustomHTTPAdapter())
+response = session.get('https://api.example.com')
+```
+
+**注意**：证书固定需要谨慎使用，错误的实现可能导致应用程序无法更新证书而完全失效。
+
+### 其他应用场景
+
+- **代码签名**：确保软件包未被篡改
+- **电子邮件加密**：S/MIME 使用证书加密邮件内容
+- **客户端证书认证**：双向 TLS，客户端也需要提供证书
+- **物联网设备认证**：设备使用证书证明身份
+
+## 常见误区
+
+### ❌ 误区1：只要有 HTTPS 就绝对安全
+实际上，HTTPS 只保证传输加密和服务器身份验证，但：
+- 如果用户忽略证书警告，仍然可能遭受中间人攻击
+- 证书可能被错误签发（如 DigiNotar 事件）
+- 应用层漏洞仍然存在
+
+### ❌ 误区2：自签名证书和 CA 签发证书安全性相同
+自签名证书缺少第三方验证和撤销机制：
+- 无法通过标准的证书链验证
+- 私钥泄露后无法撤销
+- 用户必须手动信任，容易受到社会工程攻击
+
+### ❌ 误区3：证书过期只是小问题
+证书过期会导致：
+- 浏览器显示严重警告，阻止用户访问
+- API 客户端连接失败
+- 移动应用功能中断
+应该设置自动监控和续期机制。
+
+### ❌ 误区4：中间 CA 证书可有可无
+缺少中间 CA 证书会导致：
+- 旧版客户端（如 Android 7.0 以下）无法验证证书链
+- 证书链验证失败，显示安全警告
+- SEO 排名可能受到影响
+
+### ❌ 误区5：OCSP 不重要，可以忽略
+禁用 OCSP 检查会：
+- 无法及时发现已撤销的证书
+- 在私钥泄露时延长风险窗口
+- 不符合某些合规要求（如 PCI DSS）
+
+## 动手实践
+
+### 挑战1: 证书链分析器 ⭐⭐⭐
+开发一个工具来分析网站的证书链健康状况，检测常见配置问题如证书链断裂、过期证书、不正确的基本约束等。
+
+查看 `exercises/challenges/challenge-01.md` 获取详细要求。
+
+### 挑战2: PKI 信任链模拟器 ⭐⭐⭐⭐
+创建一个交互式 PKI 模拟器，能够模拟根 CA、中间 CA 和终端证书的完整生命周期，包括签发、验证和撤销过程。
+
+查看 `exercises/challenges/challenge-02.md` 获取详细要求。
+
+### 额外练习
+- 使用 OpenSSL 命令行工具手动创建和验证证书
+- 分析不同网站的证书链结构差异
+- 研究 Let's Encrypt 的自动化证书管理流程
+- 探索证书透明度 (Certificate Transparency) 日志
+
+## 小结与思考
+
+🔑 **核心要点回顾**：
+1. **PKI 是信任基础设施**：通过 CA 层级结构建立数字信任
+2. **证书链验证复杂**：涉及签名、有效期、约束、用途等多维度检查
+3. **中间 CA 提供安全隔离**：保护根 CA 私钥，限制安全事件影响范围
+4. **证书撤销至关重要**：CRL 和 OCSP 提供应急响应机制
+5. **正确配置很重要**：证书链完整性、OCSP Stapling 等细节影响安全性
+
+🤔 **深入思考**：
+- Web PKI 的中心化信任模型是否存在根本性缺陷？去中心化的替代方案（如区块链证书）是否可行？
+- 量子计算的发展将如何影响现有的 PKI 体系？后量子密码学如何与现有 PKI 集成？
+- 零信任架构如何改变传统的 PKI 应用模式？证书在零信任环境中的角色是什么？
+
+💡 **下一步预告**：
+在下一课程 **12-03 网络安全协议：TLS/SSL 深度解析** 中，我们将深入探讨 TLS/SSL 协议的工作原理，包括握手过程、加密套件选择、前向保密等高级概念。
+
+> "Trust, but verify." — Ronald Reagan
