@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { getAllCourses } from "@/lib/courses";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,14 +17,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const courses = getAllCourses();
+
   return (
     <html lang="zh-CN">
       <body className={inter.className}>
         <div className="min-h-screen bg-background flex flex-col">
-          <Header />
-          <div className="flex-1 flex flex-col">
-            {children}
-          </div>
+          <Header courses={courses} />
+          <main className="flex-1 flex flex-col">
+            <div className="container mx-auto px-4 py-6">
+              {children}
+            </div>
+          </main>
+          <Footer />
         </div>
       </body>
     </html>

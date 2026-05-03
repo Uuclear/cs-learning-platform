@@ -4,8 +4,14 @@ import Link from "next/link";
 import { BookOpen, Menu, X, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { SearchBar } from "@/components/course/SearchBar";
+import { Course } from "@/types/course";
 
-export function Header() {
+interface HeaderProps {
+  courses: Course[];
+}
+
+export function Header({ courses }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -37,6 +43,11 @@ export function Header() {
           ))}
         </nav>
 
+        {/* Search bar - desktop */}
+        <div className="hidden md:block mx-4">
+          <SearchBar courses={courses} />
+        </div>
+
         {/* Right side actions */}
         <div className="hidden md:flex items-center gap-4 ml-auto">
           <Link href="/courses">
@@ -65,6 +76,8 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t">
           <div className="container mx-auto px-4 py-4 space-y-4">
+            {/* Mobile search */}
+            <SearchBar courses={courses} />
             <nav className="flex flex-col gap-4">
               {navItems.map((item) => (
                 <Link

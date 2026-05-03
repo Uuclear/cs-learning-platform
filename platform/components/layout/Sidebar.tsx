@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useProgress } from "@/lib/progress";
 import { Course, CourseModule } from "@/types/course";
-import { BookOpen, ChevronDown, ChevronRight } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
 interface SidebarProps {
@@ -14,8 +15,8 @@ interface SidebarProps {
 
 export function Sidebar({ modules, currentCourse }: SidebarProps) {
   const pathname = usePathname();
+  const { isCompleted } = useProgress();
   const [expandedModules, setExpandedModules] = useState<string[]>(() => {
-    // 默认展开当前课程所在模块
     if (currentCourse) {
       return [currentCourse.module];
     }
@@ -34,12 +35,12 @@ export function Sidebar({ modules, currentCourse }: SidebarProps) {
     <aside className="w-64 border-r bg-background h-[calc(100vh-3.5rem)] sticky top-14 overflow-y-auto">
       <div className="p-4">
         <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-          课程模块
+          课程导航
         </h2>
         <nav className="space-y-2">
           {modules.map((module) => {
             const isExpanded = expandedModules.includes(module.id);
-            const hasCourses = module.courses.length > 0;
+            const completedCount = module.courses.filter((c) => isCompleted(c.id)).length;
 
             return (
               <div key={module.id} className="space-y-1">
@@ -51,7 +52,7 @@ export function Sidebar({ modules, currentCourse }: SidebarProps) {
                     currentCourse?.module === module.id && "bg-accent"
                   )}
                 >
-                  {hasCourses ? (
+                  {module.courses.length > 0 ? (
                     isExpanded ? (
                       <ChevronDown className="h-4 w-4 mr-1 shrink-0" />
                     ) : (
@@ -60,13 +61,13 @@ export function Sidebar({ modules, currentCourse }: SidebarProps) {
                   ) : (
                     <span className="w-4 mr-1" />
                   )}
-                  <span className="flex-1">{module.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {module.courseCount}节
-                  </span>
+                  <span className="flex-1 truncate">{module.name}</span>
+                  {completedCount > 0 && (
+                    <span className="text-xs text-green-600 mr-1">{completedCount}</span>
+                  )}
                 </button>
 
-                {isExpanded && hasCourses && (
+                {isExpanded && module.courses.length > 0 && (
                   <div className="ml-4 space-y-1">
                     {module.courses.map((course) => (
                       <Link
@@ -80,8 +81,12 @@ export function Sidebar({ modules, currentCourse }: SidebarProps) {
                             : "text-muted-foreground"
                         )}
                       >
-                        <BookOpen className="h-3 w-3 mr-2 shrink-0" />
-                        <span className="truncate">{course.title}</span>
+                        {isCompleted(course.id) ? (
+                          <CheckCircle2 className="h-3 w-3 mr-2 shrink-0 text-green-600" />
+                        ) : (
+                          <BookOpen className="h-3 w-3 mr-2 shrink-0" />
+                        )}
+                        <span className="truncate">{course.title.split("：")[0]}</span>
                       </Link>
                     ))}
                   </div>

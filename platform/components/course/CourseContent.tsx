@@ -1,16 +1,15 @@
-"use client";
-
 import { Course } from "@/types/course";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
+import { CourseCompleteButton } from "@/components/course/CourseCompleteButton";
 import { Clock, BarChart3, Calendar, User } from "lucide-react";
 
 interface CourseContentProps {
   course: Course;
-  content: React.ReactNode;
+  contentHtml: string;
 }
 
-export function CourseContent({ course, content }: CourseContentProps) {
+export function CourseContent({ course, contentHtml }: CourseContentProps) {
   const getDifficultyLabel = (level: number) => {
     const labels = ["入门", "简单", "中等", "困难", "专家"];
     return labels[level - 1] || "未知";
@@ -52,11 +51,11 @@ export function CourseContent({ course, content }: CourseContentProps) {
               </div>
               <div className="flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                <span>难度等级 {course.difficulty}/5</span>
+                <span>难度 {course.difficulty}/5</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>更新于 {course.updatedAt}</span>
+                <span>{course.updatedAt}</span>
               </div>
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-muted-foreground" />
@@ -67,10 +66,11 @@ export function CourseContent({ course, content }: CourseContentProps) {
         </Card>
       </div>
 
-      {/* Course Content */}
-      <article className="prose prose-slate max-w-none">
-        {content}
-      </article>
+      {/* Course Content - sanitized HTML from MDX */}
+      <article
+        className="prose prose-slate max-w-none course-content"
+        dangerouslySetInnerHTML={{ __html: contentHtml }}
+      />
 
       {/* Tags */}
       {course.tags.length > 0 && (
@@ -87,6 +87,14 @@ export function CourseContent({ course, content }: CourseContentProps) {
           </div>
         </div>
       )}
+
+      {/* Mark as Complete */}
+      <div className="mt-8 pt-6 border-t flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          学完本课了？点击标记为完成
+        </p>
+        <CourseCompleteButton courseId={course.id} courseTitle={course.title} />
+      </div>
     </div>
   );
 }

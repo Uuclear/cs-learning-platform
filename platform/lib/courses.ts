@@ -1,251 +1,231 @@
-import { Course, CourseModule } from "@/types/course";
+import { Course, CourseModule, QuizQuestion } from "@/types/course";
+import fs from "fs";
+import path from "path";
 
-export const courses: Course[] = [
-  {
-    id: "01-01",
-    title: "冯诺依曼架构：计算机的「大脑」是怎么工作的",
-    slug: "von-neumann-architecture",
-    description: "从厨房工作流程理解计算机的五大组成部分，揭开计算机工作的神秘面纱",
-    module: "01-computer-basics",
-    moduleName: "计算机基础",
-    moduleOrder: 1,
-    lessonOrder: 1,
-    difficulty: 1,
-    durationMinutes: 20,
-    prerequisites: [],
-    tags: ["computer-architecture", "von-neumann", "basics"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
+const COURSES_DIR = path.resolve(process.cwd(), "../courses");
+
+/** Extract description from index.mdx frontmatter if present */
+function extractDescriptionFromMDX(indexPath: string): string | null {
+  if (!fs.existsSync(indexPath)) return null;
+  const content = fs.readFileSync(indexPath, "utf-8");
+  const match = content.match(/^---\s*\n([\s\S]*?)\n---/);
+  if (!match) return null;
+  const frontmatter = match[1];
+  const descMatch = frontmatter.match(/description:\s*["'](.+?)["']/);
+  return descMatch ? descMatch[1] : null;
+}
+
+function normalizeMetadata(filePath: string, metadata: Record<string, unknown>): Course {
+  const id = String(metadata.id ?? "");
+  const title = String(metadata.title ?? "");
+  const lessonDirName = path.basename(path.dirname(filePath));
+  const slugParts = lessonDirName.split("-");
+  const slug = slugParts.length > 2 ? slugParts.slice(2).join("-") : id.toLowerCase();
+
+  const module = String(metadata.module ?? "");
+  const moduleName = String(metadata.module_name ?? "");
+
+  // Try to get description from index.mdx frontmatter
+  const indexPath = path.join(path.dirname(filePath), "index.mdx");
+  let description = String(metadata.description ?? "");
+  if (!description) {
+    const mdxDesc = extractDescriptionFromMDX(indexPath);
+    if (mdxDesc) {
+      description = mdxDesc;
+    } else {
+      description = title || lessonDirName.replace(/-/g, " ");
+    }
+  }
+
+  const difficulty = Math.min(5, Math.max(1, Number(metadata.difficulty ?? 1))) as Course["difficulty"];
+  const durationMinutes = Number(metadata.duration ?? 30);
+  const prerequisites = Array.isArray(metadata.prerequisites)
+    ? metadata.prerequisites.map(String)
+    : [];
+  const tags = Array.isArray(metadata.tags)
+    ? metadata.tags.map(String)
+    : [module];
+  const author = String(metadata.author ?? "CS教授");
+
+  const moduleOrder = parseInt(module.split("-")[0], 10) || 0;
+  const idParts = id.split("-");
+  const lessonOrder = parseInt(idParts.length >= 2 ? idParts[1] : "0", 10) || 0;
+
+  return {
+    id,
+    title,
+    slug,
+    description,
+    module,
+    moduleName,
+    moduleOrder,
+    lessonOrder,
+    difficulty,
+    durationMinutes,
+    prerequisites,
+    tags,
+    author,
+    createdAt: String(metadata.created ?? metadata.created_at ?? "2026-05-03"),
+    updatedAt: String(metadata.updated ?? metadata.updated_at ?? "2026-05-03"),
     status: "published",
-  },
-  {
-    id: "01-02",
-    title: "CPU：计算机的「厨师长」",
-    slug: "cpu-basics",
-    description: "深入理解CPU的工作原理，时钟、指令、运算，一网打尽",
-    module: "01-computer-basics",
-    moduleName: "计算机基础",
-    moduleOrder: 1,
-    lessonOrder: 2,
-    difficulty: 2,
-    durationMinutes: 25,
-    prerequisites: ["01-01"],
-    tags: ["cpu", "processor", "computer-architecture"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-  {
-    id: "01-03",
-    title: "内存：计算机的「工作台」",
-    slug: "memory-basics",
-    description: "理解内存的层次结构，从寄存器到硬盘，速度vs容量的权衡",
-    module: "01-computer-basics",
-    moduleName: "计算机基础",
-    moduleOrder: 1,
-    lessonOrder: 3,
-    difficulty: 2,
-    durationMinutes: 25,
-    prerequisites: ["01-01", "01-02"],
-    tags: ["memory", "ram", "cache", "storage"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-  {
-    id: "02-01",
-    title: "数组：排好队的数据",
-    slug: "arrays",
-    description: "最基础的数据结构，理解连续内存存储的优缺点",
-    module: "02-data-structures",
-    moduleName: "数据结构",
-    moduleOrder: 2,
-    lessonOrder: 1,
-    difficulty: 1,
-    durationMinutes: 20,
-    prerequisites: [],
-    tags: ["array", "data-structure", "basics"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-  {
-    id: "02-02",
-    title: "链表：手拉手的数据",
-    slug: "linked-lists",
-    description: "灵活的数据结构，动态扩容的秘密武器",
-    module: "02-data-structures",
-    moduleName: "数据结构",
-    moduleOrder: 2,
-    lessonOrder: 2,
-    difficulty: 2,
-    durationMinutes: 25,
-    prerequisites: ["02-01"],
-    tags: ["linked-list", "data-structure", "pointer"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-  {
-    id: "02-03",
-    title: "栈和队列：两种排队方式",
-    slug: "stacks-and-queues",
-    description: "后进先出vs先进先出，生活中的数据结构",
-    module: "02-data-structures",
-    moduleName: "数据结构",
-    moduleOrder: 2,
-    lessonOrder: 3,
-    difficulty: 2,
-    durationMinutes: 25,
-    prerequisites: ["02-02"],
-    tags: ["stack", "queue", "data-structure"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-  {
-    id: "03-01",
-    title: "排序算法：让数据井然有序",
-    slug: "sorting-algorithms",
-    description: "冒泡、选择、插入、快速排序，一网打尽",
-    module: "03-algorithms",
-    moduleName: "算法",
-    moduleOrder: 3,
-    lessonOrder: 1,
-    difficulty: 2,
-    durationMinutes: 30,
-    prerequisites: ["02-01"],
-    tags: ["sorting", "algorithm", "bubble-sort", "quick-sort"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-  {
-    id: "03-02",
-    title: "查找算法：大海捞针有妙招",
-    slug: "searching-algorithms",
-    description: "线性查找、二分查找，效率差异有多大",
-    module: "03-algorithms",
-    moduleName: "算法",
-    moduleOrder: 3,
-    lessonOrder: 2,
-    difficulty: 2,
-    durationMinutes: 25,
-    prerequisites: ["03-01"],
-    tags: ["searching", "algorithm", "binary-search"],
-    author: "cs-professor",
-    createdAt: "2026-05-03",
-    updatedAt: "2026-05-03",
-    status: "draft",
-  },
-];
-
-export const modules: CourseModule[] = [
-  {
-    id: "01-computer-basics",
-    name: "计算机基础",
-    description: "从冯诺依曼架构开始，理解计算机的基本工作原理",
-    order: 1,
-    courseCount: 5,
-    courses: courses.filter((c) => c.module === "01-computer-basics"),
-  },
-  {
-    id: "02-data-structures",
-    name: "数据结构",
-    description: "数组、链表、栈、队列、树、图，数据结构全解析",
-    order: 2,
-    courseCount: 8,
-    courses: courses.filter((c) => c.module === "02-data-structures"),
-  },
-  {
-    id: "03-algorithms",
-    name: "算法",
-    description: "排序、查找、递归、动态规划，算法思维养成",
-    order: 3,
-    courseCount: 10,
-    courses: courses.filter((c) => c.module === "03-algorithms"),
-  },
-  {
-    id: "04-operating-systems",
-    name: "操作系统",
-    description: "进程、线程、内存管理、文件系统",
-    order: 4,
-    courseCount: 6,
-    courses: [],
-  },
-  {
-    id: "05-databases",
-    name: "数据库",
-    description: "SQL基础、索引、事务、优化",
-    order: 5,
-    courseCount: 5,
-    courses: [],
-  },
-  {
-    id: "06-networks",
-    name: "计算机网络",
-    description: "TCP/IP、HTTP、DNS、WebSocket",
-    order: 6,
-    courseCount: 5,
-    courses: [],
-  },
-  {
-    id: "07-programming",
-    name: "编程语言",
-    description: "Python、Go、TypeScript、Rust",
-    order: 7,
-    courseCount: 5,
-    courses: [],
-  },
-  {
-    id: "08-ai-ml",
-    name: "AI/ML基础",
-    description: "机器学习、神经网络、大模型",
-    order: 8,
-    courseCount: 3,
-    courses: [],
-  },
-  {
-    id: "09-web-development",
-    name: "Web开发",
-    description: "前端基础、后端API设计",
-    order: 9,
-    courseCount: 2,
-    courses: [],
-  },
-  {
-    id: "10-system-design",
-    name: "系统架构",
-    description: "微服务、分布式基础",
-    order: 10,
-    courseCount: 1,
-    courses: [],
-  },
-];
-
-export function getCourseBySlug(slug: string): Course | undefined {
-  return courses.find((course) => course.slug === slug);
+  };
 }
 
-export function getCoursesByModule(moduleId: string): Course[] {
-  return courses.filter((course) => course.module === moduleId);
+function loadCourseMetadata(filePath: string): Course {
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const metadata = JSON.parse(raw) as Record<string, unknown>;
+  return normalizeMetadata(filePath, metadata);
 }
 
-export function getAllCourses(): Course[] {
+let _allCourses: Course[] | null = null;
+let _allModules: CourseModule[] | null = null;
+
+function getAllCoursesInternal(): Course[] {
+  if (_allCourses) return _allCourses;
+
+  if (!fs.existsSync(COURSES_DIR)) {
+    return [];
+  }
+
+  const courses: Course[] = [];
+  const moduleDirs = fs
+    .readdirSync(COURSES_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name)
+    .sort();
+
+  for (const moduleDir of moduleDirs) {
+    const modulePath = path.join(COURSES_DIR, moduleDir);
+    let moduleMetadata: Record<string, unknown> | null = null;
+
+    // Try to read a module-level metadata file
+    const moduleMetaPath = path.join(modulePath, "module.json");
+    if (fs.existsSync(moduleMetaPath)) {
+      moduleMetadata = JSON.parse(fs.readFileSync(moduleMetaPath, "utf-8"));
+    }
+
+    const lessonDirs = fs
+      .readdirSync(modulePath, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name)
+      .sort();
+
+    for (const lessonDir of lessonDirs) {
+      const metaPath = path.join(modulePath, lessonDir, "metadata.json");
+      if (fs.existsSync(metaPath)) {
+        try {
+          const course = loadCourseMetadata(metaPath);
+          // Fill in missing module name from directory name
+          if (!course.moduleName && moduleMetadata) {
+            course.moduleName = String(moduleMetadata.name ?? course.module);
+          }
+          if (!course.moduleName) {
+            const dirParts = moduleDir.split("-");
+            course.moduleName = dirParts.slice(1).join(" ") || moduleDir;
+          }
+          courses.push(course);
+        } catch {
+          // Skip malformed metadata
+        }
+      }
+    }
+  }
+
+  _allCourses = courses;
   return courses;
 }
 
-export function getAllModules(): CourseModule[] {
+function getAllModulesInternal(): CourseModule[] {
+  if (_allModules) return _allModules;
+
+  const courses = getAllCoursesInternal();
+  const moduleMap = new Map<string, CourseModule>();
+
+  // Group courses by module
+  for (const course of courses) {
+    if (!moduleMap.has(course.module)) {
+      moduleMap.set(course.module, {
+        id: course.module,
+        name: course.moduleName,
+        description: `${course.moduleName}课程模块`,
+        order: course.moduleOrder,
+        courseCount: 0,
+        courses: [],
+      });
+    }
+    const mod = moduleMap.get(course.module)!;
+    mod.courses.push(course);
+  }
+
+  // Sort courses within each module and count
+  const modules = Array.from(moduleMap.values()).map((mod) => ({
+    ...mod,
+    courses: mod.courses.sort((a, b) => a.lessonOrder - b.lessonOrder),
+    courseCount: mod.courses.length,
+  }));
+
+  modules.sort((a, b) => a.order - b.order);
+  _allModules = modules;
   return modules;
 }
 
+export function getCourseBySlug(slug: string): Course | undefined {
+  return getAllCoursesInternal().find((c) => c.slug === slug);
+}
+
+export function getCoursesByModule(moduleId: string): Course[] {
+  return getAllCoursesInternal().filter((c) => c.module === moduleId);
+}
+
+export function getAllCourses(): Course[] {
+  return getAllCoursesInternal();
+}
+
+export function getAllModules(): CourseModule[] {
+  return getAllModulesInternal();
+}
+
 export function getPublishedCourses(): Course[] {
-  return courses.filter((course) => course.status === "published");
+  return getAllCoursesInternal().filter((c) => c.status === "published");
+}
+
+/** Get the filesystem path to a course directory */
+export function findCourseDirBySlug(slug: string): string | null {
+  if (!fs.existsSync(COURSES_DIR)) return null;
+
+  for (const moduleDir of fs.readdirSync(COURSES_DIR, { withFileTypes: true }).filter(d => d.isDirectory())) {
+    const modulePath = path.join(COURSES_DIR, moduleDir.name);
+    for (const lessonDir of fs.readdirSync(modulePath, { withFileTypes: true }).filter(d => d.isDirectory())) {
+      const dirName = lessonDir.name;
+      const parts = dirName.split("-");
+      const dirSlug = parts.length > 2 ? parts.slice(2).join("-") : dirName;
+      if (dirSlug === slug) {
+        return path.join(modulePath, dirName);
+      }
+    }
+  }
+  return null;
+}
+
+/** Read the full MDX content of a course */
+export function readCourseMDX(course: Course): string {
+  const dir = findCourseDirBySlug(course.slug);
+  if (!dir) return "";
+  const indexPath = path.join(dir, "index.mdx");
+  if (!fs.existsSync(indexPath)) return "";
+  return fs.readFileSync(indexPath, "utf-8");
+}
+
+/** Read quiz questions for a course */
+export function readCourseQuiz(course: Course): QuizQuestion[] {
+  const dir = findCourseDirBySlug(course.slug);
+  if (!dir) return [];
+  const quizPath = path.join(dir, "exercises", "quiz.json");
+  if (!fs.existsSync(quizPath)) return [];
+  try {
+    const raw = fs.readFileSync(quizPath, "utf-8");
+    return JSON.parse(raw) as QuizQuestion[];
+  } catch {
+    return [];
+  }
 }
