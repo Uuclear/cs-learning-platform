@@ -1,0 +1,37 @@
+{
+  "id": "08-04",
+  "title": "深度学习：CNN与图像识别",
+  "module": "08-ai-ml",
+  "slug": "lesson-04-deep-learning",
+  "status": "completed",
+  "module_name": "AI/ML基础",
+  "difficulty": 4,
+  "duration": 35,
+  "prerequisites": [
+    "08-02"
+  ],
+  "tags": [
+    "deep-learning",
+    "cnn",
+    "computer-vision",
+    "pytorch"
+  ],
+  "learning_objectives": [],
+  "files": [
+    "index.mdx",
+    "metadata.json",
+    "code/examples/example-01-cnn-basics.py",
+    "code/examples/example-02-image-classification.py",
+    "code/examples/example-03-transfer-learning.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

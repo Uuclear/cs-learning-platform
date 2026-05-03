@@ -1,0 +1,34 @@
+{
+  "id": "13-01",
+  "title": "数据仓库：OLAP与Star Schema",
+  "module": "13-data-engineering",
+  "slug": "lesson-01-data-warehouse",
+  "status": "completed",
+  "module_name": "数据工程",
+  "difficulty": 3,
+  "duration": 30,
+  "prerequisites": [],
+  "tags": [
+    "data-warehouse",
+    "olap",
+    "star-schema"
+  ],
+  "learning_objectives": [],
+  "files": [
+    "index.mdx",
+    "metadata.json",
+    "code/examples/example-01-oltp-vs-olap.py",
+    "code/examples/example-02-star-schema.py",
+    "code/examples/example-03-columnar-concept.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/quiz.json",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md"
+  ],
+  "author": "CS教授",
+  "created": "2026-05-03",
+  "updated": "2026-05-03",
+  "version": "1.0.0"
+}

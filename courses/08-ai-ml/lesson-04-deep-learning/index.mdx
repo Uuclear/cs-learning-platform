@@ -1,0 +1,293 @@
+# 08-04 深度学习：CNN与图像识别
+
+## 1. 开场白 - 从图像识别到自动驾驶，深度学习如何改变世界
+
+大家好！欢迎来到深度学习的世界！🤖
+
+想象一下：你的手机能自动识别人脸、自动驾驶汽车能识别道路上的行人和交通标志、医疗AI能从X光片中发现疾病的早期迹象——这些看似科幻的场景，如今都已成为现实。而这一切的背后，都有一个共同的英雄：**卷积神经网络**（CNN）。
+
+深度学习，特别是CNN，彻底改变了我们处理图像的方式。从简单的猫狗分类到复杂的医学影像分析，CNN让我们能够教会计算机"看懂"世界。在这个课程中，我们将一起探索CNN的奥秘，理解它是如何工作的，以及如何在实际项目中应用它。
+
+## 2. 核心概念 - 神经网络到深度学习的演进、CNN架构
+
+### 从传统神经网络到深度学习
+
+传统的神经网络（如多层感知机）在处理图像时面临巨大挑战：
+- **参数爆炸**：一张224×224的RGB图像有150,528个像素，如果直接连接到第一个隐藏层（假设1000个神经元），就需要超过1.5亿个参数！
+- **空间信息丢失**：全连接层忽略了像素间的空间关系
+
+### CNN的核心思想
+
+CNN通过三个关键组件解决了这些问题：
+
+#### 📦 卷积层（Convolutional Layer）
+- **局部感受野**：每个神经元只关注输入的一个小区域（如3×3或5×5）
+- **权重共享**：同一个卷积核在整个图像上滑动，大大减少参数数量
+- **特征提取**：不同的卷积核可以检测边缘、纹理、形状等不同特征
+
+#### 🔽 池化层（Pooling Layer）
+- **降维**：减少特征图的尺寸，降低计算复杂度
+- **平移不变性**：使网络对小的位置变化不敏感
+- **常用类型**：最大池化（Max Pooling）、平均池化（Average Pooling）
+
+#### 🔗 全连接层（Fully Connected Layer）
+- **分类决策**：将提取的特征映射到最终的类别概率
+- **通常位于网络末端**
+
+典型的CNN架构：`输入 → [卷积 → 激活 → 池化] × N → 全连接 → 输出`
+
+## 3. 代码演示
+
+让我们通过三个例子来理解CNN的工作原理：
+
+```python filename="code/examples/example-01-cnn-basics.py"
+# 示例1：卷积操作基础实现
+import numpy as np
+
+def convolution_2d(image, kernel):
+    """
+    手动实现2D卷积操作
+    :param image: 输入图像 (H, W)
+    :param kernel: 卷积核 (K, K)
+    :return: 卷积结果
+    """
+    image_height, image_width = image.shape
+    kernel_size = kernel.shape[0]
+    output_height = image_height - kernel_size + 1
+    output_width = image_width - kernel_size + 1
+    
+    output = np.zeros((output_height, output_width))
+    
+    for i in range(output_height):
+        for j in range(output_width):
+            # 提取图像的局部区域
+            region = image[i:i+kernel_size, j:j+kernel_size]
+            # 计算点积
+            output[i, j] = np.sum(region * kernel)
+    
+    return output
+
+# 创建测试图像和卷积核
+test_image = np.array([
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16]
+])
+
+# 边缘检测卷积核
+edge_kernel = np.array([
+    [-1, -1, -1],
+    [-1, 8, -1],
+    [-1, -1, -1]
+])
+
+result = convolution_2d(test_image, edge_kernel)
+print("原始图像:")
+print(test_image)
+print("\n卷积核 (边缘检测):")
+print(edge_kernel)
+print("\n卷积结果:")
+print(result)
+```
+
+```python filename="code/examples/example-02-image-classification.py"
+# 示例2：使用简单神经网络进行MNIST手写数字分类
+import numpy as np
+
+class SimpleNeuralNetwork:
+    """简单的神经网络用于MNIST分类"""
+    
+    def __init__(self, input_size=784, hidden_size=128, output_size=10):
+        # 初始化权重和偏置
+        self.W1 = np.random.randn(input_size, hidden_size) * 0.01
+        self.b1 = np.zeros((1, hidden_size))
+        self.W2 = np.random.randn(hidden_size, output_size) * 0.01
+        self.b2 = np.zeros((1, output_size))
+    
+    def relu(self, x):
+        """ReLU激活函数"""
+        return np.maximum(0, x)
+    
+    def softmax(self, x):
+        """Softmax函数用于多分类"""
+        exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
+        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+    
+    def forward(self, X):
+        """前向传播"""
+        # 第一层
+        self.z1 = np.dot(X, self.W1) + self.b1
+        self.a1 = self.relu(self.z1)
+        
+        # 输出层
+        self.z2 = np.dot(self.a1, self.W2) + self.b2
+        self.a2 = self.softmax(self.z2)
+        
+        return self.a2
+
+# 模拟MNIST数据（实际使用时会加载真实数据）
+np.random.seed(42)
+X_sample = np.random.rand(5, 784)  # 5个28x28的图像展平
+y_sample = np.array([0, 1, 2, 3, 4])  # 对应标签
+
+# 创建并运行网络
+nn = SimpleNeuralNetwork()
+predictions = nn.forward(X_sample)
+
+print("预测概率分布:")
+for i in range(5):
+    pred_class = np.argmax(predictions[i])
+    confidence = np.max(predictions[i])
+    print(f"样本 {i}: 预测为 {pred_class}, 置信度 {confidence:.3f}")
+```
+
+```python filename="code/examples/example-03-transfer-learning.py"
+# 示例3：迁移学习概念演示
+import numpy as np
+
+def extract_features(images, feature_extractor_type="simulated"):
+    """
+    模拟特征提取过程（实际中会使用预训练模型）
+    :param images: 输入图像列表
+    :param feature_extractor_type: 特征提取器类型
+    :return: 提取的特征向量
+    """
+    if feature_extractor_type == "simulated":
+        # 模拟从预训练模型提取的特征
+        num_images = len(images)
+        feature_dim = 128  # 假设特征维度为128
+        features = np.random.rand(num_images, feature_dim)
+        return features
+    else:
+        raise NotImplementedError("仅支持模拟特征提取")
+
+def classify_with_extracted_features(features, labels, new_labels):
+    """
+    使用提取的特征进行分类
+    :param features: 提取的特征
+    :param labels: 原始标签
+    :param new_labels: 新任务的标签
+    :return: 分类结果
+    """
+    # 简单的最近邻分类器
+    try:
+        from scipy.spatial.distance import cdist
+    except ImportError:
+        # 如果没有scipy，使用numpy实现简单距离计算
+        def simple_distance(a, b):
+            return np.sqrt(np.sum((a - b) ** 2))
+
+        predictions = []
+        for i in range(len(new_labels)):
+            # 模拟新特征
+            new_feature = np.random.rand(features.shape[1])
+            distances = [simple_distance(new_feature, feat) for feat in features[:2]]
+            nearest_idx = np.argmin(distances)
+            predictions.append(labels[nearest_idx])
+        return predictions, np.random.rand(len(new_labels), features.shape[1])
+
+    # 为新样本生成特征（模拟）
+    new_features = np.random.rand(len(new_labels), features.shape[1])
+    
+    # 计算距离
+    distances = cdist(new_features, features, metric='euclidean')
+    predictions = []
+    
+    for i in range(len(new_labels)):
+        nearest_idx = np.argmin(distances[i])
+        predictions.append(labels[nearest_idx])
+    
+    return predictions, new_features
+
+# 演示迁移学习
+original_images = [np.random.rand(224, 224, 3) for _ in range(10)]
+original_labels = ["cat", "dog", "bird", "car", "plane", "cat", "dog", "bird", "car", "plane"]
+
+# 提取特征
+features = extract_features(original_images)
+print(f"提取的特征形状: {features.shape}")
+
+# 新任务：区分动物和交通工具
+new_task_labels = ["animal", "vehicle"]
+predictions, _ = classify_with_extracted_features(features[:2], original_labels[:2], new_task_labels)
+
+print(f"\n迁移学习预测结果: {predictions}")
+print("这展示了如何重用预训练模型的特征提取能力！")
+```
+
+## 4. 深入理解
+
+### 反向传播在CNN中的应用
+
+在CNN中，反向传播需要考虑卷积操作的特殊性：
+- **卷积层的梯度计算**：涉及转置卷积（有时称为"反卷积"）
+- **权重共享的影响**：同一个卷积核的所有位置共享梯度
+- **池化层的梯度传递**：最大池化只将梯度传递给最大值位置
+
+### 激活函数选择
+
+- **ReLU**（Rectified Linear Unit）：最常用，解决梯度消失问题
+- **Leaky ReLU**：避免ReLU的"死亡"问题
+- **Sigmoid/Tanh**：在特定情况下使用，但容易导致梯度消失
+
+### 过拟合与正则化
+
+深度学习模型容易过拟合，常用正则化技术包括：
+- **Dropout**：随机丢弃神经元，强制网络学习冗余表示
+- **权重衰减**（L2正则化）：限制权重大小
+- **数据增强**：通过旋转、翻转、裁剪等方式增加训练数据多样性
+- **早停**（Early Stopping）：在验证集性能不再提升时停止训练
+
+## 5. 实际应用 - 使用预训练模型进行图像分类
+
+在实际项目中，我们很少从头训练CNN。更常见的做法是使用**预训练模型**：
+
+这种方法的优势：
+- **节省时间和计算资源**
+- **更好的性能**（预训练模型在大型数据集上训练）
+- **适用于小数据集**（迁移学习）
+
+## 6. 常见误区
+
+### ❌ CNN不是万能的
+- CNN主要适用于具有空间结构的数据（图像、视频）
+- 对于表格数据或文本，其他架构可能更合适
+
+### ❌ 数据量需求被低估
+- 虽然迁移学习减少了数据需求，但仍然需要足够的标注数据
+- 数据质量比数量更重要
+
+### ❌ 计算资源要求
+- 训练大型CNN需要GPU支持
+- 推理阶段也需要考虑部署环境的计算能力
+
+## 7. 动手实践
+
+现在轮到你了！完成以下练习：
+
+### 练习1：实现卷积操作
+修改`example-01-cnn-basics.py`，添加边界填充（padding）和步长（stride）支持。
+
+### 练习2：构建完整的CNN
+使用提供的解决方案作为参考，尝试构建一个能够对CIFAR-10数据集进行分类的简单CNN。
+
+### 练习3：数据增强实验
+实现图像增强功能，观察不同增强策略对模型性能的影响。
+
+完成后，检查你的答案是否与`solutions/`目录中的参考实现一致。
+
+## 8. 小结与思考
+
+今天我们探索了CNN的世界，从基本的卷积操作到实际的图像分类应用。记住几个关键点：
+
+- **CNN的核心优势**在于参数共享和局部连接，这使其特别适合处理图像数据
+- **迁移学习**是实际应用中的重要技术，可以大大减少训练时间和数据需求
+- **正则化**对于防止过拟合至关重要，特别是在数据有限的情况下
+
+思考题：
+1. 为什么卷积核通常使用奇数尺寸（3×3, 5×5）？
+2. 最大池化和平均池化各有什么优缺点？
+3. 在什么情况下应该选择从头训练而不是使用迁移学习？
+
+继续探索，你会发现深度学习的世界远比我们今天看到的更加精彩！🚀
