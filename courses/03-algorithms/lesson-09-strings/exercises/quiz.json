@@ -1,108 +1,50 @@
-{
-  "questions": [
-    {
-      "id": "q1",
-      "type": "multiple_choice",
-      "question": "KMP算法的核心思想是什么？",
-      "options": [
-        "A. 使用哈希函数快速比较字符串",
-        "B. 利用已匹配信息避免回溯文本串",
-        "C. 构建二叉搜索树存储所有子串",
-        "D. 使用动态规划预处理所有可能的匹配"
-      ],
-      "correct_answer": "B",
-      "explanation": "KMP算法通过构建next数组（部分匹配表），利用已经匹配的信息，在匹配失败时不需要回溯文本串，而是根据next数组跳转到合适的位置继续匹配。"
-    },
-    {
-      "id": "q2",
-      "type": "multiple_choice",
-      "question": "Trie树（前缀树）的主要优势是什么？",
-      "options": [
-        "A. 空间复杂度比哈希表更低",
-        "B. 支持高效的前缀搜索和自动补全",
-        "C. 插入和删除操作的时间复杂度为O(1)",
-        "D. 不需要额外的内存来存储字符"
-      ],
-      "correct_answer": "B",
-      "explanation": "Trie树的主要优势是支持高效的前缀搜索，可以在O(m)时间内检查是否存在以给定前缀开头的单词（m为前缀长度），非常适合自动补全、拼写检查等应用。"
-    },
-    {
-      "id": "q3",
-      "type": "multiple_choice",
-      "question": "Rabin-Karp算法使用什么技术来提高匹配效率？",
-      "options": [
-        "A. 动态规划",
-        "B. 贪心策略",
-        "C. 滚动哈希",
-        "D. 分治法"
-      ],
-      "correct_answer": "C",
-      "explanation": "Rabin-Karp算法使用滚动哈希技术，通过预先计算模式串的哈希值，然后在文本中滑动窗口计算哈希值，只有哈希值匹配时才进行实际的字符串比较。"
-    },
-    {
-      "id": "q4",
-      "type": "multiple_choice",
-      "question": "以下哪种算法最适合同时搜索多个模式串？",
-      "options": [
-        "A. KMP算法",
-        "B. Trie树",
-        "C. Rabin-Karp算法",
-        "D. Aho-Corasick算法"
-      ],
-      "correct_answer": "D",
-      "explanation": "Aho-Corasick算法是专门设计用于多模式匹配的算法，它结合了Trie树和KMP算法的思想，可以在线性时间内同时搜索多个模式串。"
-    },
-    {
-      "id": "q5",
-      "type": "multiple_choice",
-      "question": "KMP算法的时间复杂度是多少？",
-      "options": [
-        "A. O(n)",
-        "B. O(n + m)",
-        "C. O(n × m)",
-        "D. O(n log m)"
-      ],
-      "correct_answer": "B",
-      "explanation": "KMP算法的时间复杂度是O(n + m)，其中n是文本长度，m是模式长度。预处理阶段构建next数组需要O(m)时间，搜索阶段需要O(n)时间。"
-    },
-    {
-      "id": "q6",
-      "type": "multiple_choice",
-      "question": "在Rabin-Karp算法中，为什么需要进行二次验证？",
-      "options": [
-        "A. 因为哈希计算可能出错",
-        "B. 因为存在哈希冲突的可能性",
-        "C. 因为需要确认字符编码正确",
-        "D. 因为算法需要多次迭代才能收敛"
-      ],
-      "correct_answer": "B",
-      "explanation": "由于哈希函数的性质，不同的字符串可能产生相同的哈希值（哈希冲突），因此当哈希值匹配时，还需要进行实际的字符串比较来确认是否真的匹配。"
-    },
-    {
-      "id": "q7",
-      "type": "multiple_choice",
-      "question": "Trie树的空间复杂度通常是？",
-      "options": [
-        "A. O(n)",
-        "B. O(n × m)",
-        "C. O(m)",
-        "D. O(log n)"
-      ],
-      "correct_answer": "B",
-      "explanation": "Trie树的空间复杂度通常是O(n × m)，其中n是单词数量，m是平均单词长度。每个字符都需要一个节点，所以总空间与所有单词的总字符数成正比。"
-    },
-    {
-      "id": "q8",
-      "type": "multiple_choice",
-      "question": "朴素字符串匹配算法（暴力匹配）的时间复杂度最坏情况是？",
-      "options": [
-        "A. O(n + m)",
-        "B. O(n)",
-        "C. O(n × m)",
-        "D. O(m)"
-      ],
-      "correct_answer": "C",
-      "explanation": "朴素字符串匹配算法在最坏情况下（如文本为'AAAAA...'，模式为'AAAAB'）需要对每个位置都进行m次比较，时间复杂度为O(n × m)。"
-    }
-  ]
-}
+[
+  {
+    "question": "KMP算法的核心思想是什么？",
+    "options": ["使用哈希函数快速比较字符串", "利用已匹配信息避免回溯文本串", "构建二叉搜索树存储所有子串", "使用动态规划预处理所有可能的匹配"],
+    "answer": 1,
+    "explanation": "KMP算法通过构建next数组（部分匹配表），利用已经匹配的信息，在匹配失败时不需要回溯文本串，而是根据next数组跳转到合适的位置继续匹配。"
+  },
+  {
+    "question": "Trie树（前缀树）的主要优势是什么？",
+    "options": ["空间复杂度比哈希表更低", "支持高效的前缀搜索和自动补全", "插入和删除操作的时间复杂度为O(1)", "不需要额外的内存来存储字符"],
+    "answer": 1,
+    "explanation": "Trie树的主要优势是支持高效的前缀搜索，可以在O(m)时间内检查是否存在以给定前缀开头的单词（m为前缀长度），非常适合自动补全、拼写检查等应用。"
+  },
+  {
+    "question": "Rabin-Karp算法使用什么技术来提高匹配效率？",
+    "options": ["动态规划", "贪心策略", "滚动哈希", "分治法"],
+    "answer": 2,
+    "explanation": "Rabin-Karp算法使用滚动哈希技术，通过预先计算模式串的哈希值，然后在文本中滑动窗口计算哈希值，只有哈希值匹配时才进行实际的字符串比较。"
+  },
+  {
+    "question": "以下哪种算法最适合同时搜索多个模式串？",
+    "options": ["KMP算法", "Trie树", "Rabin-Karp算法", "Aho-Corasick算法"],
+    "answer": 3,
+    "explanation": "Aho-Corasick算法是专门设计用于多模式匹配的算法，它结合了Trie树和KMP算法的思想，可以在线性时间内同时搜索多个模式串。"
+  },
+  {
+    "question": "KMP算法的时间复杂度是多少？",
+    "options": ["O(n)", "O(n + m)", "O(n × m)", "O(n log m)"],
+    "answer": 1,
+    "explanation": "KMP算法的时间复杂度是O(n + m)，其中n是文本长度，m是模式长度。预处理阶段构建next数组需要O(m)时间，搜索阶段需要O(n)时间。"
+  },
+  {
+    "question": "在Rabin-Karp算法中，为什么需要进行二次验证？",
+    "options": ["因为哈希计算可能出错", "因为存在哈希冲突的可能性", "因为需要确认字符编码正确", "因为算法需要多次迭代才能收敛"],
+    "answer": 1,
+    "explanation": "由于哈希函数的性质，不同的字符串可能产生相同的哈希值（哈希冲突），因此当哈希值匹配时，还需要进行实际的字符串比较来确认是否真的匹配。"
+  },
+  {
+    "question": "Trie树的空间复杂度通常是？",
+    "options": ["O(n)", "O(n × m)", "O(m)", "O(log n)"],
+    "answer": 1,
+    "explanation": "Trie树的空间复杂度通常是O(n × m)，其中n是单词数量，m是平均单词长度。每个字符都需要一个节点，所以总空间与所有单词的总字符数成正比。"
+  },
+  {
+    "question": "朴素字符串匹配算法（暴力匹配）的时间复杂度最坏情况是？",
+    "options": ["O(n + m)", "O(n)", "O(n × m)", "O(m)"],
+    "answer": 2,
+    "explanation": "朴素字符串匹配算法在最坏情况下（如文本为'AAAAA...'，模式为'AAAAB'）需要对每个位置都进行m次比较，时间复杂度为O(n × m)。"
+  }
+]

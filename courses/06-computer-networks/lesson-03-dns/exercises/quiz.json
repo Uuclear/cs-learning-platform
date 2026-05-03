@@ -1,100 +1,90 @@
-{
-  "questions": [
-    {
-      "id": "dns-01",
-      "question": "DNS 的全称是什么？",
-      "options": [
-        "Domain Name System",
-        "Dynamic Network Service",
-        "Data Naming Standard",
-        "Digital Network Security"
-      ],
-      "correct_answer": 0,
-      "explanation": "DNS 是 Domain Name System（域名系统）的缩写，它是互联网的一项核心服务。"
-    },
-    {
-      "id": "dns-02",
-      "question": "以下哪个是顶级域名（TLD）？",
-      "options": [
-        "www",
-        ".com",
-        "google",
-        "mail.google.com"
-      ],
-      "correct_answer": 1,
-      "explanation": "顶级域名（TLD）位于域名层次结构的最顶层，如 .com、.org、.net 等。"
-    },
-    {
-      "id": "dns-03",
-      "question": "A 记录的作用是什么？",
-      "options": [
-        "将域名映射到 IPv4 地址",
-        "将域名映射到 IPv6 地址",
-        "将一个域名指向另一个域名",
-        "指定邮件服务器"
-      ],
-      "correct_answer": 0,
-      "explanation": "A 记录用于将域名映射到 IPv4 地址，是最常见的 DNS 记录类型。"
-    },
-    {
-      "id": "dns-04",
-      "question": "CNAME 记录的主要用途是什么？",
-      "options": [
-        "提供域名别名功能",
-        "存储文本信息",
-        "指定名称服务器",
-        "定义邮件交换服务器"
-      ],
-      "correct_answer": 0,
-      "explanation": "CNAME（Canonical Name）记录用于为域名创建别名，将一个域名指向另一个域名。"
-    },
-    {
-      "id": "dns-05",
-      "question": "DNS 缓存的 TTL 是什么意思？",
-      "options": [
-        "Time To Live，缓存过期时间",
-        "Total Time Limit，总时间限制",
-        "Transmission Time Length，传输时间长度",
-        "Temporary Transfer Location，临时传输位置"
-      ],
-      "correct_answer": 0,
-      "explanation": "TTL（Time To Live）表示 DNS 记录在缓存中的生存时间，单位为秒。"
-    },
-    {
-      "id": "dns-06",
-      "question": "递归 DNS 查询的特点是什么？",
-      "options": [
-        "客户端只需要发起一次查询，DNS 服务器负责完成所有步骤",
-        "客户端需要自己向每个 DNS 服务器发起查询",
-        "只在本地缓存中查找，不进行网络查询",
-        "同时向多个 DNS 服务器发起查询"
-      ],
-      "correct_answer": 0,
-      "explanation": "递归查询中，客户端只需要问一次，DNS 服务器会代劳完成所有必要的查询步骤。"
-    },
-    {
-      "id": "dns-07",
-      "question": "以下哪个 IP 地址是 Google Public DNS？",
-      "options": [
-        "8.8.8.8",
-        "1.1.1.1",
-        "223.5.5.5",
-        "119.29.29.29"
-      ],
-      "correct_answer": 0,
-      "explanation": "Google Public DNS 的主要地址是 8.8.8.8 和 8.8.4.4。"
-    },
-    {
-      "id": "dns-08",
-      "question": "MX 记录用于什么目的？",
-      "options": [
-        "指定邮件服务器",
-        "提供域名别名",
-        "映射到 IPv6 地址",
-        "验证域名所有权"
-      ],
-      "correct_answer": 0,
-      "explanation": "MX（Mail Exchange）记录用于指定处理该域名邮件的邮件服务器。"
-    }
-  ]
-}
+[
+  {
+    "question": "DNS 的全称是什么？",
+    "options": [
+      "Domain Name System",
+      "Dynamic Network Service",
+      "Data Naming Standard",
+      "Digital Network Security"
+    ],
+    "answer": 0,
+    "explanation": "DNS 是 Domain Name System（域名系统）的缩写，它是互联网的一项核心服务。"
+  },
+  {
+    "question": "以下哪个是顶级域名（TLD）？",
+    "options": [
+      "www",
+      ".com",
+      "google",
+      "mail.google.com"
+    ],
+    "answer": 1,
+    "explanation": "顶级域名（TLD）位于域名层次结构的最顶层，如 .com、.org、.net 等。"
+  },
+  {
+    "question": "A 记录的作用是什么？",
+    "options": [
+      "将域名映射到 IPv4 地址",
+      "将域名映射到 IPv6 地址",
+      "将一个域名指向另一个域名",
+      "指定邮件服务器"
+    ],
+    "answer": 0,
+    "explanation": "A 记录用于将域名映射到 IPv4 地址，是最常见的 DNS 记录类型。"
+  },
+  {
+    "question": "CNAME 记录的主要用途是什么？",
+    "options": [
+      "提供域名别名功能",
+      "存储文本信息",
+      "指定名称服务器",
+      "定义邮件交换服务器"
+    ],
+    "answer": 0,
+    "explanation": "CNAME（Canonical Name）记录用于为域名创建别名，将一个域名指向另一个域名。"
+  },
+  {
+    "question": "DNS 缓存的 TTL 是什么意思？",
+    "options": [
+      "Time To Live，缓存过期时间",
+      "Total Time Limit，总时间限制",
+      "Transmission Time Length，传输时间长度",
+      "Temporary Transfer Location，临时传输位置"
+    ],
+    "answer": 0,
+    "explanation": "TTL（Time To Live）表示 DNS 记录在缓存中的生存时间，单位为秒。"
+  },
+  {
+    "question": "递归 DNS 查询的特点是什么？",
+    "options": [
+      "客户端只需要发起一次查询，DNS 服务器负责完成所有步骤",
+      "客户端需要自己向每个 DNS 服务器发起查询",
+      "只在本地缓存中查找，不进行网络查询",
+      "同时向多个 DNS 服务器发起查询"
+    ],
+    "answer": 0,
+    "explanation": "递归查询中，客户端只需要问一次，DNS 服务器会代劳完成所有必要的查询步骤。"
+  },
+  {
+    "question": "以下哪个 IP 地址是 Google Public DNS？",
+    "options": [
+      "8.8.8.8",
+      "1.1.1.1",
+      "223.5.5.5",
+      "119.29.29.29"
+    ],
+    "answer": 0,
+    "explanation": "Google Public DNS 的主要地址是 8.8.8.8 和 8.8.4.4。"
+  },
+  {
+    "question": "MX 记录用于什么目的？",
+    "options": [
+      "指定邮件服务器",
+      "提供域名别名",
+      "映射到 IPv6 地址",
+      "验证域名所有权"
+    ],
+    "answer": 0,
+    "explanation": "MX（Mail Exchange）记录用于指定处理该域名邮件的邮件服务器。"
+  }
+]

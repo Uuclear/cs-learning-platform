@@ -1,108 +1,90 @@
-{
-  "questions": [
-    {
-      "id": "q1",
-      "type": "multiple_choice",
-      "question": "WebSocket协议与HTTP协议的主要区别是什么？",
-      "options": [
-        "WebSocket是基于TCP的，HTTP是基于UDP的",
-        "WebSocket提供全双工通信，HTTP是请求-响应模式",
-        "WebSocket只能用于浏览器，HTTP可以用于任何客户端",
-        "WebSocket不支持加密，HTTP支持HTTPS"
-      ],
-      "correct_answer": 1,
-      "explanation": "WebSocket建立持久连接后，客户端和服务器可以同时双向发送数据（全双工），而HTTP是典型的请求-响应模式。"
-    },
-    {
-      "id": "q2",
-      "type": "multiple_choice",
-      "question": "WebSocket连接是如何建立的？",
-      "options": [
-        "直接通过TCP连接建立",
-        "通过HTTP升级请求（Upgrade header）建立",
-        "通过DNS查询建立",
-        "通过SSL/TLS握手建立"
-      ],
-      "correct_answer": 1,
-      "explanation": "WebSocket连接通过HTTP协议的升级机制建立，客户端发送带有Upgrade: websocket头的HTTP请求，服务器响应101状态码表示协议切换成功。"
-    },
-    {
-      "id": "q3",
-      "type": "multiple_choice",
-      "question": "以下哪个场景最适合使用WebSocket？",
-      "options": [
-        "静态网页加载",
-        "表单提交",
-        "实时股票价格推送",
-        "文件下载"
-      ],
-      "correct_answer": 2,
-      "explanation": "实时股票价格推送需要服务器主动向客户端推送数据，这是WebSocket的典型应用场景。"
-    },
-    {
-      "id": "q4",
-      "type": "multiple_choice",
-      "question": "WebSocket的心跳机制主要用于什么？",
-      "options": [
-        "加密数据传输",
-        "检测连接是否仍然活跃",
-        "压缩消息大小",
-        "验证用户身份"
-      ],
-      "correct_answer": 1,
-      "explanation": "心跳机制通过定期发送ping/pong帧来检测连接是否仍然活跃，防止中间代理或防火墙断开空闲连接。"
-    },
-    {
-      "id": "q5",
-      "type": "multiple_choice",
-      "question": "WebSocket协议的默认端口是什么？",
-      "options": [
-        "80 (ws) 和 443 (wss)",
-        "8080 (ws) 和 8443 (wss)",
-        "3000 (ws) 和 3001 (wss)",
-        "8765 (ws) 和 8766 (wss)"
-      ],
-      "correct_answer": 0,
-      "explanation": "WebSocket的默认端口与HTTP/HTTPS相同：ws使用80端口，wss（安全WebSocket）使用443端口。"
-    },
-    {
-      "id": "q6",
-      "type": "multiple_choice",
-      "question": "在WebSocket中，如何处理连接意外断开的情况？",
-      "options": [
-        "忽略断开，等待用户重新连接",
-        "立即终止程序",
-        "实现重连策略，自动尝试重新连接",
-        "发送邮件通知管理员"
-      ],
-      "correct_answer": 2,
-      "explanation": "良好的WebSocket应用应该实现重连策略，在连接意外断开时自动尝试重新连接，提升用户体验。"
-    },
-    {
-      "id": "q7",
-      "type": "multiple_choice",
-      "question": "WebSocket消息帧包含哪些主要部分？",
-      "options": [
-        "源IP、目标IP、端口号、数据",
-        "FIN位、操作码、掩码、负载长度、负载数据",
-        "HTTP头、状态码、响应体",
-        "用户名、密码、会话ID、数据"
-      ],
-      "correct_answer": 1,
-      "explanation": "WebSocket帧包含FIN位（是否为最后一帧）、操作码（帧类型）、掩码（客户端到服务器必须掩码）、负载长度和负载数据。"
-    },
-    {
-      "id": "q8",
-      "type": "multiple_choice",
-      "question": "为什么WebSocket客户端到服务器的消息需要掩码？",
-      "options": [
-        "为了加密数据",
-        "为了防止缓存代理误解析WebSocket流量",
-        "为了压缩数据大小",
-        "为了验证消息完整性"
-      ],
-      "correct_answer": 1,
-      "explanation": "掩码主要是为了防止存在bug的中间代理将WebSocket流量误认为HTTP流量并进行缓存或修改。"
-    }
-  ]
-}
+[
+  {
+    "question": "WebSocket协议与HTTP协议的主要区别是什么？",
+    "options": [
+      "WebSocket是基于TCP的，HTTP是基于UDP的",
+      "WebSocket提供全双工通信，HTTP是请求-响应模式",
+      "WebSocket只能用于浏览器，HTTP可以用于任何客户端",
+      "WebSocket不支持加密，HTTP支持HTTPS"
+    ],
+    "answer": 1,
+    "explanation": "WebSocket建立持久连接后，客户端和服务器可以同时双向发送数据（全双工），而HTTP是典型的请求-响应模式。"
+  },
+  {
+    "question": "WebSocket连接是如何建立的？",
+    "options": [
+      "直接通过TCP连接建立",
+      "通过HTTP升级请求（Upgrade header）建立",
+      "通过DNS查询建立",
+      "通过SSL/TLS握手建立"
+    ],
+    "answer": 1,
+    "explanation": "WebSocket连接通过HTTP协议的升级机制建立，客户端发送带有Upgrade: websocket头的HTTP请求，服务器响应101状态码表示协议切换成功。"
+  },
+  {
+    "question": "以下哪个场景最适合使用WebSocket？",
+    "options": [
+      "静态网页加载",
+      "表单提交",
+      "实时股票价格推送",
+      "文件下载"
+    ],
+    "answer": 2,
+    "explanation": "实时股票价格推送需要服务器主动向客户端推送数据，这是WebSocket的典型应用场景。"
+  },
+  {
+    "question": "WebSocket的心跳机制主要用于什么？",
+    "options": [
+      "加密数据传输",
+      "检测连接是否仍然活跃",
+      "压缩消息大小",
+      "验证用户身份"
+    ],
+    "answer": 1,
+    "explanation": "心跳机制通过定期发送ping/pong帧来检测连接是否仍然活跃，防止中间代理或防火墙断开空闲连接。"
+  },
+  {
+    "question": "WebSocket协议的默认端口是什么？",
+    "options": [
+      "80 (ws) 和 443 (wss)",
+      "8080 (ws) 和 8443 (wss)",
+      "3000 (ws) 和 3001 (wss)",
+      "8765 (ws) 和 8766 (wss)"
+    ],
+    "answer": 0,
+    "explanation": "WebSocket的默认端口与HTTP/HTTPS相同：ws使用80端口，wss（安全WebSocket）使用443端口。"
+  },
+  {
+    "question": "在WebSocket中，如何处理连接意外断开的情况？",
+    "options": [
+      "忽略断开，等待用户重新连接",
+      "立即终止程序",
+      "实现重连策略，自动尝试重新连接",
+      "发送邮件通知管理员"
+    ],
+    "answer": 2,
+    "explanation": "良好的WebSocket应用应该实现重连策略，在连接意外断开时自动尝试重新连接，提升用户体验。"
+  },
+  {
+    "question": "WebSocket消息帧包含哪些主要部分？",
+    "options": [
+      "源IP、目标IP、端口号、数据",
+      "FIN位、操作码、掩码、负载长度、负载数据",
+      "HTTP头、状态码、响应体",
+      "用户名、密码、会话ID、数据"
+    ],
+    "answer": 1,
+    "explanation": "WebSocket帧包含FIN位（是否为最后一帧）、操作码（帧类型）、掩码（客户端到服务器必须掩码）、负载长度和负载数据。"
+  },
+  {
+    "question": "为什么WebSocket客户端到服务器的消息需要掩码？",
+    "options": [
+      "为了加密数据",
+      "为了防止缓存代理误解析WebSocket流量",
+      "为了压缩数据大小",
+      "为了验证消息完整性"
+    ],
+    "answer": 1,
+    "explanation": "掩码主要是为了防止存在bug的中间代理将WebSocket流量误认为HTTP流量并进行缓存或修改。"
+  }
+]

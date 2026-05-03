@@ -1,118 +1,90 @@
-{
-  "questions": [
-    {
-      "id": 1,
-      "type": "single_choice",
-      "question": "以下哪个设备属于输入设备？",
-      "options": [
-        "显示器",
-        "打印机",
-        "键盘",
-        "音箱"
-      ],
-      "correct": 2,
-      "explanation": "键盘是典型的输入设备，用于向计算机输入文字和命令。显示器、打印机和音箱都是输出设备，用于将计算机的信息输出给用户。",
-      "difficulty": 1
-    },
-    {
-      "id": 2,
-      "type": "single_choice",
-      "question": "USB接口的全称是什么？",
-      "options": [
-        "Universal Serial Bus（通用串行总线）",
-        "United System Bus（联合系统总线）",
-        "Universal System Bus（通用系统总线）",
-        "Ultra Speed Bus（超高速总线）"
-      ],
-      "correct": 0,
-      "explanation": "USB的全称是Universal Serial Bus，即通用串行总线。它是一种广泛使用的接口标准，可以连接键盘、鼠标、U盘等多种设备。",
-      "difficulty": 2
-    },
-    {
-      "id": 3,
-      "type": "single_choice",
-      "question": "中断机制的主要作用是什么？",
-      "options": [
-        "让计算机运行得更快",
-        "让CPU不用一直询问设备状态，提高效率",
-        "让设备可以主动控制CPU",
-        "让程序可以同时运行多个任务"
-      ],
-      "correct": 1,
-      "explanation": "中断机制的主要作用是让CPU不需要一直轮询（polling）设备状态，而是等设备有数据时再通知CPU处理。这样可以大大提高CPU的效率。",
-      "difficulty": 2
-    },
-    {
-      "id": 4,
-      "type": "single_choice",
-      "question": "以下哪种接口主要用于传输高清视频信号？",
-      "options": [
-        "USB",
-        "HDMI",
-        "蓝牙",
-        "NFC"
-      ],
-      "correct": 1,
-      "explanation": "HDMI（High-Definition Multimedia Interface）是专门用于传输高清视频和音频信号的接口，常用于连接电视、显示器、投影仪等设备。",
-      "difficulty": 1
-    },
-    {
-      "id": 5,
-      "type": "single_choice",
-      "question": "在Python中，以下哪个模式用于在文件末尾追加内容？",
-      "options": [
-        "'r'",
-        "'w'",
-        "'a'",
-        "'x'"
-      ],
-      "correct": 2,
-      "explanation": "'a'模式表示append（追加），会在文件末尾添加内容而不会覆盖原有内容。'r'是读取，'w'是写入（会覆盖），'x'是独占创建。",
-      "difficulty": 2
-    },
-    {
-      "id": 6,
-      "type": "single_choice",
-      "question": "触摸屏为什么既是输入设备又是输出设备？",
-      "options": [
-        "因为它可以同时显示画面和检测触摸",
-        "因为它有两个独立的部件",
-        "因为它可以同时连接多个设备",
-        "因为它使用了特殊的材料"
-      ],
-      "correct": 0,
-      "explanation": "触摸屏的显示层负责输出（显示画面），触摸感应层负责输入（检测触摸位置）。两者结合在一起，使它同时具有输入和输出的功能。",
-      "difficulty": 2
-    },
-    {
-      "id": 7,
-      "type": "true_false",
-      "question": "轮询（Polling）比中断机制更节省CPU资源。",
-      "correct": false,
-      "explanation": "错误。轮询需要CPU不断询问设备状态，即使没有数据也要消耗CPU时间。中断机制让CPU可以专心做其他事，设备有数据时再通知CPU，更节省CPU资源。",
-      "difficulty": 3
-    },
-    {
-      "id": 8,
-      "type": "single_choice",
-      "question": "DMA（直接内存访问）的主要优势是什么？",
-      "options": [
-        "让设备可以直接访问内存，减少CPU参与",
-        "让内存变得更大",
-        "让数据传输速度变慢但更稳定",
-        "让设备可以直接控制其他设备"
-      ],
-      "correct": 0,
-      "explanation": "DMA允许设备（如硬盘、网卡）直接和内存交换数据，不需要CPU逐字节搬运。CPU只需要在开始时设置好传输参数，传输完成后接收中断通知即可。",
-      "difficulty": 3
-    }
-  ],
-  "metadata": {
-    "total_questions": 8,
-    "difficulty_distribution": {
-      "easy": 2,
-      "medium": 4,
-      "hard": 2
-    }
+[
+  {
+    "question": "以下哪个设备属于输入设备？",
+    "options": [
+      "显示器",
+      "打印机",
+      "键盘",
+      "扬声器"
+    ],
+    "answer": 2,
+    "explanation": "键盘是输入设备，用于向计算机输入信息。显示器、打印机和扬声器都是输出设备，用于向用户展示结果。"
+  },
+  {
+    "question": "中断机制的主要作用是什么？",
+    "options": [
+      "让CPU持续检查I/O设备状态",
+      "让I/O设备在需要时通知CPU处理，避免CPU轮询",
+      "提高I/O设备的物理连接速度",
+      "减少I/O设备的数量"
+    ],
+    "answer": 1,
+    "explanation": "中断机制允许I/O设备在有数据需要处理时主动'通知'CPU，而不是让CPU不断询问每个设备是否有事（轮询），这样大大提高了CPU效率。"
+  },
+  {
+    "question": "触摸屏技术中，手机通常使用哪种类型？",
+    "options": [
+      "电阻屏",
+      "电容屏",
+      "红外屏",
+      "声波屏"
+    ],
+    "answer": 1,
+    "explanation": "手机通常使用电容屏，它利用手指的导电性来检测触摸位置。电阻屏需要按压使两层膜接触，主要用于ATM机等需要精确点击的场景。"
+  },
+  {
+    "question": "USB接口的主要优势是什么？",
+    "options": [
+      "只能传输视频信号",
+      "只能用于键盘和鼠标",
+      "通用性强，支持多种设备即插即用",
+      "传输速度比所有其他接口都快"
+    ],
+    "answer": 2,
+    "explanation": "USB（Universal Serial Bus）的最大优势是通用性，可以连接键盘、鼠标、U盘、手机、打印机等多种设备，并支持热插拔（即插即用）。"
+  },
+  {
+    "question": "DMA（直接内存访问）技术的主要目的是什么？",
+    "options": [
+      "增加内存容量",
+      "让高速I/O设备直接与内存交换数据，减少CPU负担",
+      "提高CPU主频",
+      "替代中断机制"
+    ],
+    "answer": 1,
+    "explanation": "DMA允许高速设备（如硬盘、网卡）直接与内存交换数据，无需CPU参与每次数据传输，只在开始和结束时通知CPU，大大减轻了CPU负担。"
+  },
+  {
+    "question": "在文件I/O操作中，为什么推荐使用'with'语句？",
+    "options": [
+      "with语句能让文件读写速度更快",
+      "with语句能自动管理文件资源，确保正确关闭",
+      "with语句能加密文件内容",
+      "with语句能自动创建文件目录"
+    ],
+    "answer": 1,
+    "explanation": "使用'with'语句可以确保文件在使用完毕后自动关闭，即使发生异常也不会导致文件句柄泄漏，这是Python中处理文件的最佳实践。"
+  },
+  {
+    "question": "以下关于I/O设备速度的说法，哪个是正确的？",
+    "options": [
+      "所有I/O设备的速度都差不多",
+      "键盘比硬盘快得多",
+      "硬盘比键盘快百万倍",
+      "显示器是最快的I/O设备"
+    ],
+    "answer": 2,
+    "explanation": "不同I/O设备速度差异巨大。键盘每秒处理几十个字符，而现代硬盘每秒可处理几百MB数据，速度差距可达百万倍级别。"
+  },
+  {
+    "question": "HDMI接口主要用于什么目的？",
+    "options": [
+      "连接键盘和鼠标",
+      "传输高清视频和音频信号",
+      "无线网络连接",
+      "存储数据到U盘"
+    ],
+    "answer": 1,
+    "explanation": "HDMI（High-Definition Multimedia Interface）专门用于传输高清视频和音频信号，常用于连接电脑、游戏机到电视或投影仪。"
   }
-}
+]

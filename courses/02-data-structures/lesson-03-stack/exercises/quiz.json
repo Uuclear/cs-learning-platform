@@ -1,112 +1,90 @@
-{
-  "questions": [
-    {
-      "id": 1,
-      "type": "single_choice",
-      "question": "栈的核心原则是什么？",
-      "options": [
-        "先进先出（FIFO）",
-        "后进先出（LIFO）",
-        "随机存取",
-        "按优先级存取"
-      ],
-      "correct": 1,
-      "explanation": "栈遵循后进先出（LIFO）原则，就像一叠盘子，最后放上去的盘子最先被拿走。",
-      "difficulty": 1
-    },
-    {
-      "id": 2,
-      "type": "single_choice",
-      "question": "以下哪个操作不是栈的基本操作？",
-      "options": [
-        "push（入栈）",
-        "pop（出栈）",
-        "sort（排序）",
-        "peek（查看栈顶）"
-      ],
-      "correct": 2,
-      "explanation": "栈只有四种基本操作：push、pop、peek和isEmpty。sort不是栈的标准操作，栈本身不提供排序功能。",
-      "difficulty": 1
-    },
-    {
-      "id": 3,
-      "type": "single_choice",
-      "question": "依次执行 push(A), push(B), push(C), pop(), pop() 后，栈中剩余的元素是什么？",
-      "options": [
-        "C",
-        "B",
-        "A",
-        "A和B"
-      ],
-      "correct": 2,
-      "explanation": "push后栈为[A,B,C]（C在栈顶），第一次pop弹出C，第二次pop弹出B，最后只剩A。",
-      "difficulty": 2
-    },
-    {
-      "id": 4,
-      "type": "true_false",
-      "question": "用Python的list实现栈时，push和pop操作的时间复杂度都是O(1)。",
-      "correct": true,
-      "explanation": "Python的list.append()和list.pop()在末尾操作时都是O(1)时间复杂度，非常适合实现栈。",
-      "difficulty": 2
-    },
-    {
-      "id": 5,
-      "type": "single_choice",
-      "question": "括号匹配算法中，遇到左括号应该怎么做？",
-      "options": [
-        "直接忽略",
-        "将其入栈",
-        "立即弹出栈顶",
-        "将其与右括号匹配"
-      ],
-      "correct": 1,
-      "explanation": "遇到左括号时将其入栈，等遇到对应的右括号时再弹出栈顶进行匹配。这样可以处理嵌套的括号情况。",
-      "difficulty": 2
-    },
-    {
-      "id": 6,
-      "type": "single_choice",
-      "question": "将中缀表达式 \"3 + 4 * 2\" 转为后缀表达式，结果是？",
-      "options": [
-        "3 4 + 2 *",
-        "3 4 2 * +",
-        "+ 3 * 4 2",
-        "3 + 4 2 * +"
-      ],
-      "correct": 1,
-      "explanation": "乘法优先级高于加法，所以先处理4*2，再处理+3。后缀表达式为：3 4 2 * +。",
-      "difficulty": 3
-    },
-    {
-      "id": 7,
-      "type": "single_choice",
-      "question": "浏览器的\"后退\"按钮使用了哪种数据结构？",
-      "options": [
-        "队列",
-        "栈",
-        "链表",
-        "哈希表"
-      ],
-      "correct": 1,
-      "explanation": "浏览器用两个栈实现前进后退：一个历史栈记录访问过的页面，后退时当前页面压入前进栈。这是典型的LIFO应用。",
-      "difficulty": 2
-    },
-    {
-      "id": 8,
-      "type": "true_false",
-      "question": "数组实现的栈和链表实现的栈在功能上完全等价。",
-      "correct": true,
-      "explanation": "两种实现方式都遵循LIFO原则，功能等价。区别在于：数组版更简单且缓存友好；链表版是动态大小不会满。",
-      "difficulty": 2
-    }
-  ],
-  "metadata": {
-    "total_questions": 8,
-    "difficulty_distribution": {
-      "easy": 2,
-      "medium": 5,
-      "hard": 1
-    }
+[
+  {
+    "question": "栈遵循什么存取原则？",
+    "options": [
+      "FIFO（先进先出）",
+      "LIFO（后进先出）",
+      "随机存取",
+      "按优先级存取"
+    ],
+    "answer": 1,
+    "explanation": "栈遵循LIFO（Last In, First Out，后进先出）原则。就像一叠盘子，最后放上去的盘子最先被拿走。这是栈最核心的特性。"
+  },
+  {
+    "question": "栈的基本操作中，哪个操作用于查看栈顶元素但不移除它？",
+    "options": [
+      "push",
+      "pop",
+      "peek",
+      "isEmpty"
+    ],
+    "answer": 2,
+    "explanation": "peek()操作用于查看栈顶元素但不移除它。push()用于入栈，pop()用于出栈并返回元素，isEmpty()用于判断栈是否为空。"
+  },
+  {
+    "question": "栈的所有基本操作（push、pop、peek、isEmpty）的时间复杂度是多少？",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n²)"
+    ],
+    "answer": 0,
+    "explanation": "栈的所有基本操作都是O(1)时间复杂度，因为这些操作只涉及栈顶元素，不需要遍历整个栈。"
+  },
+  {
+    "question": "以下哪个应用场景最适合使用栈？",
+    "options": [
+      "实现任务调度队列",
+      "实现浏览器的后退功能",
+      "存储用户列表并按注册时间排序",
+      "实现数据库的索引结构"
+    ],
+    "answer": 1,
+    "explanation": "浏览器的后退功能需要记住访问历史，并且最近访问的页面最先被回退，这完全符合栈的LIFO特性。其他选项更适合使用队列或其他数据结构。"
+  },
+  {
+    "question": "在括号匹配算法中，栈的作用是什么？",
+    "options": [
+      "存储所有括号字符",
+      "记录左括号的位置，以便与右括号匹配",
+      "计算括号的嵌套深度",
+      "统计括号的总数"
+    ],
+    "answer": 1,
+    "explanation": "在括号匹配算法中，遇到左括号时将其压入栈，遇到右括号时检查栈顶的左括号是否匹配。这样可以确保最内层的括号最先被匹配，完美处理嵌套结构。"
+  },
+  {
+    "question": "函数调用栈溢出（Stack Overflow）通常是由什么原因引起的？",
+    "options": [
+      "内存泄漏导致可用内存不足",
+      "递归调用层次太深，栈帧过多",
+      "栈的实现有bug",
+      "操作系统限制了栈大小"
+    ],
+    "answer": 1,
+    "explanation": "函数调用栈溢出通常是由于递归调用层次太深，每次函数调用都会在栈上创建一个栈帧，当栈帧数量超过栈的空间限制时就会发生溢出。"
+  },
+  {
+    "question": "用数组实现栈时，为什么推荐使用数组末尾作为栈顶？",
+    "options": [
+      "因为数组开头更容易访问",
+      "因为数组末尾的append和pop操作都是O(1)",
+      "因为数组末尾更节省内存",
+      "因为数组开头会被其他程序占用"
+    ],
+    "answer": 1,
+    "explanation": "在Python等语言中，数组（列表）的append()和pop()操作在末尾进行时都是O(1)时间复杂度，这使得数组末尾成为理想的栈顶位置。如果使用数组开头作为栈顶，插入和删除操作会是O(n)。"
+  },
+  {
+    "question": "最小栈（MinStack）的设计关键是什么？",
+    "options": [
+      "每次push时都重新计算最小值",
+      "使用辅助栈同步记录当前最小值",
+      "对栈进行排序",
+      "只允许push递增的序列"
+    ],
+    "answer": 1,
+    "explanation": "最小栈的关键是使用一个辅助栈来同步记录当前栈中的最小值。每次push时，辅助栈也push当前最小值和新元素中的较小者；pop时两个栈同时弹出。这样可以在O(1)时间内获取最小值。"
   }
-}
+]

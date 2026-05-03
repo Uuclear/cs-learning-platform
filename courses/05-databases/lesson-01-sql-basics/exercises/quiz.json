@@ -1,100 +1,90 @@
-{
-  "questions": [
-    {
-      "id": 1,
-      "question": "SQL是什么的缩写？",
-      "options": [
-        "Structured Query Language",
-        "Simple Query Logic",
-        "System Query Language",
-        "Standard Question Language"
-      ],
-      "correct_answer": 0,
-      "explanation": "SQL是Structured Query Language（结构化查询语言）的缩写，是用于管理和操作关系型数据库的标准语言。"
-    },
-    {
-      "id": 2,
-      "question": "以下哪个SQL语句用于从数据库中检索数据？",
-      "options": [
-        "SELECT",
-        "INSERT",
-        "UPDATE",
-        "DELETE"
-      ],
-      "correct_answer": 0,
-      "explanation": "SELECT语句用于从数据库表中检索（查询）数据，是SQL中最常用的语句之一。"
-    },
-    {
-      "id": 3,
-      "question": "在SQL中，以下哪种JOIN会返回左表的所有记录，即使右表中没有匹配的记录？",
-      "options": [
-        "INNER JOIN",
-        "LEFT JOIN",
-        "RIGHT JOIN",
-        "FULL OUTER JOIN"
-      ],
-      "correct_answer": 1,
-      "explanation": "LEFT JOIN（左连接）会返回左表的所有记录，如果右表中没有匹配的记录，则对应字段显示为NULL。"
-    },
-    {
-      "id": 4,
-      "question": "以下哪个聚合函数用于计算行数？",
-      "options": [
-        "SUM()",
-        "AVG()",
-        "COUNT()",
-        "MAX()"
-      ],
-      "correct_answer": 2,
-      "explanation": "COUNT()函数用于计算满足条件的行数，是最常用的聚合函数之一。"
-    },
-    {
-      "id": 5,
-      "question": "在SQL中，GROUP BY子句的作用是什么？",
-      "options": [
-        "对结果进行排序",
-        "对数据进行分组以便进行聚合计算",
-        "筛选特定的列",
-        "连接多个表"
-      ],
-      "correct_answer": 1,
-      "explanation": "GROUP BY子句用于将具有相同值的行分组在一起，通常与聚合函数（如COUNT、SUM、AVG等）一起使用。"
-    },
-    {
-      "id": 6,
-      "question": "以下哪个语句可以防止SQL注入攻击？",
-      "options": [
-        "直接拼接用户输入到SQL语句中",
-        "使用参数化查询（预编译语句）",
-        "只允许数字输入",
-        "禁用所有特殊字符"
-      ],
-      "correct_answer": 1,
-      "explanation": "使用参数化查询（预编译语句）是防止SQL注入攻击的最佳实践，它将用户输入作为参数处理，而不是直接拼接到SQL语句中。"
-    },
-    {
-      "id": 7,
-      "question": "SQLite是一个什么类型的数据库？",
-      "options": [
-        "客户端-服务器数据库",
-        "基于文件的嵌入式数据库",
-        "云数据库",
-        "NoSQL数据库"
-      ],
-      "correct_answer": 1,
-      "explanation": "SQLite是一个基于文件的嵌入式数据库，不需要单独的服务器进程，整个数据库存储在一个文件中。"
-    },
-    {
-      "id": 8,
-      "question": "在SQL中，HAVING子句与WHERE子句的主要区别是什么？",
-      "options": [
-        "HAVING用于过滤行，WHERE用于过滤分组",
-        "WHERE用于过滤行，HAVING用于过滤分组",
-        "两者完全相同，可以互换使用",
-        "HAVING只能用于数字列，WHERE可以用于任何列"
-      ],
-      "correct_answer": 1,
-      "explanation": "WHERE子句在分组前过滤行，而HAVING子句在分组后过滤分组结果，通常与GROUP BY一起使用。"
-    }
-  ]
-}
+[
+  {
+    "question": "SQL是什么的缩写？",
+    "options": [
+      "Structured Query Language",
+      "Simple Query Logic",
+      "System Query Language",
+      "Standard Question Language"
+    ],
+    "answer": 0,
+    "explanation": "SQL是Structured Query Language（结构化查询语言）的缩写，是用于管理和操作关系型数据库的标准语言。"
+  },
+  {
+    "question": "以下哪个SQL语句用于从数据库中检索数据？",
+    "options": [
+      "SELECT",
+      "INSERT",
+      "UPDATE",
+      "DELETE"
+    ],
+    "answer": 0,
+    "explanation": "SELECT语句用于从数据库表中检索（查询）数据，是SQL中最常用的语句之一。"
+  },
+  {
+    "question": "在SQL中，以下哪种JOIN会返回左表的所有记录，即使右表中没有匹配的记录？",
+    "options": [
+      "INNER JOIN",
+      "LEFT JOIN",
+      "RIGHT JOIN",
+      "FULL OUTER JOIN"
+    ],
+    "answer": 1,
+    "explanation": "LEFT JOIN（左连接）会返回左表的所有记录，如果右表中没有匹配的记录，则对应字段显示为NULL。"
+  },
+  {
+    "question": "以下哪个聚合函数用于计算行数？",
+    "options": [
+      "SUM()",
+      "AVG()",
+      "COUNT()",
+      "MAX()"
+    ],
+    "answer": 2,
+    "explanation": "COUNT()函数用于计算满足条件的行数，是最常用的聚合函数之一。"
+  },
+  {
+    "question": "在SQL中，GROUP BY子句的作用是什么？",
+    "options": [
+      "对结果进行排序",
+      "对数据进行分组以便进行聚合计算",
+      "筛选特定的列",
+      "连接多个表"
+    ],
+    "answer": 1,
+    "explanation": "GROUP BY子句用于将具有相同值的行分组在一起，通常与聚合函数（如COUNT、SUM、AVG等）一起使用。"
+  },
+  {
+    "question": "以下哪个语句可以防止SQL注入攻击？",
+    "options": [
+      "直接拼接用户输入到SQL语句中",
+      "使用参数化查询（预编译语句）",
+      "只允许数字输入",
+      "禁用所有特殊字符"
+    ],
+    "answer": 1,
+    "explanation": "使用参数化查询（预编译语句）是防止SQL注入攻击的最佳实践，它将用户输入作为参数处理，而不是直接拼接到SQL语句中。"
+  },
+  {
+    "question": "SQLite是一个什么类型的数据库？",
+    "options": [
+      "客户端-服务器数据库",
+      "基于文件的嵌入式数据库",
+      "云数据库",
+      "NoSQL数据库"
+    ],
+    "answer": 1,
+    "explanation": "SQLite是一个基于文件的嵌入式数据库，不需要单独的服务器进程，整个数据库存储在一个文件中。"
+  },
+  {
+    "question": "在SQL中，HAVING子句与WHERE子句的主要区别是什么？",
+    "options": [
+      "HAVING用于过滤行，WHERE用于过滤分组",
+      "WHERE用于过滤行，HAVING用于过滤分组",
+      "两者完全相同，可以互换使用",
+      "HAVING只能用于数字列，WHERE可以用于任何列"
+    ],
+    "answer": 1,
+    "explanation": "WHERE子句在分组前过滤行，而HAVING子句在分组后过滤分组结果，通常与GROUP BY一起使用。"
+  }
+]

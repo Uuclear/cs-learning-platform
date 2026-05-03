@@ -1,108 +1,50 @@
-{
-  "questions": [
-    {
-      "id": "q1",
-      "type": "multiple_choice",
-      "question": "Dijkstra算法不能处理哪种类型的图？",
-      "options": [
-        "有向图",
-        "无向图",
-        "包含负权边的图",
-        "稀疏图"
-      ],
-      "correct_answer": 2,
-      "explanation": "Dijkstra算法假设所有边的权重都是非负的。如果存在负权边，算法可能无法找到真正的最短路径，因为它基于贪心策略，一旦确定某个顶点的最短距离就不会再更新。"
-    },
-    {
-      "id": "q2",
-      "type": "multiple_choice",
-      "question": "Bellman-Ford算法的时间复杂度是多少？",
-      "options": [
-        "O(V + E)",
-        "O(V log V)",
-        "O(VE)",
-        "O(V²)"
-      ],
-      "correct_answer": 2,
-      "explanation": "Bellman-Ford算法需要进行V-1轮松弛操作，每轮遍历所有E条边，因此时间复杂度为O(VE)。"
-    },
-    {
-      "id": "q3",
-      "type": "multiple_choice",
-      "question": "Prim算法和Kruskal算法的主要区别是什么？",
-      "options": [
-        "Prim算法只能用于有向图，Kruskal算法只能用于无向图",
-        "Prim算法从一个顶点开始逐步扩展，Kruskal算法考虑所有边并按权重排序",
-        "Prim算法的时间复杂度更低",
-        "Kruskal算法不能处理稠密图"
-      ],
-      "correct_answer": 1,
-      "explanation": "Prim算法采用类似Dijkstra的方式，从一个起始顶点开始，每次选择连接MST和非MST顶点的最小权重边。而Kruskal算法将所有边按权重排序，依次选择不会形成环的最小权重边。"
-    },
-    {
-      "id": "q4",
-      "type": "multiple_choice",
-      "question": "在什么情况下应该选择Bellman-Ford算法而不是Dijkstra算法？",
-      "options": [
-        "图非常大",
-        "图中存在负权边",
-        "只需要计算单源最短路径",
-        "图是无向的"
-      ],
-      "correct_answer": 1,
-      "explanation": "Bellman-Ford算法的主要优势是能够处理包含负权边的图，并且还能检测负权环的存在。而Dijkstra算法不能处理负权边。"
-    },
-    {
-      "id": "q5",
-      "type": "multiple_choice",
-      "question": "最小生成树(MST)的性质是什么？",
-      "options": [
-        "包含图中所有的边",
-        "连接所有顶点且总权重最小的无环子图",
-        "总是唯一的",
-        "必须包含权重最大的边"
-      ],
-      "correct_answer": 1,
-      "explanation": "最小生成树是连接图中所有顶点的边权和最小的无环连通子图。对于同一个图，MST可能不唯一（当存在多条相同权重的边时）。"
-    },
-    {
-      "id": "q6",
-      "type": "multiple_choice",
-      "question": "Dijkstra算法使用什么数据结构来高效地选择下一个要处理的顶点？",
-      "options": [
-        "栈",
-        "队列",
-        "优先队列（最小堆）",
-        "并查集"
-      ],
-      "correct_answer": 2,
-      "explanation": "Dijkstra算法使用优先队列（通常是最小堆）来维护待处理的顶点，这样可以高效地取出当前距离最小的顶点，时间复杂度为O(log V)。"
-    },
-    {
-      "id": "q7",
-      "type": "multiple_choice",
-      "question": "Bellman-Ford算法如何检测负权环？",
-      "options": [
-        "在算法开始前检查所有边的权重",
-        "在V-1轮松弛后，再进行一轮松弛，如果还能更新距离则存在负权环",
-        "使用深度优先搜索",
-        "计算所有环的权重和"
-      ],
-      "correct_answer": 1,
-      "explanation": "Bellman-Ford算法的标准做法是在完成V-1轮松弛操作后，再进行第V轮松弛。如果在第V轮中还能更新任何顶点的距离，说明存在负权环。"
-    },
-    {
-      "id": "q8",
-      "type": "multiple_choice",
-      "question": "对于稠密图（E ≈ V²），Prim算法使用邻接矩阵实现的时间复杂度是多少？",
-      "options": [
-        "O(V²)",
-        "O(E log V)",
-        "O(VE)",
-        "O(V log V)"
-      ],
-      "correct_answer": 0,
-      "explanation": "对于稠密图，Prim算法使用简单的数组而不是优先队列来维护顶点距离，每次选择最小距离顶点需要O(V)时间，总共需要O(V²)时间。这比使用堆的O(E log V) = O(V² log V)更优。"
-    }
-  ]
-}
+[
+  {
+    "question": "Dijkstra算法不能处理哪种类型的图？",
+    "options": ["有向图", "无向图", "包含负权边的图", "稀疏图"],
+    "answer": 2,
+    "explanation": "Dijkstra算法假设所有边的权重都是非负的。如果存在负权边，算法可能无法找到真正的最短路径，因为它基于贪心策略，一旦确定某个顶点的最短距离就不会再更新。"
+  },
+  {
+    "question": "Bellman-Ford算法的时间复杂度是多少？",
+    "options": ["O(V + E)", "O(V log V)", "O(VE)", "O(V²)"],
+    "answer": 2,
+    "explanation": "Bellman-Ford算法需要进行V-1轮松弛操作，每轮遍历所有E条边，因此时间复杂度为O(VE)。"
+  },
+  {
+    "question": "Prim算法和Kruskal算法的主要区别是什么？",
+    "options": ["Prim算法只能用于有向图，Kruskal算法只能用于无向图", "Prim算法从一个顶点开始逐步扩展，Kruskal算法考虑所有边并按权重排序", "Prim算法的时间复杂度更低", "Kruskal算法不能处理稠密图"],
+    "answer": 1,
+    "explanation": "Prim算法采用类似Dijkstra的方式，从一个起始顶点开始，每次选择连接MST和非MST顶点的最小权重边。而Kruskal算法将所有边按权重排序，依次选择不会形成环的最小权重边。"
+  },
+  {
+    "question": "在什么情况下应该选择Bellman-Ford算法而不是Dijkstra算法？",
+    "options": ["图非常大", "图中存在负权边", "只需要计算单源最短路径", "图是无向的"],
+    "answer": 1,
+    "explanation": "Bellman-Ford算法的主要优势是能够处理包含负权边的图，并且还能检测负权环的存在。而Dijkstra算法不能处理负权边。"
+  },
+  {
+    "question": "最小生成树(MST)的性质是什么？",
+    "options": ["包含图中所有的边", "连接所有顶点且总权重最小的无环子图", "总是唯一的", "必须包含权重最大的边"],
+    "answer": 1,
+    "explanation": "最小生成树是连接图中所有顶点的边权和最小的无环连通子图。对于同一个图，MST可能不唯一（当存在多条相同权重的边时）。"
+  },
+  {
+    "question": "Dijkstra算法使用什么数据结构来高效地选择下一个要处理的顶点？",
+    "options": ["栈", "队列", "优先队列（最小堆）", "并查集"],
+    "answer": 2,
+    "explanation": "Dijkstra算法使用优先队列（通常是最小堆）来维护待处理的顶点，这样可以高效地取出当前距离最小的顶点，时间复杂度为O(log V)。"
+  },
+  {
+    "question": "Bellman-Ford算法如何检测负权环？",
+    "options": ["在算法开始前检查所有边的权重", "在V-1轮松弛后，再进行一轮松弛，如果还能更新距离则存在负权环", "使用深度优先搜索", "计算所有环的权重和"],
+    "answer": 1,
+    "explanation": "Bellman-Ford算法的标准做法是在完成V-1轮松弛操作后，再进行第V轮松弛。如果在第V轮中还能更新任何顶点的距离，说明存在负权环。"
+  },
+  {
+    "question": "对于稠密图（E ≈ V²），Prim算法使用邻接矩阵实现的时间复杂度是多少？",
+    "options": ["O(V²)", "O(E log V)", "O(VE)", "O(V log V)"],
+    "answer": 0,
+    "explanation": "对于稠密图，Prim算法使用简单的数组而不是优先队列来维护顶点距离，每次选择最小距离顶点需要O(V)时间，总共需要O(V²)时间。这比使用堆的O(E log V) = O(V² log V)更优。"
+  }
+]

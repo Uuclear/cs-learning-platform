@@ -1,112 +1,50 @@
-{
-  "questions": [
-    {
-      "id": 1,
-      "type": "single_choice",
-      "question": "递归函数必须包含以下哪个要素才能正确终止？",
-      "options": [
-        "递归调用",
-        "基准情况（Base Case）",
-        "全局变量",
-        "循环语句"
-      ],
-      "correct": 1,
-      "explanation": "基准情况是递归的'刹车'，没有它递归会无限进行下去直到栈溢出。递归调用是递归的核心，但不能保证终止。",
-      "difficulty": 1
-    },
-    {
-      "id": 2,
-      "type": "single_choice",
-      "question": "朴素递归计算斐波那契数列 F(n) 的时间复杂度是多少？",
-      "options": [
-        "O(n)",
-        "O(n^2)",
-        "O(2^n)",
-        "O(log n)"
-      ],
-      "correct": 2,
-      "explanation": "朴素递归会做大量重复计算。F(n) 需要调用 F(n-1) 和 F(n-2)，形成一棵指数级增长的调用树，时间复杂度是 O(2^n)。",
-      "difficulty": 2
-    },
-    {
-      "id": 3,
-      "type": "single_choice",
-      "question": "记忆化（Memoization）优化递归的核心思想是什么？",
-      "options": [
-        "减少递归调用的深度",
-        "将递归转换为循环",
-        "缓存已计算的结果，避免重复计算",
-        "使用更小的数据类型"
-      ],
-      "correct": 2,
-      "explanation": "记忆化的核心是'算过的记下来'，用字典或数组缓存结果，下次遇到相同子问题直接返回缓存值，用空间换时间。",
-      "difficulty": 1
-    },
-    {
-      "id": 4,
-      "type": "true_false",
-      "question": "Python 语言支持尾递归优化（Tail Call Optimization）。",
-      "correct": false,
-      "explanation": "Python 不支持尾递归优化。Guido van Rossum（Python 创始人）认为 TCO 会破坏调试时调用栈的完整性，所以故意没有实现。",
-      "difficulty": 3
-    },
-    {
-      "id": 5,
-      "type": "single_choice",
-      "question": "以下哪个递归函数会导致栈溢出？",
-      "options": [
-        "def f(n): return 1 if n==0 else f(n-1)",
-        "def f(n): return 1 if n==0 else f(n+1)",
-        "def f(n): return 1 if n==0 else f(n//2)",
-        "def f(n): return n if n<=1 else f(n-1)+f(n-2)"
-      ],
-      "correct": 1,
-      "explanation": "f(n+1) 的参数越来越大，永远不会收敛到基准情况 n==0，导致无限递归直到栈溢出。其他选项的参数都会减小。",
-      "difficulty": 2
-    },
-    {
-      "id": 6,
-      "type": "single_choice",
-      "question": "汉诺塔问题中，n个盘子最少需要多少步？",
-      "options": [
-        "n 步",
-        "n^2 步",
-        "2^n - 1 步",
-        "n! 步"
-      ],
-      "correct": 2,
-      "explanation": "汉诺塔的递推式是 T(n) = 2*T(n-1) + 1，解出来 T(n) = 2^n - 1。3个盘子7步，4个15步，5个31步。",
-      "difficulty": 2
-    },
-    {
-      "id": 7,
-      "type": "single_choice",
-      "question": "递归函数调用时，每次调用在内存中创建的是什么？",
-      "options": [
-        "一个新的对象",
-        "一个栈帧（Stack Frame）",
-        "一个线程",
-        "一个文件描述符"
-      ],
-      "correct": 1,
-      "explanation": "每次函数调用都会在调用栈上创建一个栈帧，存放参数、局部变量和返回地址。递归调用时栈帧层层叠加，返回时逐层弹出。",
-      "difficulty": 1
-    },
-    {
-      "id": 8,
-      "type": "true_false",
-      "question": "所有递归问题都可以用迭代（循环）来解决。",
-      "correct": true,
-      "explanation": "理论上，递归和迭代是等价的，任何递归都可以用迭代+手动维护栈来模拟。但有些问题（如树遍历、分治算法）用递归写简洁优雅得多。",
-      "difficulty": 3
-    }
-  ],
-  "metadata": {
-    "total_questions": 8,
-    "difficulty_distribution": {
-      "easy": 3,
-      "medium": 4,
-      "hard": 1
-    }
+[
+  {
+    "question": "递归函数必须包含以下哪个要素才能正确终止？",
+    "options": ["递归调用", "基准情况（Base Case）", "全局变量", "循环语句"],
+    "answer": 1,
+    "explanation": "基准情况是递归的'刹车'，没有它递归会无限进行下去直到栈溢出。递归调用是递归的核心，但不能保证终止。"
+  },
+  {
+    "question": "朴素递归计算斐波那契数列 F(n) 的时间复杂度是多少？",
+    "options": ["O(n)", "O(n^2)", "O(2^n)", "O(log n)"],
+    "answer": 2,
+    "explanation": "朴素递归会做大量重复计算。F(n) 需要调用 F(n-1) 和 F(n-2)，形成一棵指数级增长的调用树，时间复杂度是 O(2^n)。"
+  },
+  {
+    "question": "记忆化（Memoization）优化递归的核心思想是什么？",
+    "options": ["减少递归调用的深度", "将递归转换为循环", "缓存已计算的结果，避免重复计算", "使用更小的数据类型"],
+    "answer": 2,
+    "explanation": "记忆化的核心是'算过的记下来'，用字典或数组缓存结果，下次遇到相同子问题直接返回缓存值，用空间换时间。"
+  },
+  {
+    "question": "Python 语言支持尾递归优化（Tail Call Optimization）。",
+    "options": ["正确", "错误"],
+    "answer": 1,
+    "explanation": "Python 不支持尾递归优化。Guido van Rossum（Python 创始人）认为 TCO 会破坏调试时调用栈的完整性，所以故意没有实现。"
+  },
+  {
+    "question": "以下哪个递归函数会导致栈溢出？",
+    "options": ["def f(n): return 1 if n==0 else f(n-1)", "def f(n): return 1 if n==0 else f(n+1)", "def f(n): return 1 if n==0 else f(n//2)", "def f(n): return n if n<=1 else f(n-1)+f(n-2)"],
+    "answer": 1,
+    "explanation": "f(n+1) 的参数越来越大，永远不会收敛到基准情况 n==0，导致无限递归直到栈溢出。其他选项的参数都会减小。"
+  },
+  {
+    "question": "汉诺塔问题中，n个盘子最少需要多少步？",
+    "options": ["n 步", "n^2 步", "2^n - 1 步", "n! 步"],
+    "answer": 2,
+    "explanation": "汉诺塔的递推式是 T(n) = 2*T(n-1) + 1，解出来 T(n) = 2^n - 1。3个盘子7步，4个15步，5个31步。"
+  },
+  {
+    "question": "递归函数调用时，每次调用在内存中创建的是什么？",
+    "options": ["一个新的对象", "一个栈帧（Stack Frame）", "一个线程", "一个文件描述符"],
+    "answer": 1,
+    "explanation": "每次函数调用都会在调用栈上创建一个栈帧，存放参数、局部变量和返回地址。递归调用时栈帧层层叠加，返回时逐层弹出。"
+  },
+  {
+    "question": "所有递归问题都可以用迭代（循环）来解决。",
+    "options": ["正确", "错误"],
+    "answer": 0,
+    "explanation": "理论上，递归和迭代是等价的，任何递归都可以用迭代+手动维护栈来模拟。但有些问题（如树遍历、分治算法）用递归写简洁优雅得多。"
   }
-}
+]

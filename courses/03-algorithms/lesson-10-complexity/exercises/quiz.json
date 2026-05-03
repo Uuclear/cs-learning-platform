@@ -1,108 +1,50 @@
-{
-  "questions": [
-    {
-      "id": "q1",
-      "type": "multiple_choice",
-      "question": "以下哪个时间复杂度表示常数时间？",
-      "options": [
-        "O(n)",
-        "O(log n)",
-        "O(1)",
-        "O(n²)"
-      ],
-      "correct_answer": "O(1)",
-      "explanation": "O(1) 表示常数时间复杂度，无论输入规模多大，执行时间都是固定的。"
-    },
-    {
-      "id": "q2",
-      "type": "multiple_choice",
-      "question": "对于一个包含n个元素的数组，使用线性搜索查找特定元素的时间复杂度是？",
-      "options": [
-        "O(1)",
-        "O(log n)",
-        "O(n)",
-        "O(n log n)"
-      ],
-      "correct_answer": "O(n)",
-      "explanation": "线性搜索需要遍历整个数组，最坏情况下需要检查所有n个元素，因此时间复杂度是O(n)。"
-    },
-    {
-      "id": "q3",
-      "type": "multiple_choice",
-      "question": "二分查找算法的时间复杂度是？",
-      "options": [
-        "O(1)",
-        "O(log n)",
-        "O(n)",
-        "O(n²)"
-      ],
-      "correct_answer": "O(log n)",
-      "explanation": "二分查找每次都将搜索空间减半，因此时间复杂度是O(log n)。"
-    },
-    {
-      "id": "q4",
-      "type": "multiple_choice",
-      "question": "冒泡排序的时间复杂度是？",
-      "options": [
-        "O(n)",
-        "O(n log n)",
-        "O(n²)",
-        "O(2^n)"
-      ],
-      "correct_answer": "O(n²)",
-      "explanation": "冒泡排序使用双重嵌套循环，外层循环n次，内层循环平均n/2次，总体时间复杂度为O(n²)。"
-    },
-    {
-      "id": "q5",
-      "type": "multiple_choice",
-      "question": "以下哪种情况下的空间复杂度最低？",
-      "options": [
-        "递归实现斐波那契数列",
-        "迭代实现斐波那契数列",
-        "使用哈希表存储所有计算结果",
-        "使用数组存储中间结果"
-      ],
-      "correct_answer": "迭代实现斐波那契数列",
-      "explanation": "迭代实现只需要常数个变量，空间复杂度为O(1)，而递归需要O(n)的调用栈空间，其他选项需要O(n)的额外存储空间。"
-    },
-    {
-      "id": "q6",
-      "type": "multiple_choice",
-      "question": "当n很大时，以下哪个时间复杂度的增长速度最快？",
-      "options": [
-        "O(n)",
-        "O(n log n)",
-        "O(n²)",
-        "O(2^n)"
-      ],
-      "correct_answer": "O(2^n)",
-      "explanation": "指数时间复杂度O(2^n)的增长速度远超多项式时间复杂度，当n增大时会变得极其缓慢。"
-    },
-    {
-      "id": "q7",
-      "type": "multiple_choice",
-      "question": "大O表示法主要描述算法的什么特性？",
-      "options": [
-        "最坏情况下的性能",
-        "最好情况下的性能",
-        "平均情况下的性能",
-        "实际运行时间（毫秒）"
-      ],
-      "correct_answer": "最坏情况下的性能",
-      "explanation": "大O表示法通常用来描述算法在最坏情况下的时间或空间复杂度，提供性能的上界保证。"
-    },
-    {
-      "id": "q8",
-      "type": "multiple_choice",
-      "question": "如果一个算法的时间复杂度是O(n log n)，当输入规模从1000增加到2000时，运行时间大约会增加多少倍？",
-      "options": [
-        "2倍",
-        "略多于2倍",
-        "4倍",
-        "8倍"
-      ],
-      "correct_answer": "略多于2倍",
-      "explanation": "O(n log n)中，n从1000变为2000（2倍），log n从约10变为约11（1.1倍），所以总时间约为2×1.1=2.2倍，略多于2倍。"
-    }
-  ]
-}
+[
+  {
+    "question": "以下哪个时间复杂度表示常数时间？",
+    "options": ["O(n)", "O(log n)", "O(1)", "O(n²)"],
+    "answer": 2,
+    "explanation": "O(1) 表示常数时间复杂度，无论输入规模多大，执行时间都是固定的。"
+  },
+  {
+    "question": "对于一个包含n个元素的数组，使用线性搜索查找特定元素的时间复杂度是？",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    "answer": 2,
+    "explanation": "线性搜索需要遍历整个数组，最坏情况下需要检查所有n个元素，因此时间复杂度是O(n)。"
+  },
+  {
+    "question": "二分查找算法的时间复杂度是？",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    "answer": 1,
+    "explanation": "二分查找每次都将搜索空间减半，因此时间复杂度是O(log n)。"
+  },
+  {
+    "question": "冒泡排序的时间复杂度是？",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(2^n)"],
+    "answer": 2,
+    "explanation": "冒泡排序使用双重嵌套循环，外层循环n次，内层循环平均n/2次，总体时间复杂度为O(n²)。"
+  },
+  {
+    "question": "以下哪种情况下的空间复杂度最低？",
+    "options": ["递归实现斐波那契数列", "迭代实现斐波那契数列", "使用哈希表存储所有计算结果", "使用数组存储中间结果"],
+    "answer": 1,
+    "explanation": "迭代实现只需要常数个变量，空间复杂度为O(1)，而递归需要O(n)的调用栈空间，其他选项需要O(n)的额外存储空间。"
+  },
+  {
+    "question": "当n很大时，以下哪个时间复杂度的增长速度最快？",
+    "options": ["O(n)", "O(n log n)", "O(n²)", "O(2^n)"],
+    "answer": 3,
+    "explanation": "指数时间复杂度O(2^n)的增长速度远超多项式时间复杂度，当n增大时会变得极其缓慢。"
+  },
+  {
+    "question": "大O表示法主要描述算法的什么特性？",
+    "options": ["最坏情况下的性能", "最好情况下的性能", "平均情况下的性能", "实际运行时间（毫秒）"],
+    "answer": 0,
+    "explanation": "大O表示法通常用来描述算法在最坏情况下的时间或空间复杂度，提供性能的上界保证。"
+  },
+  {
+    "question": "如果一个算法的时间复杂度是O(n log n)，当输入规模从1000增加到2000时，运行时间大约会增加多少倍？",
+    "options": ["2倍", "略多于2倍", "4倍", "8倍"],
+    "answer": 1,
+    "explanation": "O(n log n)中，n从1000变为2000（2倍），log n从约10变为约11（1.1倍），所以总时间约为2×1.1=2.2倍，略多于2倍。"
+  }
+]
