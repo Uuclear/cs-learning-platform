@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Course, CourseModule } from "@/types/course";
 import { useProgress } from "@/lib/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -14,8 +15,28 @@ interface CoursesClientProps {
 }
 
 export function CoursesClient({ modules }: CoursesClientProps) {
+  const router = useRouter();
   const [filter, setFilter] = useState("");
   const [activeModule, setActiveModule] = useState<string | null>(null);
+
+  // Read module filter from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const moduleParam = params.get("module");
+    if (moduleParam) {
+      setActiveModule(moduleParam);
+    }
+  }, []);
+
+  const setModuleFilter = (moduleId: string | null) => {
+    setActiveModule(moduleId);
+    if (moduleId) {
+      router.push(`/courses?module=${moduleId}`);
+    } else {
+      router.push("/courses");
+    }
+  };
+
   const { isCompleted, completedCount, progressPercent } = useProgress();
 
   const totalCourses = modules.reduce((sum, m) => sum + m.courses.length, 0);
@@ -86,7 +107,7 @@ export function CoursesClient({ modules }: CoursesClientProps) {
             <Button
               variant={!activeModule ? "default" : "outline"}
               size="sm"
-              onClick={() => setActiveModule(null)}
+              onClick={() => setModuleFilter(null)}
             >
               全部
             </Button>
@@ -95,7 +116,7 @@ export function CoursesClient({ modules }: CoursesClientProps) {
                 key={mod.id}
                 variant={activeModule === mod.id ? "default" : "outline"}
                 size="sm"
-                onClick={() => setActiveModule(activeModule === mod.id ? null : mod.id)}
+                onClick={() => setModuleFilter(activeModule === mod.id ? null : mod.id)}
                 className="whitespace-nowrap"
               >
                 {mod.name}
@@ -173,7 +194,7 @@ export function CoursesClient({ modules }: CoursesClientProps) {
             <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-30" />
             <p className="text-lg">没有找到匹配的课程</p>
             <p className="text-sm mt-1">尝试调整搜索关键词</p>
-            <Button variant="outline" className="mt-4" onClick={() => { setFilter(""); setActiveModule(null); }}>
+            <Button variant="outline" className="mt-4" onClick={() => { setFilter(""); setModuleFilter(null); }}>
               清除筛选
             </Button>
           </div>

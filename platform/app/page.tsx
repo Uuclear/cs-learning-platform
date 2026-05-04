@@ -114,7 +114,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-center">课程模块</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {modules.map((module) => (
-            <Link key={module.id} href="/courses">
+            <Link key={module.id} href={`/courses?module=${module.id}`}>
               <div className="p-4 border rounded-lg text-center hover:border-primary hover:shadow-md transition-all cursor-pointer group bg-card">
                 <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded-full">
                   模块{module.order}

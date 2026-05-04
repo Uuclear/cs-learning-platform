@@ -204,10 +204,21 @@ export function findCourseDirBySlug(slug: string): string | null {
     const modulePath = path.join(COURSES_DIR, moduleDir.name);
     for (const lessonDir of fs.readdirSync(modulePath, { withFileTypes: true }).filter(d => d.isDirectory())) {
       const dirName = lessonDir.name;
-      const parts = dirName.split("-");
-      const dirSlug = parts.length > 2 ? parts.slice(2).join("-") : dirName;
-      if (dirSlug === slug) {
+      // First try exact directory name match
+      if (dirName === slug) {
         return path.join(modulePath, dirName);
+      }
+      // Then check metadata.json slug
+      const metaPath = path.join(modulePath, dirName, "metadata.json");
+      if (fs.existsSync(metaPath)) {
+        try {
+          const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
+          if (meta.slug === slug) {
+            return path.join(modulePath, dirName);
+          }
+        } catch {
+          // Skip malformed metadata
+        }
       }
     }
   }
