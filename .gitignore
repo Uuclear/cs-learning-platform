@@ -41,3 +41,5 @@ coverage/
 # Shared and Docs
 shared/
 docs/
+
+platform/node_modules/
