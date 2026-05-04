@@ -1,0 +1,1362 @@
+[
+  {
+    "courseId": "01-01",
+    "title": "冯诺依曼架构：计算机的'五脏六腑'",
+    "moduleName": "计算机基础",
+    "slug": "lesson-01-von-neumann-architecture",
+    "excerpt": "id: '0101' title: '冯诺依曼架构：计算机的\"五脏六腑\"' module: '01computerbasics' difficulty: 1 duration: 15 prerequisites: [] 冯诺依曼架构：计算机的\"五脏六腑\"  🎭 欢迎来到CS世界！ 今天，我们要揭开计算机的神秘面纱，看看这个每天陪伴我们的\"铁盒子\"里面到底藏着什么秘密。 开场白 想象一下，如果计算",
+    "matchType": "content"
+  },
+  {
+    "courseId": "01-02",
+    "title": "CPU：计算机的大脑如何思考",
+    "moduleName": "计算机基础",
+    "slug": "lesson-02-cpu",
+    "excerpt": "id: '0102' title: 'CPU：计算机的大脑如何思考' module: '01computerbasics' difficulty: 2 duration: 20 prerequisites: ['0101'] CPU：计算机的大脑如何思考  你的手机比阿波罗登月计算机强上亿倍，但你知道它\"脑子\"里在想什么吗？ 开场白 同学们好！今天我们来聊聊计算机的\"大脑\"——CPU。 想象一下，",
+    "matchType": "content"
+  },
+  {
+    "courseId": "01-03",
+    "title": "内存：计算机的\"草稿纸\"",
+    "moduleName": "计算机基础",
+    "slug": "lesson-03-memory",
+    "excerpt": "id: '0103' title: '内存：计算机的\"草稿纸\"' module: '01computerbasics' difficulty: 2 duration: 20 prerequisites: ['0101'] 内存：计算机的\"草稿纸\"  想象一下，你正在做一道复杂的数学题。你会在草稿纸上写写画画，计算中间结果，对吧？如果每次计算都要去翻书找资料，那效率得多低啊！计算机也一样，它需要一块",
+    "matchType": "content"
+  },
+  {
+    "courseId": "01-04",
+    "title": "I/O设备：计算机如何与外界对话",
+    "moduleName": "计算机基础",
+    "slug": "lesson-04-io-devices",
+    "excerpt": "id: '0104' title: 'I/O设备：计算机如何与外界对话' module: '01computerbasics' difficulty: 2 duration: 20 prerequisites: ['0101'] I/O设备：计算机如何与外界对话  🎮 想象一下：如果没有键盘，你怎么告诉电脑你想写什么？如果没有显示器，电脑怎么告诉你它在想什么？计算机就像个\"社恐天才\"——脑子转得",
+    "matchType": "content"
+  },
+  {
+    "courseId": "01-05",
+    "title": "总线：计算机内部的\"高速公路\"",
+    "moduleName": "计算机基础",
+    "slug": "lesson-05-bus",
+    "excerpt": "id: '0105' title: '总线：计算机内部的\"高速公路\"' module: '01computerbasics' difficulty: 3 duration: 25 prerequisites: ['0102', '0103', '0104'] 总线：计算机内部的\"高速公路\"  想象一下，你建了一座豪华别墅：CPU是厨房大厨，内存是冰箱，硬盘是仓库，显卡是装修队。但你忘了修路——食材",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-01",
+    "title": "数组：排排坐，吃果果",
+    "moduleName": "数据结构",
+    "slug": "lesson-01-array",
+    "excerpt": "id: '0201' title: '数组：排排坐，吃果果' module: '02datastructures' difficulty: 1 duration: 15 prerequisites: [] 数组：排排坐，吃果果  🎵 \"排排坐，吃果果，你一个，我一个...\"    小时候排队分水果的场景，其实和计算机里的数组一模一样！ 开场白 想象一下这个场景： 你走进一家网红奶茶店，发现队伍排",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-02",
+    "title": "链表：手拉手的小朋友们",
+    "moduleName": "数据结构",
+    "slug": "lesson-02-linked-list",
+    "excerpt": "id: '0202' title: '链表：手拉手的小朋友们' module: '02datastructures' difficulty: 2 duration: 20 prerequisites: ['0201'] 链表：手拉手的小朋友们 想象一下，有一群小朋友在操场上排队，每个小朋友都拉着前面和后面小朋友的手。这就是链表的生动比喻！今天我们就来学习这个有趣的数据结构。  💡 思考问题: 如",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-03",
+    "title": "栈：后进先出的盘子堆",
+    "moduleName": "数据结构",
+    "slug": "lesson-03-stack",
+    "excerpt": "id: '0203' title: '栈：后进先出的盘子堆' module: '02datastructures' difficulty: 2 duration: 20 prerequisites: ['0201'] 栈：后进先出的盘子堆  想象一下，你洗完碗后把它们一摞摞地叠起来。下次要用时，你总是从最上面拿走——没人会从中间抽一个出来吧？这就是今天的主角：栈。 开场白 同学们好！今天我们要聊的",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-04",
+    "title": "队列：先进先出的排队法则",
+    "moduleName": "数据结构",
+    "slug": "lesson-04-queue",
+    "excerpt": "id: '0204' title: '队列：先进先出的排队法则' module: '02datastructures' difficulty: 2 duration: 20 prerequisites: ['0201'] 队列：先进先出的排队法则  想象一下，你去网红奶茶店排队买奶茶。先到的同学先拿到奶茶，后到的只能在后面苦苦等待。如果你硬要插队，后面所有人都会瞪着你——这就是队列！ 开场白 同学",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-05",
+    "title": "树：倒着长的家族谱",
+    "moduleName": "数据结构",
+    "slug": "lesson-05-tree",
+    "excerpt": "树：倒着长的家族谱 上一节课我们学了链表——小朋友们手拉手排成一队。今天我们要学的数据结构可就厉害了，它让小朋友不再排成一条线，而是分叉、分叉、再分叉，像一棵树一样伸展开来。 开场白 想象一下你打开家谱。你的上面是父母，父母的上面是爷爷奶奶、外公外婆……再往上是祖宗十八代。你会发现：一个人可能有多个后代，但只有一个父母（生物学意义上的，别跟我杠）。 再想想你们公司的组织架构图：CEO在最上面，下面",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-06",
+    "title": "图：万物互联的社交网络",
+    "moduleName": "数据结构",
+    "slug": "lesson-06-graph",
+    "excerpt": "图：万物互联的社交网络 上一节课我们学了树——分叉再分叉的层级结构。但现实世界远比树复杂：你的朋友圈不是一棵树，因为你的朋友之间也互相认识，形成了各种各样的环。今天我们要学的\"图\"，就是用来表示这种\"随便连\"的数据结构。 开场白 想象一下你打开微信，点开自己的朋友圈：你有50个好友，这50个人之间又互相加了好友，其中某些人还通过某个群加了你的同事……这可不是什么树形结构，因为每个人都可以和任意人直",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-07",
+    "title": "哈希表：神奇的'字典'",
+    "moduleName": "数据结构",
+    "slug": "lesson-07-hash-table",
+    "excerpt": "id: '0207' title: '哈希表：神奇的\"字典\"' module: '02datastructures' difficulty: 3 duration: 30 prerequisites: ['0201'] 哈希表：神奇的\"字典\"  📖 \"给我一把钥匙，我就能瞬间找到对应的抽屉！\"  这就是哈希表的超能力：键值映射，瞬间定位。 开场白 想象一下这个场景： 你走进一家大型图书馆，管理员",
+    "matchType": "content"
+  },
+  {
+    "courseId": "02-08",
+    "title": "堆：优先级队列的秘密",
+    "moduleName": "数据结构",
+    "slug": "lesson-08-heap",
+    "excerpt": "id: '0208' title: '堆：优先级队列的秘密' module: '02datastructures' difficulty: 4 duration: 35 prerequisites: ['0205'] 堆：优先级队列的秘密  医院急诊室里，心跳停止的病人一定比感冒咳嗽的病人先得到救治吗？这就是堆要解决的问题——不是谁先来谁先服务，而是谁重要谁先服务。 开场白 同学们好！今天我们来聊",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-01",
+    "title": "排序算法：从混乱到有序",
+    "moduleName": "算法",
+    "slug": "lesson-01-sorting",
+    "excerpt": "id: '0301' title: '排序算法：从混乱到有序' module: '03algorithms' difficulty: 2 duration: 25 prerequisites: ['0201'] 排序算法：从混乱到有序 各位同学好！今天我们要聊一个几乎每个人每天都在用，但很少人真正理解的话题 —— 排序。 一、开场白 想象一下这个场景：你打开手机通讯录，发现联系人的名字全是乱的 —",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-02",
+    "title": "查找算法：大海捞针的艺术",
+    "moduleName": "算法",
+    "slug": "lesson-02-searching",
+    "excerpt": "id: '0302' title: '查找算法：大海捞针的艺术' module: '03algorithms' difficulty: 2 duration: 20 prerequisites: ['0201', '0207'] 查找算法：大海捞针的艺术  想象一下，你在一堆袜子中找你的另一只。如果袜子堆是乱放的，你只能一只一只翻；但如果它们按颜色排好队，你就能\"猜\"着找——这就是查找算法的精髓。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-03",
+    "title": "递归：函数的自我修养",
+    "moduleName": "算法",
+    "slug": "lesson-03-recursion",
+    "excerpt": "id: '0303' title: '递归：函数的自我修养' module: '03algorithms' difficulty: 3 duration: 30 prerequisites: ['0205'] 递归：函数的自我修养  想象一下，你站在两面镜子中间，往左看，镜子里有你，镜子里的你又在往左看……如此循环往复，永无止境。这就是递归的精髓——函数调用了自己，自己又调用了自己，层层嵌套，直到",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-04",
+    "title": "动态规划：聪明的'抄近路'",
+    "moduleName": "算法",
+    "slug": "lesson-04-dynamic-programming",
+    "excerpt": "id: '0304' title: '动态规划：聪明的\"抄近路\"' module: '03algorithms' difficulty: 4 duration: 40 prerequisites: ['0303'] 动态规划：聪明的\"抄近路\"  如果递归是个死磕到底的愣头青，那动态规划就是个精打细算的老油条。 开场白 同学们好！今天我们聊聊算法世界中最让人又爱又恨的东西——动态规划（Dynamic",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-05",
+    "title": "贪心算法：每一步都选最好的",
+    "moduleName": "算法",
+    "slug": "lesson-05-greedy",
+    "excerpt": "id: '0305' title: '贪心算法：每一步都选最好的' module: '03algorithms' difficulty: 3 duration: 30 prerequisites: ['0303'] 贪心算法：每一步都选最好的  人生如果能贪心就好了——每次都选看起来最好的选项，最后一定是最幸福的。但算法告诉我们：有时候行，有时候不行。 开场白 同学们好！今天我们来聊聊算法世界里最",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-06",
+    "title": "回溯算法：走不通就回头",
+    "moduleName": "algorithms",
+    "excerpt": "id: '0306' title: '回溯算法：走不通就回头' module: '03algorithms' difficulty: 4 duration: 35 prerequisites: [\"0303\"] 回溯算法：走不通就回头 想象你在一个巨大的迷宫里寻找出口。你沿着一条路走，走到死胡同时，你会怎么办？当然是转身回到上一个岔路口，尝试另一条路！这就是回溯算法的核心思想——试错法：尝试所有可",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-07",
+    "title": "分治算法：分而治之的智慧",
+    "moduleName": "algorithms",
+    "excerpt": "id: '0307' title: '分治算法：分而治之的智慧' module: '03algorithms' difficulty: 3 duration: 30 prerequisites: [\"0303\"] 分治算法：分而治之的智慧 想象一下，如果你是一位古代将军，面对一支庞大的敌军，你会怎么做？是硬碰硬地正面冲突，还是将敌军分割成小块，逐个击破？聪明的你肯定会选择后者！这就是\"分而治之\"（",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-08",
+    "title": "图算法：最短路径与最小生成树",
+    "moduleName": "算法",
+    "slug": "lesson-08-graph-algorithms",
+    "excerpt": "id: '0308' title: '图算法：最短路径与最小生成树' module: '03algorithms' difficulty: 4 duration: 40 prerequisites: ['0206'] 图算法：最短路径与最小生成树 想象一下，当你打开导航软件输入目的地时，它是如何在几秒钟内找到最快路线的？或者当互联网数据包在全球网络中传输时，路由器是如何选择最佳路径的？这些神奇的功",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-09",
+    "title": "字符串算法：文本处理的绝技",
+    "moduleName": "算法",
+    "slug": "lesson-09-strings",
+    "excerpt": "id: '0309' title: '字符串算法：文本处理的绝技' module: '03algorithms' difficulty: 3 duration: 30 prerequisites: ['0301'] 字符串算法：文本处理的绝技 想象一下，当你在Google搜索\"字符串算法\"时，搜索引擎是如何在几十亿网页中瞬间找到包含这些关键词的页面？或者当你在Word文档中按Ctrl+F查找某个词",
+    "matchType": "content"
+  },
+  {
+    "courseId": "03-10",
+    "title": "算法复杂度：为什么我的代码这么慢",
+    "moduleName": "算法",
+    "slug": "lesson-10-complexity",
+    "excerpt": "id: '0310' title: '算法复杂度：为什么我的代码这么慢' module: '03algorithms' difficulty: 3 duration: 25 prerequisites: [\"0301\"] 算法复杂度：为什么我的代码这么慢 你有没有遇到过这样的情况：写了一个看似简单的程序，点击运行后去泡了杯咖啡，回来发现还在跑？再泡一杯，还是在跑！最后你甚至怀疑是不是电脑死机了，结",
+    "matchType": "content"
+  },
+  {
+    "courseId": "04-01",
+    "title": "进程：程序的\"生命体\"",
+    "moduleName": "操作系统",
+    "slug": "lesson-01-processes",
+    "excerpt": "id: '0401' title: '进程：程序的\"生命体\"' module: '04operatingsystems' difficulty: 2 duration: 25 prerequisites: ['0102 CPU'] 进程：程序的\"生命体\" 想象一下，当你双击一个程序，它就像被施了魔法一样活了过来！从一个静静躺在硬盘上的文件，瞬间变成了在内存中奔跑、与你互动的\"生命体\"。这就是进程的",
+    "matchType": "content"
+  },
+  {
+    "courseId": "04-02",
+    "title": "线程：进程的\"分身术\"",
+    "moduleName": "操作系统",
+    "slug": "lesson-02-threads",
+    "excerpt": "id: '0402' title: '线程：进程的\"分身术\"' module: '04operatingsystems' difficulty: 3 duration: 30 prerequisites: [\"0401\"] 线程：进程的\"分身术\" 想象一下，你正在厨房里做饭：一边要盯着锅里的汤别烧干，一边要切菜准备下一道菜，还要时不时看看烤箱里的蛋糕。如果只有一个\"你\"，那就得不停地在这些任务之间",
+    "matchType": "content"
+  },
+  {
+    "courseId": "04-03",
+    "title": "内存管理：虚拟内存的魔法",
+    "moduleName": "operating systems",
+    "excerpt": "id: '0403' title: '内存管理：虚拟内存的魔法' module: '04operatingsystems' difficulty: 3 duration: 35 prerequisites: [\"0103\", \"0401\"] 内存管理：虚拟内存的魔法 你的电脑明明只有4GB内存，为什么能运行需要8GB内存的程序？这背后就是虚拟内存的魔法！  💡 思考问题: 如果没有虚拟内存，现代",
+    "matchType": "content"
+  },
+  {
+    "courseId": "04-04",
+    "title": "文件系统：数据的\"档案室\"",
+    "moduleName": "operating systems",
+    "excerpt": "id: '0404' title: '文件系统：数据的\"档案室\"' module: '04operatingsystems' difficulty: 2 duration: 25 prerequisites: ['0401'] 文件系统：数据的\"档案室\" 想象一下，如果你有一堆重要的文件——照片、文档、音乐，你会怎么存放它们？是随便扔在地上，还是按类别放进不同的文件夹里？操作系统面对硬盘上成千上万",
+    "matchType": "content"
+  },
+  {
+    "courseId": "04-05",
+    "title": "进程调度：谁该用CPU？",
+    "moduleName": "operating systems",
+    "excerpt": "id: '0405' title: '进程调度：谁该用CPU？' module: '04operatingsystems' difficulty: 3 duration: 30 prerequisites: [\"0401\"] 进程调度：谁该用CPU？ 想象一下，如果全班同学共用一台电脑，大家都想运行自己的程序，谁来用CPU呢？这就是进程调度要解决的核心问题！ 在多道程序系统中，多个进程竞争有限的C",
+    "matchType": "content"
+  },
+  {
+    "courseId": "04-06",
+    "title": "同步与互斥：线程间的\"交通规则\"",
+    "moduleName": "operating systems",
+    "excerpt": "id: '0406' title: '同步与互斥：线程间的\"交通规则\"' module: '04operatingsystems' difficulty: 4 duration: 35 prerequisites: [\"0402\"] 同步与互斥：线程间的\"交通规则\" 想象一下，如果没有交通规则，所有车辆都随意行驶会怎样？撞车、堵死、混乱不堪！多线程编程也是如此——当多个线程同时修改同一个变量时，会",
+    "matchType": "content"
+  },
+  {
+    "courseId": "05-01",
+    "title": "SQL基础：和数据对话的语言",
+    "moduleName": "数据库",
+    "slug": "lesson-01-sql-basics",
+    "excerpt": "title: SQL基础：和数据对话的语言 module: 05databases difficulty: ⭐⭐ duration: 25分钟 0501 SQL基础：和数据对话的语言 开场白 同学们好！今天我们来学习一门特殊的语言——SQL（Structured Query Language，结构化查询语言）。 你有没有想过，当你打开淘宝搜索\"笔记本电脑\"时，数据库是如何在几毫秒内从几十亿件商品中",
+    "matchType": "content"
+  },
+  {
+    "courseId": "05-02",
+    "title": "索引：让查询飞起来的秘密",
+    "moduleName": "数据库",
+    "slug": "lesson-02-advanced-index",
+    "excerpt": "0502 索引：让查询飞起来的秘密 开场白 想象一下，你要在一本1000页的字典中查找某个单词。如果没有索引，你可能需要一页一页地翻阅，直到找到目标单词——这显然效率极低！但如果有按字母顺序排列的索引，你就能快速定位到目标页面。 数据库索引就是这样的\"魔法目录\"！在没有索引的情况下，数据库需要扫描整个表（全表扫描）来找到匹配的数据，时间复杂度是O(n)。而有了合适的索引，查询时间可以降低到O(lo",
+    "matchType": "content"
+  },
+  {
+    "courseId": "05-03",
+    "title": "事务：要么全做，要么全不做",
+    "moduleName": "数据库",
+    "slug": "lesson-03-transaction",
+    "excerpt": "import { Exercise, Quiz } from \"@course/components\"; 0503 事务：要么全做，要么全不做 想象一下这样的场景：你正在银行进行一笔转账，把1000元从账户A转到账户B。系统开始执行转账操作——首先从账户A扣除了1000元，但就在准备给账户B增加1000元的时候，突然停电了！现在钱从A账户消失了，但B账户却没收到，这笔钱去了哪里？ 这就是为什么我们",
+    "matchType": "content"
+  },
+  {
+    "courseId": "05-04",
+    "title": "数据库范式：数据组织的艺术",
+    "moduleName": "数据库",
+    "slug": "lesson-04-normalization",
+    "excerpt": "title: \"数据库范式：数据组织的艺术\" description: \"学习数据库范式的原理、应用和最佳实践，掌握如何设计高效、一致的数据库结构。\" 数据库范式：数据组织的艺术 数据库设计不仅仅是创建表格和字段，更是一门艺术。良好的数据库设计能够确保数据的一致性、减少冗余，并提高查询性能。而数据库范式（Normalization）就是这门艺术的核心理论基础。 1. 开场白：为什么数据库设计如此重",
+    "matchType": "content"
+  },
+  {
+    "courseId": "05-05",
+    "title": "查询优化：为什么查询这么慢",
+    "moduleName": "数据库",
+    "slug": "lesson-05-query-optimization",
+    "excerpt": "title: \"0505 查询优化：为什么查询这么慢\" difficulty: \"⭐⭐⭐⭐\" import Exercise from \"@site/src/components/Exercise\"; import Challenge from \"@site/src/components/Challenge\"; 0505 查询优化：为什么查询这么慢 1. 开场白 想象一下这样的场景：你的应用上线后",
+    "matchType": "content"
+  },
+  {
+    "courseId": "06-01",
+    "title": "TCP/IP协议栈：互联网的基石",
+    "moduleName": "computer networks",
+    "excerpt": "id: '0601' title: 'TCP/IP协议栈：互联网的基石' module: '06computernetworks' difficulty: 2 duration: 25 prerequisites: [] TCP/IP协议栈：互联网的基石 当你在浏览器输入google.com并按下回车，发生了什么？ 开场白 想象一下，你坐在家里，手指轻点键盘输入\"google.com\"，瞬间就能看",
+    "matchType": "content"
+  },
+  {
+    "courseId": "06-02",
+    "title": "HTTP协议：浏览器的\"语言\"",
+    "moduleName": "computer networks",
+    "excerpt": "id: '0602' title: 'HTTP协议：浏览器的\"语言\"' module: '06computernetworks' difficulty: 2 duration: 20 prerequisites: [\"0601\"] HTTP协议：浏览器的\"语言\" 每次点击链接，你的浏览器都在说一种语言——这就是HTTP（超文本传输协议）！它就像互联网世界的通用语，让浏览器和服务器能够愉快地交流。 ",
+    "matchType": "content"
+  },
+  {
+    "courseId": "06-03",
+    "title": "DNS：域名背后的\"电话簿\"",
+    "moduleName": "computer networks",
+    "excerpt": "id: '0603' title: 'DNS：域名背后的\"电话簿\"' module: '06computernetworks' difficulty: 2 duration: 20 prerequisites: ['0601'] DNS：域名背后的\"电话簿\" 想象一下，如果你要给朋友打电话，但你必须记住他们家的完整地址（街道号、城市、邮编），而不是简单地记住他们的名字，那会有多麻烦？互联网世界也面",
+    "matchType": "content"
+  },
+  {
+    "courseId": "06-04",
+    "title": "WebSocket：实时通信的桥梁",
+    "moduleName": "computer networks",
+    "excerpt": "id: '0604' title: 'WebSocket：实时通信的桥梁' module: '06computernetworks' difficulty: 3 duration: 30 prerequisites: [\"0602\"] WebSocket：实时通信的桥梁 想象一下，你正在和朋友用微信聊天，对方发来的消息几乎是瞬间就显示在你的屏幕上，完全不需要你手动刷新页面。这背后就是WebSock",
+    "matchType": "content"
+  },
+  {
+    "courseId": "06-05",
+    "title": "网络安全：如何保护你的数据",
+    "moduleName": "computer networks",
+    "excerpt": "id: '0605' title: '网络安全：如何保护你的数据' module: '06computernetworks' difficulty: 3 duration: 30 prerequisites: [\"0601\"] 网络安全：如何保护你的数据 想象一下，你的银行账户密码是\"123456\"，而黑客正在用自动化工具每秒尝试数百万个密码组合。这听起来像是电影情节？实际上，这就是每天在互联网上",
+    "matchType": "content"
+  },
+  {
+    "courseId": "07-01",
+    "title": "Python入门：编程的第一把钥匙",
+    "moduleName": "编程语言",
+    "slug": "lesson-01-python-basics",
+    "excerpt": "id: '0701' title: 'Python入门：编程的第一把钥匙' module: '07programminglanguages' difficulty: 1 duration: 30 prerequisites: [] Python入门：编程的第一把钥匙 想象一下，如果你能用接近英语的方式告诉计算机做什么，而不是一堆复杂的符号和规则，那该多好？这就是Python的魅力！Python为什",
+    "matchType": "content"
+  },
+  {
+    "courseId": "07-02",
+    "title": "Go并发：轻量级线程的艺术",
+    "moduleName": "programming languages",
+    "excerpt": "id: '0702' title: 'Go并发：轻量级线程的艺术' module: '07programminglanguages' difficulty: 3 duration: 35 prerequisites: ['0402'] Go并发：轻量级线程的艺术 为什么Go只用几行代码就能实现百万并发？秘密就藏在goroutine这个轻量级线程里！ 开场白 想象一下，你是一家餐厅的老板。传统的多线",
+    "matchType": "content"
+  },
+  {
+    "courseId": "07-03",
+    "title": "TypeScript：给JavaScript加上类型铠甲",
+    "moduleName": "编程语言",
+    "slug": "lesson-03-typescript",
+    "excerpt": "id: '0703' title: 'TypeScript：给JavaScript加上类型铠甲' module: '07programminglanguages' difficulty: 2 duration: 25 prerequisites: ['0701'] TypeScript：给JavaScript加上类型铠甲 JavaScript的undefined错误让你崩溃过吗？半夜被\"Canno",
+    "matchType": "content"
+  },
+  {
+    "courseId": "07-04",
+    "title": "Rust：内存安全的系统编程",
+    "moduleName": "programming languages",
+    "excerpt": "id: '0704' title: 'Rust：内存安全的系统编程' module: '07programminglanguages' difficulty: 4 duration: 40 prerequisites: ['0103'] Rust：内存安全的系统编程 想象一下，你正在建造一座摩天大楼，但每次有人进入电梯，你都必须确保他们不会把整栋楼弄塌。听起来很疯狂对吧？但在系统编程世界里，这正是",
+    "matchType": "content"
+  },
+  {
+    "courseId": "07-05",
+    "title": "设计模式：前辈们的智慧结晶",
+    "moduleName": "programming languages",
+    "excerpt": "id: '0705' title: '设计模式：前辈们的智慧结晶' module: '07programminglanguages' difficulty: 3 duration: 35 prerequisites: [\"0701\"] 设计模式：前辈们的智慧结晶 每个程序员都写过类似的代码，为什么总要重复？  💡 思考问题: 你是否曾经发现自己在不同的项目中反复编写相似的代码结构？这些重复背后隐",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-01",
+    "title": "机器学习：让机器学会思考",
+    "moduleName": "ai ml",
+    "excerpt": "id: '0801' title: '机器学习：让机器学会思考' module: '08aiml' difficulty: 2 duration: 30 prerequisites: ['0701'] 机器学习：让机器学会思考 想象一下，Netflix是怎么知道你喜欢看什么电影的？亚马逊又是如何猜中你下次想买什么的？这些神奇的\"读心术\"背后，就是我们今天要探索的——机器学习！  💡 思考问题: ",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-02",
+    "title": "神经网络：模拟大脑的算法",
+    "moduleName": "ai ml",
+    "excerpt": "id: '0802' title: '神经网络：模拟大脑的算法' module: '08aiml' difficulty: 3 duration: 35 prerequisites: ['0801'] 神经网络：模拟大脑的算法 人脑有860亿个神经元，计算机能模拟吗？ 开场白 想象一下，你的大脑里有860亿个神经元，它们通过复杂的连接网络处理信息，让你能够思考、学习、记忆。那么，我们能否用计算机来",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-03",
+    "title": "大模型原理：ChatGPT是如何工作的",
+    "moduleName": "AI/ML基础",
+    "slug": "lesson-03-llm",
+    "excerpt": "title: \"0803 大模型原理：ChatGPT是如何工作的\" description: \"深入理解大语言模型的核心原理，包括Transformer架构、注意力机制和实际应用\" 0803 大模型原理：ChatGPT是如何工作的 1. 开场白 想象一下，你正在和一个无所不知的朋友聊天。无论你问什么问题——从复杂的数学公式到烹饪技巧，从历史事件到未来预测——这个朋友都能给出流畅、连贯的回答。这听起",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-04",
+    "title": "深度学习：CNN与图像识别",
+    "moduleName": "AI/ML基础",
+    "slug": "lesson-04-deep-learning",
+    "excerpt": "0804 深度学习：CNN与图像识别 1. 开场白  从图像识别到自动驾驶，深度学习如何改变世界 大家好！欢迎来到深度学习的世界！🤖 想象一下：你的手机能自动识别人脸、自动驾驶汽车能识别道路上的行人和交通标志、医疗AI能从X光片中发现疾病的早期迹象——这些看似科幻的场景，如今都已成为现实。而这一切的背后，都有一个共同的英雄：卷积神经网络（CNN）。 深度学习，特别是CNN，彻底改变了我们处理图像",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-05",
+    "title": "自然语言处理：让机器理解语言",
+    "moduleName": "AI/ML基础",
+    "slug": "lesson-05-nlp",
+    "excerpt": "0805 自然语言处理：让机器理解语言 1. 开场白  从Siri到ChatGPT，NLP如何改变了人机交互 想象一下，十年前我们还需要记住复杂的命令行语法才能与计算机交流，而今天，我们只需要对手机说\"嘿 Siri，明天天气怎么样？\"就能得到答案。自然语言处理（Natural Language Processing, NLP）正是实现这种神奇转变的核心技术！ 从智能助手到自动翻译，从垃圾邮件过滤到",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-06",
+    "title": "强化学习：从AlphaGo到自动驾驶",
+    "moduleName": "AI/ML基础",
+    "slug": "lesson-06-reinforcement-learning",
+    "excerpt": "0806 强化学习：从AlphaGo到自动驾驶 1. 开场白 2016年，AlphaGo击败了世界围棋冠军李世石，震惊了全世界。这个里程碑事件展示了强化学习在复杂决策问题上的强大能力。从那时起，强化学习已经从棋盘游戏扩展到自动驾驶、机器人控制、金融交易等众多领域。 强化学习的核心思想很简单：智能体通过与环境的交互来学习如何做出最优决策。它不像监督学习那样需要标注数据，也不像无监督学习那样只寻找数据",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-07",
+    "title": "生成式AI：从GAN到Diffusion",
+    "moduleName": "AI/ML基础",
+    "slug": "lesson-07-generative-ai",
+    "excerpt": "0807 生成式AI：从GAN到Diffusion 开场白 大家好！欢迎来到生成式AI的奇妙世界！🎨 想象一下：一幅由AI创作的艺术作品在佳士得拍卖会上以43.2万美元成交；Stable Diffusion让你只需输入文字就能生成惊艳的图像；DALLE能够理解复杂的视觉概念并创造前所未有的组合。这些曾经只存在于科幻小说中的场景，如今已经成为我们日常生活的一部分。 生成式AI正在以前所未有的速度改",
+    "matchType": "content"
+  },
+  {
+    "courseId": "08-08",
+    "title": "MLOps：模型从实验到生产",
+    "moduleName": "AI/ML基础",
+    "slug": "lesson-08-mlops",
+    "excerpt": "开场白 想象一下这样的场景：你的团队在Jupyter笔记本中开发了一个情感分析模型，准确率高达95%，每个人都为之欢呼。然而，当这个模型部署到生产环境中后，准确率骤降到60%，用户投诉不断。问题出在哪里？ 这正是MLOps要解决的核心问题——实验环境与生产环境之间的鸿沟。在笔记本中，我们有完美的数据、受控的环境和即时的反馈。但在生产环境中，数据会漂移、系统会变化、用户行为会演进。没有MLOps，再",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-01",
+    "title": "前端基础：构建用户界面",
+    "moduleName": "Web开发",
+    "slug": "lesson-01-frontend",
+    "excerpt": "title: \"0901 前端基础：构建用户界面\" description: \"学习前端开发的核心概念，掌握HTML、CSS、JavaScript三剑客，理解现代Web应用的构建原理。\" 0901 前端基础：构建用户界面 1. 开场白 🌟 想象一下，当你打开一个网站时，首先映入眼帘的是什么？是精美的布局、流畅的动画，还是直观的交互？这些用户直接看到和感受到的部分，就是前端开发的魔力所在！ 前端开",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-02",
+    "title": "后端API设计：服务器端的秘密",
+    "moduleName": "Web开发",
+    "slug": "lesson-02-api-design",
+    "excerpt": "title: \"后端API设计：服务器端的秘密\" description: \"掌握RESTful API设计原则，理解HTTP状态码和路由设计，能够使用Python构建API服务\" 后端API设计：服务器端的秘密 你好啊！👋 今天我们要一起揭开后端API设计的神秘面纱。想象一下，当你在手机上刷微博、在网页上看视频、或者用各种App时，背后都有无数个API在默默工作，就像城市的地下管道系统一样，虽",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-03",
+    "title": "React深度：状态管理与性能优化",
+    "moduleName": "Web开发",
+    "slug": "lesson-03-react-deep",
+    "excerpt": "title: React深度：状态管理与性能优化 description: 深入理解React的状态管理机制和性能优化技术，掌握构建高性能React应用的核心技能。 开场白 想象一下，你正在开发一个电商网站的商品列表页面。最初，页面加载迅速，交互流畅。但随着功能不断增加——用户筛选、排序、购物车状态同步、主题切换——页面开始变得迟钝，点击响应变慢，滚动出现卡顿。 你的团队紧急开会，讨论性能问题。有",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-04",
+    "title": "现代前端工具链：从Webpack到Vite",
+    "moduleName": "Web开发",
+    "slug": "lesson-04-frontend-toolchain",
+    "excerpt": "title: 现代前端工具链：从Webpack到Vite 开场白 想象一下，你刚刚开始学习前端开发。你创建了一个简单的 HTML 文件，引入了一些 CSS 和 JavaScript，一切都很美好。但很快，你的项目开始膨胀：你需要支持新的 JavaScript 特性、处理模块依赖、优化图片、压缩代码、进行代码检查...突然间，你发现自己花了更多时间配置工具而不是编写实际功能！ 这就是现代前端开发的现",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-05",
+    "title": "全栈框架：Next.js/Remix",
+    "moduleName": "Web开发",
+    "slug": "lesson-05-fullstack",
+    "excerpt": "0905 全栈框架：Next.js/Remix 开场白 大家好！欢迎来到全栈框架的世界！🚀 想象一下这样的场景：你开发了一个漂亮的单页应用（SPA），用户界面流畅，交互体验极佳。但是，当你把网站分享给朋友时，却发现社交媒体预览显示的只是一片空白；当你查看Google Analytics时，发现搜索引擎几乎无法索引你的页面内容；当用户在网络环境较差的地区访问时，需要等待很长时间才能看到任何内容。 ",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-06",
+    "title": "前端测试：Jest/Cypress",
+    "moduleName": "Web开发",
+    "slug": "lesson-06-frontend-testing",
+    "excerpt": "import { Exercise, Quiz, Challenge } from \"@components/course\"; 开场白 在现代Web开发中，测试已经不再是可选项，而是确保应用质量和可靠性的必备环节。想象一下，你正在开发一个电商网站，用户点击\"购买\"按钮后却没有任何反应——这种bug可能会直接导致收入损失。前端测试就是我们的防护网，帮助我们在代码部署到生产环境之前发现并修复这些问题。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-07",
+    "title": "移动端开发：响应式与PWA",
+    "moduleName": "Web开发",
+    "slug": "lesson-07-mobile-dev",
+    "excerpt": "0907 移动端开发：响应式与PWA 开场白  从桌面到掌心，移动Web的革命性转变 大家好！欢迎来到移动端开发的世界！📱 想象一下：十年前，我们还在为不同分辨率的桌面显示器调整网站布局；今天，我们的应用需要在从智能手表到平板电脑的各种设备上完美运行。这种转变不仅仅是屏幕尺寸的变化，更是用户交互方式、网络环境和性能要求的根本性变革。 移动端开发已经不再是\"适配\"的概念，而是\"原生优先\"的设计哲学",
+    "matchType": "content"
+  },
+  {
+    "courseId": "09-08",
+    "title": "Web性能优化：速度就是体验",
+    "moduleName": "Web开发",
+    "slug": "lesson-08-web-perf",
+    "excerpt": "0908 Web性能优化：速度就是体验 开场白  为什么Web性能如此重要？ 大家好！欢迎来到Web性能优化的世界！⚡ 想象一下：你点击一个网站，3秒内页面完全加载并可以交互；图片清晰流畅，滚动丝般顺滑，没有任何布局跳动。这就是优秀的Web性能带来的体验。 但现实往往相反：页面加载缓慢、按钮点击无响应、内容突然跳动...这些都会让用户流失。研究表明，页面加载时间每增加1秒，转化率就下降7%。在移动",
+    "matchType": "content"
+  },
+  {
+    "courseId": "10-01",
+    "title": "微服务与分布式：大厂都在用的架构",
+    "moduleName": "系统架构",
+    "slug": "lesson-01-microservices",
+    "excerpt": "1001 微服务与分布式：大厂都在用的架构 1. 开场白 想象一下，你正在建造一座摩天大楼。你可以选择建造一个巨大的、单一的结构（单体架构），也可以选择建造多个独立但相互连接的小型建筑（微服务架构）。在软件世界中，我们面临着同样的选择。 传统的单体应用就像一栋完整的摩天大楼——所有功能都在同一个代码库中，部署在一起。而微服务架构则将应用拆分成多个小型、独立的服务，每个服务负责特定的业务功能。 为什",
+    "matchType": "content"
+  },
+  {
+    "courseId": "10-02",
+    "title": "消息队列：Kafka/RabbitMQ实战",
+    "moduleName": "系统架构",
+    "slug": "lesson-02-message-queue",
+    "excerpt": "title: 消息队列：Kafka/RabbitMQ实战 description: 深入理解消息队列的核心概念、架构差异和实际应用场景 开场白 想象一下，你正在运营一个电商平台。某天，系统突然收到了前所未有的订单洪流——可能是某个热门商品的限时抢购活动。订单服务每秒接收数千个请求，需要同时处理库存扣减、支付验证、物流调度和用户通知。 如果没有消息队列，会发生什么？订单服务必须同步调用所有下游服务，",
+    "matchType": "content"
+  },
+  {
+    "courseId": "10-03",
+    "title": "缓存策略：Redis/Memcached",
+    "moduleName": "系统架构",
+    "slug": "lesson-03-caching",
+    "excerpt": "title: 缓存策略：Redis/Memcached module: 系统架构 difficulty: ⭐⭐⭐ duration: 30分钟 开场白 想象一下，你正在运营一个热门的电商平台。在双十一大促期间，你的网站每秒要处理成千上万的用户请求。每个用户都要查看商品详情、价格、库存等信息。如果没有缓存，每次请求都要查询数据库，数据库很快就会不堪重负，响应时间从毫秒级变成秒级，甚至直接宕机。 这就",
+    "matchType": "content"
+  },
+  {
+    "courseId": "10-04",
+    "title": "CDN与边缘计算：加速全球访问",
+    "moduleName": "系统架构",
+    "slug": "lesson-04-cdn-edge",
+    "excerpt": "开场白 想象一下，你正在访问一个全球知名的电商网站，无论你身在东京、纽约还是伦敦，页面都能在不到1秒内加载完成。这背后的技术魔法就是CDN（内容分发网络）和边缘计算。在今天的课程中，我们将深入探索这些技术如何让互联网体验变得如此流畅。 随着全球化应用的普及，用户分布在全球各地，传统的单一服务器架构已经无法满足低延迟、高可用的需求。CDN通过在全球部署边缘节点，将内容缓存到离用户最近的位置；而边缘计",
+    "matchType": "content"
+  },
+  {
+    "courseId": "10-05",
+    "title": "可观测性：日志/指标/链路追踪",
+    "moduleName": "系统架构",
+    "slug": "lesson-05-observability",
+    "excerpt": "title: 可观测性：日志/指标/链路追踪 description: 深入理解分布式系统中的可观测性三大支柱：日志、指标和链路追踪 开场白 在现代分布式系统中，应用通常由数十甚至数百个微服务组成，跨越多个数据中心和云平台。当用户遇到问题时，传统的调试方法往往力不从心——你无法简单地\"登录服务器查看日志\"，因为请求可能经过了多个服务，每个服务都有自己的日志和指标。 可观测性（Observabili",
+    "matchType": "content"
+  },
+  {
+    "courseId": "10-06",
+    "title": "高可用架构：故障转移与灾备",
+    "moduleName": "系统架构",
+    "slug": "lesson-06-ha-architecture",
+    "excerpt": "import { Exercise, Quiz } from '@components/course' import { CodeExample, CodeSolution } from '@components/code' 高可用架构：故障转移与灾备 高可用性（High Availability, HA）是现代系统架构的核心要求之一。在当今的数字化时代，用户期望服务能够7x24小时不间断运行，任",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-01",
+    "title": "Docker容器化：从开发到部署",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-01-docker",
+    "excerpt": "1101 Docker容器化：从开发到部署 开场白  从\"在我机器上能跑\"到容器化的诞生 你是否曾经遇到过这样的场景？开发同事兴奋地说：\"我的代码完美运行！\"，但当你尝试在自己的机器上运行时，却遇到了各种依赖冲突、版本不兼容的问题。这就是经典的\"在我机器上能跑\"（It works on my machine）问题。 容器化技术正是为了解决这类环境一致性问题而诞生的。就像现实世界中的集装箱一样，Do",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-02",
+    "title": "Kubernetes编排：容器集群管理",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-02-kubernetes",
+    "excerpt": "title: \"1102 Kubernetes编排：容器集群管理\" difficulty: \"⭐⭐⭐⭐\" duration: \"40分钟\" 开场白 在现代云原生应用开发中，我们经常面临一个挑战：如何从管理几个容器扩展到管理成百上千个容器？当应用规模增长时，手动管理容器变得几乎不可能。Kubernetes（简称 K8s）正是为了解决这个规模化问题而诞生的开源容器编排平台。 想象一下，你的应用需要处理",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-03",
+    "title": "CI/CD流水线：自动化交付",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-03-cicd",
+    "excerpt": "开场白 想象一下，你是一家快速发展的科技公司的开发工程师。今天是周五下午5点，你的团队刚刚完成了一个重要的功能开发，准备部署到生产环境。按照传统的手动部署流程，你需要： 1. 手动从代码仓库拉取最新代码 2. 在本地运行所有测试（希望没有遗漏任何依赖） 3. 手动构建应用包 4. 通过SSH登录到生产服务器 5. 停止当前运行的服务 6. 上传新的应用包 7. 解压并配置新版本 8. 启动服务并验",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-04",
+    "title": "IaC基础设施即代码：Terraform",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-04-iac",
+    "excerpt": "title: \"IaC基础设施即代码：Terraform\" description: \"学习使用 Terraform 实现基础设施即代码，掌握状态管理、模块化和最佳实践\" 开场白 想象一下这个场景：你的公司刚刚获得了一笔大订单，需要在24小时内部署一个全新的Web应用。运维团队紧急召开会议，开始手动创建服务器、配置网络、安装软件...几个小时过去了，服务器终于准备好了，但应用却无法正常运行。经过排",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-05",
+    "title": "云平台对比：AWS/GCP/Azure",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-05-cloud-platforms",
+    "excerpt": "import { Exercise, Quiz } from '@components/course' 云平台对比：AWS/GCP/Azure 在当今的云计算时代，选择合适的云平台对企业的技术架构和成本控制至关重要。本课程将深入对比三大主流云服务商：Amazon Web Services (AWS)、Google Cloud Platform (GCP) 和 Microsoft Azure，帮助你",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-06",
+    "title": "Serverless：无服务器架构",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-06-serverless",
+    "excerpt": "title: Serverless：无服务器架构 description: 深入理解Serverless架构的核心概念、应用场景和最佳实践 开场白 在云计算时代，我们见证了从物理服务器到虚拟机，再到容器的演进。而Serverless（无服务器）架构代表了下一个重大飞跃——开发者可以完全专注于业务逻辑，而无需关心底层基础设施的管理。 想象一下，你正在构建一个图片处理服务。传统方式需要购买服务器、配置",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-07",
+    "title": "GitOps：声明式运维",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-07-gitops",
+    "excerpt": "import { Exercise, Quiz } from '@components' 开场白 在现代软件开发中，基础设施即代码（Infrastructure as Code）已经成为标准实践。然而，如何有效地管理和部署这些基础设施配置仍然是一个挑战。GitOps 应运而生，它将 Git 作为单一事实源（Single Source of Truth），通过声明式的方式管理整个系统的状态。本课程将",
+    "matchType": "content"
+  },
+  {
+    "courseId": "11-08",
+    "title": "可观测性：日志、指标与链路追踪",
+    "moduleName": "DevOps与云原生",
+    "slug": "lesson-08-monitoring",
+    "excerpt": "1108 可观测性：日志、指标与链路追踪 开场白 大家好！欢迎来到可观测性的世界！🔍 想象一下：你的微服务应用突然出现性能问题，用户抱怨页面加载缓慢；生产环境出现了偶发性错误，但你无法复现；新上线的功能导致系统资源消耗激增，却找不到根本原因。在现代分布式系统中，这些问题每天都在发生。 可观测性（Observability）就是解决这些问题的关键。它不仅仅是传统的监控，而是一种能够让你深入理解系统",
+    "matchType": "content"
+  },
+  {
+    "courseId": "12-01",
+    "title": "密码学基础：加密与解密",
+    "moduleName": "安全与密码学",
+    "slug": "lesson-01-crypto-basics",
+    "excerpt": "1201 密码学基础：加密与解密 1. 开场白  从凯撒密码到现代加密，信息安全的基石 🔐 欢迎来到密码学的世界！ 想象一下，你有一封重要的信件需要发送给远方的朋友，但又担心路上被别人偷看。你会怎么做？古罗马的凯撒大帝就面临过同样的问题——他发明了著名的凯撒密码，通过将字母表中的每个字母向前移动固定位置来加密信息。  \"VENI VIDI VICI\"（我来，我见，我征服）用凯撒密码（偏移3位）就",
+    "matchType": "content"
+  },
+  {
+    "courseId": "12-02",
+    "title": "公钥基础设施：PKI与证书",
+    "moduleName": "安全与密码学",
+    "slug": "lesson-02-pki",
+    "excerpt": "1202 公钥基础设施：PKI与证书 开场白  当信任被破坏：DigiNotar 攻击事件 🔐 信任的脆弱性 2011年，荷兰证书颁发机构 DigiNotar 遭受了严重的安全攻击。攻击者成功入侵了 DigiNotar 的系统，并签发了数百个欺诈性 SSL 证书，包括针对 Google、Facebook、Twitter 等知名网站的证书。  这些恶意证书被用于对伊朗用户进行大规模的中间人攻击，监",
+    "matchType": "content"
+  },
+  {
+    "courseId": "12-03",
+    "title": "Web安全：OWASP Top 10",
+    "moduleName": "安全与密码学",
+    "slug": "lesson-03-web-security",
+    "excerpt": "Web安全：OWASP Top 10 开场白  从数据泄露事件看Web安全的重要性 近年来，数据泄露事件频发，从大型科技公司到小型创业企业都未能幸免。2023年某知名社交平台因SQL注入漏洞导致数亿用户数据泄露，造成了巨大的经济损失和声誉损害。这些事件提醒我们，Web安全不是可选项，而是每个开发者必须掌握的核心技能。 根据Verizon《2026年数据泄露调查报告》，超过80%的网络安全事件涉及W",
+    "matchType": "content"
+  },
+  {
+    "courseId": "12-04",
+    "title": "认证与授权：OAuth2/OIDC/JWT",
+    "moduleName": "安全与密码学",
+    "slug": "lesson-04-auth",
+    "excerpt": "title: 认证与授权：OAuth2/OIDC/JWT description: 深入理解现代 Web 应用的认证与授权机制 开场白 想象一下，你正在使用一个新应用，点击\"使用 Google 登录\"按钮。几秒钟后，你就成功登录了，无需注册账号或记住新密码。这背后发生了什么？ 这个看似简单的操作涉及了复杂的认证和授权流程。应用并没有直接获取你的 Google 密码，而是通过 OAuth2 协议请求",
+    "matchType": "content"
+  },
+  {
+    "courseId": "12-05",
+    "title": "安全测试：渗透测试基础",
+    "moduleName": "安全与密码学",
+    "slug": "lesson-05-pentesting",
+    "excerpt": "import { Exercise, Quiz } from '@components/course' 开场白 渗透测试（Penetration Testing），也被称为\"道德黑客\"，是一种授权的安全评估方法，通过模拟真实世界中的攻击来识别系统、网络或应用程序中的安全漏洞。在当今数字化时代，网络安全威胁日益复杂，渗透测试已成为保护关键资产不可或缺的手段。 想象一下，你是一家银行的安全团队负责人。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "12-06",
+    "title": "DevSecOps：安全融入CI/CD",
+    "moduleName": "安全与密码学",
+    "slug": "lesson-06-devsecops",
+    "excerpt": "title: DevSecOps：安全融入CI/CD description: 学习如何将安全实践集成到CI/CD管道中，实现DevSecOps 开场白 在现代软件开发中，安全不再是一个独立的阶段或团队的责任，而是贯穿整个软件开发生命周期的核心要素。想象一下，如果你的团队刚刚发布了一个新功能，却发现其中包含了一个严重的安全漏洞，导致用户数据泄露——这不仅会造成经济损失，更会损害公司的声誉和用户信任",
+    "matchType": "content"
+  },
+  {
+    "courseId": "13-01",
+    "title": "数据仓库：OLAP与Star Schema",
+    "moduleName": "数据工程",
+    "slug": "lesson-01-data-warehouse",
+    "excerpt": "数据仓库：OLAP与Star Schema 开场白  从业务报表到数据驱动决策，数据仓库的价值 在当今的数据驱动时代，企业不再仅仅依赖直觉做决策。想象一下，你的公司就像一个大型图书馆——每天都有成千上万的读者（用户）借阅书籍（产生数据），图书管理员（业务系统）忙着处理借还书事务。但如果你想了解\"哪些类型的书籍最受欢迎？\"、\"读者的阅读习惯如何变化？\"这类问题，就需要一个专门的数据仓库。 数据仓库就",
+    "matchType": "content"
+  },
+  {
+    "courseId": "13-02",
+    "title": "ETL流程：数据管道的构建",
+    "moduleName": "数据工程",
+    "slug": "lesson-02-etl",
+    "excerpt": "import { CodeExample } from '@/components/CodeExample' import { Quiz } from '@/components/Quiz' import { Challenge } from '@/components/Challenge' 开场白 想象一下这样的场景：某知名电商平台的营销团队基于错误的销售数据做出了重大决策。他们发现上个月的\"爆",
+    "matchType": "content"
+  },
+  {
+    "courseId": "13-03",
+    "title": "大数据基础：Hadoop与Spark",
+    "moduleName": "数据工程",
+    "slug": "lesson-03-hadoop-spark",
+    "excerpt": "title: \"大数据基础：Hadoop与Spark\" description: \"学习 Hadoop 和 Spark 大数据处理框架的核心概念和实践应用\" 开场白 想象一下，你是一家大型电商平台的数据工程师。每天，你的系统需要处理超过 10亿条 用户行为日志，包括页面浏览、商品点击、购物车添加和订单完成等操作。这些日志数据总量达到 TB级别，传统的单机数据库和处理工具根本无法在合理时间内完成分析",
+    "matchType": "content"
+  },
+  {
+    "courseId": "13-04",
+    "title": "流式处理：Flink/Spark Streaming",
+    "moduleName": "数据工程",
+    "slug": "lesson-04-streaming",
+    "excerpt": "title: 流式处理：Flink/Spark Streaming description: 深入理解流式处理的核心概念、窗口机制、水印处理和实际应用场景 开场白 在当今的数据驱动世界中，实时数据处理已成为许多关键业务应用的核心需求。想象一下信用卡欺诈检测系统需要在毫秒级别内识别异常交易，或者电商平台需要实时更新用户推荐内容——这些场景都无法等待传统的批处理作业完成。 流式处理（Stream Pr",
+    "matchType": "content"
+  },
+  {
+    "courseId": "13-05",
+    "title": "数据湖：现代数据架构",
+    "moduleName": "数据工程",
+    "slug": "lesson-05-data-lake",
+    "excerpt": "import { Exercise, Quiz } from '@components' 开场白 在现代数据架构中，数据湖（Data Lake）已经成为处理海量、多样化数据的核心组件。随着企业数据量的爆炸式增长和数据类型的日益复杂，传统的数据仓库已经难以满足所有需求。数据湖提供了一种灵活、可扩展的解决方案，能够存储结构化、半结构化和非结构化数据，为机器学习、高级分析和实时处理提供支持。 本课程将带",
+    "matchType": "content"
+  },
+  {
+    "courseId": "13-06",
+    "title": "数据治理：质量、血缘与目录",
+    "moduleName": "数据工程",
+    "slug": "lesson-06-data-governance",
+    "excerpt": "import LessonHeader from '@components/LessonHeader'; import CodeBlock from '@components/CodeBlock'; import Quiz from '@components/Quiz'; import Challenge from '@components/Challenge'; <LessonHeader   ",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-01",
+    "title": "版本控制进阶：Git工作流",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-01-git-advanced",
+    "excerpt": "1401 版本控制进阶：Git工作流 1. 开场白 在个人项目中，我们可能只需要简单的  和  就能完成版本控制。然而，当项目规模扩大、团队成员增多时，如何高效地协作开发、管理代码变更、确保发布质量就成为了关键挑战。 Git 工作流（Git Workflow）正是为了解决这些问题而生。它不仅仅是一套 Git 命令的组合，更是一种团队协作的规范和最佳实践。通过合理的工作流设计，我们可以：  提高开发",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-02",
+    "title": "代码审查：提升代码质量的利器",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-02-code-review",
+    "excerpt": "title: \"代码审查：提升代码质量的利器\" description: \"学习代码审查的最佳实践、工具和方法，掌握如何通过有效的代码审查提升团队代码质量和协作效率。\" 开场白 想象一下这样的场景：一个看似无害的代码变更被合并到生产环境，几天后，公司的支付系统突然开始向客户重复收费。经过紧急排查，发现是一个简单的边界条件错误——当用户余额恰好为零时，系统会无限循环扣款。 幸运的是，在另一个团队中，",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-03",
+    "title": "测试金字塔：单元/集成/E2E",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-03-testing-pyramid",
+    "excerpt": "import { Exercise, Quiz } from '@site/src/components/course' 测试金字塔：单元/集成/E2E 在软件开发中，测试是确保代码质量的关键环节。但并非所有测试都是平等的——我们需要一个战略性的测试方法来最大化测试的价值同时控制成本。这就是测试金字塔的核心思想。 开场白 想象一下你正在建造一座高楼大厦。你会先从地基开始，然后逐层向上建造。地基必须",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-04",
+    "title": "TDD：测试驱动开发实践",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-04-tdd",
+    "excerpt": "TDD：测试驱动开发实践 开场白 在软件开发中，我们经常面临这样的困境：代码写完后才发现有bug，修复一个bug又引入了新的bug，或者面对复杂的业务逻辑时不知从何下手。测试驱动开发（TestDriven Development, TDD）正是解决这些问题的有效方法。 TDD不仅仅是一种测试技术，更是一种设计哲学和开发流程。它通过\"先写测试，再写实现\"的方式，帮助我们写出更高质量、更可维护的代码。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-05",
+    "title": "文档即代码：Markdown/Diagrams",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-05-docs-as-code",
+    "excerpt": "文档即代码：Markdown/Diagrams 开场白 在软件开发中，文档常常被称为\"被遗忘的艺术\"。我们都知道文档的重要性——它帮助新团队成员快速上手，为用户提供了使用指南，记录了系统的设计决策。然而，在实际项目中，文档往往要么缺失，要么过时，最终变成维护的负担。 为什么会出现这种情况？主要原因是我们传统上将文档视为与代码分离的产物。文档写在Word文档、Wiki页面或静态HTML中，与代码库脱",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-06",
+    "title": "敏捷开发：Scrum与看板",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-06-agile",
+    "excerpt": "1406 敏捷开发：Scrum与看板 开场白 大家好！欢迎来到敏捷开发的世界！🚀 在当今快速变化的软件行业中，传统的瀑布式开发方法已经难以满足市场对速度和灵活性的需求。想象一下：你的竞争对手每两周就能发布新功能，而你的团队还在为一个六个月前规划的功能苦苦挣扎——这正是许多传统开发团队面临的困境。 敏捷开发应运而生，它不仅仅是一套方法论，更是一种思维方式的转变。从僵化的计划驱动到灵活的价值驱动，从",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-07",
+    "title": "技术债务：识别与管理",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-07-tech-debt",
+    "excerpt": "1407 技术债务：识别与管理 开场白 大家好！欢迎来到技术债务的世界！💼 想象一下：你的团队正在开发一个新功能，但每次修改代码都会引发意想不到的bug；系统越来越难以维护，新人需要数周才能理解现有架构；部署变得越来越频繁地失败，修复问题的时间超过了开发新功能的时间。这些都不是偶然现象，而是技术债务在作祟。 技术债务就像金融债务一样——有时候它是必要的投资，但如果不加以管理，利息会不断累积，最终",
+    "matchType": "content"
+  },
+  {
+    "courseId": "14-08",
+    "title": "技术面试：算法、系统与行为",
+    "moduleName": "软件工程实践",
+    "slug": "lesson-08-tech-interview",
+    "excerpt": "1408 技术面试：算法、系统与行为 开场白  技术面试的艺术与科学 大家好！欢迎来到技术面试准备课程！🎯 想象一下：你正在面对一位资深工程师的面试，需要在45分钟内展示你的编码能力、系统设计思维和解决问题的方法。这不仅是对你技术知识的考验，更是对你沟通能力、思维清晰度和压力管理的综合评估。 技术面试已经成为软件工程职业发展的关键环节。从硅谷巨头到初创公司，从远程工作到现场面试，掌握面试技巧能让",
+    "matchType": "content"
+  },
+  {
+    "courseId": "15-01",
+    "title": "区块链与Web3：去中心化的世界",
+    "moduleName": "新兴技术前沿",
+    "slug": "lesson-01-blockchain",
+    "excerpt": "1501 区块链与Web3：去中心化的世界 1. 开场白  从比特币到DeFi，区块链技术如何重塑信任 想象一下，如果我们可以建立一个不需要银行、政府或其他中介机构就能安全转移价值和信息的系统。这就是区块链技术的革命性所在！从2009年比特币的诞生开始，区块链已经从单纯的加密货币扩展到了金融、供应链、数字身份等各个领域。 区块链的核心思想是创建一个去中心化的、不可篡改的账本，让参与者能够在没有相互",
+    "matchType": "content"
+  },
+  {
+    "courseId": "15-02",
+    "title": "物联网IoT：万物互联",
+    "moduleName": "新兴技术前沿",
+    "slug": "lesson-02-iot",
+    "excerpt": "1502 物联网IoT：万物互联 开场白 大家好！欢迎来到物联网的世界！🌐 想象一下：你的家能自动调节温度和照明、工厂的机器能预测性维护避免停机、农田能根据土壤状况自动灌溉、城市的交通灯能根据实时车流优化信号——这些不再是科幻小说，而是物联网（Internet of Things, IoT）带来的现实。 物联网正在以前所未有的速度连接我们的世界。从智能手表到工业传感器，从智能家居到智慧城市，数十",
+    "matchType": "content"
+  },
+  {
+    "courseId": "15-03",
+    "title": "边缘计算：靠近数据的地方",
+    "moduleName": "新兴技术前沿",
+    "slug": "lesson-03-edge-computing",
+    "excerpt": "1503 边缘计算：靠近数据的地方 开场白 大家好！欢迎来到边缘计算的世界！🌐 想象一下：自动驾驶汽车在毫秒级时间内做出避障决策、智能工厂的机器人实时响应生产线异常、智慧城市的交通灯根据实时车流自动调节——这些场景的背后，都有一个共同的技术基石：边缘计算（Edge Computing）。 在云计算时代，我们将所有数据发送到遥远的数据中心处理。但随着物联网设备爆发式增长和对实时性要求的提高，这种\"",
+    "matchType": "content"
+  },
+  {
+    "courseId": "15-04",
+    "title": "量子计算：下一代算力",
+    "moduleName": "新兴技术前沿",
+    "slug": "lesson-04-quantum",
+    "excerpt": "title: 量子计算：下一代算力 description: 探索量子计算的基本原理、核心概念和实际应用 开场白 想象一下，有一种计算机可以在几秒钟内破解当今最安全的加密算法，或者在几分钟内模拟复杂的分子结构来加速新药研发。这听起来像是科幻小说，但这就是量子计算带来的革命性潜力。 在过去的几十年里，经典计算机遵循摩尔定律不断进步，但物理极限正在逼近。量子计算利用量子力学的奇特性质——叠加和纠缠——",
+    "matchType": "content"
+  },
+  {
+    "courseId": "15-05",
+    "title": "WebAssembly：浏览器中的高性能代码",
+    "moduleName": "新兴技术前沿",
+    "slug": "lesson-05-wasm",
+    "excerpt": "1505 WebAssembly：浏览器中的高性能代码 开场白  从游戏引擎到图像处理，WebAssembly如何重塑Web性能 大家好！欢迎来到 WebAssembly 的世界！🚀 想象一下：在浏览器中运行 AutoCAD 这样的专业设计软件、实时处理 4K 视频、运行完整的游戏引擎、甚至在网页中执行机器学习推理——这些曾经被认为不可能的任务，如今都已成为现实。而这一切的背后，都有一个共同的功",
+    "matchType": "content"
+  },
+  {
+    "courseId": "15-06",
+    "title": "AR/VR：沉浸式技术的未来",
+    "moduleName": "新兴技术前沿",
+    "slug": "lesson-06-ar-vr",
+    "excerpt": "1506 AR/VR：沉浸式技术的未来 开场白  走进虚拟与现实交融的新世界 大家好！欢迎来到AR/VR的世界！🕶️ 想象一下：你可以在客厅里与远在千里之外的朋友一起打乒乓球，医生可以在手术前通过全息投影预演复杂的手术过程，学生可以亲手\"触摸\"古罗马建筑的每一个细节——这些不再是科幻电影中的场景，而是AR/VR技术正在实现的现实。 增强现实（AR）和虚拟现实（VR）作为空间计算的核心技术，正在重",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-01",
+    "title": "渐近分析与摊销分析：算法效率的'放大镜'",
+    "moduleName": "算法导论",
+    "slug": "lesson-01-amortized-analysis",
+    "excerpt": "title: \"1601 渐近分析与摊销分析\" description: \"深入理解算法复杂度分析，掌握摊销分析的三种核心方法及其在实际数据结构中的应用\" 1601 渐近分析与摊销分析 1. 开场白 想象你正在经营一家自助餐厅。有些顾客吃得很少，只需要几块钱的成本；但偶尔会来一些\"大胃王\"，一顿饭要消耗几十块钱的食材。如果你按最坏情况（大胃王）来定价，大部分普通顾客会觉得太贵；但如果按平均情况定价",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-02",
+    "title": "P vs NP与NP完全性：算法的边界",
+    "moduleName": "算法导论",
+    "slug": "lesson-02-np-completeness",
+    "excerpt": "title: \"1602 P vs NP与NP完全性\" description: \"深入探索计算复杂性理论的核心问题，理解P、NP、NP完全性的定义及其在计算机科学中的重要意义\" 1602 P vs NP与NP完全性 1. 开场白 想象你是一位侦探，面对两个不同的任务： 任务A：给你一个已经完成的数独谜题，验证它是否正确。 任务B：给你一个空白的数独谜题，找出一个正确的解答。 你会发现，任务A很容",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-03",
+    "title": "随机算法：概率的力量",
+    "moduleName": "算法导论",
+    "slug": "lesson-03-randomized-algorithms",
+    "excerpt": "title: \"1603 随机算法\" description: \"探索随机算法的威力，理解Las Vegas与Monte Carlo算法的区别，掌握随机快速排序、MillerRabin素性测试和Karger最小割算法\" 1603 随机算法 1. 开场白 想象你正在玩一个猜数字的游戏。你的朋友心里想了一个1到100之间的数字，你要猜出它。如果你总是从1开始依次猜测，最坏情况下需要100次。但如果你每",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-04",
+    "title": "网络流算法",
+    "moduleName": "算法导论",
+    "slug": "lesson-04-network-flow",
+    "excerpt": "title: \"1604 网络流算法\" description: \"深入理解网络流算法，包括FordFulkerson方法、EdmondsKarp算法、最大流最小割定理及其在二分图匹配中的应用\" 1604 网络流算法 1. 开场白 想象一下你正在管理一个城市的供水系统。水从水库（源点）出发，经过复杂的管道网络，最终到达千家万户（汇点）。每根管道都有其最大承压能力，也就是它能传输的最大水量。现在的问",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-05",
+    "title": "高级字符串匹配",
+    "moduleName": "算法导论",
+    "slug": "lesson-05-advanced-string-matching",
+    "excerpt": "title: \"1605 高级字符串匹配\" description: \"深入理解KMP、RabinKarp、BoyerMoore等高级字符串匹配算法，以及后缀数组的应用\" 1605 高级字符串匹配 1. 开场白 想象一下你在使用文本编辑器的\"查找\"功能。你输入一个关键词，编辑器瞬间就能告诉你文档中所有匹配的位置。这个看似简单的功能背后，其实隐藏着许多精妙的算法！ 在计算机科学的早期，字符串匹配被认",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-06",
+    "title": "红黑树：自平衡二叉搜索树的优雅实现",
+    "moduleName": "算法导论",
+    "slug": "lesson-06-red-black-trees",
+    "excerpt": "title: \"1606 红黑树\" description: \"深入理解红黑树的原理、实现和应用\" 1606 红黑树：自平衡二叉搜索树的优雅实现 1. 开场白 想象一下，你正在管理一个大型图书馆的图书索引系统。每天都有成千上万的读者在查询书籍，同时还有新的书籍不断被添加进来。如果这个索引系统使用普通的二叉搜索树（BST），那么在最坏情况下，树可能会退化成一条链表，导致每次查询都需要O(n)的时间复",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-07",
+    "title": "近似算法：处理NP难问题的实用策略",
+    "moduleName": "算法导论",
+    "slug": "lesson-07-approximation-algorithms",
+    "excerpt": "title: \"1607 近似算法\" description: \"学习处理NP难问题的近似算法策略\" 1607 近似算法：处理NP难问题的实用策略 1. 开场白 想象你是一家快递公司的调度员，需要为100个客户规划最优的送货路线。这个问题听起来很熟悉——没错，这就是著名的旅行商问题（TSP）！理论上，你需要检查所有可能的路线组合来找到最短的一条，但100个客户的排列组合数量是100!，这个数字比宇",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-08",
+    "title": "动态规划进阶",
+    "moduleName": "算法导论",
+    "slug": "lesson-08-advanced-dp",
+    "excerpt": "title: \"1608 动态规划进阶\" description: \"深入探讨动态规划的高级技巧，包括矩阵链乘法、最优二叉搜索树、区间DP、状态压缩和优化方法\" 1608 动态规划进阶 1. 开场白 大家好！在之前的课程中，我们已经学习了动态规划的基本概念和经典问题，比如背包问题、最长公共子序列等。今天我们来深入探索动态规划的高级领域，这些内容在算法竞赛和实际工程中都有重要应用。 想象一下，你是一",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-09",
+    "title": "计算几何",
+    "moduleName": "算法导论",
+    "slug": "lesson-09-computational-geometry",
+    "excerpt": "title: \"1609 计算几何\" description: \"深入学习计算几何的核心算法，包括凸包、点定位、最近点对和扫线算法\" 1609 计算几何 1. 开场白 大家好！今天我们要进入算法世界中一个既美丽又实用的领域——计算几何。想象一下，你正在开发一个地图应用，需要判断用户是否在某个区域内；或者你在设计一个CAD软件，需要检测图形元素之间的相交关系；又或者你在做机器人路径规划，需要找到避开",
+    "matchType": "content"
+  },
+  {
+    "courseId": "16-10",
+    "title": "快速傅里叶变换FFT",
+    "moduleName": "算法导论",
+    "slug": "lesson-10-fft",
+    "excerpt": "title: \"1610 快速傅里叶变换FFT\" description: \"深入学习快速傅里叶变换的数学原理、算法实现和在多项式乘法中的应用\" 1610 快速傅里叶变换FFT 1. 开场白 大家好！今天我们要学习一个被誉为\"二十世纪十大算法之一\"的强大工具——快速傅里叶变换（Fast Fourier Transform，简称FFT）。这个算法不仅在信号处理、图像处理、音频分析等领域有着广泛应用，",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-01",
+    "title": "电压、电流与电阻：电路的三剑客",
+    "moduleName": "电路基础",
+    "slug": "lesson-01-voltage-current-resistance",
+    "excerpt": "title: 电压、电流与电阻：电路的三剑客 description: 学习电压、电流和电阻的基本概念，它们是电路分析的三要素，理解它们的关系是电路学习的基础。 电压、电流与电阻：电路的三剑客 1. 开场白：水电站里的秘密 想象一下，你正在参观一个水电站。高高的水坝蓄满了水，这些水从高处奔流而下，推动巨大的涡轮机发电。这个场景其实完美地诠释了电路中的三个核心概念！ 在电路世界里，我们也有类似的\"水",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-02",
+    "title": "欧姆定律与基尔霍夫定律：电路分析的基石",
+    "moduleName": "电路基础",
+    "slug": "lesson-02-ohm-kirchhoff",
+    "excerpt": "title: 欧姆定律与基尔霍夫定律：电路分析的基石 description: 学习欧姆定律和基尔霍夫两大定律，掌握电路分析的核心工具。 欧姆定律与基尔霍夫定律：电路分析的基石 开场白：电路世界的\"牛顿定律\" 想象一下，如果你是一位侦探，面对一个复杂的犯罪现场，你会怎么做？你可能会寻找线索、建立假设、验证理论。在电路世界里，我们也有自己的\"侦探工具\"——欧姆定律和基尔霍夫定律！它们就像是电路分析界",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-03",
+    "title": "串联与并联：电路的排列组合",
+    "moduleName": "电路基础",
+    "slug": "lesson-03-series-parallel",
+    "excerpt": "title: 串联与并联：电路的排列组合 description: 学习串联和并联电路的特点、电阻计算公式、分压和分流原理，掌握复杂电路的简化方法。 串联与并联：电路的排列组合 开场白（引入） 想象一下，你正在组装一个圣诞灯串。当你插上电源时，所有的灯都亮了，闪闪发光！但突然间，其中一个灯泡坏了，整个灯串都熄灭了。这是为什么呢？这背后隐藏着一个重要的电路原理——串联电路。 现在，再想象一下你的家庭",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-04",
+    "title": "电容与电感：储能元件的充放电特性",
+    "moduleName": "电路基础",
+    "slug": "lesson-04-capacitor-inductor",
+    "excerpt": "title: 电容与电感：储能元件的充放电特性 description: 学习电容和电感两种储能元件的特性，理解充放电过程和时间常数的概念。 import { Exercise, Quiz } from '@learn/components' import { CodeBlock } from '@learn/components/code' 电容与电感：储能元件的充放电特性 开场白：水桶与飞轮的",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-05",
+    "title": "RC/RL/RLC电路：时间常数与谐振",
+    "moduleName": "电路基础",
+    "slug": "lesson-05-rlc-circuits",
+    "excerpt": "title: RC/RL/RLC电路：时间常数与谐振 RC/RL/RLC电路：时间常数与谐振 开场白：电路中的\"弹簧振子\" 想象一下你坐在秋千上，轻轻一推，秋千就开始摆动。但你会发现，秋千不会永远摆动下去——空气阻力和摩擦力会让它慢慢停下来。这就像我们今天要学习的RLC电路！ 在物理学中，弹簧振子是最经典的二阶系统模型。当你拉伸弹簧然后释放，它会来回振动，但由于阻尼（摩擦力），振动幅度会逐渐减小。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-06",
+    "title": "二极管与整流电路：交流变直流",
+    "moduleName": "电路基础",
+    "slug": "lesson-06-diodes-rectifiers",
+    "excerpt": "title: \"二极管与整流电路：交流变直流\" description: \"学习二极管的单向导电特性，掌握半波、全波和桥式整流电路的工作原理，了解直流电源设计基础。\" 二极管与整流电路：交流变直流 开场白：电子世界的单向阀门 想象一下，如果你家的水管只能让水流向一个方向，而不能倒流，那会是什么样的场景？这听起来可能有点奇怪，但在电子世界里，这种\"单向阀门\"不仅存在，而且无处不在！这就是我们今天要学",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-07",
+    "title": "三极管与放大电路：信号放大的秘密",
+    "moduleName": "电路基础",
+    "slug": "lesson-07-transistors-amplifiers",
+    "excerpt": "title: \"三极管与放大电路：信号放大的秘密\" description: \"学习三极管（BJT）的工作原理和放大特性，掌握共射极放大电路的设计方法。\" 三极管与放大电路：信号放大的秘密 开场白：电子世界的水龙头与杠杆 想象一下，你正在用花园水管浇水。水压很大，水流强劲，但你只需要轻轻转动水龙头，就能精确控制水流的大小。这个水龙头就是三极管——它用微小的力量（基极电流）控制强大的力量（集电极电流",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-08",
+    "title": "运算放大器：模拟计算与信号处理",
+    "moduleName": "电路基础",
+    "slug": "lesson-08-op-amps",
+    "excerpt": "title: 运算放大器：模拟计算与信号处理 description: 学习运算放大器的工作原理和典型应用电路，掌握反相放大、同相放大、比较器和积分器设计。 运算放大器：模拟计算与信号处理 开场白：电子世界的超级放大镜 想象一下，你有一把超级放大镜，不仅能放大微小的物体，还能进行数学运算！这就是运算放大器（简称运放）——电子工程师的魔法工具。在数字世界统治一切的今天，运放依然是模拟电路中不可或缺的",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-09",
+    "title": "PCB设计基础：从原理图到电路板",
+    "moduleName": "电路基础",
+    "slug": "lesson-09-pcb-design",
+    "excerpt": "title: PCB设计基础：从原理图到电路板 description: 学习 PCB 设计的基本流程，从绘制原理图、放置元件、布线到导出 Gerber 文件，了解使用 KiCad 等工具进行电路板设计。 PCB设计基础：从原理图到电路板 开场白：城市道路规划的奇妙比喻 想象一下，你是一位城市规划师，负责设计一座现代化大都市。这座城市需要有住宅区（电子元件）、商业区（集成电路）、交通枢纽（连接器）",
+    "matchType": "content"
+  },
+  {
+    "courseId": "17-10",
+    "title": "电路板维修与故障诊断：万用表、示波器实战",
+    "moduleName": "电路基础",
+    "slug": "lesson-10-pcb-repair-debugging",
+    "excerpt": "title: \"电路板维修与故障诊断：万用表、示波器实战\" description: \"学习使用万用表、示波器等工具进行电路板故障诊断和维修，掌握焊接、元件更换和常见故障排查技巧。\" 电路板维修与故障诊断：万用表、示波器实战 开场白：像医生一样诊断电路板 想象一下，你的手机突然无法充电了。你把它带到维修店，维修师傅拿起一个看起来像科幻电影里的设备，对着手机主板东点西测，几分钟后就告诉你：\"是电源管",
+    "matchType": "content"
+  },
+  {
+    "courseId": "18-01",
+    "title": "单片机是什么：嵌入式世界的入口",
+    "moduleName": "单片机",
+    "slug": "lesson-01-what-is-mcu",
+    "excerpt": "title: 单片机是什么：嵌入式世界的入口 description: 了解单片机的基本概念、内部结构和应用场景，认识 Arduino、STM32 等主流平台，搭建第一个开发环境。 单片机是什么：嵌入式世界的入口 开场白：你的口袋里的迷你电脑 想象一下，你手中握着一个比指甲盖还小的\"迷你电脑\"。它没有屏幕，没有键盘，甚至看起来一点都不像我们熟悉的电脑。但它却控制着你家里的智能灯泡、汽车的发动机、微",
+    "matchType": "content"
+  },
+  {
+    "courseId": "18-02",
+    "title": "Arduino入门：点亮你的第一个LED",
+    "moduleName": "单片机",
+    "slug": "lesson-02-arduino-basics",
+    "excerpt": "title: Arduino入门：点亮你的第一个LED description: 学习 Arduino 开发板的基本使用，从点亮第一个 LED 开始，掌握数字输出、限流电阻选择和面包板搭建电路。 Arduino入门：点亮你的第一个LED 开场白：第一次打招呼的奇妙体验 想象一下，你刚搬到一个新城市，想要认识邻居。最简单的方式是什么？当然是敲门说\"你好\"！在电子世界里，Arduino 和 LED 之",
+    "matchType": "content"
+  },
+  {
+    "courseId": "18-03",
+    "title": "GPIO与传感器：感知物理世界",
+    "moduleName": "单片机",
+    "slug": "lesson-03-gpio-sensors",
+    "excerpt": "title: GPIO与传感器：感知物理世界 description: 学习 GPIO 输入输出模式，掌握按钮、电位器、温度传感器等常用传感器的连接和读取方法。 GPIO与传感器：感知物理世界 开场白：给单片机装上\"五感\" 想象一下，如果你是一个被困在黑暗房间里的机器人，没有任何感官，你该如何与这个世界互动？你既看不到光线的变化，也感受不到温度的起伏，更无法触摸到任何物体。这样的机器人虽然有强大的",
+    "matchType": "content"
+  },
+  {
+    "courseId": "18-04",
+    "title": "中断与定时器：精确控制时间",
+    "moduleName": "单片机",
+    "slug": "lesson-04-interrupts-timers",
+    "excerpt": "title: \"中断与定时器：精确控制时间\" description: \"学习单片机中断系统和定时器的工作原理，掌握中断服务程序编写和精确定时器应用。\" 中断与定时器：精确控制时间 开场白：门铃 vs. 不停地看门口 想象一下你在家等快递。你有两种选择： 方案A（轮询）：每隔5秒钟就跑到门口看看快递到了没有。这样做的后果是——你一整天都在门口和客厅之间来回奔波，什么事情都做不了，还累得半死！ 方案",
+    "matchType": "content"
+  },
+  {
+    "courseId": "18-05",
+    "title": "PWM与电机控制：让东西动起来",
+    "moduleName": "单片机",
+    "slug": "lesson-05-pwm-motors",
+    "excerpt": "title: PWM与电机控制：让东西动起来 description: 学习 PWM（脉宽调制）技术原理，掌握使用 PWM 控制直流电机速度、舵机角度和 LED 亮度的方法。 PWM与电机控制：让东西动起来 开场白：开关灯的快速闪烁魔法 想象一下，你有一个老式的电灯开关，每秒能按100次。如果你快速地开关闭合，会发生什么？人眼会觉得灯光在闪烁，但如果速度足够快——比如每秒上千次——你的大脑就会\"欺",
+    "matchType": "content"
+  },
+  {
+    "courseId": "18-06",
+    "title": "通信协议：I2C、SPI与UART",
+    "moduleName": "单片机",
+    "slug": "lesson-06-comm-protocols",
+    "excerpt": "title: 通信协议：I2C、SPI与UART description: 学习单片机间通信的三种主要协议：UART（串口）、I2C（两线制总线）和 SPI（四线制高速总线），掌握设备间数据传输的方法。 通信协议：I2C、SPI与UART 开场白：三种语言对话的比喻 想象一下，你是一位国际外交官，需要与来自不同国家的代表进行沟通。有的代表只会说一种特定的语言，有的可以用多种方式交流，而你的任务就是",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-01",
+    "title": "Rust初探：内存安全的系统语言",
+    "moduleName": "Rust编程",
+    "slug": "lesson-01-rust-intro",
+    "excerpt": "title: Rust初探：内存安全的系统语言 description: 了解 Rust 语言的设计哲学、内存安全保证和零运行时开销特性，安装 Rust 工具链并编写第一个程序。 Rust初探：内存安全的系统语言 开场白：安全驾驶的编程世界 想象一下，你正在学习驾驶一辆超级跑车。这辆车拥有惊人的性能，可以让你以极快的速度驰骋，但同时它也要求你具备精确的控制技巧。在传统的系统编程世界中，C和C++就",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-02",
+    "title": "所有权与借用：Rust的核心魔法",
+    "moduleName": "Rust编程",
+    "slug": "lesson-02-ownership-borrowing",
+    "excerpt": "title: 所有权与借用：Rust的核心魔法 所有权与借用：Rust的核心魔法 开场白：图书馆的借书规则 想象一下你去图书馆借书。图书馆有一套严格的规则： 1. 每本书只能有一个借阅者（不能同时借给多个人） 2. 当你归还书籍时，这本书就不再属于你 3. 你可以把书借给别人看，但有严格限制 Rust 的所有权系统就像这个图书馆管理系统！它在编译时就确保内存安全，避免了其他语言中常见的内存错误，比",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-03",
+    "title": "结构体与枚举：数据建模",
+    "moduleName": "Rust编程",
+    "slug": "lesson-03-structs-enums",
+    "excerpt": "title: 结构体与枚举：数据建模 module: 19rust lesson: 1903 结构体与枚举：数据建模 开场白：编程世界的积木搭建 想象一下，你是一个乐高积木大师。在你的工具箱里，有两种神奇的积木： 1. 结构体（Struct）  就像那些可以组合成复杂形状的标准积木块，每个积木都有特定的位置和功能 2. 枚举（Enum）  就像那些特殊形状的积木，每一块都代表一种独特的可能性 在 ",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-04",
+    "title": "模式匹配：强大的解构工具",
+    "moduleName": "Rust编程",
+    "slug": "lesson-04-pattern-matching",
+    "excerpt": "title: 模式匹配：强大的解构工具 模式匹配：强大的解构工具 开场白：分拣员的智慧 想象一下你是一家大型快递公司的分拣员。每天面对成千上万的包裹，每个包裹都有不同的目的地、大小、重量和特殊要求。你的工作就是快速准确地将每个包裹分到正确的传送带上。 在编程世界中，Rust的模式匹配就像是这位超级分拣员的大脑。它能够瞬间识别数据的结构，提取有用的信息，并根据不同的情况执行相应的操作。但与人类分拣员",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-05",
+    "title": "Trait与泛型：多态的Rust之道",
+    "moduleName": "Rust编程",
+    "slug": "lesson-05-traits-generics",
+    "excerpt": "title: \"Trait与泛型：多态的Rust之道\" Trait与泛型：多态的Rust之道 开场白：万能插头的哲学 想象一下，你带着笔记本电脑去世界各地旅行。在每个国家，电源插座的形状都不一样——美国的扁平插头、欧洲的圆柱插头、英国的三方插头。但你的笔记本电脑只有一个电源适配器！这怎么可能工作呢？ 答案就是适配器（Adapter）和标准接口（Interface）。你的笔记本电脑不需要知道每个国家",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-06",
+    "title": "生命周期：引用安全的保障",
+    "moduleName": "Rust编程",
+    "slug": "lesson-06-lifetimes",
+    "excerpt": "title: 生命周期：引用安全的保障 生命周期：引用安全的保障 开场白：图书借阅期限的比喻 想象一下你在图书馆借书的场景。当你借一本书时，图书管理员会给你一个借阅期限——比如30天。这个期限保证了在你拥有这本书的期间，图书馆的这本实体书不会被销毁或借给其他人。 Rust 的生命周期系统就像是这个借阅期限系统！当你创建一个引用（就像借书）时，Rust 需要知道这个引用的有效期限。这样可以确保： 1",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-07",
+    "title": "错误处理：Result与panic",
+    "moduleName": "Rust编程",
+    "slug": "lesson-07-error-handling",
+    "excerpt": "title: 错误处理：Result与panic description: 学习 Rust 的错误处理模式，掌握 Result<T, E 类型、? 操作符和 panic! 宏的使用场景。 错误处理：Result与panic 开场白：编程世界的天气预报 想象一下，你是一名经验丰富的飞行员，准备执行一次重要的飞行任务。在起飞前，你会查看天气预报，对吧？但天气预报从来不会说\"今天绝对晴朗\"或\"今天绝对有",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-08",
+    "title": "并发编程：fearless concurrency",
+    "moduleName": "Rust编程",
+    "slug": "lesson-08-concurrency",
+    "excerpt": "title: \"并发编程：fearless concurrency\" description: \"学习 Rust 的并发编程模型，掌握线程创建、通道通信、Mutex 和 Arc 共享状态，理解 Send 和 Sync trait 的并发安全保障。\" 并发编程：fearless concurrency 开场白：工厂流水线的魔法 想象一下你是一家巧克力工厂的老板。最初，你一个人负责所有工作：融化可可豆",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-09",
+    "title": "异步编程：Tokio与async/await",
+    "moduleName": "Rust编程",
+    "slug": "lesson-09-async-programming",
+    "excerpt": "title: 异步编程：Tokio与async/await description: 学习 Rust 的异步编程模型，掌握 async/await 语法、Future trait 和 Tokio 运行时，能够编写高效的异步 I/O 程序。 异步编程：Tokio与async/await 开场白：餐厅服务员的比喻 想象一下你是一家繁忙餐厅的服务员。传统同步编程就像这样：你接到一个点单后，必须站在厨房门",
+    "matchType": "content"
+  },
+  {
+    "courseId": "19-10",
+    "title": "Cargo与生态系统：包管理与测试",
+    "moduleName": "Rust编程",
+    "slug": "lesson-10-cargo-ecosystem",
+    "excerpt": "title: Cargo与生态系统：包管理与测试 Cargo与生态系统：包管理与测试 开场白：快递仓库的奇妙世界 想象一下，你是一家大型快递公司的老板。每天都有成千上万的包裹需要处理：有些是发给客户的成品，有些是从供应商那里采购的原材料，还有些是你自己工厂生产的半成品。如果没有一个高效的仓库管理系统，你的公司很快就会陷入混乱。 Rust 的 Cargo 就是这样一个超级智能的快递仓库管理系统！它不",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-01",
+    "title": "C语言入门：系统编程的起点",
+    "moduleName": "C语言",
+    "slug": "lesson-01-c-intro",
+    "excerpt": "title: C语言入门：系统编程的起点 description: 了解 C 语言的历史地位、设计哲学和编译流程，搭建开发环境并编写第一个 C 程序。 C语言入门：系统编程的起点 开场白：编程界的瑞士军刀 想象一下，你手里拿着一把瑞士军刀。它看起来简单朴素，没有花里胡哨的装饰，但当你需要解决实际问题时，你会发现它几乎无所不能——开瓶器、剪刀、螺丝刀、小刀……每个工具都精准地完成自己的任务，没有任何",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-02",
+    "title": "数据类型与运算符",
+    "moduleName": "C语言",
+    "slug": "lesson-02-types-operators",
+    "excerpt": "title: 数据类型与运算符 description: 学习 C 语言的基本数据类型（int、float、char、double）和运算符（算术、关系、逻辑），理解类型转换和 sizeof 运算符。 import { CodeBlock } from '@/components/CodeBlock' import { Exercise } from '@/components/Exercise'",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-03",
+    "title": "指针：C语言的灵魂与噩梦",
+    "moduleName": "C语言",
+    "slug": "lesson-03-pointers",
+    "excerpt": "title: 指针：C语言的灵魂与噩梦 description: 深入学习 C 语言的指针概念，理解内存地址、指针运算、空指针和 void 指针，掌握指针与数组的关系。 指针：C语言的灵魂与噩梦 开场白：家庭地址的比喻 想象一下，你想要给朋友小明寄一封信。你有两种选择： 1. 直接把整栋房子搬到邮局（这显然不现实） 2. 只写上小明家的地址，让邮递员根据地址找到房子 在C语言的世界里，指针就是那个",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-04",
+    "title": "数组与字符串",
+    "moduleName": "C语言",
+    "slug": "lesson-04-arrays-strings",
+    "excerpt": "title: 数组与字符串 module: C语言 数组与字符串 开场白：储物柜的奇妙世界 想象一下，你刚搬进新家，面对一堆杂乱的物品——书籍、衣服、餐具、工具……你需要一个系统来整理它们。于是你买了一个大型储物柜，这个储物柜有多个格子，每个格子都有编号（0号、1号、2号……）。你可以把相同类型的物品放在连续的格子里，比如把所有的书从0号格子开始依次摆放。 在C语言的世界里，数组就是这样的储物柜！",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-05",
+    "title": "函数与作用域",
+    "moduleName": "C语言",
+    "slug": "lesson-05-functions-scope",
+    "excerpt": "title: 函数与作用域 module: C语言 函数与作用域 开场白：厨房里的分工合作 想象一下你正在准备一顿丰盛的晚餐。如果你一个人负责洗菜、切菜、炒菜、摆盘、洗碗，那场面会相当混乱！但如果有几个帮手，每个人负责一个特定的任务，比如小明专门洗菜，小红负责切菜，小刚掌勺炒菜，整个流程就会变得井井有条。 C语言中的函数就像厨房里的各个帮手！每个函数都有自己的专长和职责，它们各司其职，协同工作。今",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-06",
+    "title": "结构体、联合体与位域",
+    "moduleName": "C语言",
+    "slug": "lesson-06-structs-unions",
+    "excerpt": "title: 结构体、联合体与位域 description: 学习 C 语言的结构体和联合体，掌握自定义数据类型、typedef 别名、位域的使用，理解内存对齐和结构体大小计算。 结构体、联合体与位域 开场白：你的编程档案袋 想象一下，你是一个档案管理员，每天都要处理各种各样的文件。有些文件只有姓名，有些文件包含姓名、年龄、电话号码，还有些文件甚至包含了家庭住址、工作经历和兴趣爱好。 在 C 语言",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-07",
+    "title": "内存管理：malloc与free",
+    "moduleName": "C语言",
+    "slug": "lesson-07-memory-management",
+    "excerpt": "title: 内存管理：malloc与free description: 学习 C 语言的动态内存管理，掌握 malloc、calloc、realloc 和 free 的使用，理解内存泄漏、悬空指针和常见内存错误。 内存管理：malloc与free 开场白：酒店房间的比喻 想象一下，你是一家酒店的经理。酒店有两种房间分配方式： 固定房间（栈内存）：客人预订时，你就给他们分配一个固定的房间号。这些房",
+    "matchType": "content"
+  },
+  {
+    "courseId": "20-08",
+    "title": "文件操作与预处理器",
+    "moduleName": "C语言",
+    "slug": "lesson-08-files-preprocessor",
+    "excerpt": "title: \"文件操作与预处理器\" description: \"学习 C 语言的文件操作（fopen/fread/fwrite/fclose）和预处理器（define、ifdef、include），掌握配置文件读写和条件编译。\" 文件操作与预处理器 开场白：C语言的\"仓库管理员\" 想象一下，你的程序就像一个繁忙的办公室，内存是你的办公桌——空间有限但访问超快。而硬盘就像是巨大的仓库，可以存储海量",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-01",
+    "title": "C++入门：C的超集还是新语言？",
+    "moduleName": "C++编程",
+    "slug": "lesson-01-cpp-intro",
+    "excerpt": "title: \"C++入门：C的超集还是新语言？\" description: \"了解 C++ 的设计哲学和与 C 的关系，掌握基本的输入输出、命名空间和编译流程，编写第一个 C++ 程序。\" C++入门：C的超集还是新语言？ 开场白：从老爷车到超级跑车 想象一下，你是一位汽车爱好者，拥有一辆经典的老爷车——它结构简单、可靠耐用，但驾驶体验相对原始。现在，有人告诉你可以在不改变底盘的情况下，给这辆车",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-02",
+    "title": "类与对象：面向对象编程",
+    "moduleName": "C++编程",
+    "slug": "lesson-02-classes-objects",
+    "excerpt": "title: 类与对象：面向对象编程 description: 学习 C++ 的类和对象，掌握封装、构造函数、析构函数、this 指针和成员函数，理解面向对象编程的基本概念。 类与对象：面向对象编程 开场白：模具与产品的奇妙关系 想象一下，你是一个巧克力工厂的老板。你想要生产一批心形巧克力，你会怎么做？首先，你需要制作一个心形的模具（mold），然后用这个模具来批量生产出一模一样的心形巧克力产品。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-03",
+    "title": "继承与多态",
+    "moduleName": "C++编程",
+    "slug": "lesson-03-inheritance-polymorphism",
+    "excerpt": "title: 继承与多态 description: 学习 C++ 的继承和多态机制，掌握虚函数、纯虚函数、抽象类和动态绑定，理解继承体系的设计原则。 继承与多态 开场白：家族遗传的奇妙世界 想象一下，你是一个家族的族长，你的家族有着悠久的历史和独特的传统。你的孩子们天生就继承了你的某些特质——也许是你的聪明才智，也许是你的幽默感，甚至是你的烹饪天赋！但在C++的世界里，这种\"遗传\"更加精确和可控。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-04",
+    "title": "运算符重载",
+    "moduleName": "C++编程",
+    "slug": "lesson-04-operator-overloading",
+    "excerpt": "title: 运算符重载 description: 学习 C++ 的运算符重载，掌握成员函数重载、友元函数重载和流运算符重载，理解运算符重载的设计原则。 运算符重载：让自定义类型像内置类型一样自然 开场白：遥控器的自定义按钮 想象一下，你有一个万能遥控器，可以控制家里的所有电器。但这个遥控器有个问题——它的按钮都是固定的！音量键只能调音量，频道键只能换频道。现在你想用音量键来开关灯，用频道键来调节",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-05",
+    "title": "模板编程：泛型的艺术",
+    "moduleName": "C++编程",
+    "slug": "lesson-05-templates",
+    "excerpt": "title: 模板编程：泛型的艺术 description: 学习 C++ 的模板编程，掌握函数模板、类模板、模板特化和类型推导，理解 STL 的设计基础。 模板编程：泛型的艺术 开场白：万能模具的魔法 想象一下，你是一个巧克力工厂的老板。每天都有客户来订购不同形状的巧克力：心形、星形、圆形、方形……如果你为每种形状都制作一个专用的模具，那你的仓库很快就会堆满各种各样的模具，而且每次有新需求时都要",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-06",
+    "title": "STL容器：vector、map、set",
+    "moduleName": "C++编程",
+    "slug": "lesson-06-stl-containers",
+    "excerpt": "title: STL容器：vector、map、set description: 学习 C++ STL 的标准容器库，掌握 vector、list、map、set 等常用容器及其迭代器的使用。 STL容器：vector、map、set 开场白：程序员的瑞士军刀 想象一下你是一个准备远足的冒险家。你会带什么工具？一把瑞士军刀！为什么？因为它集成了各种实用的小工具——剪刀、小刀、开瓶器、螺丝刀……每种",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-07",
+    "title": "STL算法：sort、find、transform",
+    "moduleName": "C++编程",
+    "slug": "lesson-07-stl-algorithms",
+    "excerpt": "title: STL算法：sort、find、transform description: 学习 STL 标准算法库，掌握排序、查找、变换和累积算法，结合 Lambda 表达式写出简洁高效的代码。 STL算法：sort、find、transform 开场白：编程界的\"装配线\" 想象一下，你是一家汽车制造厂的老板。在过去，你需要雇佣一大批工人，每个人都要从头到尾学会如何组装整辆汽车。这不仅效率低下，",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-08",
+    "title": "智能指针：RAII与内存安全",
+    "moduleName": "C++编程",
+    "slug": "lesson-08-smart-pointers",
+    "excerpt": "title: 智能指针：RAII与内存安全 智能指针：RAII与内存安全 开场白：你的自动管家 想象一下，你雇佣了一位超级贴心的管家来管理你的豪宅。这位管家不仅帮你整理房间、照顾花园，更重要的是——他会在你离开房间时自动关灯，在你用完餐具后立即清洗，在你不需要某样物品时马上妥善处理掉。你完全不用担心忘记关水龙头导致家里被淹，也不用担心垃圾堆积如山。 在C++的世界里，智能指针（Smart Poin",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-09",
+    "title": "C++11/14/17 现代特性",
+    "moduleName": "C++编程",
+    "slug": "lesson-09-modern-cpp",
+    "excerpt": "title: C++11/14/17 现代特性 C++11/14/17 现代特性 开场白：从功能机到智能手机的华丽转身 想象一下，你的手机还停留在十年前的功能机时代——只能打电话、发短信，连个像样的浏览器都没有。突然有一天，你换上了最新的智能手机，触摸屏、应用商店、高清摄像头...整个世界都变得不一样了！ C++ 在 2011 年就经历了这样一场革命性的升级。在此之前，C++ 虽然强大，但写起来繁",
+    "matchType": "content"
+  },
+  {
+    "courseId": "21-10",
+    "title": "异常处理与最佳实践",
+    "moduleName": "C++编程",
+    "slug": "lesson-10-exceptions-best-practices",
+    "excerpt": "title: \"异常处理与最佳实践\" description: \"学习 C++ 的异常处理机制，掌握 trycatchthrow、自定义异常类、noexcept 规范，了解 C++ 最佳实践和现代编程规范。\" 异常处理与最佳实践 开场白：编程中的安全气囊 想象一下你正在驾驶一辆汽车。正常情况下，一切都很顺利——引擎运转平稳，方向盘响应灵敏。但万一发生意外呢？这时候安全气囊就会弹出，保护你免受严重伤",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-01",
+    "title": "Java入门：Write Once, Run Anywhere",
+    "moduleName": "Java编程",
+    "slug": "lesson-01-java-intro",
+    "excerpt": "title: Java入门：Write Once, Run Anywhere description: 了解 Java 的设计哲学和\"一次编写，到处运行\"理念，掌握 JVM 和字节码概念，搭建 JDK 环境并编写第一个 Java 程序。 Java入门：Write Once, Run Anywhere 开场白：Java 的翻译官 想象一下，你是一位世界级的演讲家，准备在世界各地发表演讲。但是有个问题",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-02",
+    "title": "面向对象基础：类、继承、接口",
+    "moduleName": "Java编程",
+    "slug": "lesson-02-oop-basics",
+    "excerpt": "title: 面向对象基础：类、继承、接口 description: 学习 Java 的面向对象编程，掌握类与对象、继承、接口和封装、多态的核心概念。 面向对象基础：类、继承、接口 开场白：模具与产品的世界 想象一下你是一个巧克力工厂的老板。你想要生产各种形状的巧克力——心形、星形、圆形。你会怎么做？是每个形状都重新设计制作工艺吗？当然不是！聪明的做法是先制作一个模具（比如心形模具），然后用这个模",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-03",
+    "title": "集合框架：List、Set、Map",
+    "moduleName": "Java编程",
+    "slug": "lesson-03-collections",
+    "excerpt": "title: 集合框架：List、Set、Map description: 学习 Java 集合框架，掌握 List、Set、Map 三大接口及其常用实现类，理解迭代器和泛型在集合中的应用。 集合框架：List、Set、Map 开场白：你的编程储物柜和书架 想象一下，你刚搬进新家，面对一堆杂乱的物品：书籍、衣服、餐具、工具……你会怎么整理它们？ 如果你把所有东西都堆在一个大箱子里，每次找东西都要翻",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-04",
+    "title": "异常处理机制",
+    "moduleName": "Java编程",
+    "slug": "lesson-04-exceptions",
+    "excerpt": "title: 异常处理机制 import Example from '../../components/Example' import Challenge from '../../components/Challenge' import Quiz from '../../components/Quiz' 异常处理机制 开场白：程序世界的保险箱 想象一下，你正在银行工作，负责管理一个巨大的保险箱。这",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-05",
+    "title": "泛型与类型擦除",
+    "moduleName": "Java编程",
+    "slug": "lesson-05-generics",
+    "excerpt": "title: 泛型与类型擦除 import Exercise from \"@site/src/components/Exercise\"; import Quiz from \"@site/src/components/Quiz\"; 泛型与类型擦除 开场白：万能模具的魔法 想象一下，你是一个烘焙大师，需要制作各种形状的饼干。如果没有模具，你只能用手捏，不仅效率低，而且每个饼干的形状都不一样。但如果你有",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-06",
+    "title": "多线程与并发",
+    "moduleName": "Java编程",
+    "slug": "lesson-06-multithreading",
+    "excerpt": "title: 多线程与并发 description: 学习 Java 的多线程编程，掌握线程创建、synchronized 同步、volatile、线程池和并发工具类。 多线程与并发 开场白：餐厅里的多服务员哲学 想象一下你去一家餐厅吃饭。如果这家餐厅只有一个服务员，会发生什么情况？ 当你点完菜后，服务员要去厨房下单，然后等待厨师做好菜，再端给你。在这期间，其他桌的客人只能干等着，即使他们只是想加",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-07",
+    "title": "I/O与NIO",
+    "moduleName": "Java编程",
+    "slug": "lesson-07-io-nio",
+    "excerpt": "title: \"I/O与NIO\" description: \"学习 Java 的 I/O 和 NIO 系统，掌握字节流、字符流、文件操作和 NIO 的 Channel/Buffer 模型。\" I/O与NIO：Java中的数据搬运工 开场白：水管工的故事 想象一下你家里的水管系统。当你打开水龙头，水流就从水源（比如水库）通过管道流向你的水槽。在这个过程中，水是数据，管道就是流（Stream），而水源",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-08",
+    "title": "Lambda与Stream API",
+    "moduleName": "Java编程",
+    "slug": "lesson-08-lambda-streams",
+    "excerpt": "title: Lambda与Stream API description: 学习 Java 8 的 Lambda 表达式和 Stream API，掌握函数式编程风格的数据处理链。 import { Exercise, Quiz } from '@learn/components' Lambda与Stream API 开场白：数据处理的流水线革命 想象一下，你是一家工厂的老板，需要处理一批原材料。在",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-09",
+    "title": "JVM内存模型与GC",
+    "moduleName": "Java编程",
+    "slug": "lesson-09-jvm-gc",
+    "excerpt": "title: JVM内存模型与GC description: 学习 JVM 内存模型和垃圾回收机制，理解堆、栈、方法区的结构，掌握常见 GC 算法调优参数。 JVM内存模型与GC 开场白：Java的自动清洁工 想象一下，你住在一个豪华公寓里，房间里堆满了各种物品。有些是你经常使用的（比如手机、电脑），有些是临时用完就扔的（比如外卖盒子、快递包装），还有一些是你珍藏的宝贝（比如毕业证书、家庭相册）。",
+    "matchType": "content"
+  },
+  {
+    "courseId": "22-10",
+    "title": "Spring Boot入门",
+    "moduleName": "Java编程",
+    "slug": "lesson-10-spring-boot",
+    "excerpt": "title: Spring Boot入门 description: 了解 Spring Boot 框架的核心思想，掌握依赖注入、REST API 开发和自动配置，编写第一个 Web 服务。 Spring Boot入门：从全自动厨房到你的第一个Web服务 开场白：欢迎来到Spring Boot的全自动厨房 想象一下，你刚刚搬进了一个全新的厨房。传统的方式是：你需要自己购买所有的厨具——锅碗瓢盆、刀叉",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-01",
+    "title": "JavaScript基础：动态网页的语言",
+    "moduleName": "JavaScript",
+    "slug": "lesson-01-js-intro",
+    "excerpt": "title: JavaScript基础：动态网页的语言 description: 了解 JavaScript 的历史和在 Web 开发中的地位，掌握基本语法和浏览器控制台的使用，编写第一个 JS 脚本。 JavaScript基础：动态网页的语言 开场白：网页的灵魂 想象一下，你正在参观一个精美的博物馆。HTML是展品的框架和标签，CSS是灯光和装饰，让一切看起来赏心悦目。但如果没有讲解员、互动装置",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-02",
+    "title": "数据类型与函数",
+    "moduleName": "JavaScript",
+    "slug": "lesson-02-types-functions",
+    "excerpt": "title: 数据类型与函数 description: 深入学习JavaScript的数据类型（基本类型和引用类型）和函数的各种声明方式。 数据类型与函数 开场白 大家好！在上一节课中，我们初步了解了JavaScript的基础语法。今天，我们将深入探讨JavaScript中最核心的两个概念：数据类型和函数。这两个概念就像是烹饪中的食材和菜谱——食材决定了你能做什么菜，而菜谱则告诉你如何把食材变成美",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-03",
+    "title": "DOM操作：与网页交互",
+    "moduleName": "JavaScript",
+    "slug": "lesson-03-dom-manipulation",
+    "excerpt": "title: DOM操作：与网页交互 description: 学习Document Object Model (DOM)的概念和API，掌握如何使用JavaScript获取和修改网页元素。 DOM操作：与网页交互 开场白：网页背后的秘密结构 想象一下，你正在看一本精美的立体书。表面上看，它只是一张平面的纸，但当你轻轻翻开，里面却隐藏着层层叠叠的立体结构——房子、树木、人物，它们都有自己的位置和关",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-04",
+    "title": "事件处理与异步编程",
+    "moduleName": "JavaScript",
+    "slug": "lesson-04-events-async",
+    "excerpt": "title: \"事件处理与异步编程\" description: \"学习JavaScript事件模型和异步编程基础，理解事件循环机制。\" 事件处理与异步编程 开场白 同学们好！今天我们来聊聊JavaScript中两个非常重要的概念：事件处理和异步编程。想象一下，你在一个繁忙的餐厅里当服务员。顾客点菜时，你不会站在那里一直等着厨房做好（那太浪费时间了！），而是会继续服务其他顾客，当厨房的铃声响起时，你",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-05",
+    "title": "Promise与async/await",
+    "moduleName": "JavaScript",
+    "slug": "lesson-05-promises-async",
+    "excerpt": "title: \"Promise与async/await\" description: \"深入学习Promise对象和async/await语法，掌握现代JavaScript异步编程的最佳实践。\" Promise与async/await 开场白：为什么我们需要异步编程？ 同学们好！今天我们来聊聊JavaScript中一个非常重要但又常常让人困惑的概念——异步编程。想象一下这样的场景：你点了一份外卖，是",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-06",
+    "title": "ES6+ 现代语法",
+    "moduleName": "JavaScript",
+    "slug": "lesson-06-es6-modern",
+    "excerpt": "title: \"ES6+ 现代语法\" description: \"学习ES6及更高版本的现代JavaScript语法特性，写出更简洁、优雅的代码。\" ES6+ 现代语法 同学们好！今天我们要一起探索JavaScript的现代化之旅。想象一下，如果把ES5比作自行车，那么ES6+就是一辆豪华跑车——不仅外观更酷，性能也更强！ 开场白：为什么需要ES6+？ 在ES6（也叫ES2015）之前，JavaS",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-07",
+    "title": "模块化与Node.js",
+    "moduleName": "JavaScript",
+    "slug": "lesson-07-modules-nodejs",
+    "excerpt": "title: 模块化与Node.js description: 学习JavaScript模块化编程和Node.js运行环境，掌握从前端到后端的跨越。 模块化与Node.js 同学们好！今天我们来探索JavaScript世界中一个非常重要的概念——模块化，以及如何使用Node.js让JavaScript脱离浏览器的束缚，在服务器端大展身手。 想象一下，如果你要搭建一座复杂的乐高城堡，你会选择把所有积",
+    "matchType": "content"
+  },
+  {
+    "courseId": "23-08",
+    "title": "闭包与作用域链",
+    "moduleName": "JavaScript",
+    "slug": "lesson-08-closures-scope",
+    "excerpt": "title: \"闭包与作用域链\" description: \"深入理解JavaScript的闭包机制、作用域链和变量提升，掌握JS中最核心也最难的概念。\" 闭包与作用域链 开场白：JavaScript中最神秘的概念 同学们好！今天我们来探讨JavaScript中最有名也最让人困惑的概念——闭包（Closure）和作用域链（Scope Chain）。如果你觉得这些概念难以理解，别担心，你不是一个人！",
+    "matchType": "content"
+  }
+]
