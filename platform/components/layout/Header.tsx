@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { SearchBar } from "@/components/course/SearchBar";
 import { Course } from "@/types/course";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface HeaderProps {
   courses: Course[];
@@ -50,6 +51,7 @@ export function Header({ courses }: HeaderProps) {
 
         {/* Right side actions */}
         <div className="hidden md:flex items-center gap-4 ml-auto">
+          <ThemeToggle />
           <Link href="/courses">
             <Button variant="outline" size="sm" className="gap-2">
               <BookOpen className="h-4 w-4" />
@@ -90,6 +92,9 @@ export function Header({ courses }: HeaderProps) {
                 </Link>
               ))}
             </nav>
+            <div className="flex justify-center">
+              <ThemeToggle />
+            </div>
             <Link href="/courses" onClick={() => setMobileMenuOpen(false)}>
               <Button variant="outline" size="sm" className="w-full gap-2">
                 <BookOpen className="h-4 w-4" />
