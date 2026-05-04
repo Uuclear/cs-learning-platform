@@ -1,5 +1,4 @@
-import { Course, CourseModule, QuizQuestion, SearchIndexItem } from "@/types/course";
-export type { SearchIndexItem };
+import { Course, CourseModule, QuizQuestion } from "@/types/course";
 import fs from "fs";
 import path from "path";
 
@@ -204,21 +203,10 @@ export function findCourseDirBySlug(slug: string): string | null {
     const modulePath = path.join(COURSES_DIR, moduleDir.name);
     for (const lessonDir of fs.readdirSync(modulePath, { withFileTypes: true }).filter(d => d.isDirectory())) {
       const dirName = lessonDir.name;
-      // First try exact directory name match
-      if (dirName === slug) {
+      const parts = dirName.split("-");
+      const dirSlug = parts.length > 2 ? parts.slice(2).join("-") : dirName;
+      if (dirSlug === slug) {
         return path.join(modulePath, dirName);
-      }
-      // Then check metadata.json slug
-      const metaPath = path.join(modulePath, dirName, "metadata.json");
-      if (fs.existsSync(metaPath)) {
-        try {
-          const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
-          if (meta.slug === slug) {
-            return path.join(modulePath, dirName);
-          }
-        } catch {
-          // Skip malformed metadata
-        }
       }
     }
   }
@@ -246,87 +234,4 @@ export function readCourseQuiz(course: Course): QuizQuestion[] {
   } catch {
     return [];
   }
-}
-
-let _searchIndex: SearchIndexItem[] | null = null;
-
-function stripMarkdown(text: string): string {
-  return text
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/`[^`]*`/g, "")
-    .replace(/#{1,6}\s?/g, "")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1")
-    .replace(/[*_~`>|-]/g, "")
-    .replace(/\n+/g, " ")
-    .trim();
-}
-
-export function buildSearchIndex(): SearchIndexItem[] {
-  if (_searchIndex) return _searchIndex;
-
-  const courses = getAllCoursesInternal();
-  const index: SearchIndexItem[] = [];
-
-  for (const course of courses) {
-    const dir = findCourseDirBySlug(course.slug);
-    let content = "";
-    if (dir) {
-      const indexPath = path.join(dir, "index.mdx");
-      if (fs.existsSync(indexPath)) {
-        content = stripMarkdown(fs.readFileSync(indexPath, "utf-8"));
-      }
-    }
-
-    index.push({
-      courseId: course.id,
-      title: course.title,
-      moduleName: course.moduleName,
-      slug: course.slug,
-      excerpt: content.substring(0, 200),
-      matchType: "content",
-    });
-  }
-
-  _searchIndex = index;
-  return index;
-}
-
-export function fullTextSearch(query: string): SearchIndexItem[] {
-  if (query.length < 2) return [];
-  const q = query.toLowerCase();
-  const index = buildSearchIndex();
-  const results: (SearchIndexItem & { score: number })[] = [];
-
-  for (const item of index) {
-    let score = 0;
-
-    if (item.title.toLowerCase().includes(q)) {
-      score += 100;
-      results.push({ ...item, score, matchType: "title" });
-      continue;
-    }
-
-    if (item.moduleName.toLowerCase().includes(q)) {
-      score += 50;
-      results.push({ ...item, score, matchType: "module" });
-      continue;
-    }
-
-    const lowerContent = item.excerpt.toLowerCase();
-    if (lowerContent.includes(q)) {
-      // Find context around match for better excerpt
-      const idx = lowerContent.indexOf(q);
-      const start = Math.max(0, idx - 50);
-      const end = Math.min(item.excerpt.length, idx + q.length + 100);
-      let excerpt = item.excerpt.substring(start, end);
-      if (start > 0) excerpt = "..." + excerpt;
-      if (end < item.excerpt.length) excerpt += "...";
-      score += 10;
-      results.push({ ...item, score, excerpt, matchType: "content" });
-      continue;
-    }
-  }
-
-  return results.sort((a, b) => b.score - a.score).slice(0, 15);
 }

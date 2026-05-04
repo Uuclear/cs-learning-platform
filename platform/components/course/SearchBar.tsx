@@ -1,112 +1,40 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { Search, X, BookOpen, Hash, Folder } from "lucide-react";
+import { useState, useMemo, useCallback } from "react";
+import { Course } from "@/types/course";
+import { Search, X, BookOpen } from "lucide-react";
 import Link from "next/link";
+import { Badge } from "@/components/ui/Badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 
 interface SearchBarProps {
-  mode?: "header" | "page";
+  courses: Course[];
 }
 
-interface SearchResult {
-  courseId: string;
-  title: string;
-  moduleName: string;
-  slug: string;
-  excerpt: string;
-  matchType: string;
-  score?: number;
-}
-
-export function SearchBar({ mode = "header" }: SearchBarProps) {
+export function SearchBar({ courses }: SearchBarProps) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
   const [isFocused, setIsFocused] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [searchIndex, setSearchIndex] = useState<SearchResult[]>([]);
-  const [indexLoaded, setIndexLoaded] = useState(false);
 
-  // Load static search index on mount (GitHub Pages compatible)
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/search-index.json")
-      .then((r) => r.json())
-      .then((data) => {
-        if (!cancelled) {
-          setSearchIndex(data);
-          setIndexLoaded(true);
-        }
+  const results = useMemo(() => {
+    if (query.length < 2) return [];
+    const q = query.toLowerCase();
+    return courses
+      .filter((c) => {
+        return (
+          c.title.toLowerCase().includes(q) ||
+          c.description.toLowerCase().includes(q) ||
+          c.moduleName.toLowerCase().includes(q) ||
+          c.tags.some((t) => t.toLowerCase().includes(q))
+        );
       })
-      .catch(() => {
-        // Fallback: index not available, will use API route
-        if (!cancelled) setIndexLoaded(true);
-      });
-    return () => { cancelled = true; };
-  }, []);
-
-  const clientSearch = useCallback((q: string): SearchResult[] => {
-    if (q.length < 2) return [];
-    const lower = q.toLowerCase();
-    const scored = searchIndex
-      .map((item) => {
-        const titleMatch = item.title.toLowerCase().includes(lower);
-        const moduleMatch = item.moduleName.toLowerCase().includes(lower);
-        const contentMatch = item.excerpt.toLowerCase().includes(lower);
-        const score = (titleMatch ? 3 : 0) + (moduleMatch ? 2 : 0) + (contentMatch ? 1 : 0);
-        if (score === 0) return null;
-        const matchType = titleMatch ? "title" : moduleMatch ? "module" : "content";
-        return { ...item, matchType, score };
-      })
-      .filter((item): item is SearchResult & { score: number } => item !== null)
-      .sort((a, b) => b.score - a.score)
       .slice(0, 10);
-    return scored;
-  }, [searchIndex]);
+  }, [query, courses]);
 
-  const doSearch = useCallback(async (q: string) => {
-    if (q.length < 2) {
-      setResults([]);
-      return;
-    }
-    setLoading(true);
-    try {
-      // Prefer static index (GitHub Pages), fallback to API route
-      if (indexLoaded && searchIndex.length > 0) {
-        setResults(clientSearch(q));
-      } else {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-        const data = await res.json();
-        setResults(data.results || []);
-      }
-    } catch {
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [indexLoaded, searchIndex, clientSearch]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => doSearch(query), 300);
-    return () => clearTimeout(timer);
-  }, [query, doSearch]);
-
-  const clearSearch = () => {
-    setQuery("");
-    setResults([]);
-  };
-
-  const getMatchIcon = (type: string) => {
-    switch (type) {
-      case "title": return <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />;
-      case "module": return <Folder className="h-3.5 w-3.5 text-blue-500 shrink-0" />;
-      default: return <Hash className="h-3.5 w-3.5 text-green-500 shrink-0" />;
-    }
-  };
-
-  const isHeader = mode === "header";
+  const clearSearch = () => setQuery("");
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full max-w-md">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
@@ -116,7 +44,7 @@ export function SearchBar({ mode = "header" }: SearchBarProps) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-          className={`w-full rounded-lg border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isHeader ? "h-10 pl-10 pr-10" : "h-12 pl-10 pr-10 text-base"}`}
+          className="w-full h-10 pl-10 pr-10 rounded-lg border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         />
         {query && (
           <button
@@ -131,30 +59,20 @@ export function SearchBar({ mode = "header" }: SearchBarProps) {
       {/* Dropdown results */}
       {isFocused && query.length >= 2 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
-          {loading ? (
-            <div className="p-4 text-center text-sm text-muted-foreground animate-pulse">
-              搜索中...
-            </div>
-          ) : results.length > 0 ? (
-            results.map((r) => (
+          {results.length > 0 ? (
+            results.map((course) => (
               <Link
-                key={r.courseId}
-                href={`/courses/${r.slug}`}
+                key={course.id}
+                href={`/courses/${course.slug}`}
                 className="block p-3 hover:bg-accent border-b last:border-b-0 transition-colors"
-                onMouseDown={(e) => e.preventDefault()}
               >
                 <div className="flex items-start gap-2">
-                  {getMatchIcon(r.matchType)}
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{r.title}</p>
+                  <BookOpen className="h-4 w-4 mt-0.5 text-primary shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">{course.title}</p>
                     <p className="text-xs text-muted-foreground truncate">
-                      {r.moduleName}
+                      {course.moduleName}
                     </p>
-                    {r.matchType === "content" && r.excerpt && (
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                        {r.excerpt}
-                      </p>
-                    )}
                   </div>
                 </div>
               </Link>
@@ -167,5 +85,18 @@ export function SearchBar({ mode = "header" }: SearchBarProps) {
         </div>
       )}
     </div>
+  );
+}
+
+/** Filter courses by query string on the courses page */
+export function filterCourses(courses: Course[], query: string): Course[] {
+  if (!query || query.length < 2) return courses;
+  const q = query.toLowerCase();
+  return courses.filter(
+    (c) =>
+      c.title.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q) ||
+      c.moduleName.toLowerCase().includes(q) ||
+      c.tags.some((t) => t.toLowerCase().includes(q))
   );
 }

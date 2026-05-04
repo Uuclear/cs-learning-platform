@@ -1,18 +1,13 @@
-import { getAllModules, getAllCourses } from "@/lib/courses";
+import { getAllModules } from "@/lib/courses";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
-import { BookOpen, Code, Lightbulb, ArrowRight, GraduationCap, Trophy, Layers, Clock } from "lucide-react";
+import { BookOpen, Code, Lightbulb, ArrowRight, GraduationCap, Trophy, Layers } from "lucide-react";
 import Link from "next/link";
-import { RecentlyViewedClient } from "./recently-viewed";
 
 export default function Home() {
   const modules = getAllModules();
-  const allCourses = getAllCourses();
   const totalCourses = modules.reduce((sum, m) => sum + m.courses.length, 0);
   const totalModules = modules.length;
-
-  // Recently viewed - empty on first visit (would be populated by client-side localStorage)
-  const recentCourses = allCourses.slice(0, 0); // Start empty, will be managed client-side
 
   return (
     <div className="space-y-16">
@@ -106,15 +101,12 @@ export default function Home() {
         </Card>
       </section>
 
-      {/* Recently Viewed - populated client-side, placeholder for server render */}
-      <RecentlyViewedClient courses={recentCourses} />
-
       {/* Course Modules Preview */}
       <section className="space-y-6">
         <h2 className="text-3xl font-bold text-center">课程模块</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {modules.map((module) => (
-            <Link key={module.id} href={`/courses?module=${module.id}`}>
+            <Link key={module.id} href="/courses">
               <div className="p-4 border rounded-lg text-center hover:border-primary hover:shadow-md transition-all cursor-pointer group bg-card">
                 <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-1 rounded-full">
                   模块{module.order}

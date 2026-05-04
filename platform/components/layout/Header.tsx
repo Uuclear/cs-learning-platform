@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { BookOpen, Menu, X, GraduationCap } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { SearchBar } from "@/components/course/SearchBar";
 import { Course } from "@/types/course";
-import { ThemeToggle } from "./ThemeToggle";
-import { ProgressRing } from "./ProgressRing";
 
 interface HeaderProps {
   courses: Course[];
@@ -47,13 +45,11 @@ export function Header({ courses }: HeaderProps) {
 
         {/* Search bar - desktop */}
         <div className="hidden md:block mx-4">
-          <SearchBar />
+          <SearchBar courses={courses} />
         </div>
 
         {/* Right side actions */}
-        <div className="hidden md:flex items-center gap-3 ml-auto">
-          <ProgressRing totalCourses={courses.length} />
-          <ThemeToggle />
+        <div className="hidden md:flex items-center gap-4 ml-auto">
           <Link href="/courses">
             <Button variant="outline" size="sm" className="gap-2">
               <BookOpen className="h-4 w-4" />
@@ -81,7 +77,7 @@ export function Header({ courses }: HeaderProps) {
         <div className="md:hidden border-t">
           <div className="container mx-auto px-4 py-4 space-y-4">
             {/* Mobile search */}
-            <SearchBar />
+            <SearchBar courses={courses} />
             <nav className="flex flex-col gap-4">
               {navItems.map((item) => (
                 <Link
@@ -94,9 +90,6 @@ export function Header({ courses }: HeaderProps) {
                 </Link>
               ))}
             </nav>
-            <div className="flex justify-center">
-              <ThemeToggle />
-            </div>
             <Link href="/courses" onClick={() => setMobileMenuOpen(false)}>
               <Button variant="outline" size="sm" className="w-full gap-2">
                 <BookOpen className="h-4 w-4" />
