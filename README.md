@@ -71,6 +71,7 @@ npm install
 ### 开发模式
 
 ```bash
+cd platform
 npm run dev
 ```
 
@@ -79,25 +80,37 @@ npm run dev
 ### 构建生产版本
 
 ```bash
+cd platform
 npm run build
 npm run start
 ```
 
 ## 部署
 
+### GitHub Pages (推荐，免费)
+
+**CI 自动部署**: 推送到 `main` 分支后，GitHub Actions 会自动构建并部署到 GitHub Pages。
+
+**手动部署**:
+```bash
+./deploy.sh --gh-pages
+```
+
+> 需在 GitHub 仓库设置 → Pages → Build and deployment → Source: GitHub Actions
+
 ### Vercel (一键部署)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F<your-username>%2Fcs-learning-platform&project-name=cs-learning-platform&repository-name=cs-learning-platform&root-directory=platform)
 
-### 手动部署
+### 手动部署 (Node.js 服务器)
 
 ```bash
 cd platform
 npm run build
-# 将 .next/standalone 目录部署到 Node.js 服务器
+npm run start
 ```
 
-### Docker 部署
+或使用一键部署脚本:
 
 ```bash
 ./deploy.sh
@@ -135,7 +148,9 @@ npm run build
 │   │   │   └── exercises/       # 测验题目
 │   │   └── ...
 │   └── ...
-└── deploy.sh                    # 一键部署脚本
+├── deploy.sh                    # 一键部署脚本
+└── .github/workflows/           # GitHub Actions CI/CD
+    └── deploy.yml               # GitHub Pages 自动部署
 ```
 
 ## 添加新课程

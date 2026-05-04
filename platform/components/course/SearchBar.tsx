@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { SearchIndexItem } from "@/lib/courses";
 import { Search, X, BookOpen, Hash, Folder } from "lucide-react";
 import Link from "next/link";
 
@@ -9,11 +8,60 @@ interface SearchBarProps {
   mode?: "header" | "page";
 }
 
+interface SearchResult {
+  courseId: string;
+  title: string;
+  moduleName: string;
+  slug: string;
+  excerpt: string;
+  matchType: string;
+  score?: number;
+}
+
 export function SearchBar({ mode = "header" }: SearchBarProps) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchIndexItem[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchIndex, setSearchIndex] = useState<SearchResult[]>([]);
+  const [indexLoaded, setIndexLoaded] = useState(false);
+
+  // Load static search index on mount (GitHub Pages compatible)
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/search-index.json")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled) {
+          setSearchIndex(data);
+          setIndexLoaded(true);
+        }
+      })
+      .catch(() => {
+        // Fallback: index not available, will use API route
+        if (!cancelled) setIndexLoaded(true);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  const clientSearch = useCallback((q: string): SearchResult[] => {
+    if (q.length < 2) return [];
+    const lower = q.toLowerCase();
+    const scored = searchIndex
+      .map((item) => {
+        const titleMatch = item.title.toLowerCase().includes(lower);
+        const moduleMatch = item.moduleName.toLowerCase().includes(lower);
+        const contentMatch = item.excerpt.toLowerCase().includes(lower);
+        const score = (titleMatch ? 3 : 0) + (moduleMatch ? 2 : 0) + (contentMatch ? 1 : 0);
+        if (score === 0) return null;
+        const matchType = titleMatch ? "title" : moduleMatch ? "module" : "content";
+        return { ...item, matchType, score };
+      })
+      .filter((item): item is SearchResult & { score: number } => item !== null)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    return scored;
+  }, [searchIndex]);
 
   const doSearch = useCallback(async (q: string) => {
     if (q.length < 2) {
@@ -22,15 +70,20 @@ export function SearchBar({ mode = "header" }: SearchBarProps) {
     }
     setLoading(true);
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
-      setResults(data.results || []);
+      // Prefer static index (GitHub Pages), fallback to API route
+      if (indexLoaded && searchIndex.length > 0) {
+        setResults(clientSearch(q));
+      } else {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        setResults(data.results || []);
+      }
     } catch {
       setResults([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [indexLoaded, searchIndex, clientSearch]);
 
   useEffect(() => {
     const timer = setTimeout(() => doSearch(query), 300);
