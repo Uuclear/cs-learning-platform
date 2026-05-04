@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { BookOpen, Menu, X, GraduationCap } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { SearchBar } from "@/components/course/SearchBar";
 import { Course } from "@/types/course";
 import { ThemeToggle } from "./ThemeToggle";
+import { ProgressRing } from "./ProgressRing";
 
 interface HeaderProps {
   courses: Course[];
@@ -50,7 +51,8 @@ export function Header({ courses }: HeaderProps) {
         </div>
 
         {/* Right side actions */}
-        <div className="hidden md:flex items-center gap-4 ml-auto">
+        <div className="hidden md:flex items-center gap-3 ml-auto">
+          <ProgressRing totalCourses={courses.length} />
           <ThemeToggle />
           <Link href="/courses">
             <Button variant="outline" size="sm" className="gap-2">

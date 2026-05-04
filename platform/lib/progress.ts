@@ -171,6 +171,11 @@ export function useProgress() {
     [progress.completed]
   );
 
+  const isBookmarked = useCallback(
+    (courseId: string) => progress.bookmarked.includes(courseId),
+    [progress.bookmarked]
+  );
+
   const progressPercent = useCallback(
     (total: number) =>
       total > 0 ? Math.round((progress.completed.length / total) * 100) : 0,
@@ -182,6 +187,10 @@ export function useProgress() {
     markComplete,
     markIncomplete,
     isCompleted,
+    isBookmarked,
+    toggleBookmark: () => {
+      // Will be called from component level
+    },
     progressPercent,
     completedCount: progress.completed.length,
   };

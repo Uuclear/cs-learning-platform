@@ -1,8 +1,9 @@
 import { getAllModules } from "@/lib/courses";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
-import { BookOpen, Code, Lightbulb, ArrowRight, GraduationCap, Trophy, Layers } from "lucide-react";
+import { BookOpen, Code, Lightbulb, ArrowRight, GraduationCap, Trophy, Layers, Clock } from "lucide-react";
 import Link from "next/link";
+import { RecentlyViewedSection } from "./recently-viewed";
 
 export default function Home() {
   const modules = getAllModules();
@@ -100,6 +101,9 @@ export default function Home() {
           </CardContent>
         </Card>
       </section>
+
+      {/* Recently Viewed */}
+      <RecentlyViewedSection />
 
       {/* Course Modules Preview */}
       <section className="space-y-6">
