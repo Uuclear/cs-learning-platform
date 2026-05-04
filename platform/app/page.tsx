@@ -1,14 +1,18 @@
-import { getAllModules } from "@/lib/courses";
+import { getAllModules, getAllCourses } from "@/lib/courses";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { BookOpen, Code, Lightbulb, ArrowRight, GraduationCap, Trophy, Layers, Clock } from "lucide-react";
 import Link from "next/link";
-import { RecentlyViewedSection } from "./recently-viewed";
+import { RecentlyViewedClient } from "./recently-viewed";
 
 export default function Home() {
   const modules = getAllModules();
+  const allCourses = getAllCourses();
   const totalCourses = modules.reduce((sum, m) => sum + m.courses.length, 0);
   const totalModules = modules.length;
+
+  // Recently viewed - empty on first visit (would be populated by client-side localStorage)
+  const recentCourses = allCourses.slice(0, 0); // Start empty, will be managed client-side
 
   return (
     <div className="space-y-16">
@@ -102,8 +106,8 @@ export default function Home() {
         </Card>
       </section>
 
-      {/* Recently Viewed */}
-      <RecentlyViewedSection />
+      {/* Recently Viewed - populated client-side, placeholder for server render */}
+      <RecentlyViewedClient courses={recentCourses} />
 
       {/* Course Modules Preview */}
       <section className="space-y-6">
