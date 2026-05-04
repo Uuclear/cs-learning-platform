@@ -46,7 +46,7 @@ export function Header({ courses }: HeaderProps) {
 
         {/* Search bar - desktop */}
         <div className="hidden md:block mx-4">
-          <SearchBar courses={courses} />
+          <SearchBar />
         </div>
 
         {/* Right side actions */}
@@ -79,7 +79,7 @@ export function Header({ courses }: HeaderProps) {
         <div className="md:hidden border-t">
           <div className="container mx-auto px-4 py-4 space-y-4">
             {/* Mobile search */}
-            <SearchBar courses={courses} />
+            <SearchBar />
             <nav className="flex flex-col gap-4">
               {navItems.map((item) => (
                 <Link

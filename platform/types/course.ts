@@ -60,3 +60,12 @@ export interface QuizQuestion {
 export interface Quiz {
   questions: QuizQuestion[];
 }
+
+export interface SearchIndexItem {
+  courseId: string;
+  title: string;
+  moduleName: string;
+  slug: string;
+  excerpt: string;
+  matchType: "title" | "content" | "tag" | "module";
+}

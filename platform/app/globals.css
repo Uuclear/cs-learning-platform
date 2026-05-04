@@ -149,3 +149,43 @@
 .course-content .code-block {
   @apply my-6;
 }
+
+/* Dark mode code blocks */
+.dark .course-content code {
+  @apply bg-slate-800 text-slate-200;
+}
+
+/* Print styles */
+@media print {
+  header, footer, .print\\:hidden, nav, button, [class*="Sidebar"],
+  [class*="LessonNavigation"], [class*="ReadingProgress"], [class*="ThemeToggle"],
+  [class*="SearchBar"], [class*="CourseCompleteButton"], [class*="QuizClient"] {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+
+  .course-content h1 { font-size: 24pt; }
+  .course-content h2 { font-size: 20pt; }
+  .course-content h3 { font-size: 16pt; }
+  .course-content p { font-size: 11pt; }
+
+  .course-content pre {
+    border: 1px solid #ddd;
+    background: #f8f8f8 !important;
+    white-space: pre-wrap;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  a[href^="/"]:after {
+    content: "";
+  }
+}
