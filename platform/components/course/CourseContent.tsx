@@ -2,6 +2,7 @@ import { Course } from "@/types/course";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import { CourseCompleteButton } from "@/components/course/CourseCompleteButton";
+import { PrintButton } from "@/components/course/PrintButton";
 import { Clock, BarChart3, Calendar, User } from "lucide-react";
 
 interface CourseContentProps {
@@ -35,6 +36,9 @@ export function CourseContent({ course, contentHtml }: CourseContentProps) {
           <Badge className={getDifficultyColor(course.difficulty)}>
             {getDifficultyLabel(course.difficulty)}
           </Badge>
+          <div className="ml-auto print:hidden">
+            <PrintButton />
+          </div>
         </div>
         <h1 className="text-3xl md:text-4xl font-bold mb-4">{course.title}</h1>
         <p className="text-lg text-muted-foreground mb-6">
