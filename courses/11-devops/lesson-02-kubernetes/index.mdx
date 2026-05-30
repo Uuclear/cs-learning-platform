@@ -39,13 +39,22 @@ Ingress 是管理外部 HTTP/HTTPS 访问集群内服务的规则集合。它通
 让我们通过三个实际的例子来深入理解 Kubernetes 的工作原理：
 
 ### 示例 1：Kubernetes Manifests 生成
-第一个例子展示如何用 Python 动态生成 Kubernetes YAML manifests，包括 Deployment、Service 和 Ingress 配置。
+
+```python filename="code/examples/example-01-k8s-manifests.py"
+# 用 Python 生成 Deployment / Service / Ingress YAML
+```
 
 ### 示例 2：部署策略模拟
-第二个例子演示不同的部署策略（滚动更新 vs 重新创建）如何影响应用的可用性。
+
+```python filename="code/examples/example-02-deployment-strategies.py"
+# 对比 RollingUpdate 与 Recreate 对可用性的影响
+```
 
 ### 示例 3：水平 Pod 自动伸缩器模拟
-第三个例子模拟 HPA（Horizontal Pod Autoscaler）如何根据负载自动调整 Pod 数量。
+
+```python filename="code/examples/example-03-hpa-simulation.py"
+# 根据 CPU 指标模拟 HPA 扩缩容决策
+```
 
 ## 深入理解
 

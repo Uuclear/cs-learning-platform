@@ -3,7 +3,7 @@
   "title": "Web安全：OWASP Top 10",
   "module": "12-security",
   "slug": "lesson-03-web-security",
-  "status": "draft",
+  "status": "completed",
   "module_name": "安全与密码学",
   "difficulty": 3,
   "duration": 30,
@@ -18,11 +18,18 @@
   ],
   "learning_objectives": [],
   "files": [
-    "index.mdx",
-    "metadata.json"
+    "code/examples/example-01-sql-injection-demo.py",
+    "code/examples/example-02-xss-demo.py",
+    "code/examples/example-03-csrf-demo.py",
+    "code/solutions/solution-01.py",
+    "code/solutions/solution-02.py",
+    "code/solutions/solution-03.py",
+    "exercises/challenges/challenge-01.md",
+    "exercises/challenges/challenge-02.md",
+    "exercises/quiz.json"
   ],
   "author": "CS教授",
   "created": "2026-05-03",
-  "updated": "2026-05-03",
+  "updated": "2026-05-30",
   "version": "1.0.0"
 }
