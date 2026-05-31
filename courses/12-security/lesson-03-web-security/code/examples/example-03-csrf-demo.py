@@ -205,19 +205,54 @@ class CSRFHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(content.encode('utf-8'))
 
 
-def main():
-    """主函数 - 启动CSRF演示服务器"""
-    print("=== CSRF攻击演示与防御 ===")
-    print("启动服务器: http://localhost:8000")
-    print("注意：此演示仅用于教育目的")
-    print("按 Ctrl+C 停止服务器\n")
+def run_console_demo():
+    """控制台演示：无需启动 HTTP 服务即可理解 CSRF 机制"""
+    print("=== CSRF 攻击与防御（控制台演示）===\n")
 
-    try:
-        with socketserver.TCPServer(("", 8000), CSRFHandler) as httpd:
-            print("服务器运行中...")
-            httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\n服务器已停止")
+    session_id = secrets.token_hex(8)
+    CSRFHandler.sessions[session_id] = "admin"
+    valid_token = secrets.token_hex(16)
+
+    print("1. 用户已登录，会话 ID:", session_id[:12] + "...")
+    print("2. 合法转账表单携带 CSRF 令牌:", valid_token[:12] + "...")
+
+    def validate_transfer(csrf_token: str | None, recipient: str, amount: str) -> str:
+        if not csrf_token:
+            return "❌ 拒绝：缺少 CSRF 令牌（疑似跨站伪造请求）"
+        if csrf_token != valid_token:
+            return "❌ 拒绝：CSRF 令牌无效"
+        return f"✅ 转账成功：向 {recipient} 转账 {amount} 元"
+
+    print("\n场景 A — 用户在本站提交表单:")
+    print(validate_transfer(valid_token, "张三", "100"))
+
+    print("\n场景 B — 恶意站点伪造 POST（无令牌）:")
+    print(validate_transfer(None, "攻击者账户", "10000"))
+
+    print("\n场景 C — 攻击者猜测错误令牌:")
+    print(validate_transfer("fake-token", "攻击者账户", "10000"))
+
+    print("\n防御要点: CSRF 令牌 + SameSite Cookie + 敏感操作二次确认")
+    print("完整交互演示可运行: python3 example-03-csrf-demo.py --server")
+
+
+def main():
+    """主函数 - 默认控制台演示；--server 启动 HTTP 服务"""
+    import sys
+
+    if "--server" in sys.argv:
+        print("=== CSRF攻击演示与防御 ===")
+        print("启动服务器: http://localhost:8000")
+        print("注意：此演示仅用于教育目的")
+        print("按 Ctrl+C 停止服务器\n")
+        try:
+            with socketserver.TCPServer(("", 8000), CSRFHandler) as httpd:
+                print("服务器运行中...")
+                httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\n服务器已停止")
+    else:
+        run_console_demo()
 
 
 if __name__ == "__main__":
