@@ -1,4 +1,13 @@
-# 文档即代码：Markdown/Diagrams
+import LessonHeader from '@components/LessonHeader';
+import Quiz from '@components/Quiz';
+import Challenge from '@components/Challenge';
+
+<LessonHeader
+  title="文档即代码：Markdown/Diagrams"
+  module="软件工程"
+  difficulty={2}
+  duration={25}
+/>
 
 ## 开场白
 
@@ -289,10 +298,13 @@ sequenceDiagram
 - 安全方案定义
 - 输出为YAML格式
 
-### 挑战项目
+### 编程挑战
 
-1. **集成现有项目**：选择一个现有的开源项目，为其添加文档即代码的支持
-2. **自定义文档生成器**：创建一个能够从多种源（代码、数据库schema、配置文件）生成统一文档的工具
+<Challenge id="challenge-01" />
+
+<Challenge id="challenge-02" />
+
+<Quiz questionsPath="exercises/quiz.json" />
 
 ## 小结与思考
 
