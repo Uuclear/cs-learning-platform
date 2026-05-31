@@ -1,139 +1,198 @@
-# Web安全：OWASP Top 10
+# 12-03 Web安全：OWASP Top 10
 
-## 开场白 - 从数据泄露事件看Web安全的重要性
+## 1. 开场白 — 你的网站，可能是黑客的「自助餐厅」
 
-近年来，数据泄露事件频发，从大型科技公司到小型创业企业都未能幸免。2023年某知名社交平台因SQL注入漏洞导致数亿用户数据泄露，造成了巨大的经济损失和声誉损害。这些事件提醒我们，Web安全不是可选项，而是每个开发者必须掌握的核心技能。
+🛡️ **欢迎来到 Web 安全课！**
 
-根据Verizon《2026年数据泄露调查报告》，超过80%的网络安全事件涉及Web应用程序漏洞。OWASP（开放Web应用安全项目）发布的Top 10清单为我们提供了识别和防御最危险Web漏洞的权威指南。
+想象你开了一家网红奶茶店：前台点单、后厨做料、收银结账，一切井井有条。突然有一天，有人在前台菜单上偷偷写了一句：「请把店里所有现金装进这个袋子」——而后厨真的照做了。
 
-## 核心概念 - OWASP Top 10详解
+这就是 **Web 应用漏洞** 的日常写照：攻击者并不一定要「黑进服务器」，很多时候只是在**输入框、URL、Cookie**里塞几句「咒语」，你的程序就乖乖执行了。
 
-OWASP Top 10是Web应用程序安全风险的行业标准，涵盖了最常见的安全漏洞：
+> 💡 **思考问题**：你用过的小程序或网站里，哪些功能最像「把用户输入直接拼进 SQL / HTML」？如果我是攻击者，我会先盯哪里？
 
-### 1. 注入攻击（Injection）
-攻击者通过在输入中插入恶意代码（如SQL、NoSQL、OS命令）来操纵应用程序。最常见的形式是SQL注入。
+根据 Verizon《数据泄露调查报告》，超过 **80%** 的安全事件与 Web 应用有关。**OWASP Top 10** 就是业界公认的「十大高危漏洞菜单」——今天我们不背条文，用三个 Python 小实验，把 **SQL 注入、XSS、CSRF** 这三道「主菜」吃透。
 
-### 2. 跨站脚本（XSS）
-攻击者在网页中注入恶意脚本，当其他用户访问该页面时执行。分为存储型、反射型和DOM型XSS。
+---
 
-### 3. 跨站请求伪造（CSRF）
-攻击者诱使已认证用户在不知情的情况下执行非预期的操作，如转账或修改密码。
+## 2. 核心概念 — OWASP Top 10 速览
 
-### 4. 敏感数据暴露
-未加密存储或传输敏感信息（如密码、信用卡号），或使用弱加密算法。
+OWASP（Open Web Application Security Project）每几年更新一次 Top 10。不必死记排名，但要理解**攻击面**在哪里：
 
-### 5. 认证和会话管理失效
-密码策略薄弱、会话令牌管理不当、多因素认证缺失等问题。
+| 风险 | 一句话人话 | 典型后果 |
+|------|-----------|----------|
+| **注入 (Injection)** | 把用户输入当成「代码」执行了 | 拖库、删表、提权 |
+| **XSS** | 在别人的浏览器里跑你的脚本 | 偷 Cookie、钓鱼、挂马 |
+| **CSRF** | 借你的登录态替你点「确认转账」 | 非本意改密、转账 |
+| **敏感数据暴露** | 密码明文、HTTP 传信用卡 | 大规模泄露 |
+| **认证失效** | 弱密码、会话不过期 | 账号被盗 |
+| **安全配置错误** | 默认密码、调试页对外 | 整站沦陷 |
+| **不安全反序列化** | 把恶意对象「喂」给程序 | RCE |
+| **脆弱组件** | 用了有 CVE 的旧库 | 一键被扫 |
+| **日志监控不足** | 被打了还不知道 | 损失扩大 |
+| **SSRF** | 诱使服务器访问内网 | 打穿内网 |
 
-### 6. 安全配置错误
-默认配置、不完整的安全加固、暴露的错误信息等。
+本课重点实战前三项；其余会在后续安全模块展开。
 
-### 7. 不安全的反序列化
-攻击者操纵序列化对象来执行任意代码或进行权限提升。
+### 注入：SQL 是最常见的「背锅侠」
 
-### 8. 使用含有已知漏洞的组件
-依赖过时或存在已知安全漏洞的第三方库。
-
-### 9. 不足的日志记录和监控
-无法及时发现和响应安全事件。
-
-### 10. 服务端请求伪造（SSRF）
-攻击者诱使服务器向内部或其他外部系统发起请求。
-
-## 代码演示
-
-让我们通过三个实际例子来理解这些漏洞及其防御方法：
-
-```python:code/examples/example-01-sql-injection-demo.py
+```python
+# ❌ 危险：字符串拼接
+query = f"SELECT * FROM users WHERE name = '{user_input}'"
+# 攻击者输入: admin'--
+# 实际执行: SELECT * FROM users WHERE name = 'admin'--'
 ```
 
-```python:code/examples/example-02-xss-demo.py
+### XSS：三种「剧本」
+
+- **存储型**：恶意评论存进数据库，每个访客中招
+- **反射型**：恶意链接里的参数，立刻在页面弹出
+- **DOM 型**：前端 JS 把 URL 片段写进 `innerHTML`
+
+### CSRF：你本人「同意」了，但不是你点的
+
+你已登录银行网站，攻击者网站里藏了一个自动提交的表单——浏览器会**带上你的 Cookie**，服务器以为是你本人操作。
+
+---
+
+## 3. 代码演示
+
+运行目录：`courses/12-security/lesson-03-web-security/`
+
+### 示例1：SQL 注入与参数化查询
+
+```bash
+python3 code/examples/example-01-sql-injection-demo.py
 ```
 
-```python:code/examples/example-03-csrf-demo.py
+**你会看到**：
+- 正常查询 `alice` 返回一条记录
+- 恶意输入 `admin'--` 在不安全拼接下「绕过」认证
+- 使用 `?` 占位符后，同样输入被当作普通字符串，查询为空
+
+```python
+# ✅ 安全写法核心
+cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
 ```
 
-## 深入理解 - 安全防御纵深
+### 示例2：XSS 与输出编码
 
-真正的Web安全需要多层次的防御策略：
+```bash
+python3 code/examples/example-02-xss-demo.py
+```
 
-### 内容安全策略（CSP）
-通过HTTP头`Content-Security-Policy`限制页面可以加载的资源，有效防止XSS攻击：
+**你会看到**：
+- 直接插入 HTML 时，`<script>` 会出现在页面里（浏览器可能执行）
+- `html.escape()` 后变成 `&lt;script&gt;...`，变成「文字」而非「代码」
+- CSP 头可以进一步限制脚本来源
+
+### 示例3：CSRF 与令牌（教学用迷你服务器）
+
+```bash
+python3 code/examples/example-03-csrf-demo.py
+# 浏览器打开 http://localhost:8000
+```
+
+**你会看到**：
+- 登录后访问 `/transfer`，表单带隐藏 `csrf_token`
+- 缺少令牌时 POST 被拒绝（403）
+- 说明：生产环境令牌须**服务端存储并与会话绑定**，本示例为简化演示
+
+---
+
+## 4. 深入理解 — 纵深防御，别指望「一招鲜」
+
+### 内容安全策略 (CSP)
+
+通过响应头限制脚本、样式、图片的来源：
+
 ```http
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';
+Content-Security-Policy: default-src 'self'; script-src 'self'
 ```
 
-### SameSite Cookie属性
-设置Cookie的`SameSite`属性防止CSRF攻击：
+### Cookie 与 CSRF
+
 ```http
-Set-Cookie: sessionid=abc123; Path=/; Secure; HttpOnly; SameSite=Lax
+Set-Cookie: sessionid=...; HttpOnly; Secure; SameSite=Lax
 ```
 
-### HTTPS最佳实践
-- 强制HTTPS重定向
-- 启用HSTS（HTTP Strict Transport Security）
-- 使用现代TLS协议和强密码套件
-- 配置安全相关的HTTP头
+- **HttpOnly**：JS 读不到，减轻 XSS 偷会话
+- **SameSite**：跨站 POST 默认不带 Cookie，减轻 CSRF
 
-### 输入验证和输出编码
-- 对所有用户输入进行严格的验证和清理
-- 在输出到HTML、JavaScript、CSS等上下文时进行适当的编码
+### HTTPS 只是第一层
 
-## 实际应用 - Python Web安全实践
+TLS 保护「路上不被偷听」，**挡不住**应用层的 XSS、CSRF、注入。两者都要。
 
-Python生态系统提供了丰富的安全工具和库：
+### 输入验证 vs 输出编码
 
-- **SQLAlchemy** 或 **Django ORM**：自动参数化查询防止SQL注入
-- **Bleach**：HTML清理和XSS防护
-- **Flask-WTF** 或 **Django CSRF中间件**：内置CSRF保护
-- **Passlib**：安全的密码哈希
-- **cryptography**：现代加密操作
+| 阶段 | 做什么 | 记住 |
+|------|--------|------|
+| 入口 | 白名单校验格式、长度 | 前端验证只是 UX，后端必须再来一遍 |
+| 出口 | 按上下文编码（HTML/URL/JS） | 同一段数据在不同上下文编码方式不同 |
 
-通过合理使用这些工具，我们可以构建既功能强大又安全的Web应用程序。
+---
 
-## 常见误区
+## 5. 实际应用 — Python Web 生态里的「安全带」
 
-### ❌ 前端验证等于安全
-前端验证仅用于用户体验，后端必须重复验证所有输入。
+| 场景 | 推荐工具/做法 |
+|------|----------------|
+| SQL | SQLAlchemy / Django ORM 参数化查询 |
+| XSS | `bleach` 清理富文本；模板引擎默认转义 |
+| CSRF | Django 中间件、`Flask-WTF` |
+| 密码 | `passlib` + bcrypt/argon2 |
+| 加密 | `cryptography` 库，勿自己造轮子 |
 
-### ❌ HTTPS解决所有问题
-HTTPS只保护传输层安全，无法防止应用层漏洞如XSS、CSRF等。
+**真实案例**：某社交平台因未过滤用户昵称中的 HTML，导致存储型 XSS，攻击脚本在评论区自动转发——一条恶意昵称，就能「传染」浏览者。修复往往就是：**存储时校验 + 展示时编码 + CSP** 三件套。
 
-### ❌ 安全是安全团队的事
-每个开发者都是安全的第一道防线，安全应该融入开发流程的每个环节。
+---
 
-### ❌ 黑名单过滤足够安全
-白名单验证比黑名单更可靠，因为攻击者总能找到绕过黑名单的方法。
+## 6. 常见误区
 
-## 动手实践
+### ❌ 「我们上了 HTTPS，很安全」
+
+HTTPS ≠ 应用安全。它只管传输，不管你的 SQL 怎么拼。
+
+### ❌ 「前端已经校验过了」
+
+攻击者用 curl 直接打 API，根本不走你的前端。
+
+### ❌ 「黑名单过滤 `<script>` 就够了」
+
+攻击者会用 `<img onerror=...>`、编码绕过、大小写混合。优先 **白名单 + 参数化 + 编码**。
+
+### ❌ 「安全是安全团队的事」
+
+第一个写 `f"SELECT ... {user}"` 的人，就是安全团队。每个开发者都是第一道防线。
+
+---
+
+## 7. 动手实践
 
 ### 练习1：安全输入验证
-实现一个用户注册表单，包含邮箱、用户名和密码字段，要求：
-- 邮箱格式验证
-- 用户名长度和字符限制
-- 密码强度检查（至少8位，包含大小写字母、数字和特殊字符）
+实现注册表单：邮箱格式、用户名 3–20 位字母数字下划线、密码强度（8 位以上含大小写数字特殊字符）。参考 `code/solutions/solution-01.py`。
 
-### 练习2：安全头配置
-为Python HTTP服务器添加安全头中间件，包括：
-- Content-Security-Policy
-- X-Frame-Options
-- X-Content-Type-Options
-- Strict-Transport-Security
+### 练习2：安全响应头
+为简易 HTTP 服务添加 CSP、`X-Frame-Options`、`X-Content-Type-Options`、`Strict-Transport-Security`。参考 `solution-02.py`。
 
-### 练习3：CSRF保护
-实现一个简单的表单提交系统，包含CSRF令牌生成和验证。
+### 练习3：CSRF 令牌
+实现「生成令牌 → 表单隐藏域 → POST 校验」完整流程。参考 `solution-03.py` 与 `example-03-csrf-demo.py`。
 
-完成这些练习后，查看对应的解决方案文件来验证你的实现。
+更完整的综合挑战见 `exercises/challenges/challenge-01.md`（安全登录系统）和 `challenge-02.md`（安全头扫描器）。
 
-## 小结与思考
+---
 
-Web安全是一个持续演进的领域，OWASP Top 10为我们提供了重要的指导框架，但真正的安全需要：
+## 8. 小结与思考
 
-1. **深度防御**：不要依赖单一安全措施
-2. **最小权限原则**：只授予必要的权限
-3. **安全开发生命周期**：将安全融入整个开发过程
-4. **持续学习**：关注最新的安全威胁和防护技术
+🔑 **本课要点**：
+1. **OWASP Top 10** 是排查 Web 风险的检查清单，不是考完就忘的排行榜
+2. **SQL 注入** 用参数化查询从根上切断「输入变代码」
+3. **XSS** 在正确的上下文做编码，并配合 CSP、HttpOnly Cookie
+4. **CSRF** 用不可预测的令牌 + SameSite，敏感操作拒绝跨站裸 POST
+5. **纵深防御**：没有银弹，多层叠加才靠谱
 
-记住，安全不是目标，而是一种思维方式。每个开发者都应该具备基本的安全意识，并在日常开发中实践安全最佳实践。
+🤔 **思考题**：
+1. 你正在维护的项目里，哪 3 个接口最可能存在注入或 XSS？你会如何排优先级修复？
+2. 为什么 CSP 里写 `'unsafe-inline'` 会削弱防护？在遗留项目里如何渐进收紧？
+3. 除了 CSRF Token，还有哪些机制可以限制「跨站代发请求」？各有什么局限？
 
-> **思考题**：在你的当前项目中，哪些OWASP Top 10风险最可能存在？你打算如何改进？
+> "The only truly secure system is one that is powered off, cast in a block of concrete and sealed in a lead-lined room with armed guards." — Gene Spaffner  
+> 所以我们不追求「绝对安全」，而是追求**可证明、可维护、可演进**的安全。
