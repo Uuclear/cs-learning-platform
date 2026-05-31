@@ -7,10 +7,10 @@
 使用 numpy 生成不同的负载模式来测试自动伸缩行为。
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
 import time
 from typing import List, Tuple
+
+import numpy as np
 
 
 class HPASimulator:
@@ -77,7 +77,12 @@ class HPASimulator:
         return self.cpu_usage_history, self.replica_history
 
     def plot_results(self, load_patterns: List[str]):
-        """绘制结果图表"""
+        """绘制结果图表（需要 matplotlib，无则仅打印模拟结果）"""
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            raise ImportError("matplotlib")
+
         fig, axes = plt.subplots(len(load_patterns), 2, figsize=(12, 4 * len(load_patterns)))
         if len(load_patterns) == 1:
             axes = [axes]
