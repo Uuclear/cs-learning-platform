@@ -197,4 +197,12 @@
 
 ---
 
-*最后更新: 2026-05-03 算法导论模块（10课）完成！总计110门课程*
+## 2026-05-31 定时维护
+
+- 收尾 6 门 `draft` 课程，全部标为 `completed`
+- 修复示例脚本：
+  - `11-devops/lesson-02-kubernetes`：部署策略 Pod 命名 TypeError；HPA 移除 matplotlib 依赖
+  - `12-security/lesson-03-web-security`：CSRF 默认快速演示模式（`--serve` 启动服务器）
+  - `08-ai-ml/lesson-06-reinforcement-learning`：移除未使用的 matplotlib 导入
+
+*最后更新: 2026-05-31 — draft 课程收尾完成*
