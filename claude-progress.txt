@@ -207,4 +207,5 @@
   - 补充 §7 三道编程练习、`<Quiz />` 组件
   - 更新 metadata（learning_objectives、files 列表）
   - 验证 3 个 example 脚本可运行
-- ⏳ 剩余 draft：08-06、11-02、12-03、14-05、15-01（5 门）
+- ✅ **14-05 文档即代码**：draft → completed（Quiz、练习与 metadata）
+- ⏳ 剩余 draft：08-06、11-02、12-03、15-01（4 门）

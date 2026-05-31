@@ -1,3 +1,5 @@
+import { Quiz } from '@site/src/components/course'
+
 # 文档即代码：Markdown/Diagrams
 
 ## 开场白
@@ -267,32 +269,36 @@ sequenceDiagram
 
 ## 动手实践
 
-### 练习1：创建简单的Markdown文档生成器
+### 练习1：创建简单的 Markdown 文档生成器（⭐）
 
-使用提供的`example-01-markdown-generator.py`作为基础，扩展功能以支持：
-- 类文档生成
-- 模块级别的文档提取
-- 输出到文件而非仅返回字符串
+运行 `code/examples/example-01-markdown-generator.py`，观察从 docstring 生成的 Markdown 结构。在此基础上扩展：支持**类**的文档提取，并将结果写入 `api-docs.md` 文件。
 
-### 练习2：实现Mermaid图表生成
+**参考答案**：`code/solutions/solution-01.py`
 
-基于`example-02-diagrams-as-code.py`，实现以下功能：
-- 支持状态图生成
-- 从JSON配置文件读取图表定义
-- 添加错误处理和验证
+### 练习2：实现 Mermaid 图表生成（⭐⭐）
 
-### 练习3：完整的OpenAPI生成器
+基于 `example-02-diagrams-as-code.py`，为给定的类定义生成 Mermaid **类图**，并为 3 步以上的交互流程生成**序列图**。
 
-扩展`example-03-api-docs.py`以支持：
-- 请求/响应体的详细定义
-- 参数验证规则
-- 安全方案定义
-- 输出为YAML格式
+**参考答案**：`code/solutions/solution-02.py`
 
-### 挑战项目
+### 练习3：完整的 OpenAPI 生成器（⭐⭐⭐）
 
-1. **集成现有项目**：选择一个现有的开源项目，为其添加文档即代码的支持
-2. **自定义文档生成器**：创建一个能够从多种源（代码、数据库schema、配置文件）生成统一文档的工具
+扩展 `example-03-api-docs.py`，为每个端点补充 `parameters` 与 `responses` 的 schema 描述，并支持导出为 JSON 或 YAML。
+
+**参考答案**：`code/solutions/solution-03.py`
+
+```bash
+python code/examples/example-01-markdown-generator.py
+python code/examples/example-02-diagrams-as-code.py
+python code/examples/example-03-api-docs.py
+```
+
+### 编程挑战
+
+完成 `exercises/challenges/` 中的两道综合挑战：
+
+1. **挑战1**：为现有项目集成文档即代码（`challenge-01.md`）
+2. **挑战2**：多源统一文档生成器（`challenge-02.md`）
 
 ## 小结与思考
 
@@ -312,3 +318,5 @@ sequenceDiagram
 3. 文档即代码如何与现有的开发文化和工具链集成？
 
 记住，最好的文档是那些能够随着代码一起演进，并且始终反映系统真实状态的文档。
+
+<Quiz questions={require('./exercises/quiz.json')} />
