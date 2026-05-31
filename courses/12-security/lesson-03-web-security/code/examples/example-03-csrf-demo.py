@@ -205,8 +205,40 @@ class CSRFHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(content.encode('utf-8'))
 
 
+def run_cli_demo():
+    """命令行演示：无需启动 HTTP 服务器即可理解 CSRF 防护"""
+    print("=== CSRF 攻击演示与防御（CLI 模式）===\n")
+
+    session_id = secrets.token_hex(16)
+    CSRFHandler.sessions[session_id] = "admin"
+    csrf_token = secrets.token_hex(32)
+
+    print("1. 用户已登录，会话 ID:", session_id[:8] + "...")
+    print("2. 转账表单生成 CSRF 令牌:", csrf_token[:16] + "...")
+
+    # 合法请求：带令牌
+    print("\n[合法请求] POST /transfer（含 csrf_token）→ 200 转账成功")
+    print(f"   recipient=alice, amount=100, csrf_token={csrf_token[:8]}...")
+
+    # 恶意请求：无令牌（跨站伪造）
+    print("\n[CSRF 攻击] POST /transfer（无 csrf_token）→ 403 请求被拒绝")
+    print("   攻击者页面可自动提交表单，但缺少令牌无法通过验证")
+
+    print("\n防御要点:")
+    print("  • 每个敏感操作使用一次性 CSRF 令牌")
+    print("  • Cookie 设置 SameSite=Lax/Strict")
+    print("  • 关键操作要求重新认证")
+    print("\n如需交互式演示，请运行: python3 example-03-csrf-demo.py --server")
+
+
 def main():
-    """主函数 - 启动CSRF演示服务器"""
+    """主函数 - 启动 CSRF 演示服务器（需 --server 参数）"""
+    import sys
+
+    if "--server" not in sys.argv:
+        run_cli_demo()
+        return
+
     print("=== CSRF攻击演示与防御 ===")
     print("启动服务器: http://localhost:8000")
     print("注意：此演示仅用于教育目的")

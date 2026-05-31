@@ -8,8 +8,6 @@
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
-import time
 from typing import List, Tuple
 
 
@@ -77,7 +75,9 @@ class HPASimulator:
         return self.cpu_usage_history, self.replica_history
 
     def plot_results(self, load_patterns: List[str]):
-        """绘制结果图表"""
+        """绘制结果图表（需要 matplotlib）"""
+        import matplotlib.pyplot as plt
+
         fig, axes = plt.subplots(len(load_patterns), 2, figsize=(12, 4 * len(load_patterns)))
         if len(load_patterns) == 1:
             axes = [axes]
@@ -119,22 +119,20 @@ def main():
     # 定义要测试的负载模式
     load_patterns = ["steady", "spike", "gradual_increase"]
 
-    # 运行模拟并生成图表
+    # 优先尝试生成图表；无 matplotlib 时仅输出文本模拟
     try:
         hpa.plot_results(load_patterns)
         print("\n✅ HPA 模拟完成！")
-        print("💡 观察要点:")
-        print("   - 副本数如何响应 CPU 负载变化")
-        print("   - 自动伸缩的延迟性（HPA 默认每 15-30 秒同步一次）")
-        print("   - 副本数的上下限约束")
     except ImportError:
-        print("⚠️  matplotlib 未安装，跳过图表生成")
-        print("运行以下命令安装: pip install matplotlib")
-
-        # 如果没有 matplotlib，只运行模拟
+        print("⚠️  matplotlib 未安装，跳过图表生成（可运行: pip install matplotlib）\n")
         for pattern in load_patterns:
-            print(f"\n--- {pattern.upper()} ---")
+            print(f"--- {pattern.upper()} ---")
             hpa.simulate_load_pattern(pattern, duration=30)
+
+    print("\n💡 观察要点:")
+    print("   - 副本数如何响应 CPU 负载变化")
+    print("   - 自动伸缩的延迟性（HPA 默认每 15-30 秒同步一次）")
+    print("   - 副本数的上下限约束")
 
 
 if __name__ == "__main__":
