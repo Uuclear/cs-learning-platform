@@ -96,7 +96,8 @@ class DeploymentSimulator:
                     # 删除旧 Pod
                     self.pods.remove(pod)
                     # 创建新 Pod 替代
-                    new_pod = Pod(f"{self.app_name}-pod-{updated+pod.name.split('-')[-1]}", new_version)
+                    pod_suffix = pod.name.rsplit("-", 1)[-1]
+                    new_pod = Pod(f"{self.app_name}-pod-{updated}-{pod_suffix}", new_version)
                     new_pod.ready = False
                     self.pods.append(new_pod)
                     updated += 1
@@ -109,7 +110,7 @@ class DeploymentSimulator:
                         pod.ready = True
 
             self.display_status("滚动更新")
-            time.sleep(1)
+            time.sleep(0.05)
 
         self.current_version = new_version
         print("✅ 滚动更新完成！")
@@ -125,7 +126,7 @@ class DeploymentSimulator:
         old_pods = self.pods[:]
         self.pods = []
         self.display_status("重新创建 - 删除阶段")
-        time.sleep(2)
+        time.sleep(0.1)
 
         # 第二阶段：创建所有新 Pod
         print("阶段 2: 创建所有新 Pod...")
@@ -142,7 +143,7 @@ class DeploymentSimulator:
                     pod.ready = True
                     ready_count += 1
             self.display_status("重新创建 - 创建阶段")
-            time.sleep(1)
+            time.sleep(0.05)
 
         self.current_version = new_version
         print("✅ 重新创建部署完成！")

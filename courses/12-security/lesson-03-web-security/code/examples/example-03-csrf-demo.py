@@ -205,19 +205,46 @@ class CSRFHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(content.encode('utf-8'))
 
 
-def main():
-    """主函数 - 启动CSRF演示服务器"""
-    print("=== CSRF攻击演示与防御 ===")
-    print("启动服务器: http://localhost:8000")
-    print("注意：此演示仅用于教育目的")
-    print("按 Ctrl+C 停止服务器\n")
+def run_offline_demo():
+    """离线演示 CSRF 令牌机制（无需启动 HTTP 服务）"""
+    print("1. 用户登录后，服务器为会话生成 session_id")
+    session_id = secrets.token_hex(8)
+    username = "admin"
+    CSRFHandler.sessions[session_id] = username
+    print(f"   会话: {session_id[:8]}... → 用户 {username}")
 
-    try:
-        with socketserver.TCPServer(("", 8000), CSRFHandler) as httpd:
-            print("服务器运行中...")
-            httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\n服务器已停止")
+    print("\n2. 转账表单附带 CSRF 令牌，服务器校验后才执行操作")
+    csrf_token = secrets.token_hex(16)
+    print(f"   合法请求: recipient=alice, amount=100, csrf_token={csrf_token[:16]}...")
+    print("   ✅ 令牌存在 → 转账允许")
+
+    print("\n3. 恶意站点发起的跨站请求通常不带有效令牌")
+    print("   恶意请求: recipient=attacker, amount=1000, (无 csrf_token)")
+    print("   ❌ 缺少令牌 → 403 Forbidden")
+
+    print("\n4. 辅助防御: SameSite=Lax Cookie、验证 Referer（辅助）")
+    print("   Set-Cookie: sessionid=...; Path=/; SameSite=Lax")
+
+
+def main():
+    """主函数 - 默认离线演示；传入 --serve 启动交互服务器"""
+    import sys
+
+    print("=== CSRF攻击演示与防御 ===\n")
+    print("注意：此演示仅用于教育目的\n")
+
+    if "--serve" in sys.argv:
+        print("启动服务器: http://localhost:8000")
+        print("按 Ctrl+C 停止服务器\n")
+        try:
+            with socketserver.TCPServer(("", 8000), CSRFHandler) as httpd:
+                print("服务器运行中...")
+                httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\n服务器已停止")
+    else:
+        run_offline_demo()
+        print("\n💡 需要交互式页面时运行: python3 example-03-csrf-demo.py --serve")
 
 
 if __name__ == "__main__":
