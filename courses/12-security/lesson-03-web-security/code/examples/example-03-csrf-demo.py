@@ -205,6 +205,22 @@ class CSRFHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(content.encode('utf-8'))
 
 
+def run_demo():
+    """非交互演示：说明 CSRF 原理与防御（适合批量验证）"""
+    print("=== CSRF攻击演示与防御 ===\n")
+    print("1. 攻击原理：利用用户已登录的 Cookie，在用户不知情时发起敏感请求")
+    print("2. 典型场景：恶意页面自动 POST 到银行 /transfer 接口")
+    print("3. 防御措施：")
+    print("   - 每个表单附带 CSRF Token，服务端校验")
+    print("   - Cookie 设置 SameSite=Lax/Strict")
+    print("   - 敏感操作要求二次确认\n")
+
+    token = secrets.token_hex(16)
+    print(f"示例 CSRF Token: {token}")
+    print("缺少令牌时，服务器应返回 403 Forbidden\n")
+    print("✅ 演示完成。使用 --serve 可启动交互式 HTTP 服务器")
+
+
 def main():
     """主函数 - 启动CSRF演示服务器"""
     print("=== CSRF攻击演示与防御 ===")
@@ -221,4 +237,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    if "--serve" in sys.argv:
+        main()
+    else:
+        run_demo()

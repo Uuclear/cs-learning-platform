@@ -96,7 +96,12 @@ class DeploymentSimulator:
                     # 删除旧 Pod
                     self.pods.remove(pod)
                     # 创建新 Pod 替代
-                    new_pod = Pod(f"{self.app_name}-pod-{updated+pod.name.split('-')[-1]}", new_version)
+                    suffix = pod.name.rsplit("-", 1)[-1]
+                    try:
+                        pod_num = int(suffix)
+                    except ValueError:
+                        pod_num = updated
+                    new_pod = Pod(f"{self.app_name}-pod-{pod_num}", new_version)
                     new_pod.ready = False
                     self.pods.append(new_pod)
                     updated += 1
