@@ -87,3 +87,9 @@ if __name__ == "__main__":
     print(f"一致性检查: {'通过' if consistent else '失败'}")
     if inconsistencies:
         print(f"不一致: {inconsistencies}")
+
+# 预期输出:
+# 完整性检查: 通过
+# 准确性检查: 通过
+# 一致性检查: 失败
+# 不一致: ["键 C001 在字段 region 上存在不一致: {'上海', '北京'}"]

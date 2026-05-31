@@ -22,7 +22,7 @@ import Challenge from '@components/Challenge';
 
 ### 什么是数据治理？
 
-数据治理是一套组织流程、角色、策略和标准，用于确保数据在整个组织中的可用性、可用性、完整性、一致性、可审计性和安全性。它不仅仅是技术问题，更是业务和管理问题。
+数据治理是一套组织流程、角色、策略和标准，用于确保数据在整个组织中的可用性、完整性、一致性、可审计性和安全性。它不仅仅是技术问题，更是业务和管理问题。
 
 数据治理的核心目标包括：
 - **确保数据质量**：数据必须准确、完整、一致和及时
@@ -530,26 +530,39 @@ if __name__ == "__main__":
 
 ## 动手实践
 
-现在让我们通过两个实践挑战来巩固所学知识。
+### 练习1：扩展数据质量规则（⭐）
+
+在 `example-01-data-quality.py` 的基础上，为 `check_data_accuracy` 增加 **电话号码** 验证规则（`rule == "phone"`）：值必须是字符串，且去掉 `-` 和空格后全部为数字。
+
+**提示**：可参考 `code/solutions/solution-01.py` 中的 `phone` 规则实现。
+
+### 练习2：血缘影响分析（⭐⭐）
+
+使用 `DataLineageTracker`，注册以下处理链：`raw_orders` → `cleaned_orders` → `monthly_sales_report`。编写代码打印 `monthly_sales_report` 的**全部上游节点**，以及从 `raw_orders` 到 `monthly_sales_report` 的**完整路径**。
+
+**提示**：使用 `get_upstream()` 和 `find_impact_path()`，答案思路见 `code/solutions/solution-02.py`。
+
+### 练习3：数据目录搜索（⭐⭐）
+
+向 `SimpleDataCatalog` 注册至少 3 个数据资产，要求其中一个带 `pii` 标签。实现：按关键词 `"order"` 搜索，再按标签 `["pii"]` 过滤，并打印匹配资产的 `asset_id` 与 `owner`。
+
+**提示**：参考 `code/solutions/solution-03.py` 中的 `search_assets` 用法。
+
+---
+
+完成上述练习后，可运行示例代码验证环境：
+
+```bash
+python code/examples/example-01-data-quality.py
+python code/examples/example-02-data-lineage.py
+python code/examples/example-03-data-catalog.py
+```
+
+### 编程挑战
 
 <Challenge id="challenge-01" />
 
 <Challenge id="challenge-02" />
-
-同时，你可以运行前面提供的三个示例代码来体验数据治理的核心概念：
-
-```bash
-# 运行数据质量检查示例
-python code/examples/example-01-data-quality.py
-
-# 运行数据血缘追踪示例  
-python code/examples/example-02-data-lineage.py
-
-# 运行数据目录示例
-python code/examples/example-03-data-catalog.py
-```
-
-尝试修改这些示例，添加新的检查规则、血缘关系或目录功能，观察结果的变化。
 
 ## 小结与思考
 
@@ -566,3 +579,5 @@ python code/examples/example-03-data-catalog.py
 - 数据治理应该如何适应敏捷开发和DevOps文化？
 
 记住，数据治理不是目的，而是手段。最终目标是让数据真正成为推动业务价值的资产，而不是负担。
+
+<Quiz questionsPath="exercises/quiz.json" />
