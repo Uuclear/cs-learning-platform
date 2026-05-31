@@ -3,7 +3,7 @@
   "title": "强化学习：从AlphaGo到自动驾驶",
   "module": "08-ai-ml",
   "slug": "lesson-06-reinforcement-learning",
-  "status": "draft",
+  "status": "completed",
   "module_name": "AI/ML基础",
   "difficulty": 4,
   "duration": 35,
@@ -22,6 +22,6 @@
   ],
   "author": "CS教授",
   "created": "2026-05-03",
-  "updated": "2026-05-03",
+  "updated": "2026-05-31",
   "version": "1.0.0"
 }

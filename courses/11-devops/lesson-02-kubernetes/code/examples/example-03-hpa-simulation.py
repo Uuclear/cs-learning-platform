@@ -8,7 +8,6 @@
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import time
 from typing import List, Tuple
 
@@ -76,37 +75,18 @@ class HPASimulator:
 
         return self.cpu_usage_history, self.replica_history
 
-    def plot_results(self, load_patterns: List[str]):
-        """绘制结果图表"""
-        fig, axes = plt.subplots(len(load_patterns), 2, figsize=(12, 4 * len(load_patterns)))
-        if len(load_patterns) == 1:
-            axes = [axes]
-
-        for i, pattern in enumerate(load_patterns):
-            cpu_data, replica_data = self.simulate_load_pattern(pattern)
-
-            # CPU 使用率图表
-            axes[i][0].plot(cpu_data, 'b-', linewidth=2, label='CPU 使用率')
-            axes[i][0].axhline(y=self.target_cpu, color='r', linestyle='--',
-                              label=f'目标 ({self.target_cpu}%)')
-            axes[i][0].set_title(f'{pattern} - CPU 使用率')
-            axes[i][0].set_ylabel('CPU (%)')
-            axes[i][0].set_xlabel('时间 (秒)')
-            axes[i][0].legend()
-            axes[i][0].grid(True, alpha=0.3)
-
-            # 副本数量图表
-            axes[i][1].plot(replica_data, 'g-', linewidth=2, label='Pod 副本数')
-            axes[i][1].set_title(f'{pattern} - Pod 副本数')
-            axes[i][1].set_ylabel('副本数')
-            axes[i][1].set_xlabel('时间 (秒)')
-            axes[i][1].set_ylim(self.min_replicas - 0.5, self.max_replicas + 0.5)
-            axes[i][1].legend()
-            axes[i][1].grid(True, alpha=0.3)
-
-        plt.tight_layout()
-        plt.savefig('hpa_simulation.png', dpi=150, bbox_inches='tight')
-        print(f"\n📊 图表已保存为 'hpa_simulation.png'")
+    def summarize_results(self, load_patterns: List[str], duration: int = 30):
+        """以文本形式汇总各负载模式下的伸缩结果"""
+        for pattern in load_patterns:
+            self.current_replicas = self.min_replicas
+            cpu_data, replica_data = self.simulate_load_pattern(pattern, duration=duration)
+            avg_cpu = float(np.mean(cpu_data))
+            max_replicas = int(max(replica_data))
+            min_replicas = int(min(replica_data))
+            print(
+                f"\n📋 {pattern}: 平均 CPU={avg_cpu:.1f}%, "
+                f"副本范围={min_replicas}-{max_replicas}"
+            )
 
 
 def main():
@@ -119,22 +99,12 @@ def main():
     # 定义要测试的负载模式
     load_patterns = ["steady", "spike", "gradual_increase"]
 
-    # 运行模拟并生成图表
-    try:
-        hpa.plot_results(load_patterns)
-        print("\n✅ HPA 模拟完成！")
-        print("💡 观察要点:")
-        print("   - 副本数如何响应 CPU 负载变化")
-        print("   - 自动伸缩的延迟性（HPA 默认每 15-30 秒同步一次）")
-        print("   - 副本数的上下限约束")
-    except ImportError:
-        print("⚠️  matplotlib 未安装，跳过图表生成")
-        print("运行以下命令安装: pip install matplotlib")
-
-        # 如果没有 matplotlib，只运行模拟
-        for pattern in load_patterns:
-            print(f"\n--- {pattern.upper()} ---")
-            hpa.simulate_load_pattern(pattern, duration=30)
+    hpa.summarize_results(load_patterns, duration=30)
+    print("\n✅ HPA 模拟完成！")
+    print("💡 观察要点:")
+    print("   - 副本数如何响应 CPU 负载变化")
+    print("   - 自动伸缩的延迟性（HPA 默认每 15-30 秒同步一次）")
+    print("   - 副本数的上下限约束")
 
 
 if __name__ == "__main__":

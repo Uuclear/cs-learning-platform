@@ -3,7 +3,7 @@
   "title": "文档即代码：Markdown/Diagrams",
   "module": "14-software-engineering",
   "slug": "lesson-05-docs-as-code",
-  "status": "draft",
+  "status": "completed",
   "module_name": "软件工程实践",
   "difficulty": 2,
   "duration": 25,
@@ -20,6 +20,6 @@
   ],
   "author": "CS教授",
   "created": "2026-05-03",
-  "updated": "2026-05-03",
+  "updated": "2026-05-31",
   "version": "1.0.0"
 }
