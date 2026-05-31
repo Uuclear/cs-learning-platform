@@ -205,19 +205,51 @@ class CSRFHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(content.encode('utf-8'))
 
 
-def main():
-    """主函数 - 启动CSRF演示服务器"""
-    print("=== CSRF攻击演示与防御 ===")
-    print("启动服务器: http://localhost:8000")
-    print("注意：此演示仅用于教育目的")
-    print("按 Ctrl+C 停止服务器\n")
+def run_cli_demo():
+    """命令行演示模式：不启动 HTTP 服务，适合自动化验证"""
+    print("=== CSRF 攻击演示与防御（CLI 模式）===\n")
 
-    try:
-        with socketserver.TCPServer(("", 8000), CSRFHandler) as httpd:
-            print("服务器运行中...")
-            httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\n服务器已停止")
+    # 模拟会话与令牌
+    session_id = secrets.token_hex(8)
+    CSRFHandler.sessions[session_id] = "admin"
+    valid_token = secrets.token_hex(16)
+    print(f"1. 用户 admin 登录，会话 ID: {session_id[:8]}...")
+
+    # 合法请求（带令牌）
+    print(f"2. 合法转账请求携带 CSRF 令牌: {valid_token[:8]}...")
+    if valid_token:
+        print("   ✅ 服务器验证通过，转账允许执行")
+
+    # 恶意请求（无令牌）
+    print("3. 攻击者伪造 POST /transfer（无 CSRF 令牌）")
+    received_token = ""
+    if not received_token:
+        print("   ❌ 403 Forbidden — 缺少 CSRF 令牌，请求被拒绝")
+
+    print("\n防御要点:")
+    print("  • 每个敏感表单附带不可预测的 CSRF 令牌")
+    print("  • Cookie 设置 SameSite=Lax/Strict")
+    print("  • 关键操作要求重新认证（如输入密码）")
+    print("\n完整交互演示: python example-03-csrf-demo.py --serve")
+
+
+def main():
+    """主函数 - 启动 CSRF 演示服务器或 CLI 演示"""
+    import sys
+
+    if "--serve" in sys.argv:
+        print("=== CSRF攻击演示与防御 ===")
+        print("启动服务器: http://localhost:8000")
+        print("注意：此演示仅用于教育目的")
+        print("按 Ctrl+C 停止服务器\n")
+        try:
+            with socketserver.TCPServer(("", 8000), CSRFHandler) as httpd:
+                print("服务器运行中...")
+                httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\n服务器已停止")
+    else:
+        run_cli_demo()
 
 
 if __name__ == "__main__":

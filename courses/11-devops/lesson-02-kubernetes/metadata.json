@@ -3,7 +3,7 @@
   "title": "Kubernetes编排：容器集群管理",
   "module": "11-devops",
   "slug": "lesson-02-kubernetes",
-  "status": "draft",
+  "status": "completed",
   "module_name": "DevOps与云原生",
   "difficulty": 4,
   "duration": 40,
@@ -23,5 +23,6 @@
   "author": "CS教授",
   "created": "2026-05-03",
   "updated": "2026-05-03",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "updated_at": "2026-05-31"
 }
