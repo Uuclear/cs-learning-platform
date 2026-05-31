@@ -139,8 +139,9 @@ def main():
     print("\n🎭 模拟篡改攻击...")
     blockchain.tamper_block(1, [{"sender": "Hacker", "receiver": "Thief", "amount": 100}])
 
-    print("\n🔍 再次验证区块链完整性...")
-    blockchain.is_chain_valid()
+    print("\n🔍 再次验证区块链完整性（预期失败：篡改后哈希不匹配）...")
+    if not blockchain.is_chain_valid():
+        print("✅ 篡改已被检测到 — 这正是区块链防篡改的核心机制！")
 
 
 if __name__ == "__main__":
